@@ -1,4 +1,4 @@
-Valt projekt:
+﻿Valt projekt:
 
 Cloudio - Mediaspelare inriktad mot ljudboksuppspelning med molntjänstbaserade funktioner.
 
@@ -20,18 +20,18 @@ Länk till den kompletta licensen: http://creativecommons.org/licenses/by-nc-nd/
 
 Features som vi tror att vi hinner med under projektet:
 
-* Grundläggande mediaspelarfunktionalitet: användaren kan spela upp ljudfiler samt playlists av ljudfiler samt använda sig av standardkontroller som pause, play, stop, seek etc. för att påverka uppspelningsflödet.
+* Grundläggande mediaspelarfunktionalitet: användaren kan spela upp ljudfiler samt spellistor av ljudfiler och använda sig av standardkontroller som pause, play, stop, seek etc. för att styra uppspelningen.
 
-* Applikationen sparar bokmärken: Bokmärken som indikerar var användaren senast slutade lyssna (ljudspår samt tid) lokalt på enheten. Med hjälp av denna information kan användaren sedan välja att återuppta sin lyssningssession.
+* Applikationen sparar bokmärken som markerar var användaren senast slutade lyssna (ljudspår samt tid) lokalt på enheten. Med hjälp av denna information kan användaren sedan välja att återuppta sin lyssningssession.
 
-* Molnbaserad lagring av bokmärken: Ifall användaren registrerat ett personligt konto kan bokmärken laddas upp till en central server. Dessa kan sedan synkroniseras till den enhet där användaren väljer att logga in på sitt konto, varför användare kan välja att lyssna på ljudböcker synkroniserat över flera enheter. Kravet är dock fortfarande att en kopia av själva ljudboken existerar på alla enheter.
+* Molnbaserad lagring av bokmärken: ifall användaren registrerat ett personligt konto kan bokmärken laddas upp till en central server. Dessa kan sedan synkroniseras till den enhet där användaren väljer att logga in på sitt konto, varför användare kan välja att lyssna på ljudböcker synkroniserat över flera enheter. Kravet är dock fortfarande att en kopia av själva ljudboken existerar på alla enheter.
 
-* Molnbaserad lagring av ljudböcker: Utöver den funktionalitet som beskrivs ovan kan användaren även välja att ladda upp sina ljudböcker till en central server, varifrån dessa kan streamas. Detta eliminerar kravet att ljudboken måste finnas tillgänglig lokalt på varje enhet som användaren använder.
+* Molnbaserad lagring av ljudböcker: utöver den funktionalitet som beskrivs ovan kan användaren även välja att ladda upp sina ljudböcker till en central server, varifrån dessa kan streamas eller laddas ned lokalt. Möjligheten att streama eliminerar kravet att ljudboken måste finnas tillgänglig lokalt på varje enhet som användaren använder.
 
 Roller i projektet:
 
 Product owner: Fredrik Åhs
-Scrum master: ???
+Scrum master: TBD
 Team: Fredrik Åhs, Aki Käkelä, Marcus Parkkinen, Matej Kadric
 
 
