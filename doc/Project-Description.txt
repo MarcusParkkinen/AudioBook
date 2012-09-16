@@ -31,7 +31,7 @@ Features som vi tror att vi hinner med under projektet:
 Roller i projektet:
 
 Product owner: Fredrik Åhs
-Scrum master: TBD
+Scrum master: Marcus Parkkinen
 Team: Fredrik Åhs, Aki Käkelä, Marcus Parkkinen, Matej Kadric
 
 
