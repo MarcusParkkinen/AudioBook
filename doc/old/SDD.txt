@@ -1,0 +1,116 @@
+Beskriv om ni använder kända mönster (Architectural styles
+) som tex Client-server, layered, multi-tier, MVC, MTV (DJango)…)
+
+Dela upp i mindre komponenter (t ex Lagring, gui…), separera helst i olika paket
+
+Namnge och beskriv klasser i dessa komponenter
+
+Ni behöver inte skriva (ännu) vilka metoder dessa klasser har
+
+Krav på UML????
+
+SYFTE:
+Nya medlemmar i ert projekt skall kunna sätta sig in i projektet snabbt
+Ni skall få stöd av dokumentet under implentationsfasen (faserna)
+----
+
+System design document for Claudio
+Version history
+
+			
+			Date
+						
+			Author
+						
+			Description
+			
+
+Introduction
+
+Claudio is an audio player application for android designed with audio books in mind. Users are able to listen to audio files and synchronize the position through other devices through the cloud.
+
+// Steam vs. Dropbox
+Design goals
+
+Claudio will attempt to synchronize with the cloud whenever an internet connection is established. In the case that this is not possible, Claudio stores the data locally and awaits internet access to the cloud. The user will then be able to manually synchronize with the cloud.
+
+The cloud which holds the audio books will store the users’ data and, upon request, send it to the client, who in turn may continue where they left off, regardless of the device.
+
+The synchronization is the app’s main feature, which makes the client-server model appropriate.
+Definitions, acronyms and abbreviations
+
+Cloud
+Application (or “app”)
+Client
+Tag
+Session
+Bookmark
+Metadata
+Seek
+Swipe
+…
+References
+
+---
+Proposed system architecture
+
+Overview
+
+The application will be able to play locally stored audio files. Upon pausing or stopping a file - and every x seconds of playing the file - the application will attempt to store the track data on the cloud. Upon restarting the track the application will request information from the server.
+
+The design pattern will follow a client-server model.
+Software decomposition
+
+General
+
+
+Tiers
+
+Cloud <-> Local <-> Application
+(A multilayered software architecture is using different layers for allocating the responsibilities of an application. )
+Communication
+
+
+Decomposition into subsystems
+
+Layering (anpassas efter indelning, tex MVC)
+
+(The concepts of layer and tier are often used interchangeably. However, one fairly common point of view is that there is indeed a difference, and that a layer is a logical structuring mechanism for the elements that make up the software solution, while a tier is a physical structuring mechanism for the system infrastructure. "
+Dependency analysis
+
+< copy-paste UML from Eclipse plugin >
+Concurrency issues
+
+
+Vi utgår ifrån att ni vet vad "concurrency" är, annars får ni läsa på om detta. Tex
+http://en.wikipedia.org/wiki/Concurrency_%28computer_science%29
+Om er applikation på något sätt hanterar concurrency tar ni lämpligen upp detta i denna sektion
+Persistent data management
+
+Data is stored locally and, if a connection to the cloud server is established, also on the server.
+
+Hur ni hanterar persistent datalagrning?
+Har ni ens detta?
+Detta tas upp i denna sektion
+Access control and security
+
+If a connection to the server is established the user may manually request the server for an update on whether there is a newer state available (a later time stamp).
+
+If the user can not connect to the cloud the application will notify them when there is a connection. 
+
+When there is a connection to the cloud, the user can overwrite their local data with the data of the cloud, or vice versa.
+
+// (a) Steam vs. (b) Dropbox
+a) Content cannot be added to the server. It is only possible to either stream or download the files to local storage.
+
+(Kryptering?)
+
+Jag utgår ifrån att ni vet vad "Access control" är, annars får ni läsa på om detta. Tex
+	http://en.wikipedia.org/wiki/Access_control
+Om er applikation på något sätt hanterar "Access control" tar ni lämpligen upp detta i denna sektion
+Om er applikation på något sätt hanterar "säkerhet" tar ni lämpligen upp detta i denna sektion
+Boundary conditions
+
+Beskriv hur ert system startas, stängs ned samt hur fel hanteras.
+References
+
