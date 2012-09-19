@@ -1,0 +1,38 @@
+Valt projekt:
+
+Cloudio - Mediaspelare inriktad mot ljudboksuppspelning med molntjänstbaserade funktioner.
+
+Motiverad licens:
+
+Eftersom att vi är ute efter att skapa en kommersiell produkt så är det motiverat att vi använder en licens som förbjuder andra från att använda eller ändra på vår kod för egna kommersiella syften. En licens som skulle uppfylla bland annat detta krav är:
+
+Creative Commons BY-NC-ND 3.0
+
+Som anger att användare får kopiera, distribuera och dela koden som vi skapat, men under följande villkor:
+
+* Attribution - You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
+
+* Noncommercial - You may not use this work for commercial purposes.
+
+* No derivative works - You may not alter, transform, or build upon this work.
+
+Länk till den kompletta licensen: http://creativecommons.org/licenses/by-nc-nd/3.0/legalcodehttp://creativecommons.org/licenses/by-nc-nd/3.0/legalcode
+
+Features som vi tror att vi hinner med under projektet:
+
+* Grundläggande mediaspelarfunktionalitet: användaren kan spela upp ljudfiler samt playlists av ljudfiler samt använda sig av standardkontroller som pause, play, stop, seek etc. för att påverka uppspelningsflödet.
+
+* Applikationen sparar bokmärken: Bokmärken som indikerar var användaren senast slutade lyssna (ljudspår samt tid) lokalt på enheten. Med hjälp av denna information kan användaren sedan välja att återuppta sin lyssningssession.
+
+* Molnbaserad lagring av bokmärken: Ifall användaren registrerat ett personligt konto kan bokmärken laddas upp till en central server. Dessa kan sedan synkroniseras till den enhet där användaren väljer att logga in på sitt konto, varför användare kan välja att lyssna på ljudböcker synkroniserat över flera enheter. Kravet är dock fortfarande att en kopia av själva ljudboken existerar på alla enheter.
+
+* Molnbaserad lagring av ljudböcker: Utöver den funktionalitet som beskrivs ovan kan användaren även välja att ladda upp sina ljudböcker till en central server, varifrån dessa kan streamas. Detta eliminerar kravet att ljudboken måste finnas tillgänglig lokalt på varje enhet som användaren använder.
+
+Roller i projektet:
+
+Product owner: Fredrik Åhs
+Scrum master: Marcus Parkkinen
+Team: Fredrik Åhs, Aki Käkelä, Marcus Parkkinen, Matej Kadric
+
+
+
