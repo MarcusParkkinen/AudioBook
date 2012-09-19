@@ -1,0 +1,17 @@
+Måndag kl9, vid HA-salarna
+Gjorde git-övningara.
+
+Tisdag kl13.15, sal 2514
+Design av appens utseende diskuterades.
+Började med att diskutera grundläggande funktioner.
+
+Onsdag kl10, sal 2514
+
+Fredag kl11, sal 2514
+RAD
+Koddesign
+Scrum
+
+Nästa
+Fortsätta med att skapa grunden för systemet
+Scrum
