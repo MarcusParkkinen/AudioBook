@@ -1,8 +1,6 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
 import edu.chalmers.dat255.audiobookplayer.R;
-import edu.chalmers.dat255.audiobookplayer.R.layout;
-import edu.chalmers.dat255.audiobookplayer.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
