@@ -7,7 +7,8 @@ import java.util.List;
 /**
  * A queue that contains a pointer and a collection of paths to audio files.
  * 
- * @author Aki
+ * @author Aki Käkelä
+ * @version 0.1
  */
 public class PlayerQueue {
 	private int currentTrackIndex;

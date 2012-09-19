@@ -11,8 +11,8 @@ import android.util.Log;
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
- * @author Aki
- * 
+ * @author Aki Käkelä
+ * @version 0.1
  */
 public class PlayerController implements OnCompletionListener {
 	private MediaPlayer mp;
