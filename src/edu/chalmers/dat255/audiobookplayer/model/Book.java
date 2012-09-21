@@ -8,13 +8,11 @@ import java.util.List;
 import android.util.Log;
 
 /**
- * Represents a collection of file paths to audio tracks that 
- * collectively form a book. Every mutator method makes sure that
- * no null strings are added to the collection.
+ * Represents a collection of Track objects that 
+ * collectively form a book.
  * 
  * @author Marcus Parkkinen
  * @version 1.0
- * 
  */
 
 public class Book {
@@ -34,9 +32,9 @@ public class Book {
 	
 	/**
 	 * Create a book from the referenced collection of
-	 * file paths.
+	 * Tracks.
 	 * 
-	 * @param c A collection containing paths to audio files
+	 * @param c A collection containing Tracks.
 	 */
 	public Book(Collection<Track> c) {
 		this();
@@ -49,10 +47,10 @@ public class Book {
 	}
 	
 	/**
-	 * Add a file path to the collection.
+	 * Add a Track to the collection.
 	 * 
-	 * @param index index to insert the path
-	 * @param filePath path to file
+	 * @param index index to insert the track
+	 * @param t reference to track object to add
 	 */
 	public void addTrack(int index, Track t) {
 		if(t != null) {
@@ -60,10 +58,14 @@ public class Book {
 		}
 	}
 	
+	public void addTrack(Track t) {
+		addTrack(tracks.size(), t);
+	}
+	
 	/**
-	 * Add a collection of file paths.
+	 * Add a collection of tracks.
 	 * 
-	 * @param c Collection that contains the file paths
+	 * @param c Collection that contains references to the tracks
 	 */
 	
 	public void addTracks(Collection<Track> c) {
@@ -73,7 +75,7 @@ public class Book {
 	}
 	
 	/**
-	 * Swap location of two paths.
+	 * Swap location of two tracks.
 	 * 
 	 * @param firstIndex
 	 * @param secondIndex
@@ -87,9 +89,9 @@ public class Book {
 	}
 	
 	/**
-	 * Move the path at the specified index to a new index.
+	 * Move the track at the specified index to a new index.
 	 * 
-	 * @param oldIndex index of the path
+	 * @param oldIndex index of the track
 	 * @param newIndex 
 	 */
 	public void move(int oldIndex, int newIndex) {
@@ -124,7 +126,7 @@ public class Book {
 	}
 	
 	/**
-	 * Returns a list containing paths to all tracks contained in this book.
+	 * Returns a list containing references to all tracks contained in this book.
 	 * 
 	 * @return List<String> the list
 	 */
