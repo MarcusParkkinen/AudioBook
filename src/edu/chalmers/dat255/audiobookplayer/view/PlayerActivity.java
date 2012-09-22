@@ -8,6 +8,8 @@ public class PlayerActivity {
 	private ImageButton reset;
 	private ImageButton stop;
 	
+	//Branching
+	
 //    mPreview = (SurfaceView) findViewById(R.id.surface);
 //    mPath = (EditText) findViewById(R.id.path);
 //    mPlay = (ImageButton) findViewById(R.id.play);
