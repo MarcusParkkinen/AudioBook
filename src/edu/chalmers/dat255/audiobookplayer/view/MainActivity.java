@@ -12,9 +12,6 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        PlayerController pc = new PlayerController();
-        pc.addTrack("http://www.soundjay.com/button/beep-1.wav");
     }
 
     @Override
