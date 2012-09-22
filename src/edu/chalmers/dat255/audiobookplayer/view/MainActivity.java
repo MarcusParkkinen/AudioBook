@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
 
 public class MainActivity extends Activity {
 
@@ -12,7 +13,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        System.out.println("test");
+        PlayerController pc = new PlayerController();
+        pc.addTrack("http://www.soundjay.com/button/beep-1.wav");
     }
 
     @Override

@@ -14,9 +14,41 @@ import android.util.Log;
  * @author Aki Käkelä
  * @version 0.1
  */
-public class PlayerController implements OnCompletionListener {
+public class PlayerController {
 	private MediaPlayer mp;
 	private PlayerQueue pq;
+	
+	private OnCompletionListener ocl = new OnCompletionListener() {
+		public void onCompletion(MediaPlayer mp) {
+			Log.i("onComplete", "Track finished");
+			pq.incrementTrackIndex();
+			try {
+				mp.setDataSource(pq.getCurrentTrackPath());
+			} catch (IllegalArgumentException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (SecurityException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IllegalStateException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				mp.prepare();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("-- NEXT: " + mp.getDuration() + "ms");
+		}
+	};
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
@@ -41,7 +73,7 @@ public class PlayerController implements OnCompletionListener {
 	 */
 	public void play() {
 		if (pq != null && pq.getCurrentTrackPath() != null) {
-			this.startPlaying();
+			mp.start();
 		}
 	}
 
@@ -65,7 +97,7 @@ public class PlayerController implements OnCompletionListener {
 				Log.e("start IOException", "");
 				e.printStackTrace();
 			}
-			startPlaying();
+			mp.start();
 		} else {
 			Log.i("start", "tried to start without choosing data source.");
 		}
@@ -120,21 +152,6 @@ public class PlayerController implements OnCompletionListener {
 	 */
 	public void setTrackList(List<String> trackList) {
 		pq.setQueue(trackList);
-	}
-
-	private void startPlaying() {
-		mp.start();
-		mp.setOnCompletionListener(this);
-	}
-
-	public void onCompletion(MediaPlayer mp) {
-		System.out
-				.println("----------------------------------------- TRACK COMPLETED");
-		pq.incrementTrackIndex();
-
-		startPlaying();
-		System.out
-				.println("----------------------------------------- NEXT TRACK PLAYING");
 	}
 
 }
