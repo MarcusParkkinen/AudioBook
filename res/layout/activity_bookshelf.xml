@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    
+    <Button android:text="@string/add_button_text"
+        android:id="@+id/AddBook"
+        android:layout_width="match_parent"
+        android:textSize="18dp"
+        android:layout_height="55dp"
+        android:gravity="center_horizontal" 
+    	android:layout_gravity="center_horizontal|center" >
+   	</Button>
+    <ListView
+        android:id="@+id/bookshelfList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+    
+
+</LinearLayout>
+      

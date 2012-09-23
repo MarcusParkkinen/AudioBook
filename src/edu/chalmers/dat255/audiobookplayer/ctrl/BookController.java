@@ -1,5 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
+import java.beans.PropertyChangeListener;
+
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;
@@ -32,25 +34,16 @@ public class BookController {
 	 * @param filePaths paths to the audio files that compose the book
 	 */
 	
-	public void createBook(String[] filePaths) {
-		Book book = new Book();
+	public void createBook(String[] filePaths, String title) {
+		Book book = new Book(title);
 		for(int i = 0; i < filePaths.length; i++) {
-			if(isValidPath(filePaths[i])){
-				book.addTrack(new Track(filePaths[i], 0));
-			}
+			book.addTrack(new Track(filePaths[i], 0));
 		}
 		bookshelf.addNewBook(book);
 	}
 	
-	/**
-	 * Check whether the format of a file path is valid or not.
-	 * 
-	 * @param path the file path
-	 * @return boolean indicating yes or no
-	 */
-	
-	private boolean isValidPath(String path) {
-		//Temporary solution
-		return true;
+	public void addBookshelfListener(PropertyChangeListener listener) {
+		bookshelf.addListener(listener);
 	}
 }
+ 

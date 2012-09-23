@@ -1,7 +1,10 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
 
+import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
 import android.util.Log;
 
 /**
@@ -15,12 +18,23 @@ import android.util.Log;
 public class Bookshelf {
 	private LinkedList<Book> books;
 	private static final String TAG = "Bookshelf.java";
+	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	
 	/**
 	 * Create an empty bookshelf.
 	 */
 	public Bookshelf() {
 		books = new LinkedList<Book>();
+	}
+	
+	
+	/**
+	 * Add listener class.
+	 * 
+	 * @param PropertyChangeListener reference to the listener object
+	 */
+	public void addListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
 	}
 	
 	/**
@@ -31,6 +45,7 @@ public class Bookshelf {
 	 */
 	public void addNewBook(Book b) {
 		books.addLast(b);
+		pcs.firePropertyChange(StringConstants.event.book_added, null, b.getTitle());
 	}
 	
 	/**
@@ -45,6 +60,7 @@ public class Bookshelf {
 			Book temp = books.remove();
 			books.add(newIndex, temp);
 			
+			pcs.firePropertyChange(StringConstants.event.book_moved, oldIndex, newIndex);
 		} else{
 			Log.e(TAG, " attempting to move book from/to an index out of bounds. Skipping operation.");
 		}
@@ -58,8 +74,18 @@ public class Bookshelf {
 	public void remove(int index) {
 		try{
 			books.remove(index);
+			pcs.firePropertyChange(StringConstants.event.book_removed, index, null);
 		} catch(IndexOutOfBoundsException e) {
 			Log.e(TAG, " attempting to remove book from an index out of bounds. Skipping operation.");
 		}
+	}
+	
+	/**
+	 * Return the amount of books currently in the bookshelf
+	 * 
+	 * @return int number indicating amount
+	 */
+	public int size() {
+		return books.size();
 	}
 }

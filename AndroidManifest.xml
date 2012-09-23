@@ -21,13 +21,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.BrowserActivity"
+            android:name=".view.BookshelfActivity"
             android:label="@string/title_activity_browser" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
