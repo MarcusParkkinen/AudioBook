@@ -18,6 +18,7 @@ import android.util.Log;
 public class Book {
 	private static final String TAG = "Book.java";
 	private LinkedList<Track> tracks;
+	private String title;
 	//private int totalLength;
 	//private Bookmark bookmark;
 	//private HashSet<Tag> tags;
@@ -26,7 +27,8 @@ public class Book {
 	/**
 	 * Create an empty book.
 	 */
-	public Book() {
+	public Book(String title) {
+		this.title = title;
 		tracks = new LinkedList<Track>();
 	}
 	
@@ -36,8 +38,8 @@ public class Book {
 	 * 
 	 * @param c A collection containing Tracks.
 	 */
-	public Book(Collection<Track> c) {
-		this();
+	public Book(Collection<Track> c, String title) {
+		this(title);
 		
 		for(Track t : c) {
 			if(t != null) {
@@ -136,6 +138,22 @@ public class Book {
 			l.add(t.getPath());
 		}
 		return l;
+	}
+	
+	@Override
+	public Book clone() {
+		// Temporary solution
+		return this;
+	}
+	
+	
+	/**
+	 * Returns the title of the book.
+	 * 
+	 * @return String title
+	 */
+	public String getTitle() {
+		return title;
 	}
 	
 	// more accessors to be added.
