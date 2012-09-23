@@ -45,7 +45,7 @@ public class Bookshelf {
 	 */
 	public void addNewBook(Book b) {
 		books.addLast(b);
-		pcs.firePropertyChange(StringConstants.event.book_added, null, b.getTitle());
+		pcs.firePropertyChange(StringConstants.event.book_added, null, b);
 	}
 	
 	/**

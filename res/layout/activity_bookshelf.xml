@@ -6,18 +6,18 @@
 
     
     <Button android:text="@string/add_button_text"
-        android:id="@+id/AddBook"
+        android:id="@+id/addBook"
         android:layout_width="match_parent"
         android:textSize="18dp"
         android:layout_height="55dp"
         android:gravity="center_horizontal" 
     	android:layout_gravity="center_horizontal|center" >
    	</Button>
-    <ListView
+    <ExpandableListView
         android:id="@+id/bookshelfList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent" >
+    </ExpandableListView>
     
 
 </LinearLayout>
