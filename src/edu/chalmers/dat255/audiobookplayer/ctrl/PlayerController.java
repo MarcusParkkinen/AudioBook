@@ -3,52 +3,21 @@ package edu.chalmers.dat255.audiobookplayer.ctrl;
 import java.io.IOException;
 import java.util.List;
 
-import edu.chalmers.dat255.audiobookplayer.model.PlayerQueue;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.core.PlayerQueueControls;
+import edu.chalmers.dat255.audiobookplayer.model.PlayerQueue;
 
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
  * @author Aki Käkelä
- * @version 0.1
+ * @version 0.2
  */
-public class PlayerController {
+public class PlayerController implements PlayerQueueControls {
 	private MediaPlayer mp;
 	private PlayerQueue pq;
-	
-	private OnCompletionListener ocl = new OnCompletionListener() {
-		public void onCompletion(MediaPlayer mp) {
-			Log.i("onComplete", "Track finished");
-			pq.incrementTrackIndex();
-			try {
-				mp.setDataSource(pq.getCurrentTrackPath());
-			} catch (IllegalArgumentException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IllegalStateException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				mp.prepare();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("-- NEXT: " + mp.getDuration() + "ms");
-		}
-	};
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
@@ -60,79 +29,94 @@ public class PlayerController {
 	}
 
 	/**
-	 * Pauses the audio if the player is playing.
+	 * Pauses the audio if the player is playing. Resumes or starts otherwise.
 	 */
-	public void pause() {
+	public void playPause() {
 		if (mp.isPlaying())
 			mp.pause();
-	}
-
-	/**
-	 * Resumes the player if (1) it was paused, (2) the queue is initialized and
-	 * (3) the queue is not empty.
-	 */
-	public void play() {
-		if (pq != null && pq.getCurrentTrackPath() != null) {
+		else
 			mp.start();
-		}
+	}
+	
+	/**
+	 * Sets the volume to the given values.
+	 * @param leftVolume left channel balance
+	 * @param rightVolume right channel balance
+	 */
+	public void setVolume(float leftVolume, float rightVolume) {
+		mp.setVolume(leftVolume, rightVolume);
+	}
+	
+	/**
+	 * Sets the volum to the given value.
+	 * @param volume
+	 */
+	public void setVolume(float volume) {
+		setVolume(volume, volume);
 	}
 
 	/**
-	 * Starts the audio player if the queue is initialized and not empty.
+	 * Starts the audio player. The PlayerQueue must have been initialized and
+	 * can not be empty.
 	 */
 	public void start() {
-		if (pq != null && pq.getCurrentTrackPath() != null) {
+		// we have started playing a file, so start thread that updates time on
+		// Track instance once every second, and
+		if (pq.getCurrentTrackPath() != null) {
 			try {
 				mp.setDataSource(pq.getCurrentTrackPath());
 			} catch (IllegalArgumentException e) {
-				Log.e("start IllegalArgumentException", "");
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				Log.e("start SecurityException", "");
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				Log.e("start IllegalStateException", "");
 				e.printStackTrace();
 			} catch (IOException e) {
-				Log.e("start IOException", "");
 				e.printStackTrace();
 			}
+			try {
+				mp.prepare();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			mp.setOnCompletionListener(new OnCompletionListener() {
+				public void onCompletion(MediaPlayer mp) {
+					Log.i("onComplete", "Track finished");
+					mp.stop();
+					mp.reset();
+					pq.incrementTrackIndex();
+					start();
+					// does setDataSource, prepare, adds listener and starts MP
+				}
+			});
 			mp.start();
+			System.out.println("-- PLAYING: " + pq.getCurrentTrackIndex()
+					+ ". " + pq.getCurrentTrackPath() + " @" + mp.getDuration()
+					+ "ms");
 		} else {
 			Log.i("start", "tried to start without choosing data source.");
 		}
 	}
 
 	/**
-	 * @param path
-	 */
-	public void addTrack(String path) {
-		pq.addTrack(path);
-	}
-
-	/**
-	 * Moves the selected track (from) to the position (to) and adjusts indices.
+	 * Seeks to the right
 	 * 
-	 * @param from
-	 * @param to
-	 */
-	public void moveTrack(int from, int to) {
-
-	}
-
-	/**
 	 * @param time
 	 *            ms
 	 */
-	public void seekForward(int time) {
+	public void seekRight(int time) {
 		seekTo(mp.getCurrentPosition() + time);
 	}
 
 	/**
+	 * Seeks to the left.
+	 * 
 	 * @param time
 	 *            ms
 	 */
-	public void seekBackward(int time) {
+	public void seekLeft(int time) {
 		seekTo(mp.getCurrentPosition() - time);
 	}
 
@@ -146,12 +130,45 @@ public class PlayerController {
 		mp.seekTo(time);
 	}
 
-	/**
-	 * Sets the player queue to the given list of paths of audio files.
-	 * @param trackList a list of paths of audio files.
-	 */
-	public void setTrackList(List<String> trackList) {
+	public void addTrack(String path) {
+		pq.addTrack(path);
+	}
+
+	public void removeTrack(int index) {
+		pq.removeTrack(index);
+	}
+
+	public void clearTracks() {
+		pq.clearTracks();
+	}
+
+	public void setQueue(List<String> trackList) {
 		pq.setQueue(trackList);
+	}
+
+	public void moveTrack(int from, int to) {
+		pq.moveTrack(from, to);
+	}
+
+	public void moveTracks(int[] tracks, int to) {
+		pq.moveTracks(tracks, to);
+		for (int i = 0; i < tracks.length; i++) {
+			moveTrack(tracks[i], to);
+		}
+	}
+
+	public int getTrackDuration() {
+		return mp.getDuration();
+	}
+
+	public void previousTrack() {
+		pq.decrementTrackIndex();
+		mp.start();
+	}
+
+	public void nextTrack() {
+		pq.incrementTrackIndex();
+		mp.start();
 	}
 
 }

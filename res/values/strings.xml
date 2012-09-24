@@ -6,5 +6,12 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_browser">BrowserActivity</string>
     <string name="title_activity_player">PlayerActivity</string>
-
+    <string name="moveToPlayerBtn">Move to player activity</string>
+    
+	<string name="prevTrack">&lt;|</string>
+	<string name="seekLeft">&lt;&lt;</string>
+	<string name="playPause">||</string>
+	<string name="seekRight">&gt;&gt;</string>
+	<string name="nextTrack">|&gt;</string>
+    
 </resources>

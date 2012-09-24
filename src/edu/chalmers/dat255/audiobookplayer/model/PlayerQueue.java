@@ -4,15 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.chalmers.dat255.audiobookplayer.core.PlayerQueueControls;
+
+import android.util.Log;
+
 /**
  * A queue that contains a pointer and a collection of paths to audio files.
  * 
  * @author Aki Käkelä
- * @version 0.1
+ * @version 0.2
  */
-public class PlayerQueue {
+public class PlayerQueue implements PlayerQueueControls {
 	private int currentTrackIndex;
 	private List<String> trackPaths;
+	// TODO: List<Track> tracks
+
+	// TODO: delete this
+	private String tag = "PlayerQueue";
 
 	/**
 	 * Creates a Queue instance without any track paths.
@@ -36,41 +44,19 @@ public class PlayerQueue {
 		currentTrackIndex = 0;
 	}
 
-	/*
-	 * Track manipulation within the playlist (player queue)
-	 */
-	/**
-	 * Moves the chosen track to the chosen location. Adjusts the positions of
-	 * the other elements.
-	 * 
-	 * @param from
-	 * @param to
-	 */
 	public void moveTrack(int from, int to) {
 		Collections.rotate(trackPaths.subList(from, to + 1), -1);
 	}
 
-	/**
-	 * Adds the given path to the queue.
-	 * 
-	 * @param path
-	 */
 	public void addTrack(String path) {
 		trackPaths.add(path);
+		Log.i(tag, "addTrack: " + path + ", size: " + trackPaths.size());
 	}
 
-	/**
-	 * Removes the path at index <i>index</i>
-	 * 
-	 * @param index
-	 */
 	public void removeTrack(int index) {
 		trackPaths.remove(index);
 	}
 
-	/**
-	 * Clears the queue.
-	 */
 	public void clearTracks() {
 		trackPaths.clear();
 	}
@@ -123,17 +109,26 @@ public class PlayerQueue {
 	}
 
 	/**
-	 * Increases the index to be played by the player by 1.
+	 * Increases the index to be played by the player by 1, or sets it to 0 if
+	 * there isn't a later element in the queue.
 	 */
 	public void incrementTrackIndex() {
-		this.currentTrackIndex++;
+		this.currentTrackIndex = (this.currentTrackIndex + 1)
+				% this.trackPaths.size();
 	}
 
-	/*
-	 * Books to add or set as a playlist.
+	/**
+	 * Decreases the index to be played by the player by 1, or sets it to the
+	 * index of the last element if the current element index is 0.
 	 */
+	public void decrementTrackIndex() {
+		this.currentTrackIndex = (this.currentTrackIndex - 1)
+				% this.trackPaths.size();
+	}
+
 	/**
 	 * Adds the track paths of a Book into the queue.
+	 * 
 	 * @param book
 	 */
 	public void addBook(Book book) {
@@ -142,19 +137,21 @@ public class PlayerQueue {
 
 	/**
 	 * Sets the queue to contain the track paths of a Book.
+	 * 
 	 * @param book
 	 */
 	public void setBook(Book book) {
 		this.setQueue(book.getPaths());
 	}
 
-	/**
-	 * Sets a given list of paths as the queue for the player.
-	 * 
-	 * @param paths
-	 */
 	public void setQueue(List<String> paths) {
 		this.trackPaths = paths;
+	}
+
+	public void moveTracks(int[] tracks, int to) {
+		for (int i = 0; i < tracks.length; i++) {
+			moveTrack(tracks[i], to);
+		}
 	}
 
 }
