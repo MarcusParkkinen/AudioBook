@@ -1,23 +1,20 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
 import java.io.IOException;
-import java.util.List;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
-import edu.chalmers.dat255.audiobookplayer.core.PlayerQueueControls;
-import edu.chalmers.dat255.audiobookplayer.model.PlayerQueue;
+import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
  * @author Aki Käkelä
- * @version 0.2
+ * @version 0.3
  */
-public class PlayerController implements PlayerQueueControls {
+public class PlayerController {
 	private MediaPlayer mp;
-//	private PlayerQueue pq;
 	private Bookshelf bs;
 
 	/**
@@ -38,22 +35,26 @@ public class PlayerController implements PlayerQueueControls {
 		else
 			mp.start();
 	}
-	
+
 	/**
 	 * Sets the volume to the given values.
-	 * @param leftVolume left channel balance
-	 * @param rightVolume right channel balance
+	 * 
+	 * @param leftVolume
+	 *            left channel balance
+	 * @param rightVolume
+	 *            right channel balance
 	 */
 	public void setVolume(float leftVolume, float rightVolume) {
 		mp.setVolume(leftVolume, rightVolume);
 	}
-	
+
 	/**
 	 * Sets the volum to the given value.
+	 * 
 	 * @param volume
 	 */
 	public void setVolume(float volume) {
-		setVolume(volume, volume);
+		this.setVolume(volume, volume);
 	}
 
 	/**
@@ -87,14 +88,14 @@ public class PlayerController implements PlayerQueueControls {
 					Log.i("onComplete", "Track finished");
 					mp.stop();
 					mp.reset();
-					pq.incrementTrackIndex();
-					start();
-					// does setDataSource, prepare, adds listener and starts MP
+					bs.incrementTrackIndex();
+					start(); // does setDataSource, prepare, adds listener and
+								// starts MP
 				}
 			});
 			mp.start();
-			System.out.println("-- PLAYING: " + pq.getCurrentTrackIndex()
-					+ ". " + pq.getCurrentTrackPath() + " @" + mp.getDuration()
+			System.out.println("-- PLAYING: " + bs.getSelectedBookIndex()
+					+ ". " + bs.getCurrentTrackPath() + " @" + mp.getDuration()
 					+ "ms");
 		} else {
 			Log.i("start", "tried to start without choosing data source.");
@@ -131,28 +132,23 @@ public class PlayerController implements PlayerQueueControls {
 		mp.seekTo(time);
 	}
 
-	public void addTrack(String path) {
-		pq.addTrack(path);
-	}
-
-	public void removeTrack(int index) {
-		pq.removeTrack(index);
-	}
-
-	public void clearTracks() {
-		pq.clearTracks();
-	}
-	
-	public void setQueue(List<String> trackList) {
-		pq.setQueue(trackList);
-	}
-
+	/**
+	 * Moves the specified track to the specified index.
+	 * 
+	 * @param from Start index.
+	 * @param to Where to put the track.
+	 */
 	public void moveTrack(int from, int to) {
 		bs.moveTrack(from, to);
 	}
 
+	/**
+	 * Moves the specified tracks to the specified index.
+	 * 
+	 * @param from Start index.
+	 * @param to Where to put the tracks.
+	 */
 	public void moveTracks(int[] tracks, int to) {
-		bs.moveTracks(tracks, to);
 		for (int i = 0; i < tracks.length; i++) {
 			moveTrack(tracks[i], to);
 		}
@@ -166,6 +162,10 @@ public class PlayerController implements PlayerQueueControls {
 	public void nextTrack() {
 		bs.incrementTrackIndex();
 		mp.start();
+	}
+
+	public int getTrackDuration() {
+		return bs.getTrackDuration();
 	}
 
 }

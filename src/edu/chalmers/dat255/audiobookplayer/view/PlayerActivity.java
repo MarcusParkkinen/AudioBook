@@ -2,7 +2,6 @@ package edu.chalmers.dat255.audiobookplayer.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -17,7 +16,7 @@ import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
  * A graphical UI to PlayerController.
  * 
  * @author Aki Käkelä
- * @version 0.2
+ * @version 0.3
  */
 public class PlayerActivity extends Activity {
 	private PlayerController pc;
@@ -29,18 +28,8 @@ public class PlayerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
 
-		pc = new PlayerController();
-
-		// TODO: delete these
-		String env = Environment.getExternalStorageDirectory().getPath();
-		String PATH1 = env + "/game.mp3";
-		String PATH2 = env + "/game2.mp3";
-
-		pc.addTrack(PATH1);
-		pc.addTrack(PATH2);
-		// --
-
-		pc.start();
+		// TODO: call to start playing audio
+		// pc.start();
 
 		prevTrack = (Button) findViewById(R.id.prevTrack);
 		prevTrack.setOnClickListener(new OnClickListener() {
@@ -82,15 +71,16 @@ public class PlayerActivity extends Activity {
 
 		seekBar = (SeekBar) findViewById(R.id.seekBar);
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			String tag = "seekBar";
+			static final String TAG = "seekBar";
 
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 
-				double seekPercentage = (double) progress * (1.0 / seekBar.getMax());
+				double seekPercentage = (double) progress
+						* (1.0 / seekBar.getMax());
 				int displayPercentage = (100 * progress) / (seekBar.getMax());
 
-				Log.d(tag,
+				Log.d(TAG,
 						"progress is " + progress + " out of "
 								+ seekBar.getMax() + "(" + displayPercentage
 								+ "%)");
@@ -99,7 +89,7 @@ public class PlayerActivity extends Activity {
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				Log.i(tag, "started tracking");
+				Log.d(TAG, "started tracking");
 
 				// InputMethodManager imm = (InputMethodManager)
 				// getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -107,14 +97,10 @@ public class PlayerActivity extends Activity {
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				Log.i(tag, "stopped tracking");
+				Log.d(TAG, "stopped tracking");
 			}
 		});
 
-	}
-
-	public void setController(PlayerController pc) {
-		this.pc = pc;
 	}
 
 	@Override
