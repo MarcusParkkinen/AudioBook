@@ -54,10 +54,7 @@ public class BookshelfActivity extends Activity implements PropertyChangeListene
         
         //Make this activity a fullscreen activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
-      //Only create a new instance if saved instance state does not contain one already
+        //Only create a new instance if saved instance state does not contain one already
         if(listData == null) {
         	listData = new ArrayList<Entry<String, List<String>>>();
         }
@@ -80,31 +77,21 @@ public class BookshelfActivity extends Activity implements PropertyChangeListene
         Button add = (Button) findViewById(R.id.addBook);
         adapter = new ExpandableBookshelfAdapter(this, listData);
         
-        //Set the listener method for the ListView
+        //Set the listener method for the children in the ExpandableListView
         bookshelfList.setOnChildClickListener(new OnChildClickListener() {			
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				Toast.makeText(getApplicationContext(), listData.get(groupPosition).getValue().get(childPosition), Toast.LENGTH_SHORT).show();				
-				PlayerController pc = new PlayerController();
-                pc.addTrack(listData.get(groupPosition).getValue().get(childPosition));
-                pc.start();
-                pc.play();
 				return true;
 			}
 		});
         
+        //Set the listener method for the parents in the ExpandableListView
         bookshelfList.setOnGroupClickListener(new OnGroupClickListener() {			
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 				Toast.makeText(getApplicationContext(), listData.get(groupPosition).getKey() , Toast.LENGTH_SHORT).show();
-        		
-				if(parent.isGroupExpanded(groupPosition)) {
-					parent.collapseGroup(groupPosition);
-					return true;
-				} else {
-					parent.expandGroup(groupPosition);
-					return false;
-				}
+				return false;
 			}
 		});        
         
@@ -112,7 +99,7 @@ public class BookshelfActivity extends Activity implements PropertyChangeListene
         add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
             	//temporary test
-                bsc.createBook(new String[]{Environment.getExternalStorageDirectory().getAbsolutePath()+"/skinnylove.mp3", "testbook"+counter+"/path2"}, "testbook" + counter++);
+                bsc.createBook(new String[]{"asd", "testbook"+counter+"/path2"}, "testbook" + counter++);
             }
         });
         
@@ -136,7 +123,6 @@ public class BookshelfActivity extends Activity implements PropertyChangeListene
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
     	super.onRestoreInstanceState(savedInstanceState);
-    	
     	savedInstanceState.get("values");
     }
     
