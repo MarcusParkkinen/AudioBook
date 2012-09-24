@@ -17,15 +17,16 @@ import edu.chalmers.dat255.audiobookplayer.model.PlayerQueue;
  */
 public class PlayerController implements PlayerQueueControls {
 	private MediaPlayer mp;
-	private PlayerQueue pq;
+//	private PlayerQueue pq;
+	private Bookshelf bs;
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
 	 * Queue.
 	 */
-	public PlayerController() {
+	public PlayerController(Bookshelf bs) {
 		mp = new MediaPlayer();
-		pq = new PlayerQueue();
+		this.bs = bs;
 	}
 
 	/**
@@ -62,9 +63,9 @@ public class PlayerController implements PlayerQueueControls {
 	public void start() {
 		// we have started playing a file, so start thread that updates time on
 		// Track instance once every second, and
-		if (pq.getCurrentTrackPath() != null) {
+		if (bs.getCurrentTrackPath() != null) {
 			try {
-				mp.setDataSource(pq.getCurrentTrackPath());
+				mp.setDataSource(bs.getCurrentTrackPath());
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			} catch (SecurityException e) {
@@ -141,33 +142,29 @@ public class PlayerController implements PlayerQueueControls {
 	public void clearTracks() {
 		pq.clearTracks();
 	}
-
+	
 	public void setQueue(List<String> trackList) {
 		pq.setQueue(trackList);
 	}
 
 	public void moveTrack(int from, int to) {
-		pq.moveTrack(from, to);
+		bs.moveTrack(from, to);
 	}
 
 	public void moveTracks(int[] tracks, int to) {
-		pq.moveTracks(tracks, to);
+		bs.moveTracks(tracks, to);
 		for (int i = 0; i < tracks.length; i++) {
 			moveTrack(tracks[i], to);
 		}
 	}
 
-	public int getTrackDuration() {
-		return mp.getDuration();
-	}
-
 	public void previousTrack() {
-		pq.decrementTrackIndex();
+		bs.decrementTrackIndex();
 		mp.start();
 	}
 
 	public void nextTrack() {
-		pq.incrementTrackIndex();
+		bs.incrementTrackIndex();
 		mp.start();
 	}
 
