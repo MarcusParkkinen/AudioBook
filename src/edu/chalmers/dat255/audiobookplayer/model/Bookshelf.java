@@ -31,7 +31,7 @@ public class Bookshelf {
 
 	public void addBook(Book b) {
 		books.add(b);
-		pcs.firePropertyChange(StringConstants.event.BOOK_ADDED, null, null);
+		pcs.firePropertyChange(StringConstants.event.BOOK_ADDED, null, b);
 	}
 
 	public void removeBook(int index) {

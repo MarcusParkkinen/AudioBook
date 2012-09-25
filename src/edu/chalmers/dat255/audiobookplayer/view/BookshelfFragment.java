@@ -1,5 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,9 +20,11 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
-import edu.chalmers.dat255.audiobookplayer.R;;
+import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.model.Book;
+import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
 
-public class BookshelfFragment extends Fragment {
+public class BookshelfFragment extends Fragment implements PropertyChangeListener {
 	private List<Entry<String, List<String>>> listData;
 	private ExpandableBookshelfAdapter adapter;
 	private BookshelfUIEventListener fragmentOwner;
@@ -29,6 +33,7 @@ public class BookshelfFragment extends Fragment {
 		public void bookSelected(int index);
 		public void bookLongPress(int index);
 		public void addButtonPressed();
+		public void setBookshelfListener(PropertyChangeListener listener);
 	}
 	
 	/**
@@ -64,11 +69,11 @@ public class BookshelfFragment extends Fragment {
 		adapter = new ExpandableBookshelfAdapter(view.getContext(), listData);
 		
 		//TEMP
-		listData.add(new BookshelfEntry<String, List<String>>("Booktitle 1", Arrays.asList("Track 1", "Track 2")));
+		/*listData.add(new BookshelfEntry<String, List<String>>("Booktitle 1", Arrays.asList("Track 1", "Track 2")));
 		listData.add(new BookshelfEntry<String, List<String>>("Booktitle 2", Arrays.asList("Track 1", "Track 2")));
 		listData.add(new BookshelfEntry<String, List<String>>("Booktitle 3", Arrays.asList("Track 1", "Track 2")));
 		listData.add(new BookshelfEntry<String, List<String>>("Booktitle 4", Arrays.asList("Track 1", "Track 2")));
-		
+		*/
 		
 		/**************************************************************/
 		/**/														/**/
@@ -117,8 +122,23 @@ public class BookshelfFragment extends Fragment {
 		});
 		
 		bookshelfList.setAdapter(adapter);
+
+		//sets PropertyChangeListener in Bookshelf via AudioBookActivity
+		fragmentOwner.setBookshelfListener(this);
 		
 		return view;
+	}
+	
+	
+	//never gets called at the moment
+	public void propertyChange(PropertyChangeEvent event) {
+		if(event.getPropertyName().equals(StringConstants.event.BOOK_ADDED)) {
+			//Add a new entry to 'values'
+			Book b = (Book)event.getNewValue();			
+			listData.add(new BookshelfEntry<String, List<String>>(b.getTitle(), b.getPaths()));
+			//Notify the adapter that the list has changed
+			adapter.notifyDataSetChanged();	
+		}
 	}
 	
 	

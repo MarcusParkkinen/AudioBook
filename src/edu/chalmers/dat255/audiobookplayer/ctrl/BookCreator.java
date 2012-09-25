@@ -40,7 +40,6 @@ public class BookCreator {
 	}
 	
 	public void createTestBook() {
-		System.out.println("ADDED NEW BOOK!");
 		createBook(new String[]{"path1", "path2", "path3"}, "TestBook");
 	}
 }

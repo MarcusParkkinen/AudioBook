@@ -26,7 +26,7 @@ public class Book {
 	private int trackIndex;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	private String name;
+	private String title;
 	@SuppressWarnings("unused")
 	private int duration;
 
@@ -47,9 +47,9 @@ public class Book {
 	 * @param c
 	 *            A collection containing Track instances.
 	 */
-	public Book(Collection<Track> c, String name) {
+	public Book(Collection<Track> c, String title) {
 		this();
-		this.name = name;
+		this.setTitle(title);
 		
 		for (Track t : c) {
 			if (t != null) {
@@ -275,6 +275,14 @@ public class Book {
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

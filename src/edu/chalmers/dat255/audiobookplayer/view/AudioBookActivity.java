@@ -1,5 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
+import java.beans.PropertyChangeListener;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -50,6 +52,7 @@ public class AudioBookActivity extends FragmentActivity implements BookshelfUIEv
 		
 		bc.setBookshelf(bookshelf);
 		
+		System.out.println(bookshelf);
 		
 		//Make sure that audiobook_layout is being used as layout for this activity and
 		//that we are not resuming from a previous state as this could result in overlapping
@@ -66,6 +69,8 @@ public class AudioBookActivity extends FragmentActivity implements BookshelfUIEv
 			ft.add(R.id.audiobook_layout, STARTING_FRAGMENT);
 			ft.commit();
 		}
+		
+		
 		
 	}
 
@@ -105,5 +110,9 @@ public class AudioBookActivity extends FragmentActivity implements BookshelfUIEv
 	public void nextTrack() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void setBookshelfListener(PropertyChangeListener listener) {
+		bookshelf.addPropertyChangeListener(listener);
 	}
 }
