@@ -10,82 +10,96 @@ import android.util.Log;
 /**
  * The bookshelf class contains a collection of books.
  * 
- * @author Marcus Parkkinen
- * @version 1.0
+ * @author Marcus Parkkinen, Aki Käkelä
+ * @version 0.4
  * 
  */
 
 public class Bookshelf {
-	private LinkedList<Book> books;
 	private static final String TAG = "Bookshelf.java";
+
+	private LinkedList<Book> books;
+	private int selectedBook;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-	
+
 	/**
-	 * Create an empty bookshelf.
+	 * Creates an empty bookshelf.
 	 */
 	public Bookshelf() {
 		books = new LinkedList<Book>();
 	}
-	
-	
+
+	public void addBook(Book b) {
+		books.add(b);
+		pcs.firePropertyChange(StringConstants.event.BOOK_ADDED, null, null);
+	}
+
+	public void removeBook(int index) {
+		books.remove(index);
+		pcs.firePropertyChange(StringConstants.event.BOOK_REMOVED, null, null);
+	}
+
+	public void moveBook(int from, int to) {
+		if (books.size() < from && books.size() < to) {
+			Book temp = books.remove(to);
+			books.add(from, temp);
+			pcs.firePropertyChange(StringConstants.event.BOOK_MOVED, null, null);
+		} else {
+			Log.e(TAG,
+					" attempting to move a track from/to illegal index. Skipping operation.");
+		}
+	}
+
+	public String getCurrentTrackPath() {
+		return books.get(selectedBook).getCurrentTrack().getTrackPath();
+	}
+
 	/**
-	 * Add listener class.
+	 * Moves the specified track to the specified index.
 	 * 
-	 * @param PropertyChangeListener reference to the listener object
+	 * @param from Start index.
+	 * @param to Where to put the track.
 	 */
-	public void addListener(PropertyChangeListener listener) {
+	public void moveTrack(int from, int to) {
+		books.get(selectedBook).moveTrack(from, to);
+	}
+
+	public void incrementTrackIndex() {
+		books.get(selectedBook).incrementTrackIndex();
+	}
+
+	public void decrementTrackIndex() {
+		books.get(selectedBook).decrementTrackIndex();
+	}
+
+	public int getTrackDuration() {
+		return books.get(selectedBook).getTrackDuration();
+	}
+
+	/**
+	 * The book that the player will play is set here.
+	 * 
+	 * @param index
+	 */
+	public void setSelectedBook(int index) {
+		this.selectedBook = index;
+	}
+
+	/**
+	 * 
+	 * 
+	 * @return The index of the book that is either playing or is to be played.
+	 */
+	public int getSelectedBookIndex() {
+		return selectedBook;
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
 	}
-	
-	/**
-	 * 
-	 * Add a new book to the bookshelf.
-	 * 
-	 * @param b new book to be added
-	 */
-	public void addNewBook(Book b) {
-		books.addLast(b);
-		pcs.firePropertyChange(StringConstants.event.book_added, null, b);
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
 	}
-	
-	/**
-	 * Change the location of a book in the bookshelf.
-	 * 
-	 * @param oldIndex old index of the book
-	 * @param newIndex new index of the book
-	 */
-	public void move(int oldIndex, int newIndex) {
-		if(oldIndex <= (books.size()-1) &&
-				newIndex <= (books.size()-1)) {
-			Book temp = books.remove();
-			books.add(newIndex, temp);
-			
-			pcs.firePropertyChange(StringConstants.event.book_moved, oldIndex, newIndex);
-		} else{
-			Log.e(TAG, " attempting to move book from/to an index out of bounds. Skipping operation.");
-		}
-	}
-	
-	/**
-	 * Remove a book from the bookshelf
-	 * 
-	 * @param index index of the book to be removed.
-	 */
-	public void remove(int index) {
-		try{
-			books.remove(index);
-			pcs.firePropertyChange(StringConstants.event.book_removed, index, null);
-		} catch(IndexOutOfBoundsException e) {
-			Log.e(TAG, " attempting to remove book from an index out of bounds. Skipping operation.");
-		}
-	}
-	
-	/**
-	 * Return the amount of books currently in the bookshelf
-	 * 
-	 * @return int number indicating amount
-	 */
-	public int size() {
-		return books.size();
-	}
+
 }

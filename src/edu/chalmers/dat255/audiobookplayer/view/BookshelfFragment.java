@@ -23,6 +23,31 @@ import edu.chalmers.dat255.audiobookplayer.R;;
 public class BookshelfFragment extends Fragment {
 	private List<Entry<String, List<String>>> listData;
 	private ExpandableBookshelfAdapter adapter;
+	private BookshelfUIEventListener fragmentOwner;
+	
+	public interface BookshelfUIEventListener{
+		public void bookSelected(int index);
+		public void bookLongPress(int index);
+		public void addButtonPressed();
+	}
+	
+	/**
+	 * Lifecycle method that makes sure that the container activity (AudioBookActivity)
+	 * has implemented the OnBookSelectedListener interface.
+	 * 
+	 * @throws ClassCastException
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		try{
+			fragmentOwner = (BookshelfUIEventListener) activity;
+		} catch(ClassCastException e) {
+			throw new ClassCastException(activity.toString() +
+					" must implement BookshelfUIEventListener");
+		}
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +85,7 @@ public class BookshelfFragment extends Fragment {
                 
                 //Make sure that the activity is not at the end of its lifecycle
                 if (activity != null) {
-                    Toast.makeText(activity, "you clicked on add!", Toast.LENGTH_SHORT).show(); //§
+                    fragmentOwner.addButtonPressed();
                 }
             }
         });
@@ -76,7 +101,8 @@ public class BookshelfFragment extends Fragment {
 		bookshelfList.setOnGroupClickListener(new OnGroupClickListener() {			
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
-				Toast.makeText(v.getContext().getApplicationContext(), listData.get(groupPosition).getKey() , Toast.LENGTH_SHORT).show();
+				//Toast.makeText(v.getContext().getApplicationContext(), listData.get(groupPosition).getKey() , Toast.LENGTH_SHORT).show();
+				fragmentOwner.bookSelected(groupPosition);
 				return false;
 			}
 		});

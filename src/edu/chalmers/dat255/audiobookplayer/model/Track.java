@@ -1,40 +1,77 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.security.InvalidParameterException;
 
+import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
+
+import android.util.Log;
+
 /**
- * Represents a single audio Track.
+ * Represents a single audio track. Includes its duration and path.
  * 
- * @author Marcus Parkkinen
- * @version 1.0
+ * @author Marcus Parkkinen, Aki Käkelä
+ * @version 0.4
  * 
  */
 
 public class Track {
+	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private String path;
-	private int length;
-	
+	private int elapsedTime; 
+	private int duration;
+
 	/**
-	 * Constructor for a track. Path to the data source as well as the length of the track
-	 * must be provided.
+	 * Constructor for a track. Path to the data source as well as the length of
+	 * the track must be provided.
 	 * 
-	 * @param path source (path) to the track
-	 * @param length playing time of the track in ms
+	 * @param path
+	 *            Path to the track
+	 * @param duration
+	 *            Playing time of the track in ms.
 	 */
-	public Track(String path, int length) {
-		if( path != null ) {
+	public Track(String path, int duration) {
+		if (path != null) {
 			this.path = path;
-			this.length = length;
-		} else{
+			this.duration = duration;
+		} else {
+			Log.e("Track", "Path to track is null in constructor");
 			throw new InvalidParameterException();
 		}
 	}
-	
-	protected String getPath() {
+
+	/**
+	 * @return The path to the track.
+	 */
+	protected String getTrackPath() {
 		return path;
 	}
-	
-	protected int getLength() {
-		return length;
+
+	/**
+	 * @return The playing time of the track.
+	 */
+	protected int getTrackDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param time
+	 */
+	public void setTime(int time) {
+		this.elapsedTime = time;
+		pcs.firePropertyChange(StringConstants.event.TRACK_TIME_CHANGED, null, null);
+	}
+
+	public int getTime() {
+		return this.elapsedTime;
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
 	}
 }
