@@ -73,6 +73,7 @@ public class BookshelfFragment extends Fragment implements PropertyChangeListene
 		if( listData == null && adapter == null ) {
 			listData = new ArrayList<Entry<String, List<String>>>();
 			adapter = new ExpandableBookshelfAdapter(view.getContext(), listData);
+			fragmentOwner.setBookshelfListener(this);
 		}
 		
 		/**************************************************************/
@@ -129,7 +130,7 @@ public class BookshelfFragment extends Fragment implements PropertyChangeListene
 	
 		//sets PropertyChangeListener in Bookshelf via parent class AudioBookActivity
 		if (getActivity() != null) {
-			fragmentOwner.setBookshelfListener(this);
+			
 		}
 		
 		return view;
