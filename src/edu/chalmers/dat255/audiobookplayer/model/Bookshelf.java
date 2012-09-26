@@ -8,14 +8,13 @@ import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.StringConstants;
 
 /**
- * @author Aki K‰kel‰
- * @version 0.3
+ * The bookshelf class contains a collection of books.
+ * 
+ * @author Marcus Parkkinen, Aki K√§kel√§
+ * @version 0.4
  * 
  */
-/**
- * @author Perkele
- * 
- */
+
 public class Bookshelf {
 	private static final String TAG = "Bookshelf.java";
 
@@ -32,7 +31,7 @@ public class Bookshelf {
 
 	public void addBook(Book b) {
 		books.add(b);
-		pcs.firePropertyChange(StringConstants.event.BOOK_ADDED, null, null);
+		pcs.firePropertyChange(StringConstants.event.BOOK_ADDED, null, b);
 	}
 
 	public void removeBook(int index) {

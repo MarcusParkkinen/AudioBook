@@ -7,16 +7,18 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import edu.chalmers.dat255.audiobookplayer.constants.StringConstants;
+import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
 
 import android.util.Log;
 
 /**
- * Represents a collection of Track objects that collectively form a book.
+ * Represents a collection of Track objects that 
+ * collectively form a book.
  * 
- * @author Marcus Parkkinen, Aki K‰kel‰
- * @version 0.3
+ * @author Marcus Parkkinen, Aki K√§kel√§
+ * @version 0.4
  */
+
 public class Book {
 	private static final String TAG = "Book.java";
 
@@ -24,7 +26,7 @@ public class Book {
 	private int trackIndex;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	// private String name;
+	private String title;
 	@SuppressWarnings("unused")
 	private int duration;
 
@@ -45,9 +47,10 @@ public class Book {
 	 * @param c
 	 *            A collection containing Track instances.
 	 */
-	public Book(Collection<Track> c) {
+	public Book(Collection<Track> c, String title) {
 		this();
-
+		this.setTitle(title);
+		
 		for (Track t : c) {
 			if (t != null) {
 				tracks.add(t);
@@ -272,6 +275,14 @@ public class Book {
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

@@ -1,7 +1,6 @@
-package edu.chalmers.dat255.audiobookplayer.util;
+package edu.chalmers.dat255.audiobookplayer.ctrl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
@@ -10,7 +9,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * A Singleton class that is responsible for the creation of books.
  * 
- * @author Aki K�kel�
+ * @author Aki Käkelä
  * @version 0.3
  * 
  */
@@ -33,10 +32,14 @@ public class BookCreator {
 	}
 
 	public void createBook(String[] paths /* , int duration */, String name) {
-		Collection<Track> list = new ArrayList<Track>();
+		ArrayList<Track> list = new ArrayList<Track>();
 		for (int i = 0; i < paths.length; i++) {
 			list.add(new Track(paths[i], 0));
 		}
 		bsh.addBook(new Book(list, name));
+	}
+	
+	public void createTestBook() {
+		createBook(new String[]{"path1", "path2", "path3"}, "TestBook");
 	}
 }

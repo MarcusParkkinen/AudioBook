@@ -10,7 +10,11 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
+<<<<<<< HEAD
  * @author Aki Käkelä
+=======
+ * @author Aki KÃ¤kelÃ¤
+>>>>>>> Fragments
  * @version 0.3
  */
 public class PlayerController {

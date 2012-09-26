@@ -4,17 +4,18 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.security.InvalidParameterException;
 
-import edu.chalmers.dat255.audiobookplayer.constants.StringConstants;
+import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
 
 import android.util.Log;
 
 /**
  * Represents a single audio track. Includes its duration and path.
  * 
- * @author Aki K‰kel‰, Marcus Parkkinen
- * @version 0.3
+ * @author Marcus Parkkinen, Aki K√§kel√§
+ * @version 0.4
  * 
  */
+
 public class Track {
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private String path;
@@ -61,15 +62,15 @@ public class Track {
 		this.elapsedTime = time;
 		pcs.firePropertyChange(StringConstants.event.TRACK_TIME_CHANGED, null, null);
 	}
-	
+
 	public int getTime() {
 		return this.elapsedTime;
 	}
-	
+
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
 	}
-	
+
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
 	}
