@@ -2,16 +2,20 @@ package edu.chalmers.dat255.audiobookplayer.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.media.MediaMetadataRetriever;
 
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;
 
 /**
- * A Singleton class that is responsible for the creation of books.
+ * Creates Book instances (filling them with metadata).
  * 
- * @author Aki Kï¿½kelï¿½
- * @version 0.3
+ * @author Aki Käkelä
+ * @version 0.4
  * 
  */
 public class BookCreator {
@@ -32,11 +36,27 @@ public class BookCreator {
 		this.bsh = bsh;
 	}
 
-	public void createBook(String[] paths /* , int duration */, String name) {
-		Collection<Track> list = new ArrayList<Track>();
+	public void createBook(String[] paths, String path) {
+		List<Track> trackList = new LinkedList<Track>();
 		for (int i = 0; i < paths.length; i++) {
-			list.add(new Track(paths[i], 0));
+			trackList.add(TrackCreator.createTrack(paths[i]));
 		}
-		bsh.addBook(new Book(list, name));
+		
+		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+		mmr.setDataSource(path);
+		String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+		bsh.addBook(new Book(trackList, title));
+	}
+
+	public void createTestBook() {
+		Collection<Track> list = new ArrayList<Track>();
+		String[] paths = { "/game.mp3", "/game2.mp3", "/game.mp3" };
+		int[] ms = { 37204, 131291, 37204 };
+		for (int i = 0; i < paths.length; i++) {
+			list.add(new Track(paths[i], ms[i]));
+		}
+		bsh.addBook(new Book(
+				list,
+				"TestBook12312333333333......- ------999999997ujihgyfguhujikolpkojiusduhfjisdofksdpofk"));
 	}
 }

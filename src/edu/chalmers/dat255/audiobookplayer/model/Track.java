@@ -17,9 +17,11 @@ import android.util.Log;
  */
 
 public class Track {
+	private static final String TAG = "Track.class";
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private String path;
-	private int elapsedTime; 
+	private int elapsedTime;
+
 	private int duration;
 
 	/**
@@ -51,20 +53,26 @@ public class Track {
 	/**
 	 * @return The playing time of the track.
 	 */
-	protected int getTrackDuration() {
+	protected int getDuration() {
 		return duration;
+	}
+	
+	public int getElapsedTime() {
+		return elapsedTime;
 	}
 
 	/**
 	 * @param time
+	 *            ms
 	 */
-	public void setTime(int time) {
-		this.elapsedTime = time;
-		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, null, null);
+	public void setElapsedTime(int elapsedTime) {
+//		Log.d(TAG, "Track time changing from " + elapsedTime + " to " + time);
+		this.elapsedTime = elapsedTime;
+		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, elapsedTime, this.elapsedTime);
 	}
-
-	public int getTime() {
-		return this.elapsedTime;
+	
+	public void addToElapsedTime(int time) {
+		setElapsedTime(elapsedTime + time);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -74,4 +82,5 @@ public class Track {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
 	}
+
 }

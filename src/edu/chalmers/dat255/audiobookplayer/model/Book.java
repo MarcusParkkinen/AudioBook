@@ -11,8 +11,8 @@ import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
 /**
- * Represents a collection of Track objects that 
- * collectively form a book.
+ * Represents a collection of Track objects that collectively form a book. Note
+ * that "index >= 0" is guaranteed by the GUI.
  * 
  * @author Marcus Parkkinen, Aki Käkelä
  * @version 0.4
@@ -21,12 +21,10 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 public class Book {
 	private static final String TAG = "Book.java";
 
-	private LinkedList<Track> tracks;
-	private int trackIndex;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
+	private LinkedList<Track> tracks;
+	private int trackIndex = 0;
 	private String title;
-	@SuppressWarnings("unused")
 	private int duration;
 
 	// private Bookmark bookmark;
@@ -49,10 +47,11 @@ public class Book {
 	public Book(Collection<Track> c, String title) {
 		this();
 		this.setTitle(title);
-		
+
 		for (Track t : c) {
 			if (t != null) {
 				tracks.add(t);
+				duration += t.getDuration();
 			}
 		}
 	}
@@ -69,8 +68,9 @@ public class Book {
 	public void removeTrack(int index) {
 		if (tracks.size() < index) {
 			tracks.remove(index);
-			pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null,
-					null);
+			if (index < trackIndex)
+				trackIndex--;
+			pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null, null);
 		}
 	}
 
@@ -83,10 +83,12 @@ public class Book {
 	 *            The Track instance to add.
 	 */
 	public void addTrack(int index, Track t) {
-		if (t != null) {
+		if (t != null && index <= tracks.size()) {
 			tracks.add(index, t);
-			pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
-					null);
+			// if we removed a track earlier in the list, compensate:
+			if (index < trackIndex)
+				trackIndex++;
+			pcs.firePropertyChange(Constants.event.TRACK_ADDED, null, null);
 		}
 	}
 
@@ -122,8 +124,7 @@ public class Book {
 		try {
 			Collections.swap(tracks, firstIndex, secondIndex);
 			// TODO: see catch; does not always swap?
-			pcs.firePropertyChange(Constants.event.TRACK_SWAPPED, null,
-					null);
+			pcs.firePropertyChange(Constants.event.TRACK_SWAPPED, null, null);
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG,
 					" attempting to move a track from/to illegal index. Skipping operation.");
@@ -141,8 +142,7 @@ public class Book {
 		if (tracks.size() < from && tracks.size() < to) {
 			Track temp = tracks.remove(from);
 			tracks.add(to, temp);
-			pcs.firePropertyChange(Constants.event.TRACK_MOVED, null,
-					null);
+			pcs.firePropertyChange(Constants.event.TRACK_MOVED, null, null);
 		} else {
 			Log.e(TAG,
 					" attempting to move a track from/to illegal index. Skipping operation.");
@@ -176,16 +176,16 @@ public class Book {
 	 * @param index
 	 * @return The track at index <i>index</i> of the book.
 	 */
-	public Track getTrackAt(int index) {
-		return tracks.get(index);
-	}
+	// public Track getTrackAt(int index) {
+	// return tracks.get(index);
+	// }
 
 	/**
 	 * @return The list of tracks.
 	 */
-	public List<Track> getTracks() {
-		return tracks;
-	}
+	// public List<Track> getTracks() {
+	// return tracks;
+	// }
 
 	// ----
 
@@ -209,9 +209,18 @@ public class Book {
 	 * @param index
 	 */
 	public void setCurrentTrackIndex(int index) {
-		this.trackIndex = index % this.tracks.size();
-		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
-				null);
+		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGING, null, null); // make
+		Log.d(TAG, "old index: " + trackIndex);
+		trackIndex = index;
+		if (trackIndex < 0)
+			trackIndex = this.tracks.size() - 1;
+		if (trackIndex > tracks.size()-1)
+			trackIndex = 0;
+		// Log.d(TAG, "Changing trackIndex from " + trackIndex + " to " +
+		// index);
+//		this.trackIndex = index % this.tracks.size();
+		Log.d(TAG, "new index: " + trackIndex);
+		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null, null);
 	}
 
 	/**
@@ -258,14 +267,19 @@ public class Book {
 	 */
 	public void updateDuration() {
 		for (Track t : tracks) {
-			duration += t.getTrackDuration();
+			setDuration(getDuration() + t.getDuration());
 		}
-		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED,
-				null, null);
+		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED, null,
+				null);
 	}
 
+	/**
+	 * The track duration in milliseconds.
+	 * 
+	 * @return
+	 */
 	public int getTrackDuration() {
-		return tracks.get(trackIndex).getTrackDuration();
+		return tracks.get(trackIndex).getDuration();
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -282,6 +296,32 @@ public class Book {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public void addToElapsedTime(int time) {
+		this.tracks.get(trackIndex).addToElapsedTime(time);
+	}
+	
+	/**
+	 * @param time
+	 *            ms
+	 */
+	public void setElapsedTime(int elapsedTime) {
+//		Log.d(TAG, "Track time changing from " + elapsedTime + " to " + time);
+		this.tracks.get(trackIndex).setElapsedTime(elapsedTime);
+//		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, getElapsedTime(), elapsedTime);
+	}
+	
+	public int getElapsedTime() {
+		return this.tracks.get(trackIndex).getElapsedTime();
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}
 
 }

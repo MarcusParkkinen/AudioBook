@@ -44,16 +44,17 @@
         android:text="@string/prevTrack" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/trackBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/playPause"
         android:layout_alignParentLeft="true" />
-    
+
     <SeekBar
-        android:id="@+id/volumeBar"
+        android:id="@+id/bookBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

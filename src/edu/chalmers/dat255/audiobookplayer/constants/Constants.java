@@ -14,12 +14,6 @@ public final class Constants {
 		public static final String BOOK_MOVED = "!bookMoved";
 		public static final String BOOK_REMOVED = "!bookRemoved";
 		public static final String BOOK_SELECTED = "!bookSelected";
-		
-		// PlayerController:
-		// BOOK_SELECTED
-		
-		// PlayerFragment:
-		// BOOK_SELECTED, BOOK_DURATION_CHANGED, TRACK_TIME_CHANGED (BOOKMARK_SET, TAG_SET)
 
 		// Book.class
 		public static final String TRACK_REMOVED = "!trackRemoved";
@@ -27,8 +21,9 @@ public final class Constants {
 		public static final String TRACK_SWAPPED = "!trackSwapped";
 		public static final String TRACK_MOVED = "!trackMoved";
 		public static final String BOOKMARK_SET = "!bookmarkSet";
-//		public static final String TAG_SET = "!tagSet";
+		public static final String TAG_SET = "!tagSet";
 		public static final String TRACK_INDEX_CHANGED = "!trackIndexChanged";
+		public static final String TRACK_INDEX_CHANGING = "!trackIndexChanging";
 		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
 
 		// Track.class

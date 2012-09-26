@@ -1,10 +1,5 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import edu.chalmers.dat255.audiobookplayer.R;
-import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,19 +13,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import edu.chalmers.dat255.audiobookplayer.R;
 
 /**
  * A graphical UI fragment to PlayerController.
  * 
- * @author Aki K√§kel√§, Marcus Parkkinen
- * @version 0.4
+ * @author Aki K‰kel‰, Marcus Parkkinen
+ * @version 0.5
  */
 
-public class PlayerFragment extends Fragment implements PropertyChangeListener {
+public class PlayerFragment extends Fragment {
+	private static final String TAG = "PlayerFragment.class";
 	private PlayerUIEventListener fragmentOwner;
-	private PlayerAdapter adapter;
+	private SeekBar trackBar;
+	private SeekBar bookBar;
+	// Labels, update methods
 
 	public interface PlayerUIEventListener {
+		// Required:
 		public void previousTrack();
 
 		public void playPause();
@@ -41,7 +41,11 @@ public class PlayerFragment extends Fragment implements PropertyChangeListener {
 
 		public void seekRight();
 
+		// ?
 		public void seekToPercentage(double seekPercentage);
+
+		public int getTrackTime(); // ???
+
 	}
 
 	@Override
@@ -61,13 +65,6 @@ public class PlayerFragment extends Fragment implements PropertyChangeListener {
 			Bundle savedInstanceState) {
 		View view = inflater
 				.inflate(R.layout.player_fragment, container, false);
-		
-		if (adapter == null /* && */) {
-			adapter = new PlayerAdapter(view.getContext());
-		}
-
-		// TODO: call to start playing audio
-		// pc.start();
 
 		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
 		prevTrack.setOnClickListener(new OnClickListener() {
@@ -75,29 +72,36 @@ public class PlayerFragment extends Fragment implements PropertyChangeListener {
 				fragmentOwner.previousTrack();
 			}
 		});
-		prevTrack.setEnabled(false);
 
 		Button seekLeft = (Button) view.findViewById(R.id.seekLeft);
 		seekLeft.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN) {
-					//fragmentOwner.seekLeft();
-					Log.i("Seek", "Seeking LEFT");
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					Log.i("Seek", "Stopped seeking LEFT");
+				int ev = event.getAction();
+				if (ev == MotionEvent.ACTION_DOWN) {
+					// Log.i("Seek", "Seeking LEFT");
+					Log.i("Seek", "ACTION_DOWN");
+				} else if (ev == MotionEvent.ACTION_UP) {
+					// Log.i("Seek", "Stopped seeking LEFT");
+					Log.i("Seek", "ACTION_UP");
+				} else if (ev == MotionEvent.ACTION_CANCEL) {
+					// Log.i("Seek", "Stopped seeking LEFT (Cancelled)");
+					Log.i("Seek", "ACTION_CANCEL");
 				}
 				return false;
 			}
 		});
 		
+
 		Button seekRight = (Button) view.findViewById(R.id.seekRight);
 		seekRight.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN) {
-					//fragmentOwner.seekRight();
+				int ev = event.getAction();
+				if (ev == MotionEvent.ACTION_DOWN) {
 					Log.i("Seek", "Seeking RIGHT");
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				} else if (ev == MotionEvent.ACTION_UP) {
 					Log.i("Seek", "Stopped seeking RIGHT");
+				} else if (ev == MotionEvent.ACTION_CANCEL) {
+					Log.i("Seek", "Stopped seeking RIGHT (Cancelled)");
 				}
 				return false;
 			}
@@ -116,49 +120,90 @@ public class PlayerFragment extends Fragment implements PropertyChangeListener {
 				fragmentOwner.nextTrack();
 			}
 		});
+		
+		
+		bookBar = (SeekBar) view.findViewById(R.id.bookBar);
+		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			static final String TAG = "bookBar";
+			
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					// Log.d(TAG, "User used SeekBar");
+				} else {
+					// Log.d(TAG, "Code used SeekBar");
+				}
+			}
+			
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				Log.d(TAG, "started tracking");
+			}
 
-		SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar);
-		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			static final String TAG = "seekBar";
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				Log.d(TAG, "stopped tracking");
+			}
+			
+		});
+		
+
+		trackBar = (SeekBar) view.findViewById(R.id.trackBar);
+		Log.d(TAG, "onCreateView5");
+		trackBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			static final String TAG = "trackBar";
 
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
+				Log.d(TAG, "onCreateView6");
+				if (fromUser) {
+					// seekTo();
+					// Log.d(TAG, "User used SeekBar");
+					double seekPercentage = (double) progress
+							* (1.0 / seekBar.getMax());
+					int displayPercentage = (100 * progress)
+							/ (seekBar.getMax());
 
-				double seekPercentage = (double) progress
-						* (1.0 / seekBar.getMax());
-				int displayPercentage = (100 * progress) / (seekBar.getMax());
+					Log.d(TAG,
+							"progress is " + progress + " out of "
+									+ seekBar.getMax() + "("
+									+ displayPercentage + "%)");
 
-				Log.d(TAG,
-						"progress is " + progress + " out of "
-								+ seekBar.getMax() + "(" + displayPercentage
-								+ "%)");
-
-				fragmentOwner.seekToPercentage(seekPercentage);
+					Log.d(TAG, "onCreateView7");
+					fragmentOwner.seekToPercentage(seekPercentage);
+				} else {
+					// do not seekTo();
+					// Log.d(TAG, "Code used SeekBar");
+				}
 			}
-
+			
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				Log.d(TAG, "started tracking");
-
-				// InputMethodManager imm = (InputMethodManager)
-				// getSystemService(Context.INPUT_METHOD_SERVICE);
-				// imm.hideSoftInputFromWindow(mSeekBar.getWindowToken(), 0);
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				Log.d(TAG, "stopped tracking");
 			}
 		});
-
+		
 		return view;
 	}
 
-	public void propertyChange(PropertyChangeEvent event) {
-		String eventName = event.getPropertyName();
-		if (eventName.equals(Constants.event.BOOK_SELECTED)) {
-			;
-			// What to get:
-			// BOOK_SELECTED
-			// TRACK_INDEX_CHANGED (change audio file)
-		}
+	public void updateTrackProgress(int newTime) {
+		// seekBar.setProgress((int)(Math.random()*100));
+		int newProgress = (int) ((trackBar.getMax() * newTime) / fragmentOwner
+				.getTrackTime());
+		// Log.d("PlayerFragment.class", "timeProgress: " + timeProgress);
+		// Log.d("PlayerFragment.class", "newProgress: " + newProgress);
+		trackBar.setProgress(newProgress);
 	}
+
+	public void updateBookDuration() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateTrackDuration(int newTime) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

@@ -11,7 +11,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * The bookshelf class contains a collection of books.
  * 
  * @author Marcus Parkkinen, Aki Käkelä
- * @version 0.4
+ * @version 0.5
  * 
  */
 
@@ -19,7 +19,7 @@ public class Bookshelf {
 	private static final String TAG = "Bookshelf.java";
 
 	private LinkedList<Book> books;
-	private int selectedBook;
+	private int selectedBookIndex = 0;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	/**
@@ -36,10 +36,14 @@ public class Bookshelf {
 
 	public void removeBook(int index) {
 		books.remove(index);
+		if (selectedBookIndex+1 > books.size())
+			selectedBookIndex--;
 		pcs.firePropertyChange(Constants.event.BOOK_REMOVED, null, null);
 	}
 
 	public void moveBook(int from, int to) {
+		if (selectedBookIndex == from)
+			selectedBookIndex = to;
 		if (books.size() < from && books.size() < to) {
 			Book temp = books.remove(to);
 			books.add(from, temp);
@@ -49,11 +53,8 @@ public class Bookshelf {
 					" attempting to move a track from/to illegal index. Skipping operation.");
 		}
 	}
-
-	public String getCurrentTrackPath() {
-		return books.get(selectedBook).getCurrentTrack().getTrackPath();
-	}
-
+	
+	/*    Book methods    */
 	/**
 	 * Moves the specified track to the specified index.
 	 * 
@@ -61,19 +62,23 @@ public class Bookshelf {
 	 * @param to Where to put the track.
 	 */
 	public void moveTrack(int from, int to) {
-		books.get(selectedBook).moveTrack(from, to);
+		books.get(selectedBookIndex).moveTrack(from, to);
 	}
-
+	
 	public void incrementTrackIndex() {
-		books.get(selectedBook).incrementTrackIndex();
+		books.get(selectedBookIndex).incrementTrackIndex();
 	}
 
 	public void decrementTrackIndex() {
-		books.get(selectedBook).decrementTrackIndex();
+		books.get(selectedBookIndex).decrementTrackIndex();
 	}
 
+	/**
+	 * The track duration in milliseconds.
+	 * @return
+	 */
 	public int getTrackDuration() {
-		return books.get(selectedBook).getTrackDuration();
+		return books.get(selectedBookIndex).getTrackDuration();
 	}
 
 	/**
@@ -82,25 +87,58 @@ public class Bookshelf {
 	 * @param index
 	 */
 	public void setSelectedBook(int index) {
-		this.selectedBook = index;
-		pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null, null);
+		this.selectedBookIndex = index;
+		Log.i(TAG, "Selected a book");
+		pcs.firePropertyChange(Constants.event.BOOK_SELECTED, index, null);
 	}
 
+//	/**
+//	 * 
+//	 * 
+//	 * @return The index of the book that is either playing or is to be played.
+//	 */
+//	public int getSelectedBookIndex() {
+//		return selectedBookIndex;
+//	}
+	
+	/*    Track methods    */
+	public String getCurrentTrackPath() {
+		return books.get(selectedBookIndex).getCurrentTrack().getTrackPath();
+	}
+
+	public void addToElapsedTime(int time) {
+		setElapsedTime(getElapsedTime() + time);
+//		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, this.books.get(selectedBookIndex).getElapsedTime(), time);
+	}
+	
 	/**
-	 * 
-	 * 
-	 * @return The index of the book that is either playing or is to be played.
+	 * @param time
+	 *            ms
 	 */
-	public int getSelectedBookIndex() {
-		return selectedBook;
+	public void setElapsedTime(int elapsedTime) {
+//		Log.d(TAG, "Track time changing from " + elapsedTime + " to " + time);
+		this.books.get(selectedBookIndex).setElapsedTime(elapsedTime);
+//		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, getElapsedTime(), elapsedTime);
+	}
+	
+	public int getElapsedTime() {
+		return this.books.get(selectedBookIndex).getElapsedTime();
 	}
 
+	public int getCurrentTrackIndex() {
+		return this.books.get(selectedBookIndex).getCurrentTrackIndex();
+	}
+	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
+	}
+	
+	public Book getCurrentBook() {
+		return this.books.get(selectedBookIndex);
 	}
 
 }

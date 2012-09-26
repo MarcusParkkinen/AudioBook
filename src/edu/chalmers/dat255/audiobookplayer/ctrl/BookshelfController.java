@@ -29,14 +29,14 @@ public class BookshelfController {
 		shelf.setSelectedBook(index);
 	}
 	
-	/**
-	 * Returns the index of the currently selected book.
-	 * 
-	 * @return index
-	 */
-	public int getSelectedBookIndex() {
-		return shelf.getSelectedBookIndex();
-	}
+//	/**
+//	 * Returns the index of the currently selected book.
+//	 * 
+//	 * @return index
+//	 */
+//	public int getSelectedBookIndex() {
+//		return shelf.getSelectedBookIndex();
+//	}
 
 	// sort, swap, move, edit book
 
