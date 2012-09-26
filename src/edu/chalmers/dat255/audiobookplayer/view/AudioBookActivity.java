@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.ctrl.BookCreator;
@@ -18,18 +19,17 @@ import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventList
 /**
  * Main activity of the application. This class should handle all fragment functionality.
  * 
- * @author epinefrema
- * @version 1.0
+ * @author Marcus Parkkinen
+ * @version 0.2
  */
 public class AudioBookActivity extends FragmentActivity implements BookshelfUIEventListener, PlayerUIEventListener {
-	private final Fragment STARTING_FRAGMENT = new BookshelfFragment();
 	
 	//Temporary solution: a new Bookshelf is created every time
 	private Bookshelf bookshelf;
 	
 	//Fragment classes
-	private BookshelfFragment bookshelfFragment;
-	private PlayerFragment playerFragment;
+	private final BookshelfFragment bookshelfFragment = new BookshelfFragment();
+	private final PlayerFragment playerFragment = new PlayerFragment();
 	
 	//Controller classes
 	private BookshelfController bsc;
@@ -62,31 +62,32 @@ public class AudioBookActivity extends FragmentActivity implements BookshelfUIEv
 			
 			//In case arguments have been sent through an Intent, forward these to the
 			//fragments as well
-			STARTING_FRAGMENT.setArguments(getIntent().getExtras());
+			bookshelfFragment.setArguments(getIntent().getExtras());
 			
 			//Add the STARTING_FRAGMENT to this layout
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.add(R.id.audiobook_layout, STARTING_FRAGMENT);
+			ft.add(R.id.audiobook_layout, bookshelfFragment);
 			ft.commit();
 		}
-		
-		
-		
 	}
 
 	public void bookSelected(int index) {
 		if(findViewById(R.id.audiobook_layout) != null) {
-			if(playerFragment == null) {
-				playerFragment = new PlayerFragment();
-			}
-			
 			playerFragment.setArguments(getIntent().getExtras());
 			
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.replace(R.id.audiobook_layout, playerFragment);
-			ft.addToBackStack(null);
-			ft.commit();
+			switchFragment(bookshelfFragment, playerFragment);
 		}		
+	}
+	
+	private void switchFragment(Fragment oldFragment, Fragment newFragment) {
+		FragmentManager fm = getSupportFragmentManager();
+		fm.saveFragmentInstanceState(oldFragment);
+		
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.replace(R.id.audiobook_layout, playerFragment);
+		ft.addToBackStack(null);
+		ft.commit();
 	}
 
 	public void bookLongPress(int index) {

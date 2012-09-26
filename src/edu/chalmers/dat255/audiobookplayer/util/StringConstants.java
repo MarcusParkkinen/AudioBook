@@ -21,4 +21,8 @@ public final class StringConstants {
 		// Track.class
 		public static final String TRACK_TIME_CHANGED = "!timeChanged";
 	}
+	
+	public static final class state {
+		public static final String FRAGMENT_ALREADY_CREATED = "§alreadyCreated";
+	}
 }

@@ -11,6 +11,13 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+/**
+ * TBA
+ * 
+ * @author Fredrik Åhs
+ * @version 0.1
+ */
+
 public class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
