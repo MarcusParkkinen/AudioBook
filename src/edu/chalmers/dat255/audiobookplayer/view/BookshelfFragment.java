@@ -8,19 +8,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
-import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
 
 /**
  * Graphical representation of the bookshelf.
@@ -142,13 +142,15 @@ public class BookshelfFragment extends Fragment implements PropertyChangeListene
 	 * @param event event object describing the change
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
-		if(event.getPropertyName().equals(StringConstants.event.BOOK_ADDED)) {
+		String eventName = event.getPropertyName();
+		if(eventName.equals(Constants.event.BOOK_ADDED)) {
 			//Add a new entry to 'values'
 			Book b = (Book)event.getNewValue();			
 			listData.add(new BookshelfEntry<String, List<String>>(b.getTitle(), b.getPaths()));
 			//Notify the adapter that the list has changed
 			adapter.notifyDataSetChanged();	
 		}
+		// else if.. for all bookshelf, book, track events (see Constants.event.*)
 	}
 	
 	/**

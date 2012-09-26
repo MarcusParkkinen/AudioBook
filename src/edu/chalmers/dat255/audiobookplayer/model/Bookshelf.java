@@ -5,7 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
 
 import android.util.Log;
-import edu.chalmers.dat255.audiobookplayer.constants.StringConstants;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
 /**
  * The bookshelf class contains a collection of books.
@@ -31,19 +31,19 @@ public class Bookshelf {
 
 	public void addBook(Book b) {
 		books.add(b);
-		pcs.firePropertyChange(StringConstants.event.BOOK_ADDED, null, b);
+		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, b);
 	}
 
 	public void removeBook(int index) {
 		books.remove(index);
-		pcs.firePropertyChange(StringConstants.event.BOOK_REMOVED, null, null);
+		pcs.firePropertyChange(Constants.event.BOOK_REMOVED, null, null);
 	}
 
 	public void moveBook(int from, int to) {
 		if (books.size() < from && books.size() < to) {
 			Book temp = books.remove(to);
 			books.add(from, temp);
-			pcs.firePropertyChange(StringConstants.event.BOOK_MOVED, null, null);
+			pcs.firePropertyChange(Constants.event.BOOK_MOVED, null, null);
 		} else {
 			Log.e(TAG,
 					" attempting to move a track from/to illegal index. Skipping operation.");
@@ -83,6 +83,7 @@ public class Bookshelf {
 	 */
 	public void setSelectedBook(int index) {
 		this.selectedBook = index;
+		pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null, null);
 	}
 
 	/**

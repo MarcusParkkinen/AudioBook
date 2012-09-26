@@ -7,9 +7,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
-
 import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
 /**
  * Represents a collection of Track objects that 
@@ -70,7 +69,7 @@ public class Book {
 	public void removeTrack(int index) {
 		if (tracks.size() < index) {
 			tracks.remove(index);
-			pcs.firePropertyChange(StringConstants.event.TRACK_REMOVED, null,
+			pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null,
 					null);
 		}
 	}
@@ -86,7 +85,7 @@ public class Book {
 	public void addTrack(int index, Track t) {
 		if (t != null) {
 			tracks.add(index, t);
-			pcs.firePropertyChange(StringConstants.event.TRACK_ADDED, null,
+			pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
 					null);
 		}
 	}
@@ -123,7 +122,7 @@ public class Book {
 		try {
 			Collections.swap(tracks, firstIndex, secondIndex);
 			// TODO: see catch; does not always swap?
-			pcs.firePropertyChange(StringConstants.event.TRACK_SWAPPED, null,
+			pcs.firePropertyChange(Constants.event.TRACK_SWAPPED, null,
 					null);
 		} catch (IndexOutOfBoundsException e) {
 			Log.e(TAG,
@@ -142,7 +141,7 @@ public class Book {
 		if (tracks.size() < from && tracks.size() < to) {
 			Track temp = tracks.remove(from);
 			tracks.add(to, temp);
-			pcs.firePropertyChange(StringConstants.event.TRACK_MOVED, null,
+			pcs.firePropertyChange(Constants.event.TRACK_MOVED, null,
 					null);
 		} else {
 			Log.e(TAG,
@@ -200,7 +199,7 @@ public class Book {
 	 */
 	public void setBookmark(int trackIndex, int time) {
 		// this.bookmark = new Bookmark(trackIndex, time);
-		pcs.firePropertyChange(StringConstants.event.BOOKMARK_SET, null, null);
+		pcs.firePropertyChange(Constants.event.BOOKMARK_SET, null, null);
 	}
 
 	/**
@@ -211,7 +210,7 @@ public class Book {
 	 */
 	public void setCurrentTrackIndex(int index) {
 		this.trackIndex = index % this.tracks.size();
-		pcs.firePropertyChange(StringConstants.event.TRACK_INDEX_CHANGED, null,
+		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
 				null);
 	}
 
@@ -261,7 +260,7 @@ public class Book {
 		for (Track t : tracks) {
 			duration += t.getTrackDuration();
 		}
-		pcs.firePropertyChange(StringConstants.event.BOOK_DURATION_CHANGED,
+		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED,
 				null, null);
 	}
 

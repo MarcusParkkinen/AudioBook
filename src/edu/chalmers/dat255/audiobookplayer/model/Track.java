@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.security.InvalidParameterException;
 
-import edu.chalmers.dat255.audiobookplayer.util.StringConstants;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
 import android.util.Log;
 
@@ -60,7 +60,7 @@ public class Track {
 	 */
 	public void setTime(int time) {
 		this.elapsedTime = time;
-		pcs.firePropertyChange(StringConstants.event.TRACK_TIME_CHANGED, null, null);
+		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, null, null);
 	}
 
 	public int getTime() {

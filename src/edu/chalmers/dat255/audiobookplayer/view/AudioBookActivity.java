@@ -99,20 +99,29 @@ public class AudioBookActivity extends FragmentActivity implements BookshelfUIEv
 	}
 
 	public void previousTrack() {
-		// TODO Auto-generated method stub
-		
+		pc.previousTrack();
 	}
 
 	public void playPause() {
-		// TODO Auto-generated method stub
-		
+		pc.playPause();
 	}
 
 	public void nextTrack() {
-		// TODO Auto-generated method stub
-		
+		pc.nextTrack();
 	}
-
+	
+	public void seekLeft() {
+		pc.seekLeft();
+	}
+	
+	public void seekRight() {
+		pc.seekRight();
+	}
+	
+	public void seekToPercentage(double percentage) {
+		pc.seekToPercentage(percentage);
+	}
+	
 	public void setBookshelfListener(PropertyChangeListener listener) {
 		bookshelf.addPropertyChangeListener(listener);
 	}

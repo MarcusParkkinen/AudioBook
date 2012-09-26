@@ -10,14 +10,11 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
-<<<<<<< HEAD
  * @author Aki Käkelä
-=======
- * @author Aki KÃ¤kelÃ¤
->>>>>>> Fragments
  * @version 0.3
  */
 public class PlayerController {
+	public static final String TAG = "PlayerController.class";
 	private MediaPlayer mp;
 	private Bookshelf bs;
 
@@ -26,7 +23,7 @@ public class PlayerController {
 	 * Queue.
 	 */
 	public PlayerController(Bookshelf bs) {
-		mp = new MediaPlayer();
+		this.mp = new MediaPlayer();
 		this.bs = bs;
 	}
 
@@ -41,89 +38,81 @@ public class PlayerController {
 	}
 
 	/**
-	 * Sets the volume to the given values.
-	 * 
-	 * @param leftVolume
-	 *            left channel balance
-	 * @param rightVolume
-	 *            right channel balance
-	 */
-	public void setVolume(float leftVolume, float rightVolume) {
-		mp.setVolume(leftVolume, rightVolume);
-	}
-
-	/**
-	 * Sets the volum to the given value.
-	 * 
-	 * @param volume
-	 */
-	public void setVolume(float volume) {
-		this.setVolume(volume, volume);
-	}
-
-	/**
-	 * Starts the audio player. The PlayerQueue must have been initialized and
-	 * can not be empty.
+	 * Starts the audio player. The Bookshelf must have been initialized and the
+	 * path at the selected track index can not be null.
 	 */
 	public void start() {
 		// we have started playing a file, so start thread that updates time on
 		// Track instance once every second, and
 		if (bs.getCurrentTrackPath() != null) {
+			mp.stop();
+			mp.reset();
+			// Initialize again?
 			try {
 				mp.setDataSource(bs.getCurrentTrackPath());
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				Log.e(TAG, "Illegal argument");
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				Log.e(TAG, "Security exception");
 			} catch (IllegalStateException e) {
-				e.printStackTrace();
+				Log.e(TAG, "Illegal state");
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(TAG, "IO Exception");
 			}
 			try {
 				mp.prepare();
 			} catch (IllegalStateException e) {
-				e.printStackTrace();
+				Log.e(TAG, "Illegal state, should not be playing.");
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(TAG, "IO Exception");
 			}
 			mp.setOnCompletionListener(new OnCompletionListener() {
 				public void onCompletion(MediaPlayer mp) {
-					Log.i("onComplete", "Track finished");
-					mp.stop();
-					mp.reset();
+					Log.i(TAG, "onComplete: Track finished");
 					bs.incrementTrackIndex();
 					start(); // does setDataSource, prepare, adds listener and
 								// starts MP
 				}
 			});
 			mp.start();
-			System.out.println("-- PLAYING: " + bs.getSelectedBookIndex()
-					+ ". " + bs.getCurrentTrackPath() + " @" + mp.getDuration()
-					+ "ms");
+			Log.i(TAG,
+					"Playing: " + bs.getSelectedBookIndex() + 1 + ". "
+							+ bs.getCurrentTrackPath() + " @"
+							+ mp.getDuration() + "ms");
 		} else {
-			Log.i("start", "tried to start without choosing data source.");
+			Log.i(TAG, "Start: tried to start without choosing data source.");
 		}
 	}
 
 	/**
-	 * Seeks to the right
+	 * Seeks to the right (10% of the track duration).
 	 * 
 	 * @param time
 	 *            ms
 	 */
-	public void seekRight(int time) {
-		seekTo(mp.getCurrentPosition() + time);
+	public void seekRight() {
+		seekToPercentage(mp.getCurrentPosition() + getTrackDuration() / 10);
 	}
 
 	/**
-	 * Seeks to the left.
+	 * Seeks to the left (10% of the track duration).
 	 * 
 	 * @param time
 	 *            ms
 	 */
-	public void seekLeft(int time) {
-		seekTo(mp.getCurrentPosition() - time);
+	public void seekLeft() {
+		seekToPercentage(mp.getCurrentPosition() - getTrackDuration() / 10);
+	}
+
+	/**
+	 * Seeks to the given progress percentage of the track.
+	 * 
+	 * @param percentage
+	 *            e.g. input value "50" will seek halfway (50%) through the
+	 *            track.
+	 */
+	public void seekToPercentage(double percentage) {
+		seekTo((int) (getTrackDuration() * percentage));
 	}
 
 	/**
@@ -139,8 +128,10 @@ public class PlayerController {
 	/**
 	 * Moves the specified track to the specified index.
 	 * 
-	 * @param from Start index.
-	 * @param to Where to put the track.
+	 * @param from
+	 *            Start index.
+	 * @param to
+	 *            Where to put the track.
 	 */
 	public void moveTrack(int from, int to) {
 		bs.moveTrack(from, to);
@@ -149,8 +140,10 @@ public class PlayerController {
 	/**
 	 * Moves the specified tracks to the specified index.
 	 * 
-	 * @param from Start index.
-	 * @param to Where to put the tracks.
+	 * @param from
+	 *            Start index.
+	 * @param to
+	 *            Where to put the tracks.
 	 */
 	public void moveTracks(int[] tracks, int to) {
 		for (int i = 0; i < tracks.length; i++) {
