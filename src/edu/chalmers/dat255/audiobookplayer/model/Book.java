@@ -53,15 +53,37 @@ public class Book implements ITrackUpdates, IBookUpdates {
 		}
 	}
 
-	public Book clone() {
-		Book copy = new Book();
-		copy.setTitle(this.title);
-		for (Track t : tracks) {
-			copy.addTrackTo(copy.tracks.size(), t.clone());
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param other
+	 */
+	public Book(Book other) {
+		this();
+		this.duration = other.duration;
+		this.title = other.title;
+		this.trackIndex = other.trackIndex;
+		for (Track t: tracks) {
+			this.tracks.add(new Track(t));
 		}
-		copy.setDuration(this.duration);
-		return copy;
 	}
+	
+	public Object clone() throws CloneNotSupportedException {
+		Book clone = (Book) super.clone();
+		// Immutable values
+		clone.duration = this.duration;
+		clone.title = this.title;
+		clone.trackIndex = this.trackIndex;
+		
+		// Shallow copy of the object of type Track
+		clone.tracks = (LinkedList<Track>) clone.tracks;
+		clone.tracks.clear();
+		for (Track t : tracks) {
+			Track copyTrack = (Track)t.clone();
+			clone.addTrackTo(clone.tracks.size(), copyTrack);
+		}
+	    return clone;
+	  }
 
 	/* IBookUpdates */
 	public void removeTrack(int index) {

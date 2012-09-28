@@ -14,7 +14,6 @@ import android.util.Log;
 public class Track implements ITrackUpdates, Cloneable {
 	private String path;
 	private int elapsedTime;
-
 	private int duration;
 
 	/**
@@ -35,13 +34,27 @@ public class Track implements ITrackUpdates, Cloneable {
 			throw new InvalidParameterException();
 		}
 	}
-	
-	public Track clone() {
-		Track copy = new Track(this.path, this.duration);
-		copy.setElapsedTime(this.elapsedTime);
-		return copy;
+
+	public Object clone() throws CloneNotSupportedException {
+		Track clone = (Track) super.clone();
+		// Immutable values
+		clone.path = this.path;
+		clone.duration = this.duration;
+		clone.elapsedTime = this.elapsedTime;
+		return clone;
 	}
-	
+
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param other
+	 */
+	public Track(Track other) {
+		this.duration = other.duration;
+		this.elapsedTime = other.elapsedTime;
+		this.path = other.path;
+	}
+
 	/**
 	 * @return The path to the track.
 	 */
@@ -55,18 +68,19 @@ public class Track implements ITrackUpdates, Cloneable {
 	protected int getDuration() {
 		return duration;
 	}
-	
+
 	public int getElapsedTime() {
 		return elapsedTime;
 	}
-	
+
 	public void addToElapsedTime(int time) {
 		setElapsedTime(elapsedTime + time);
 	}
 
 	public void setElapsedTime(int elapsedTime) {
-//		Log.d(TAG, "Track time changing from " + elapsedTime + " to " + time);
+		// Log.d(TAG, "Track time changing from " + elapsedTime + " to " +
+		// time);
 		this.elapsedTime = elapsedTime;
 	}
-	
+
 }

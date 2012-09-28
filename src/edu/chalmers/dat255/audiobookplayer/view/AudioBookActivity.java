@@ -150,14 +150,16 @@ public class AudioBookActivity extends FragmentActivity implements
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
 		Log.d(TAG, "Received update: " + eventName);
-		Log.d(TAG, "instanceof? " + (event.getNewValue() instanceof Book?"yes":"no"));
+		Log.d(TAG, "event.getNewValue(): " + event.getNewValue());
+		Log.d(TAG, "instanceof Bookshelf? " + (event.getNewValue() instanceof Bookshelf?"yes":"no"));
+		Log.d(TAG, "instanceof Book? " + (event.getNewValue() instanceof Book?"yes":"no"));
+		Log.d(TAG, "instanceof Track? " + (event.getNewValue() instanceof Track?"yes":"no"));
 		
 		if (event.getNewValue() instanceof Bookshelf) {
-			// it is a Bookshelf
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				// Bookshelf
-				Log.d(TAG, "instanceof Book? " + (event.getNewValue() instanceof Book?"yes":"no"));
 				if (event.getNewValue() instanceof Book) {
+					// getOldValue()
 					Book b = (Book) event.getNewValue();
 					this.bookshelfFragment.bookAdded(b);
 				}
@@ -220,8 +222,7 @@ public class AudioBookActivity extends FragmentActivity implements
 			}
 		} else {
 			// it is unrecognized
-			Log.e(TAG, "Error: eventName not recognized");
-			Log.e(TAG, "Type not recognized: " + event.getNewValue());
+			Log.e(TAG, "Error: eventName (" + eventName + ") or type (" + event.getNewValue() + ") not recognized");
 		}
 		
 	}
