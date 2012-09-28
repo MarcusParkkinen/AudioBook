@@ -1,4 +1,4 @@
-Valt projekt:
+﻿Valt projekt:
 
 Cloudio - Mediaspelare inriktad mot ljudboksuppspelning med molntjänstbaserade funktioner.
 
@@ -33,6 +33,3 @@ Roller i projektet:
 Product owner: Fredrik Åhs
 Scrum master: Marcus Parkkinen
 Team: Fredrik Åhs, Aki Käkelä, Marcus Parkkinen, Matej Kadric
-
-
-

@@ -32,9 +32,6 @@ public class AudioBookActivity extends FragmentActivity implements
 
 	private static final String TAG = "AudioBookActivity.class";
 
-	// Temporary solution: a new Bookshelf is created every time
-	private Bookshelf bookshelf;
-
 	// Fragment classes
 	private final BookshelfFragment bookshelfFragment = new BookshelfFragment();
 	private final PlayerFragment playerFragment = new PlayerFragment();
@@ -50,7 +47,7 @@ public class AudioBookActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_audiobook);
 
 		// Temporary solution: always create a new bookshelf
-		bookshelf = new Bookshelf();
+		Bookshelf bookshelf = new Bookshelf();
 
 		// Instantiate Controller classes
 		bsc = new BookshelfController(bookshelf);
@@ -140,21 +137,21 @@ public class AudioBookActivity extends FragmentActivity implements
 	public int getTrackTime() {
 		return pc.getTrackDuration();
 	}
-
-	public void addBookshelfListener(PropertyChangeListener listener) {
-		Log.d(TAG, "Adding shelf listener for: " + bookshelf);
-		bookshelf.addPropertyChangeListener(listener);
-	}
-
-	public void removeBookshelfListener(PropertyChangeListener listener) {
-		Log.d(TAG, "Removing shelf listener for: " + bookshelf);
-		bookshelf.removePropertyChangeListener(listener);
-	}
 	
 	/*        UPDATE EVENTS       */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
 		Log.d(TAG, "Received update: " + eventName);
+		
+		if (event.getNewValue() instanceof Bookshelf) {
+			// it's a Bookshelf
+		} else if (event.getNewValue() instanceof Book) {
+			// it's a Book
+		} else if (event.getNewValue() instanceof Track) {
+			// it's a Track
+		} else {
+			Log.e(TAG, "Type not recognized: " + event.getNewValue());
+		}
 
 		// Bookshelf.class
 		if (eventName.equals(Constants.event.BOOK_ADDED)) {
@@ -169,7 +166,6 @@ public class AudioBookActivity extends FragmentActivity implements
 			// Bookshelf
 		} else if (eventName.equals(Constants.event.BOOK_SELECTED)) {
 			// Bookshelf
-			Log.i(TAG, "Book selected event");
 
 			// Player
 			// no need for index
@@ -189,37 +185,17 @@ public class AudioBookActivity extends FragmentActivity implements
 			// Bookshelf
 		} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
 			// Bookshelf
-		} else if (eventName.equals(Constants.event.TRACK_SWAPPED)) {
+		} else if (eventName.equals(Constants.event.TRACK_ORDER_CHANGED)) {
 			// Bookshelf
-		} else if (eventName.equals(Constants.event.TRACK_MOVED)) {
-			// Bookshelf
-		} else if (eventName.equals(Constants.event.BOOKMARK_SET)) {
-			// Do nothing
-		} else if (eventName.equals(Constants.event.TAG_SET)) {
-			// Do nothing
-		} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGING)) {
-			// Player
-			// The track is about to change. Remove the listener.
-			if (event.getNewValue() instanceof Track) {
-				Track t = (Track) event.getNewValue();
-				t.removePropertyChangeListener(this);
-			}
 		} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
 			// Bookshelf
 
 			// Player
-			// The track has changed. Add a listener (we are currently listening
-			// to nothing).
-			if (event.getNewValue() instanceof Track) {
-				Track t = (Track) event.getNewValue();
-				t.addPropertyChangeListener(this);
-			}
 			pc.start();
-		} else if (eventName.equals(Constants.event.BOOK_DURATION_CHANGED)) {
+		} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
 			// Bookshelf
-
+			
 			// Player
-			this.playerFragment.updateBookDuration();
 		}
 
 		// Track.class

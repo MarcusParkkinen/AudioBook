@@ -15,7 +15,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * 
  */
 
-public class Bookshelf {
+public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	private static final String TAG = "Bookshelf.java";
 
 	private LinkedList<Book> books;
@@ -29,6 +29,7 @@ public class Bookshelf {
 		books = new LinkedList<Book>();
 	}
 
+	/* Bookshelf methods */
 	public void addBook(Book b) {
 		books.add(b);
 		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, b);
@@ -54,33 +55,6 @@ public class Bookshelf {
 		}
 	}
 	
-	/*    Book methods    */
-	/**
-	 * Moves the specified track to the specified index.
-	 * 
-	 * @param from Start index.
-	 * @param to Where to put the track.
-	 */
-	public void moveTrack(int from, int to) {
-		books.get(selectedBookIndex).moveTrack(from, to);
-	}
-	
-	public void incrementTrackIndex() {
-		books.get(selectedBookIndex).incrementTrackIndex();
-	}
-
-	public void decrementTrackIndex() {
-		books.get(selectedBookIndex).decrementTrackIndex();
-	}
-
-	/**
-	 * The track duration in milliseconds.
-	 * @return
-	 */
-	public int getTrackDuration() {
-		return books.get(selectedBookIndex).getTrackDuration();
-	}
-
 	/**
 	 * The book that the player will play is set here.
 	 * 
@@ -91,42 +65,68 @@ public class Bookshelf {
 		Log.i(TAG, "Selected a book");
 		pcs.firePropertyChange(Constants.event.BOOK_SELECTED, index, null);
 	}
-
-//	/**
-//	 * 
-//	 * 
-//	 * @return The index of the book that is either playing or is to be played.
-//	 */
-//	public int getSelectedBookIndex() {
-//		return selectedBookIndex;
-//	}
 	
+	/* End Bookshelf methods */
+	
+	/*    Book methods    */
+	// Extra convenience methods
+	public void incrementTrackIndex() {
+		books.get(selectedBookIndex).incrementTrackIndex();
+	}
+	
+	public void decrementTrackIndex() {
+		books.get(selectedBookIndex).decrementTrackIndex();
+	}
+	// End convenience methods
+	
+	public void removeTrack(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addTrack(int index, Track t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void swap(int firstIndex, int secondIndex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void moveTrack(int from, int to) {
+		// TODO Auto-generated method stub
+		
+	}
+
+//	public void setBookmark(int trackIndex, int time) {	}
+//	public void setTag(int trackIndex, int time) { }
+
+	public void setCurrentTrackIndex(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void setBookTitle(String newTitle) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/* End Book methods */
+
 	/*    Track methods    */
+	public void setElapsedTime(int elapsedTime) {
+		this.books.get(selectedBookIndex).setElapsedTime(elapsedTime);
+		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, null, elapsedTime);
+	}
+	/*    End Track methods    */
+	
+	public int getTrackDuration() {
+		return books.get(selectedBookIndex).getTrackDuration();
+	}
+	
 	public String getCurrentTrackPath() {
 		return books.get(selectedBookIndex).getCurrentTrack().getTrackPath();
-	}
-
-	public void addToElapsedTime(int time) {
-		setElapsedTime(getElapsedTime() + time);
-//		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, this.books.get(selectedBookIndex).getElapsedTime(), time);
-	}
-	
-	/**
-	 * @param time
-	 *            ms
-	 */
-	public void setElapsedTime(int elapsedTime) {
-//		Log.d(TAG, "Track time changing from " + elapsedTime + " to " + time);
-		this.books.get(selectedBookIndex).setElapsedTime(elapsedTime);
-//		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, getElapsedTime(), elapsedTime);
-	}
-	
-	public int getElapsedTime() {
-		return this.books.get(selectedBookIndex).getElapsedTime();
-	}
-
-	public int getCurrentTrackIndex() {
-		return this.books.get(selectedBookIndex).getCurrentTrackIndex();
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -136,9 +136,10 @@ public class Bookshelf {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
 	}
-	
-	public Book getCurrentBook() {
-		return this.books.get(selectedBookIndex);
+
+	// convenience method
+	public void addToElapsedTime(int time) {
+		this.setElapsedTime(this.books.get(selectedBookIndex).getElapsedTime() + time);
 	}
 
 }

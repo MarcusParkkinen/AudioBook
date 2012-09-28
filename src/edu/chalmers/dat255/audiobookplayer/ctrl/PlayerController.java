@@ -18,7 +18,7 @@ public class PlayerController {
 	public static final String TAG = "PlayerController.class";
 	private MediaPlayer mp;
 	private Bookshelf bs;
-	private Thread saveThread;
+	private Thread modelUpdaterThread;
 
 	private boolean isStarted = false;
 
@@ -47,13 +47,14 @@ public class PlayerController {
 	}
 
 	private void startTimer() {
-		saveThread = new Thread(new Runnable() {
+		modelUpdaterThread = new Thread(new Runnable() {
 			public void run() {
 				while (isStarted) {
-					int frequency = 1000;
+					int frequency = 1000; // TODO: this should maybe not be
+											// hard-coded
 					while (isStarted && mp.isPlaying()) {
-//						Log.d(TAG, "Updating track time @"
-//								+ (1000/frequency) + "x/s");
+						// Log.d(TAG, "Updating track time @"
+						// + (1000/frequency) + "x/s");
 						updateTrackTime(frequency);
 						try {
 							Thread.sleep(frequency);
@@ -65,7 +66,7 @@ public class PlayerController {
 			}
 
 		});
-		saveThread.start();
+		modelUpdaterThread.start();
 	}
 
 	/**
@@ -101,10 +102,13 @@ public class PlayerController {
 				public void onCompletion(MediaPlayer mp) {
 					Log.i(TAG, "onComplete: Track finished");
 					bs.incrementTrackIndex();
-					start(); // do this method again when finished
+					if (bs.getCurrentTrackIndex() != -1) {
+						start(); // restart with the next index
+					}
+					// else the book is finished (no repeat).
 				}
 			});
-			if (saveThread == null) {
+			if (modelUpdaterThread == null) {
 				startTimer();
 			}
 			mp.start();
