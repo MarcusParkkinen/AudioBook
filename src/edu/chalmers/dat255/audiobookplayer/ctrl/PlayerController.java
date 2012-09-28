@@ -175,7 +175,7 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void updateTrackTime(int time) {
-		this.bs.addToElapsedTime(time);
+		this.bs.setElapsedTime(mp.getCurrentPosition());
 	}
 
 	/* * * * * * * * * * * * * * * * * * * * *

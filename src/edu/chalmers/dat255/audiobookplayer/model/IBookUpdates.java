@@ -1,5 +1,12 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
+/**
+ * Used to assert that implementing classes can handle updates on Book
+ * instances.
+ * 
+ * @author Aki Käkelä
+ * 
+ */
 public interface IBookUpdates {
 	/**
 	 * Removes a track from the collection on the specified index.
@@ -7,7 +14,7 @@ public interface IBookUpdates {
 	 * @param index
 	 */
 	public void removeTrack(int index);
-
+	
 	/**
 	 * Adds a track to the collection to the specified index.
 	 * 
@@ -16,7 +23,7 @@ public interface IBookUpdates {
 	 * @param t
 	 *            The Track instance to add.
 	 */
-	public void addTrack(int index, Track t);
+	public void addTrackTo(int index, Track t);
 
 	/**
 	 * Swap location of two tracks.
@@ -43,9 +50,9 @@ public interface IBookUpdates {
 	 * @param time
 	 *            The time at which to add the bookmark (in ms).
 	 */
-//	public void setBookmark(int trackIndex, int time);
-	
-//	public void setTag();
+	// public void setBookmark(int trackIndex, int time);
+
+	// public void setTag();
 
 	/**
 	 * Sets the track index of the book. Rolls over if the index is out of
@@ -54,7 +61,7 @@ public interface IBookUpdates {
 	 * @param index
 	 */
 	public void setCurrentTrackIndex(int index);
-	
+
 	/**
 	 * Changes the title of the book.
 	 * 

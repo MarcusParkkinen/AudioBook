@@ -144,72 +144,66 @@ public class AudioBookActivity extends FragmentActivity implements
 		Log.d(TAG, "Received update: " + eventName);
 		
 		if (event.getNewValue() instanceof Bookshelf) {
-			// it's a Bookshelf
+			// it is a Bookshelf
+			if (eventName.equals(Constants.event.BOOK_ADDED)) {
+				// Bookshelf
+				if (event.getNewValue() instanceof Book) {
+					Book b = (Book) event.getNewValue();
+					this.bookshelfFragment.bookAdded(b);
+				}
+			} else if (eventName.equals(Constants.event.BOOK_MOVED)) {
+				// Bookshelf
+			} else if (eventName.equals(Constants.event.BOOK_REMOVED)) {
+				// Bookshelf
+			} else if (eventName.equals(Constants.event.BOOK_SELECTED)) {
+				// Bookshelf
+
+				// Player
+				if (findViewById(R.id.audiobook_layout) != null) {
+					playerFragment.setArguments(getIntent().getExtras());
+
+					switchFragment(bookshelfFragment, playerFragment);
+
+					Log.i(TAG, "bookSelected");
+
+					bookSelected();
+				}
+			}
 		} else if (event.getNewValue() instanceof Book) {
-			// it's a Book
+			// it is a Book
+			if (eventName.equals(Constants.event.TRACK_REMOVED)) {
+				// Bookshelf
+			} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
+				// Bookshelf
+			} else if (eventName.equals(Constants.event.TRACK_ORDER_CHANGED)) {
+				// Bookshelf
+			} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
+				// Bookshelf
+
+				// Player
+				pc.start();
+			} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
+				// Bookshelf
+				
+				// Player
+			}
 		} else if (event.getNewValue() instanceof Track) {
-			// it's a Track
+			// it is a Track
+			if (eventName.equals(Constants.event.TRACK_ELAPSED_TIME_CHANGED)) {
+				// Bookshelf
+				
+				// Player
+				if (event.getNewValue() instanceof Integer) {
+					int newTime = (Integer) event.getNewValue();
+					this.playerFragment.updateTrackDuration(newTime);
+				}
+			}
 		} else {
+			// it is unrecognized
+			Log.e(TAG, "Error: eventName not recognized");
 			Log.e(TAG, "Type not recognized: " + event.getNewValue());
 		}
-
-		// Bookshelf.class
-		if (eventName.equals(Constants.event.BOOK_ADDED)) {
-			// Bookshelf
-			if (event.getNewValue() instanceof Book) {
-				Book b = (Book) event.getNewValue();
-				this.bookshelfFragment.bookAdded(b);
-			}
-		} else if (eventName.equals(Constants.event.BOOK_MOVED)) {
-			// Bookshelf
-		} else if (eventName.equals(Constants.event.BOOK_REMOVED)) {
-			// Bookshelf
-		} else if (eventName.equals(Constants.event.BOOK_SELECTED)) {
-			// Bookshelf
-
-			// Player
-			// no need for index
-			if (findViewById(R.id.audiobook_layout) != null) {
-				playerFragment.setArguments(getIntent().getExtras());
-
-				switchFragment(bookshelfFragment, playerFragment);
-
-				Log.i(TAG, "bookSelected");
-
-				bookSelected();
-			}
-		}
-
-		// Book.class
-		else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
-			// Bookshelf
-		} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
-			// Bookshelf
-		} else if (eventName.equals(Constants.event.TRACK_ORDER_CHANGED)) {
-			// Bookshelf
-		} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
-			// Bookshelf
-
-			// Player
-			pc.start();
-		} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
-			// Bookshelf
-			
-			// Player
-		}
-
-		// Track.class
-		else if (eventName.equals(Constants.event.TRACK_TIME_CHANGED)) {
-			// Bookshelf
-			
-			// Player
-			if (event.getNewValue() instanceof Integer) {
-				int newTime = (Integer) event.getNewValue();
-				this.playerFragment.updateTrackDuration(newTime);
-			}
-		} else {
-			Log.e(TAG, "Error: eventName not recognized");
-		}
+		
 	}
 	
 	public void bookSelected(int index) {
