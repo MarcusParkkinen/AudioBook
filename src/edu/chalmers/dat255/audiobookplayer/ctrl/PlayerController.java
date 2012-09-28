@@ -101,11 +101,7 @@ public class PlayerController {
 			mp.setOnCompletionListener(new OnCompletionListener() {
 				public void onCompletion(MediaPlayer mp) {
 					Log.i(TAG, "onComplete: Track finished");
-					bs.incrementTrackIndex();
-					if (bs.getCurrentTrackIndex() != -1) {
-						start(); // restart with the next index
-					}
-					// else the book is finished (no repeat).
+					nextTrack();
 				}
 			});
 			if (modelUpdaterThread == null) {
@@ -150,13 +146,16 @@ public class PlayerController {
 	}
 
 	public void previousTrack() {
-		bs.decrementTrackIndex();
-		start();
+		// decrement track index
+		bs.setCurrentTrackIndex(bs.getCurrentTrackIndex() - 1);
+		start(); // restart with the next index
 	}
 
 	public void nextTrack() {
-		bs.incrementTrackIndex();
-		start();
+		// increment track index
+		bs.setCurrentTrackIndex(bs.getCurrentTrackIndex() + 1);
+		if (bs.getCurrentTrackIndex() != -1) // check whether we are done
+			start(); // restart with the next index
 	}
 
 	/**
@@ -166,6 +165,15 @@ public class PlayerController {
 	 */
 	public int getTrackDuration() {
 		return bs.getTrackDuration();
+	}
+
+	/**
+	 * The book duration in milliseconds.
+	 * 
+	 * @return
+	 */
+	public int getBookDuration() {
+		return bs.getBookDuration();
 	}
 
 	/**
@@ -188,7 +196,8 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekRight() {
-		seekToPercentage(mp.getCurrentPosition() + getTrackDuration() / 10);
+		seekToMultiplierInTrack(mp.getCurrentPosition() + getTrackDuration()
+				/ 10);
 	}
 
 	/**
@@ -198,21 +207,43 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekLeft() {
-		seekToPercentage(mp.getCurrentPosition() - getTrackDuration() / 10);
+		seekToMultiplierInTrack(mp.getCurrentPosition() - getTrackDuration()
+				/ 10);
 	}
 
 	/**
 	 * Seeks to the given progress percentage of the track.
 	 * 
-	 * @param percentage
+	 * @param multiplier
 	 *            e.g. input value "50" will seek halfway (50%) through the
 	 *            track.
 	 */
-	public void seekToPercentage(double percentage) {
-		double temp = mp.getDuration() * percentage;
-		Log.d(TAG, "seekTo: " + mp.getDuration() + " * " + percentage + " = "
+	public void seekToMultiplierInTrack(double multiplier) {
+		double temp = mp.getDuration() * multiplier;
+		Log.d(TAG, "seekTo: " + mp.getDuration() + " * " + multiplier + " = "
 				+ temp + " = " + (int) temp);
 		seekTo((int) temp);
+	}
+
+	/**
+	 * Seeks <i>time</i> ms through the tracks of the book.
+	 * 
+	 * @param multiplier
+	 *            e.g. input value "50" will seek halfway (50%) through the
+	 *            book.
+	 */
+	public void seekToMultiplierInBook(double multiplier) {
+		int seekTime = (int) (bs.getBookDuration() * multiplier);
+		while (seekTime > bs.getTrackDuration()) {
+			seekTime -= bs.getTrackDuration();
+			bs.setCurrentTrackIndex(bs.getCurrentTrackIndex() - 1);
+			/*
+			 * note that we are not changing the player state just by changing
+			 * the index.
+			 */
+		}
+		start(); // start the track we seeked to
+		mp.seekTo(seekTime); // seek to the time within that track
 	}
 
 	/**

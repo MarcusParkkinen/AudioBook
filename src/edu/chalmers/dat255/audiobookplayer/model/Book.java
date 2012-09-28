@@ -11,7 +11,7 @@ import android.util.Log;
  * Represents a collection of Track objects that collectively form a book. Null
  * tracks are not allowed (and will be ignored when added).
  * 
- * @author Marcus Parkkinen, Aki K√§kel√§
+ * @author Marcus Parkkinen, Aki K‰kel‰
  * @version 0.4
  */
 
@@ -23,9 +23,10 @@ public class Book implements ITrackUpdates, IBookUpdates {
 	private String title;
 	private int duration;
 
-	// private Bookmark bookmark;
-	// private Tag[] tags;
-	// private Stats stats;
+	/*
+	 * To be implemented later: private Bookmark bookmark; private Tag[] tags;
+	 * private Stats stats;
+	 */
 
 	/**
 	 * Create an empty book.
@@ -101,13 +102,24 @@ public class Book implements ITrackUpdates, IBookUpdates {
 	// public void setTag(int trackIndex, int time) { }
 
 	public void setCurrentTrackIndex(int index) {
+		boolean loop = false; // TODO: change in settings?
 		// Log.d(TAG, "Changing trackIndex from " + trackIndex + " to " +
 		// index);
 		trackIndex = index;
-		if (trackIndex < 0)
-			trackIndex = this.tracks.size() - 1; // last index
-		if (trackIndex > tracks.size() - 1)
-			trackIndex = -1; // book finished
+		if (trackIndex < 0) {
+			if (loop) {
+				trackIndex = this.tracks.size() - 1; // last index
+			} else {
+				trackIndex = -1; // end
+			}
+		}
+		if (trackIndex > tracks.size() - 1) {
+			if (loop) {
+				trackIndex = 0; // first index
+			} else {
+				trackIndex = -1; // end; book finished
+			}
+		}
 		// TODO: test
 		// this.trackIndex = index % this.tracks.size();
 		Log.d(TAG, "new index: " + trackIndex);
@@ -154,14 +166,14 @@ public class Book implements ITrackUpdates, IBookUpdates {
 	public int getTrackDuration() {
 		return tracks.get(trackIndex).getDuration();
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public int getElapsedTime() {
 		return this.tracks.get(trackIndex).getElapsedTime();
 	}
-	
+
 	/**
 	 * Returns a list containing references to all tracks contained in this
 	 * book.
@@ -175,7 +187,7 @@ public class Book implements ITrackUpdates, IBookUpdates {
 		}
 		return paths;
 	}
-	
+
 	public String getCurrentTrackPath() {
 		return tracks.get(trackIndex).getTrackPath();
 	}
@@ -194,13 +206,20 @@ public class Book implements ITrackUpdates, IBookUpdates {
 		this.title = title;
 	}
 
-//	public int getDuration() {
-//		return duration;
-//	}
+	public void updateBookDuration() {
+		this.duration = 0;
+		for (Track t : tracks) {
+			this.duration += t.getDuration();
+		}
+	}
 
-//	public void setDuration(int duration) {
-//		this.duration = duration;
-//	}
+	public int getDuration() {
+		return duration;
+	}
+
+	// public void setDuration(int duration) {
+	// this.duration = duration;
+	// }
 
 	// public Book clone() { }
 

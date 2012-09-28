@@ -68,5 +68,10 @@ public interface IBookUpdates {
 	 * @param newTitle
 	 */
 	public void setBookTitle(String newTitle);
+	
+	/**
+	 * Updates the duration of the book to the sum of the duration of its tracks.
+	 */
+	public void updateBookDuration();
 
 }

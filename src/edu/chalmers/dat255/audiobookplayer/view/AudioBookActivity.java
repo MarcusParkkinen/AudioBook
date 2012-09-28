@@ -104,9 +104,13 @@ public class AudioBookActivity extends FragmentActivity implements
 	public void seekRight() {
 		pc.seekRight();
 	}
+	
+	public void seekToMultiplierInBook(double multiplier) {
+		pc.seekToMultiplierInBook(multiplier);
+	}
 
-	public void seekToPercentage(double percentage) {
-		pc.seekToPercentage(percentage);
+	public void seekToMultiplierInTrack(double multiplier) {
+		pc.seekToMultiplierInTrack(multiplier);
 	}
 
 	public void bookSelected() {
@@ -116,13 +120,13 @@ public class AudioBookActivity extends FragmentActivity implements
 	public void trackTimeChanged() {
 		;
 	}
-
-	/* End player */
-
+	
 	public void bookDurationChanged() {
 		// TODO Auto-generated method stub
-
+		
 	}
+
+	/* End player */
 
 	public void bookmarkSet() {
 		// TODO Auto-generated method stub
@@ -134,10 +138,14 @@ public class AudioBookActivity extends FragmentActivity implements
 
 	}
 
-	public int getTrackTime() {
+	public int getTrackDuration() {
 		return pc.getTrackDuration();
 	}
-	
+
+	public int getBookDuration() {
+		return pc.getBookDuration();
+	}
+
 	/*        UPDATE EVENTS       */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
@@ -186,6 +194,16 @@ public class AudioBookActivity extends FragmentActivity implements
 				// Bookshelf
 				
 				// Player
+				this.playerFragment.updateBookTitleLabel();
+			} else if (eventName.equals(Constants.event.BOOK_DURATION_CHANGED)) {
+				// Bookshelf (redraw label or "progress bar?")
+				
+				// Player
+				// redraw book seekbar
+				if (event.getNewValue() instanceof Integer) {
+					Integer i = (Integer) event.getNewValue();
+					this.playerFragment.updateBookSeekBar(i.intValue());
+				}
 			}
 		} else if (event.getNewValue() instanceof Track) {
 			// it is a Track

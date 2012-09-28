@@ -10,7 +10,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 /**
  * The bookshelf class contains a collection of books.
  * 
- * @author Marcus Parkkinen, Aki K√§kel√§
+ * @author Marcus Parkkinen, Aki K‰kel‰
  * @version 0.5
  * 
  */
@@ -74,6 +74,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void removeTrack(int index) {
 		this.books.get(selectedBookIndex).removeTrack(index);
 		pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null, index);
+
+		/* since we removed a track we need to recalculate the duration of the book*/
 		updateBookDuration();
 	}
 
@@ -118,16 +120,13 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 				newTitle);
 	}
 
-	// Extra convenience methods
-	public void incrementTrackIndex() {
-		setCurrentTrackIndex(books.get(selectedBookIndex)
-				.getCurrentTrackIndex() + 1);
+	public void updateBookDuration() {
+		this.books.get(selectedBookIndex).updateBookDuration();
+		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED, null,
+				this.books.get(selectedBookIndex).getDuration());
 	}
 
-	public void decrementTrackIndex() {
-		setCurrentTrackIndex(books.get(selectedBookIndex)
-				.getCurrentTrackIndex() - 1);
-	}
+	// Extra convenience methods
 
 	// End convenience methods
 
@@ -151,10 +150,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	}
 
 	/* convenience method */
-	private void updateBookDuration() {
-		
-	}
 	
+	public int getBookDuration() {
+		return books.get(selectedBookIndex).getDuration();
+	}
+
 	public int getTrackDuration() {
 		return books.get(selectedBookIndex).getTrackDuration();
 	}
@@ -162,7 +162,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public String getCurrentTrackPath() {
 		return books.get(selectedBookIndex).getCurrentTrackPath();
 	}
-	
+
 	public int getCurrentTrackIndex() {
 		return books.get(selectedBookIndex).getCurrentTrackIndex();
 	}

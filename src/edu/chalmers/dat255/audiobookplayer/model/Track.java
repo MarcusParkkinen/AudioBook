@@ -7,7 +7,7 @@ import android.util.Log;
 /**
  * Represents a single audio track. Includes its duration and path.
  * 
- * @author Marcus Parkkinen, Aki K√§kel√§
+ * @author Marcus Parkkinen, Aki K‰kel‰
  * @version 0.4
  * 
  */
