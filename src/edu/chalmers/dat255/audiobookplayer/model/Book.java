@@ -53,6 +53,16 @@ public class Book implements ITrackUpdates, IBookUpdates {
 		}
 	}
 
+	public Book clone() {
+		Book copy = new Book();
+		copy.setTitle(this.title);
+		for (Track t : tracks) {
+			copy.addTrackTo(copy.tracks.size(), t.clone());
+		}
+		copy.setDuration(this.duration);
+		return copy;
+	}
+
 	/* IBookUpdates */
 	public void removeTrack(int index) {
 		if (tracks.size() < index) {
@@ -60,8 +70,6 @@ public class Book implements ITrackUpdates, IBookUpdates {
 			if (index < trackIndex)
 				trackIndex--;
 		}
-
-		// "BOOK_DURATION_CHANGED"
 	}
 
 	public void addTrackTo(int index, Track t) {
@@ -72,8 +80,6 @@ public class Book implements ITrackUpdates, IBookUpdates {
 			if (index < trackIndex)
 				trackIndex++; // this will not call TRACK_INDEX_CHANGED_BY_USER
 		}
-
-		// "BOOK_DURATION_CHANGED"
 	}
 
 	public void swap(int firstIndex, int secondIndex) {
@@ -217,10 +223,12 @@ public class Book implements ITrackUpdates, IBookUpdates {
 		return duration;
 	}
 
-	// public void setDuration(int duration) {
-	// this.duration = duration;
-	// }
-
-	// public Book clone() { }
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+	
+	public Track getCurrentTrack() {
+		return this.tracks.get(trackIndex);
+	}
 
 }

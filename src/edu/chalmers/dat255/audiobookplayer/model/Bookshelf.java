@@ -28,6 +28,14 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public Bookshelf() {
 		books = new LinkedList<Book>();
 	}
+	
+	public Bookshelf clone() {
+		Bookshelf copy = new Bookshelf();
+		for (Book b : books) {
+			copy.addBook(b.clone());
+		}
+		return copy;
+	}
 
 	/**
 	 * The book that the player will use (read from) is set here.
@@ -37,20 +45,20 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void setSelectedBook(int index) {
 		this.selectedBookIndex = index;
 		Log.i(TAG, "Selected a book");
-		pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null, index);
+		pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null, this.clone());
 	}
 
 	/* Bookshelf methods */
 	public void addBook(Book b) {
 		books.add(b);
-		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, b);
+		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, this.clone());
 	}
 
 	public void removeBook(int index) {
 		books.remove(index);
 		if (selectedBookIndex + 1 > books.size())
 			selectedBookIndex--;
-		pcs.firePropertyChange(Constants.event.BOOK_REMOVED, null, index);
+		pcs.firePropertyChange(Constants.event.BOOK_REMOVED, null, this.clone());
 	}
 
 	public void moveBook(int from, int to) {
@@ -59,7 +67,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		if (books.size() < from && books.size() < to) {
 			Book temp = books.remove(to);
 			books.add(from, temp);
-			pcs.firePropertyChange(Constants.event.BOOK_MOVED, from, to);
+			pcs.firePropertyChange(Constants.event.BOOK_MOVED, null, this.clone());
 			// TODO: recheck this
 		} else {
 			Log.e(TAG,
@@ -73,7 +81,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	public void removeTrack(int index) {
 		this.books.get(selectedBookIndex).removeTrack(index);
-		pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null, index);
+		pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null, this.books.get(selectedBookIndex).clone());
 
 		/* since we removed a track we need to recalculate the duration of the book*/
 		updateBookDuration();
@@ -92,18 +100,18 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void addTrackTo(int index, Track t) {
 		this.books.get(selectedBookIndex).addTrackTo(index, t);
 		pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
-				Track.clone(t));
+				this.books.get(selectedBookIndex).clone());
 		updateBookDuration();
 	}
 
 	public void swap(int firstIndex, int secondIndex) {
 		this.books.get(selectedBookIndex).swap(firstIndex, secondIndex);
-		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null, null);
+		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null, this.books.get(selectedBookIndex).clone());
 	}
 
 	public void moveTrack(int from, int to) {
 		this.books.get(selectedBookIndex).moveTrack(from, to);
-		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null, null);
+		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null, this.books.get(selectedBookIndex).clone());
 	}
 
 	// public void setBookmark(int trackIndex, int time) { }
@@ -111,19 +119,19 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	public void setCurrentTrackIndex(int index) {
 		this.books.get(selectedBookIndex).setCurrentTrackIndex(index);
-		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null, index);
+		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null, this.books.get(selectedBookIndex).clone());
 	}
 
 	public void setBookTitle(String newTitle) {
 		this.books.get(selectedBookIndex).setBookTitle(newTitle);
 		pcs.firePropertyChange(Constants.event.BOOK_TITLE_CHANGED, null,
-				newTitle);
+				this.books.get(selectedBookIndex).clone());
 	}
 
 	public void updateBookDuration() {
 		this.books.get(selectedBookIndex).updateBookDuration();
 		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED, null,
-				this.books.get(selectedBookIndex).getDuration());
+				this.books.get(selectedBookIndex).clone());
 	}
 
 	// Extra convenience methods
@@ -136,7 +144,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void setElapsedTime(int elapsedTime) {
 		this.books.get(selectedBookIndex).setElapsedTime(elapsedTime);
 		pcs.firePropertyChange(Constants.event.TRACK_ELAPSED_TIME_CHANGED,
-				null, elapsedTime);
+				null, this.books.get(selectedBookIndex).getCurrentTrack().clone());
 	}
 
 	/* End Track methods */

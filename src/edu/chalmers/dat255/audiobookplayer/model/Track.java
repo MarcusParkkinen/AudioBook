@@ -36,33 +36,12 @@ public class Track implements ITrackUpdates, Cloneable {
 		}
 	}
 	
-	// TODO: Choose one of the following:
-	
-	/**
-	 * Copy constructor.
-	 * 
-	 * @param other
-	 */
-	public Track(Track other) {
-		this.duration = other.duration;
-		this.elapsedTime = other.elapsedTime;
-		this.path = other.path;
-	}
-	
-	/**
-	 * Static clone method.
-	 * 
-	 * @param t
-	 * @return
-	 */
-	public static Track clone(Track t) {
-		Track copy = new Track(t.path, t.duration);
-		copy.setElapsedTime(t.elapsedTime);
+	public Track clone() {
+		Track copy = new Track(this.path, this.duration);
+		copy.setElapsedTime(this.elapsedTime);
 		return copy;
 	}
 	
-	// ---
-
 	/**
 	 * @return The path to the track.
 	 */

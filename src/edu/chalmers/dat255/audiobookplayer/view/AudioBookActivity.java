@@ -150,11 +150,13 @@ public class AudioBookActivity extends FragmentActivity implements
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
 		Log.d(TAG, "Received update: " + eventName);
+		Log.d(TAG, "instanceof? " + (event.getNewValue() instanceof Book?"yes":"no"));
 		
 		if (event.getNewValue() instanceof Bookshelf) {
 			// it is a Bookshelf
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				// Bookshelf
+				Log.d(TAG, "instanceof Book? " + (event.getNewValue() instanceof Book?"yes":"no"));
 				if (event.getNewValue() instanceof Book) {
 					Book b = (Book) event.getNewValue();
 					this.bookshelfFragment.bookAdded(b);
