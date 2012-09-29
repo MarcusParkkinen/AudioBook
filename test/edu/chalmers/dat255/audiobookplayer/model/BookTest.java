@@ -174,27 +174,6 @@ public class BookTest extends TestCase {
 		assertEquals(elapsedTime, b.getBookElapsedTime());
 	}
 	
-	public void testIncrementCurrentTrackIndex() {
-		int trackIndex = b.getSelectedTrackIndex();
-		b.incrementTrackIndex();
-		
-		// assert that we increment the track index correctly
-		assertEquals(trackIndex+1, b.getSelectedTrackIndex());
-		
-		// increment the track index past the final track of the book ...
-		while(b.getSelectedTrackIndex() != tracks.length-1) {
-			b.incrementTrackIndex();
-		}
-		b.incrementTrackIndex();
-		
-		// ... and assert that no track is selected
-		assertEquals(-1, b.getSelectedTrackIndex());
-		
-		// also assert that this is the case even if we add more tracks to the book
-		b.addTrack(t0);
-		assertEquals(-1, b.getSelectedTrackIndex());
-	}
-	
 	public void testSetBookTitle() {
 		// assert that we cannot set the book name with a null string
 		try{

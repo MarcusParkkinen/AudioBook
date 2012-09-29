@@ -20,7 +20,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	private static final int NO_TRACK_SELECTED = -1;
 
 	private LinkedList<Track> tracks;
-	private int trackIndex;
+	private int trackIndex = NO_TRACK_SELECTED;
 	private String title;
 	private int duration;
 
@@ -34,8 +34,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 */
 	public Book(String title) {
 		tracks = new LinkedList<Track>();
-		trackIndex = NO_TRACK_SELECTED;
-
 		setBookTitle(title);
 	}
 
@@ -164,7 +162,11 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 */
 
 	public void setCurrentTrackIndex(int index) {
-		if (isLegalIndex(index)) {
+		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: " + this.tracks.size()+")");
+		if (index >= 0) {
+			if (index > this.tracks.size() + 1) {
+				index = 0;
+			}
 			trackIndex = index;
 		} else {
 			Log.e(TAG,
@@ -365,7 +367,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 			i++;
 		}
 		bookElapsedTime += tracks.get(i).getElapsedTime();
-			
+
 		return bookElapsedTime;
 	}
 

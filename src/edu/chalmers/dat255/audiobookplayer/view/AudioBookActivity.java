@@ -2,6 +2,7 @@ package edu.chalmers.dat255.audiobookplayer.view;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -135,7 +136,7 @@ public class AudioBookActivity extends FragmentActivity implements
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-		Log.d(TAG, "Received update: " + eventName);
+//		Log.d(TAG, "Received update: " + eventName);
 
 		if (event.getNewValue() instanceof Bookshelf) {
 			// Get the model from the update
@@ -145,8 +146,6 @@ public class AudioBookActivity extends FragmentActivity implements
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				// Bookshelf
-				Log.d(TAG,
-						"Bookshelf list size (copy): " + bs.getNumberOfBooks());
 				Book b = bs.getCurrentBook();
 				bookshelfFragment.bookAdded(b);
 
@@ -157,6 +156,7 @@ public class AudioBookActivity extends FragmentActivity implements
 				// indicate selected book
 
 				// show the player
+				Log.d(TAG, "Started switching fragments");
 				switchToPlayerFragment();
 				// start the player
 				pc.start();
@@ -178,7 +178,9 @@ public class AudioBookActivity extends FragmentActivity implements
 				// Player
 				Book b = bs.getCurrentBook();
 				// recalculate the book seekbar
-				updateBookSeekbar(b);
+//				Log.d(TAG, "playerFragment is " + (playerFragment.isAdded()?"":"not ") + "added");
+				if (playerFragment != null && playerFragment.isAdded())
+					updateBookSeekbar(b);
 				// recalculate the track seekbar
 				updateTrackSeekbar(b);
 			} else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
@@ -237,8 +239,10 @@ public class AudioBookActivity extends FragmentActivity implements
 		
 		double progress = getProgress(trackElapsedTime, trackDuration);
 
+		DecimalFormat df = new DecimalFormat("#.##");
+		
 		Log.d(TAG, "track seeking to:  " + trackElapsedTime + "/"
-				+ trackDuration + " = " + progress);
+				+ trackDuration + " = " + df.format(progress));
 		playerFragment.updateTrackSeekBar(progress);
 	}
 
@@ -250,9 +254,11 @@ public class AudioBookActivity extends FragmentActivity implements
 		int bookDuration = b.getDuration();
 		
 		double progress = getProgress(bookElapsedTime, bookDuration);
+		
+		DecimalFormat df = new DecimalFormat("#.##");
 
 		Log.d(TAG, "book seeking ratio:  " + bookElapsedTime + "/"
-				+ bookDuration + " = " + progress);
+				+ bookDuration + " = " + df.format(progress));
 		playerFragment.updateBookSeekBar(progress);
 	}
 	
@@ -262,7 +268,6 @@ public class AudioBookActivity extends FragmentActivity implements
 
 	public void bookSelected(int index) {
 		// set the selected book to the new index
-		Log.d(TAG, "bookSelected");
 		bsc.setSelectedBook(index);
 	}
 
@@ -283,6 +288,7 @@ public class AudioBookActivity extends FragmentActivity implements
 		ft.replace(R.id.audiobook_layout, playerFragment);
 		ft.addToBackStack(null);
 		ft.commit();
+		Log.d(TAG, "Finished switching fragments");
 	}
 
 	// public int getTrackDuration() {

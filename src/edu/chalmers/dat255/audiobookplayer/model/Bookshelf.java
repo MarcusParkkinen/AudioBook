@@ -58,7 +58,6 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void setSelectedBookIndex(int index) {
 		if (isLegalIndex(index)) {
 			selectedBookIndex = index;
-			Log.i(TAG, "Selected a book");
 
 			// notify the view module that we have selected a book
 			pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null,
