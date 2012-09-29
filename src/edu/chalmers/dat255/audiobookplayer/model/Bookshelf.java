@@ -38,16 +38,15 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	 */
 	public Bookshelf(Bookshelf original) {
 		this();
-		LinkedList<Book> origBooks = original.getBooks();
-		System.out.println(origBooks.size());
-		for (Book b : origBooks) {
-			System.out.println("Adding book");
+		
+		// copy instance variables
+		this.selectedBookIndex = original.selectedBookIndex;
+		
+		// make deep copies of Book in the list
+		
+		for (Book b : original.books) {
 			this.books.add(new Book(b));
 		}
-	}
-
-	private LinkedList<Book> getBooks() {
-		return this.books;
 	}
 
 	/* Bookshelf methods */
@@ -98,13 +97,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 			books.remove(index);
 			
 			// adjust the selected book index
-			if (index < selectedBookIndex) {
-				selectedBookIndex--;
-			}
 			
 			if (selectedBookIndex == index || selectedBookIndex == 0)
 				selectedBookIndex = 0;
-			else
+			else if (index < selectedBookIndex)
 				selectedBookIndex--;
 			
 			// notify the view module of the change, provide a bookshelf copy as
@@ -211,11 +207,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		return b.getCurrentTrackPath();
 	}
 
-	public int getCurrentTrackIndex() {
-		return books.get(selectedBookIndex).getCurrentTrackIndex();
+	public int getSelectedTrackIndex() {
+		return books.get(selectedBookIndex).getSelectedTrackIndex();
 	}
 	
-	public int getCurrentBookIndex() {
+	public int getSelectedBookIndex() {
 		return this.selectedBookIndex;
 	}
 
@@ -261,6 +257,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	public Book getCurrentBook() {
 		return this.books.get(selectedBookIndex);
+	}
+	
+	public Book getBookAt(int index) {
+		return this.books.get(index);
 	}
 	
 	public int getNumberOfBooks() {

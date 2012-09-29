@@ -109,7 +109,7 @@ public class PlayerController {
 			}
 			mp.start();
 			isStarted = true;
-			Log.i(TAG, "Playing: " + (bs.getCurrentTrackIndex() + 1) + ". "
+			Log.i(TAG, "Playing: " + (bs.getSelectedTrackIndex() + 1) + ". "
 					+ bs.getCurrentTrackPath() + " @" + mp.getDuration() + "ms");
 		} else {
 			Log.e(TAG, "Start: tried to start without choosing data source.");
@@ -147,14 +147,14 @@ public class PlayerController {
 
 	public void previousTrack() {
 		// decrement track index
-		bs.setCurrentTrackIndex(bs.getCurrentTrackIndex() - 1);
+		bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() - 1);
 		start(); // restart with the next index
 	}
 
 	public void nextTrack() {
 		// increment track index
-		bs.setCurrentTrackIndex(bs.getCurrentTrackIndex() + 1);
-		if (bs.getCurrentTrackIndex() != -1) // check whether we are done
+		bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() + 1);
+		if (bs.getSelectedTrackIndex() != -1) // check whether we are done
 			start(); // restart with the next index
 	}
 

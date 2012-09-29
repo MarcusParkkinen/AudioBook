@@ -278,7 +278,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * 
 	 * @return int index
 	 */
-	public int getCurrentTrackIndex() {
+	public int getSelectedTrackIndex() {
 		return this.trackIndex;
 	}
 

@@ -99,7 +99,7 @@ public class BookTest extends TestCase {
 		}
 		
 		// assert that no track is selected if the book is lacking tracks
-		assertEquals(-1, b.getCurrentTrackIndex());
+		assertEquals(-1, b.getSelectedTrackIndex());
 	}
 	
 	public void testAddTrack() {
@@ -162,7 +162,7 @@ public class BookTest extends TestCase {
 		b.setCurrentTrackIndex(tracks.length-1);
 		
 		// assert that the index is set correctly
-		assertEquals(tracks.length-1, b.getCurrentTrackIndex());
+		assertEquals(tracks.length-1, b.getSelectedTrackIndex());
 		
 		// assert that the elapsed time of the book is adjusted
 		// accordingly
@@ -175,24 +175,24 @@ public class BookTest extends TestCase {
 	}
 	
 	public void testIncrementCurrentTrackIndex() {
-		int trackIndex = b.getCurrentTrackIndex();
+		int trackIndex = b.getSelectedTrackIndex();
 		b.incrementTrackIndex();
 		
 		// assert that we increment the track index correctly
-		assertEquals(trackIndex+1, b.getCurrentTrackIndex());
+		assertEquals(trackIndex+1, b.getSelectedTrackIndex());
 		
 		// increment the track index past the final track of the book ...
-		while(b.getCurrentTrackIndex() != tracks.length-1) {
+		while(b.getSelectedTrackIndex() != tracks.length-1) {
 			b.incrementTrackIndex();
 		}
 		b.incrementTrackIndex();
 		
 		// ... and assert that no track is selected
-		assertEquals(-1, b.getCurrentTrackIndex());
+		assertEquals(-1, b.getSelectedTrackIndex());
 		
 		// also assert that this is the case even if we add more tracks to the book
 		b.addTrack(t0);
-		assertEquals(-1, b.getCurrentTrackIndex());
+		assertEquals(-1, b.getSelectedTrackIndex());
 	}
 	
 	public void testSetBookTitle() {
