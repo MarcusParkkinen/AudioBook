@@ -3,7 +3,7 @@ package edu.chalmers.dat255.audiobookplayer.constants;
 /**
  * Holds unique event property names for events.
  * 
- * @author Aki Käkelä
+ * @author Aki Kï¿½kelï¿½
  * @version 0.4
  */
 public final class Constants {
@@ -18,6 +18,7 @@ public final class Constants {
 		public static final String TRACK_REMOVED = "!trackRemoved";
 		public static final String TRACK_ADDED = "!trackAdded";
 		public static final String TRACK_ORDER_CHANGED = "!trackOrderChanged";
+		public static final String ELAPSED_TIME_CHANGED = "!timeChanged";
 		// public static final String BOOKMARK_SET = "!bookmarkSet";
 		// public static final String TAG_SET = "!tagSet";
 		public static final String TRACK_INDEX_CHANGED = "!trackIndexChanged";
@@ -30,6 +31,7 @@ public final class Constants {
 		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
 
 		// Track.class
-		public static final String TRACK_ELAPSED_TIME_CHANGED = "!timeChanged";
+		// THIS IS NOT NEEDED!
+		//public static final String TRACK_ELAPSED_TIME_CHANGED = "!timeChanged";
 	}
 }

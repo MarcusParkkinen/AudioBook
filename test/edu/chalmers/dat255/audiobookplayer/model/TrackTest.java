@@ -1,35 +1,124 @@
-/**
- * 
- */
+
 package edu.chalmers.dat255.audiobookplayer.model;
+
+import java.security.InvalidParameterException;
 
 import junit.framework.TestCase;
 
 /**
- * @author Aki Käkelä
- *
+ * @author Marcus Parkkinen
+ * @version 0.1
  */
+
 public class TrackTest extends TestCase {
-
-	/**
-	 * @param name
-	 */
-	public TrackTest(String name) {
-		super(name);
-	}
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
+	private final String trackPath = "MyTrack.mp3";
+	private final int trackLength = 1238921;
+	private final int elapsedTime = 238238;
+	private final int addition = 2399;
+	private Track t;
+	
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		t = new Track(trackPath, trackLength);
+		t.setElapsedTime(elapsedTime);
 	}
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-
+	
+	public TrackTest() {
+		super();
+	}
+	
+	public void testCopy() {
+		//create a new copy of the track
+		Track newTrack = new Track(t);
+		
+		//assert that we have two separate objects
+		assertFalse(newTrack == t);
+		
+		//but assert that they are equal
+		assertTrue(newTrack.equals(t));
+	}
+	
+	
+	public void testAddToElapsedTime() {
+		//add 'addition' to the elapsed time
+		t.addToElapsedTime(addition);
+		
+		//assert that the addition was done correctly
+		assertEquals(elapsedTime + addition, t.getElapsedTime());
+		
+		//test overflow
+		t.addToElapsedTime(trackLength+1);
+		
+		//assert that the track time has been set to zero
+		assertEquals(0, t.getElapsedTime());
+	}
+	
+	public void testGetTrackPath() {
+		assertTrue(trackPath.equals(t.getTrackPath()));
+	}
+	
+	public void testGetElapsedTime() {
+		assertEquals(elapsedTime, t.getElapsedTime());
+	}
+	
+	public void testSetElapsedTime() {
+		//test legal bound values
+		t.setElapsedTime(trackLength);
+		t.setElapsedTime(0);
+		
+		//try setting a negative value for the track
+		try{
+			t.setElapsedTime(-1);
+			fail("managed to set time to negative value.");
+		} catch(IllegalArgumentException e) {
+			
+		}
+		
+		//try setting a time > duration
+		try{
+			t.setElapsedTime(trackLength+1);
+			fail("managed to set time to negative value.");
+		} catch(IllegalArgumentException e) {
+			
+		}
+	}
+	
+	public void testConstructor() {
+		//try creating a track with 'null' as path
+		try{
+			t = new Track(null, trackLength);
+			fail("Constructor did not throw exception for null path.");
+		} catch(IllegalArgumentException e) {
+			
+		}
+		
+		//try creating a track with illegal path string
+		try{
+			t = new Track("", trackLength);
+			fail("Constructor did not throw exception for empty string as path");
+		} catch(IllegalArgumentException e) {
+			
+		}
+		
+		//try creating a track with 0 as duration
+		try{
+			t = new Track(trackPath, 0);
+			fail("Constructor did not throw exception for zero duration.");
+		} catch(IllegalArgumentException e) {
+			
+		}
+		
+		//try creating a track with -1 as duration
+		try{
+			t = new Track(trackPath, -1);
+			fail("Constructor did not throw exception for negative duration.");
+		} catch(IllegalArgumentException e) {
+			
+		}
+	}
 }
