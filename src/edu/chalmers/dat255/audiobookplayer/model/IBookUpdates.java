@@ -4,7 +4,7 @@ package edu.chalmers.dat255.audiobookplayer.model;
  * Used to assert that implementing classes can handle updates on Book
  * instances.
  * 
- * @author Aki Käkelä
+ * @author Aki Kï¿½kelï¿½
  * 
  */
 public interface IBookUpdates {

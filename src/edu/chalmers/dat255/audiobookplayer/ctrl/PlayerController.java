@@ -11,7 +11,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
- * @author Aki Käkelä
+ * @author Aki Kï¿½kelï¿½
  * @version 0.3
  */
 public class PlayerController {
@@ -55,7 +55,7 @@ public class PlayerController {
 					while (isStarted && mp.isPlaying()) {
 						// Log.d(TAG, "Updating track time @"
 						// + (1000/frequency) + "x/s");
-						updateTrackTime(frequency);
+						updateTrackTime();
 						try {
 							Thread.sleep(frequency);
 						} catch (InterruptedException e) {
@@ -182,7 +182,7 @@ public class PlayerController {
 	 * @param time
 	 *            ms
 	 */
-	public void updateTrackTime(int time) {
+	public void updateTrackTime() {
 		this.bs.setElapsedTime(mp.getCurrentPosition());
 	}
 

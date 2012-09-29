@@ -7,41 +7,65 @@ import android.util.Log;
 /**
  * Represents a single audio track. Includes its duration and path.
  * 
- * @author Marcus Parkkinen, Aki Käkelä
- * @version 0.4
+ * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
+ * @version 0.5
  * 
  */
-public class Track implements ITrackUpdates, Cloneable {
-	private String path;
+public final class Track implements ITrackUpdates {
+	private static final String TAG = "Bookshelf.java";
+	
+	private final String path;
+	private final int duration;
 	private int elapsedTime;
-	private int duration;
 
 	/**
 	 * Constructor for a track. Path to the data source as well as the length of
-	 * the track must be provided.
+	 * the track must be provided. The path may not be an empty string ("").
 	 * 
 	 * @param path
 	 *            Path to the track
 	 * @param duration
 	 *            Playing time of the track in ms.
 	 */
-	public Track(String path, int duration) {
-		if (path != null) {
+	public Track(String path, int duration) throws InvalidParameterException {
+		if (path != null && path.length() > 0 && duration > 0) {
 			this.path = path;
 			this.duration = duration;
 		} else {
-			Log.e("Track", "Path to track is null in constructor");
-			throw new InvalidParameterException();
+			throw new InvalidParameterException(
+					"Attempting to create track with either null path or negative duration.");
 		}
 	}
 
-	public Object clone() throws CloneNotSupportedException {
-		Track clone = (Track) super.clone();
-		// Immutable values
-		clone.path = this.path;
-		clone.duration = this.duration;
-		clone.elapsedTime = this.elapsedTime;
-		return clone;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + duration;
+		result = prime * result + elapsedTime;
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Track other = (Track) obj;
+		if (duration != other.duration)
+			return false;
+		if (elapsedTime != other.elapsedTime)
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		return true;
 	}
 
 	/**
@@ -49,10 +73,9 @@ public class Track implements ITrackUpdates, Cloneable {
 	 * 
 	 * @param other
 	 */
-	public Track(Track other) {
-		this.duration = other.duration;
-		this.elapsedTime = other.elapsedTime;
-		this.path = other.path;
+	public Track(Track original) {
+		this(original.path, original.duration);
+		this.elapsedTime = original.elapsedTime;
 	}
 
 	/**
@@ -68,19 +91,45 @@ public class Track implements ITrackUpdates, Cloneable {
 	protected int getDuration() {
 		return duration;
 	}
-
+	
+	/**
+	 * @return The elapsed time of the track.
+	 */
 	public int getElapsedTime() {
 		return elapsedTime;
 	}
-
-	public void addToElapsedTime(int time) {
-		setElapsedTime(elapsedTime + time);
+	
+	
+	/**
+	 * Increment the elapsed time of the track by a specified
+	 * amount.
+	 * 
+	 * @param time
+	 */
+	public void addToElapsedTime(int time) throws InvalidParameterException {
+		if(time > 0) {
+			if(elapsedTime + time <= duration) {
+				setElapsedTime(elapsedTime + time);
+			} else{
+				elapsedTime = 0;
+			}
+		} else{
+			throw new InvalidParameterException(
+				"Attempting to change track time with illegal value: " + time);
+		}
+		
 	}
-
-	public void setElapsedTime(int elapsedTime) {
-		// Log.d(TAG, "Track time changing from " + elapsedTime + " to " +
-		// time);
-		this.elapsedTime = elapsedTime;
+	
+	/**
+	 * Set the elapsed time of the track to a specified amount.
+	 * 
+	 * @param new time
+	 */
+	public void setElapsedTime(int elapsedTime) throws InvalidParameterException {
+		if( elapsedTime >= 0 && elapsedTime <= duration) {
+			this.elapsedTime = elapsedTime;
+		} else {
+			throw new InvalidParameterException("Attempting to set elapsed time to illegal value.");
+		}
 	}
-
 }

@@ -18,7 +18,7 @@ import edu.chalmers.dat255.audiobookplayer.R;
 /**
  * A graphical UI fragment of AudioBookActivity in charge of PlayerController.
  * 
- * @author Aki Käkelä, Marcus Parkkinen
+ * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
  * @version 0.5
  */
 public class PlayerFragment extends Fragment {
@@ -194,7 +194,7 @@ public class PlayerFragment extends Fragment {
 				Log.d(TAG, "stopped tracking");
 			}
 		});
-
+		
 		return view;
 	}
 
@@ -211,23 +211,23 @@ public class PlayerFragment extends Fragment {
 	 * @param i
 	 *            Duration in ms of the book.
 	 */
-	public void updateBookSeekBar(int i) {
-
+	public void updateBookSeekBar(int newRatio) {
+		bookBar.setProgress(newRatio);
 	}
 
-	public void updateTrackSeekBar() {
-
+	public void updateTrackSeekBar(int newRatio) {
+		trackBar.setProgress(newRatio);
 	}
 
 	public void updateBookTitleLabel() {
 
 	}
 
-	public void updateTrackDuration(int newTime) {
-
+	public void updateTrackDuration() {
+		
 	}
 
-	public void updateBookDuration(int newTime) {
-
+	public void updateBookDuration() {
+		
 	}
 }
