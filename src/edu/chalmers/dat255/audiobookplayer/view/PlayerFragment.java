@@ -13,21 +13,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 
 /**
  * A graphical UI fragment of AudioBookActivity in charge of PlayerController.
  * 
- * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
- * @version 0.5
+ * @author Aki Käkelä, Marcus Parkkinen
+ * @version 0.6
  */
 public class PlayerFragment extends Fragment {
+	@SuppressWarnings("unused")
 	private static final String TAG = "PlayerFragment.class";
 	private PlayerUIEventListener fragmentOwner;
 	private SeekBar trackBar;
 	private SeekBar bookBar;
+	private TextView bookTitle;
+	private TextView trackTitle;
+	private TextView bookDuration;
+	private TextView trackDuration;
+	private TextView bookElapsedTime;
+	private TextView trackElapsedTime;
 
-	// Labels, update methods
+	// 2 Title labels: Track, Book
+	// 2 Time labels: Track, Book
+	// (Picker to seek to given time)
 
 	// TODO: make some methods protected
 
@@ -42,13 +52,13 @@ public class PlayerFragment extends Fragment {
 
 		public void seekRight();
 
-		public void seekToMultiplierInTrack(double seekPercentage);
+		public void seekToPercentageInTrack(double percentage);
 
-		public void seekToMultiplierInBook(double percentage);
+		public void seekToPercentageInBook(double percentage);
 
-		public int getTrackDuration();
+		// public int getTrackDuration();
 
-		public int getBookDuration();
+		// public int getBookDuration();
 
 	}
 
@@ -69,13 +79,6 @@ public class PlayerFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater
 				.inflate(R.layout.player_fragment, container, false);
-
-		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
-		prevTrack.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				fragmentOwner.previousTrack();
-			}
-		});
 
 		Button seekLeft = (Button) view.findViewById(R.id.seekLeft);
 		seekLeft.setOnTouchListener(new OnTouchListener() {
@@ -121,6 +124,13 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 
+		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
+		prevTrack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				fragmentOwner.previousTrack();
+			}
+		});
+
 		bookBar = (SeekBar) view.findViewById(R.id.bookBar);
 		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "bookBar";
@@ -133,16 +143,8 @@ public class PlayerFragment extends Fragment {
 					double seekMultiplier = (double) progress
 							* (1.0 / seekBar.getMax());
 
-					// TODO: currently just for debugging
-					int displayPercentage = (int) (100 * seekMultiplier);
-
-					Log.d(TAG,
-							"progress is " + progress + " out of "
-									+ seekBar.getMax() + "("
-									+ displayPercentage + "%)");
-
 					// fragmentOwner.seekToTimeInBook(time);
-					fragmentOwner.seekToMultiplierInBook(seekMultiplier);
+					fragmentOwner.seekToPercentageInBook(seekMultiplier);
 				} else {
 					Log.d(TAG, "Code used SeekBar");
 				}
@@ -165,23 +167,13 @@ public class PlayerFragment extends Fragment {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (fromUser) {
-					// seekTo();
 					Log.d(TAG, "User used SeekBar");
-					// updateTrackSeekBar();
+					
 					double seekPercentage = (double) progress
 							* (1.0 / seekBar.getMax());
 
-					// TODO: currently just for debugging
-					int displayPercentage = (int) (100 * seekPercentage);
-
-					Log.d(TAG,
-							"progress is " + progress + " out of "
-									+ seekBar.getMax() + "("
-									+ displayPercentage + "%)");
-
-					fragmentOwner.seekToMultiplierInTrack(seekPercentage);
+					fragmentOwner.seekToPercentageInTrack(seekPercentage);
 				} else {
-					// do not seekTo();
 					Log.d(TAG, "Code used SeekBar");
 				}
 			}
@@ -195,39 +187,60 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 		
+		trackTitle = (TextView) view.findViewById(R.id.trackTitle);
+		trackTitle.setText("track time");
+		
+		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
+		bookTitle.setText("book time");
+		
+		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
+		bookDuration.setText("XX");
+		
+		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
+		trackDuration.setText("YY");
+		
+		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
+		bookElapsedTime.setText("AA");
+		
+		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
+		trackElapsedTime.setText("BB");
+		
 		return view;
 	}
 
-	// public void updateTrackProgress(int newTime) {
-	// // seekBar.setProgress((int)(Math.random()*100));
-	// int newProgress = (int) ((trackBar.getMax() * newTime) / fragmentOwner
-	// .getTrackDuration());
-	// // Log.d("PlayerFragment.class", "timeProgress: " + timeProgress);
-	// // Log.d("PlayerFragment.class", "newProgress: " + newProgress);
-	// trackBar.setProgress(newProgress);
-	// }
-
-	/**
-	 * @param i
-	 *            Duration in ms of the book.
-	 */
-	public void updateBookSeekBar(int newRatio) {
-		bookBar.setProgress(newRatio);
+	public void updateBookSeekBar(double percentage) {
+		int progress = (int) (bookBar.getMax() * percentage);
+		// calls 'onProgressChanged' from code:
+		bookBar.setProgress(progress);
 	}
 
-	public void updateTrackSeekBar(int newRatio) {
-		trackBar.setProgress(newRatio);
+	public void updateTrackSeekBar(double percentage) {
+		int progress = (int) (trackBar.getMax() * percentage);
+		// calls 'onProgressChanged' from code:
+		trackBar.setProgress(progress);
 	}
 
-	public void updateBookTitleLabel() {
-
+	public void updateBookElapsedTimeLabel(String label) {
+		bookElapsedTime.setText(label);
 	}
 
-	public void updateTrackDuration() {
-		
+	public void updateTrackElapsedTimeLabel(String label) {
+		trackElapsedTime.setText(label);
 	}
 
-	public void updateBookDuration() {
-		
+	public void updateBookTitleLabel(String label) {
+		bookTitle.setText(label);
+	}
+
+	public void updateTrackTitleLabel(String label) {
+		trackTitle.setText(label);
+	}
+
+	public void updateBookDurationLabel(String label) {
+		bookDuration.setText(label);
+	}
+
+	public void updateTrackDurationLabel(String label) {
+		trackDuration.setText(label);
 	}
 }

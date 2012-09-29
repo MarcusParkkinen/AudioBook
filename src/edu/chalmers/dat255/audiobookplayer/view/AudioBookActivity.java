@@ -15,7 +15,6 @@ import edu.chalmers.dat255.audiobookplayer.ctrl.BookshelfController;
 import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
-import edu.chalmers.dat255.audiobookplayer.model.Track;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 import edu.chalmers.dat255.audiobookplayer.view.BookshelfFragment.BookshelfUIEventListener;
 import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventListener;
@@ -24,8 +23,8 @@ import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventList
  * Main activity of the application. This class should handle all fragment
  * functionality.
  * 
- * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
- * @version 0.5
+ * @author Marcus Parkkinen, Aki Käkelä
+ * @version 0.6
  */
 public class AudioBookActivity extends FragmentActivity implements
 		BookshelfUIEventListener, PlayerUIEventListener, PropertyChangeListener {
@@ -57,30 +56,34 @@ public class AudioBookActivity extends FragmentActivity implements
 		bc.setBookshelf(bookshelf);
 
 		bookshelf.addPropertyChangeListener(this);
-		
-		//Make sure that audiobook_layout is being used as layout for this activity and
-		//that we are not resuming from a previous state as this could result in overlapping
-		//fragments
-		if(findViewById(R.id.audiobook_layout) != null &&
-				savedInstance == null) {
 
-			//In case arguments have been sent through an Intent, forward these to the
-			//fragments as well
+		// Make sure that audiobook_layout is being used as layout for this
+		// activity and
+		// that we are not resuming from a previous state as this could result
+		// in overlapping
+		// fragments
+		if (findViewById(R.id.audiobook_layout) != null
+				&& savedInstance == null) {
+
+			// In case arguments have been sent through an Intent, forward these
+			// to the
+			// fragments as well
 			bookshelfFragment.setArguments(getIntent().getExtras());
 
-			//Add the STARTING_FRAGMENT to this layout
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			// Add the STARTING_FRAGMENT to this layout
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
 			ft.add(R.id.audiobook_layout, bookshelfFragment);
 			ft.commit();
 		}
-		
+
 	}
 
 	public void bookLongPress(int index) {
 		// TODO
 	}
 
-	/* Concerning Player*.class */
+	/* Player*.class functions */
 	public void addButtonPressed() {
 		bc.createTestBook();
 	}
@@ -104,158 +107,156 @@ public class AudioBookActivity extends FragmentActivity implements
 	public void seekRight() {
 		pc.seekRight();
 	}
-	
-	public void seekToMultiplierInBook(double multiplier) {
-		pc.seekToMultiplierInBook(multiplier);
+
+	public void seekToPercentageInBook(double percentage) {
+		pc.seekToPercentageInBook(percentage);
 	}
 
-	public void seekToMultiplierInTrack(double multiplier) {
-		pc.seekToMultiplierInTrack(multiplier);
-	}
-
-	public void trackTimeChanged() {
-		;
-	}
-	
-	public void bookDurationChanged() {
-		// TODO Auto-generated method stub
-		
+	public void seekToPercentageInTrack(double percentage) {
+		pc.seekToPercentageInTrack(percentage);
 	}
 
 	/* End player */
 
 	public void bookmarkSet() {
-		// TODO Auto-generated method stub
-
+		Log.d(TAG, "Bookmark set");
 	}
 
 	public void tagSet() {
-		// TODO Auto-generated method stub
-
+		Log.d(TAG, "Tag set");
 	}
 
-	public int getTrackDuration() {
-		return pc.getTrackDuration();
-	}
-
-	public int getBookDuration() {
-		return pc.getBookDuration();
-	}
-
-	
 	/**
-	 * View module update method. Whenever the model component changes, it sends updates which
-	 * are received here. The parameter event object contains a reference to a copy of the changed
-	 * object.
+	 * Whenever the model component changes, an event is received here. The new
+	 * value property of the event contains a reference to a copy of the model.
 	 * 
-	 * @param event event object that contains information about the change
+	 * @param event
+	 *            Event object that contains information about the change.
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
 		Log.d(TAG, "Received update: " + eventName);
-		/*
-		Log.d(TAG, "event.getNewValue(): " + event.getNewValue());
-		Log.d(TAG, "instanceof Bookshelf? " + (event.getNewValue() instanceof Bookshelf?"yes":"no"));
-		Log.d(TAG, "instanceof Book? " + (event.getNewValue() instanceof Book?"yes":"no"));
-		Log.d(TAG, "instanceof Track? " + (event.getNewValue() instanceof Track?"yes":"no"));
-		*/
-		
+
 		if (event.getNewValue() instanceof Bookshelf) {
-			
+			// Get the model from the update
+			Bookshelf bs = (Bookshelf) event.getNewValue();
+
+			// Check which event was fired, and do relevant updates in the
+			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
-				// if a new book has been added, we should forward it
-				// to the bookshelf fragment
-				
-				// WIP, DOES NOT WORK
-				//Book newBook = ((Bookshelf) event.getNewValue()).getNewestBook();
-				
-				//bookshelfFragment.bookAdded(newBook);
+				// Bookshelf
+				Log.d(TAG, "Bookshelf list size (copy): " + bs.getNumberOfBooks());
+				Book b = bs.getCurrentBook();
+				bookshelfFragment.bookAdded(b);
+
+				// Player
+				// Do nothing
 			} else if (eventName.equals(Constants.event.BOOK_SELECTED)) {
-				// if a book has been selected, we should only switch to
-				// the player fragment
+				// Bookshelf
+				// indicate selected book
+
+				// show the player
 				switchToPlayerFragment();
+				// start the player
+				pc.start();
 			} else if (eventName.equals(Constants.event.BOOK_REMOVED)) {
-				
-				// not used yet
-				
+				// Bookshelf
+				// Do nothing for now
+
+				// Player
+				// Do nothing
 			} else if (eventName.equals(Constants.event.BOOK_MOVED)) {
-				
-				// not used yet
-				
-			}
-		} else if (event.getNewValue() instanceof Book) {
-			
-			Book changedBookCopy = (Book) event.getNewValue();
-			
-			if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)){
-				int bookElapsedTime = changedBookCopy.getBookElapsedTime();
-				int trackElapsedTime = changedBookCopy.getCurrentTrack().getElapsedTime();
-				
-				int bookDuration = changedBookCopy.getDuration();
-				int trackDuration = changedBookCopy.getTrackDuration();
-				
-				playerFragment.updateBookSeekBar(bookElapsedTime/bookDuration);
-				playerFragment.updateTrackSeekBar(trackElapsedTime/trackDuration);
-				
-			}else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
 				// Bookshelf
-			} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
-				// Bookshelf
-			} else if (eventName.equals(Constants.event.TRACK_ORDER_CHANGED)) {
-				// Bookshelf
-			} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
+				// Do nothing for now
+
+				// Player
+				// Do nothing
+			} else if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)) {
 				// Bookshelf
 
 				// Player
-				pc.start();
+				Book b = bs.getCurrentBook();
+				// recalculate the book seekbar
+				updateBookSeekbar(b);
+				// recalculate the track seekbar
+				updateTrackSeekbar(b);
+			} else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
+				// Bookshelf
+				// remove the track from the list (the child on the given index
+				// in the given parent)
+
+				// Player
+				// Do nothing
+			} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
+				// Bookshelf
+				// add ... -"-
+
+				// Player
+				// Do nothing
+			} else if (eventName.equals(Constants.event.TRACK_ORDER_CHANGED)) {
+				// Bookshelf
+				// redraw list
+
+				// Player
+				// Do nothing
+			} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
+				// Bookshelf
+				// move the "selected track" indicator to the new index
+
+				// Player
+				// update the track name label
+				// recalculate the track seekbar
 			} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
 				// Bookshelf
-				
+				// update the name of the book (parent) of the given index
+
 				// Player
-				this.playerFragment.updateBookTitleLabel();
+				// update the book title label
+				Book b = bs.getCurrentBook();
+				this.playerFragment.updateBookTitleLabel(b.getTitle());
 			} else if (eventName.equals(Constants.event.BOOK_DURATION_CHANGED)) {
-				// Bookshelf (redraw label or "progress bar?")
-				
-				// Player
-				// redraw book seekbar
-				if (event.getNewValue() instanceof Integer) {
-					Integer i = (Integer) event.getNewValue();
-					this.playerFragment.updateBookSeekBar(i.intValue());
-				}
-			}
-		} 
-		/*
-		else if (event.getNewValue() instanceof Track) {
-			// it is a Track
-			if (eventName.equals(Constants.event.TRACK_ELAPSED_TIME_CHANGED)) {
 				// Bookshelf
-				
+
 				// Player
-				if (event.getNewValue() instanceof Integer) {
-					System.out.println("ok, new time!");
-					int newTime = (Integer) event.getNewValue();
-					this.playerFragment.updateTrackDuration(newTime);
-				}
+				// update the book duration label
+				Book b = bs.getCurrentBook();
+				this.playerFragment.updateBookDurationLabel(""
+						+ b.getElapsedTime());
 			}
-		*/
+		}
+
 	}
-	
+
+	private void updateTrackSeekbar(Book b) {
+		// elapsed time
+		int trackElapsedTime = b.getCurrentTrack().getElapsedTime();
+
+		// total duration
+		int trackDuration = b.getTrackDuration();
+
+		Log.d(TAG, "track seeking ratio:  " + trackElapsedTime + "/"
+				+ trackDuration + " = " + trackElapsedTime / trackDuration);
+		playerFragment.updateTrackSeekBar(trackElapsedTime / trackDuration);
+	}
+
+	private void updateBookSeekbar(Book b) {
+		// elapsed time
+		int bookElapsedTime = b.getBookElapsedTime();
+
+		// total duration
+		int bookDuration = b.getDuration();
+
+		Log.d(TAG, "book seeking ratio:  " + bookElapsedTime + "/"
+				+ bookDuration + " = " + bookElapsedTime / bookDuration);
+		playerFragment.updateBookSeekBar(bookElapsedTime / bookDuration);
+	}
+
 	public void bookSelected(int index) {
-		if(findViewById(R.id.audiobook_layout) != null) {
-			Log.d(TAG, "bookSelected(index)");
-			
-			// set the selected book to the new index
-			bsc.setSelectedBook(index);
-			
-			// switch fragment to player when selecting a book
-			playerFragment.setArguments(getIntent().getExtras());
-			switchFragment(bookshelfFragment, playerFragment);
-			
-			// (optional) start the book instantly
-			pc.start();
-		}		
+		// set the selected book to the new index
+		Log.d(TAG, "bookSelected");
+		bsc.setSelectedBook(index);
 	}
-	
+
 	private void switchToPlayerFragment() {
 		if (findViewById(R.id.audiobook_layout) != null) {
 			playerFragment.setArguments(getIntent().getExtras());
@@ -263,8 +264,7 @@ public class AudioBookActivity extends FragmentActivity implements
 			switchFragment(bookshelfFragment, playerFragment);
 		}
 	}
-		
-	
+
 	private void switchFragment(Fragment oldFragment, Fragment newFragment) {
 		FragmentManager fm = getSupportFragmentManager();
 		fm.saveFragmentInstanceState(oldFragment);
@@ -275,5 +275,13 @@ public class AudioBookActivity extends FragmentActivity implements
 		ft.addToBackStack(null);
 		ft.commit();
 	}
+	
+//	public int getTrackDuration() {
+//	return pc.getTrackDuration();
+//}
+//
+//public int getBookDuration() {
+//	return pc.getBookDuration();
+//}
 
 }

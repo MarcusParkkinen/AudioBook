@@ -173,7 +173,7 @@ public class PlayerController {
 	 * @return
 	 */
 	public int getBookDuration() {
-		return bs.getBookDuration();
+		return bs.getBookSelectedDuration();
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekRight() {
-		seekToMultiplierInTrack(mp.getCurrentPosition() + getTrackDuration()
+		seekToPercentageInTrack(mp.getCurrentPosition() + getTrackDuration()
 				/ 10);
 	}
 
@@ -207,41 +207,40 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekLeft() {
-		seekToMultiplierInTrack(mp.getCurrentPosition() - getTrackDuration()
+		seekToPercentageInTrack(mp.getCurrentPosition() - getTrackDuration()
 				/ 10);
 	}
 
 	/**
 	 * Seeks to the given progress percentage of the track.
 	 * 
-	 * @param multiplier
+	 * @param percentage
 	 *            e.g. input value "50" will seek halfway (50%) through the
 	 *            track.
 	 */
-	public void seekToMultiplierInTrack(double multiplier) {
-		double temp = mp.getDuration() * multiplier;
-		Log.d(TAG, "seekTo: " + mp.getDuration() + " * " + multiplier + " = "
-				+ temp + " = " + (int) temp);
-		seekTo((int) temp);
+	public void seekToPercentageInTrack(double percentage) {
+		int seekTime = (int)(mp.getDuration() * percentage);
+		Log.d(TAG, "seekTo: " + mp.getDuration() + " * " + percentage + " = "
+				+ seekTime);
+		seekTo(seekTime);
 	}
 
 	/**
 	 * Seeks <i>time</i> ms through the tracks of the book.
 	 * 
-	 * @param multiplier
+	 * @param percentage
 	 *            e.g. input value "50" will seek halfway (50%) through the
 	 *            book.
 	 */
-	public void seekToMultiplierInBook(double multiplier) {
-		int seekTime = (int) (bs.getBookDuration() * multiplier);
+	public void seekToPercentageInBook(double percentage) {
+		int seekTime = (int) (bs.getBookSelectedDuration() * percentage);
+		// seek through the tracks
+		int track = 0;
 		while (seekTime > bs.getTrackDuration()) {
 			seekTime -= bs.getTrackDuration();
-			bs.setCurrentTrackIndex(bs.getCurrentTrackIndex() - 1);
-			/*
-			 * note that we are not changing the player state just by changing
-			 * the index.
-			 */
+			track++;
 		}
+		bs.setCurrentTrackIndex(track);
 		start(); // start the track we seeked to
 		mp.seekTo(seekTime); // seek to the time within that track
 	}

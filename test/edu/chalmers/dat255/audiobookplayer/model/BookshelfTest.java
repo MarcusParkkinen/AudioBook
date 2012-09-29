@@ -1,84 +1,129 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 /**
- * @author Marcus Parkkinen
+ * @author Aki Käkelä
  * @version 0.1
+ *
  */
 public class BookshelfTest extends TestCase {
-	private ArrayList<Book> books;
-	
-	//Create books and tracks
-	private Track t0 = new Track("/thePath/theTrack1.mp3", 5);
-	private Track t1 = new Track("/thePath/theTrack2.mp3", 10);
-	
-	private Track t2 = new Track("/thePath/theTrack3.mp3", 15);
-	private Track t3 = new Track("/thePath/theTrack4.mp3", 20);
-	
-	private Track t4 = new Track("/thePath/theTrack3.mp3", 25);
-	private Track t5 = new Track("/thePath/theTrack4.mp3", 30);
-	
-	private Book b1;
-	private Book b2;
-	private Book b3;
-	
-	
+
 	private Bookshelf bookshelf;
-	
+
+	public BookshelfTest(String name) {
+		super(name);
+	}
+
+	protected static void setUpBeforeClass() throws Exception {
+	}
+
+	protected static void tearDownAfterClass() throws Exception {
+	}
+
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		b1.addTrackTo(0, t0);
-		b1.addTrackTo(0, t1);
-		
-		b2.addTrackTo(0, t2);
-		b2.addTrackTo(0, t3);
-		
-		b3.addTrackTo(0, t4);
-		b3.addTrackTo(0, t5);
-		
-		books = new ArrayList<Book>();
-		books.add(b1);
-		books.add(b2);
-		books.add(b3);
-		
 		bookshelf = new Bookshelf();
-		for(Book b : books) {
-			bookshelf.addBook(b);
-		}
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-	
-	public void testCopy() {
-		// create a new copy of the bookshelf
-		Bookshelf newBookshelf = new Bookshelf(bookshelf);
-						
-		// assert that we have two separate objects
-		assertFalse(newBookshelf == bookshelf);
-						
-		// assert that both books are equal
-		assertTrue(newBookshelf.equals(bookshelf));
-				
-		// also try this with bookshelves that are empty
-		bookshelf = new Bookshelf();
-		newBookshelf = new Bookshelf(bookshelf);
-				
-		// assert that we have two separate objects
-		assertFalse(newBookshelf == bookshelf);
-									
-		// assert that both books are equal
-		assertTrue(newBookshelf.equals(bookshelf));
+
+	public void testBookshelf() {
+		assertTrue(bookshelf.getCurrentBookIndex() == -1); // not selected
+		try {
+			bookshelf.getCurrentBook();
+			fail("Current book on an empty bookshelf should not exist.");
+		} catch (IndexOutOfBoundsException e) { }
 	}
-	
-	public void testSetSelectedBook() {
-		bookshelf.setSelectedBook(3);
+
+	public void testBookshelfBookshelf() {
+		// empty
+		Bookshelf testBookshelf = new Bookshelf(bookshelf);
+		assertFalse(testBookshelf == bookshelf);
+		assertTrue(bookshelf.getCurrentBookIndex() == testBookshelf.getCurrentBookIndex());
+		assertTrue(bookshelf != null);
+		assertTrue(testBookshelf != null);
 		
-		// WIP //
+		assertTrue(bookshelf.equals(testBookshelf));
+		
+		// not empty
+		List<Track> tracks = new LinkedList<Track>();
+		tracks.add(new Track("path1", 111));
+		tracks.add(new Track("path2", 222));
+		tracks.add(new Track("path3", 333));
+		Book book1 = new Book("1");
+		Book book2 = new Book("2");
+		Book book3 = new Book(tracks, "3");
+		bookshelf.addBook(book1);
+		bookshelf.addBook(book2);
+		bookshelf.addBook(book3);
+		
+		testBookshelf = new Bookshelf(bookshelf);
 	}
+
+	public void testSetSelectedBook() {
+		// Test a negative integer
+		bookshelf.setSelectedBookIndex(-5);
+		assertFalse(bookshelf.getCurrentBookIndex() == -5);
+		
+		Book b = new Book("Test");
+		bookshelf.addBook(b);
+		bookshelf.addBook(b);
+		bookshelf.addBook(b);
+		bookshelf.addBook(b);
+		
+		// Test a positive integer within the allowed indices
+		bookshelf.setSelectedBookIndex(2);
+		assertTrue(bookshelf.getCurrentBookIndex() == 2);
+		
+		// Test a positive integer beyond the allowed indices
+		bookshelf.setSelectedBookIndex(13);
+		assertFalse(bookshelf.getCurrentBookIndex() == 13);
+		
+		// Test index when adding a book
+		bookshelf = new Bookshelf();
+		bookshelf.addBook(b);
+		bookshelf.addBook(b);
+		bookshelf.addBook(b);
+		bookshelf.addBook(b);
+		bookshelf.setSelectedBookIndex(2);
+		bookshelf.addBook(b);
+		assertTrue(bookshelf.getCurrentTrackIndex() == 2);
+		
+		// Test index when removing a book
+		bookshelf.setSelectedBookIndex(3);
+		bookshelf.removeBook(5);
+		assertTrue(bookshelf.getCurrentTrackIndex() == 3);
+		bookshelf.removeBook(2);
+		assertTrue(bookshelf.getCurrentTrackIndex() == (3-1));
+		
+		bookshelf = new Bookshelf();
+		bookshelf.removeBook(0);
+	}
+
+	public void testAddBook() {
+		Book b = new Book("testBook");
+		bookshelf.addBook(b);
+	}
+
+	public void testRemoveBook() {
+	}
+
+	public void testMoveBook() {
+	}
+
+	public void testGetCurrentBook() {
+	}
+
+	public void testGetNumberOfBooks() {
+	}
+
+	public void testEqualsObject() {
+	}
+
 }

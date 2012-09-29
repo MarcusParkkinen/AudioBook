@@ -15,5 +15,6 @@
 	<string name="playPause">||</string>
 	<string name="seekRight">&gt;&gt;</string>
 	<string name="nextTrack">|&gt;</string>
+	<string name="coverText">&lt;Cover art&gt;</string>
 
 </resources>

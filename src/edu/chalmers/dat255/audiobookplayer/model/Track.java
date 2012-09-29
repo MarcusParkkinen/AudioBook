@@ -2,8 +2,6 @@ package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.security.InvalidParameterException;
 
-import android.util.Log;
-
 /**
  * Represents a single audio track. Includes its duration and path.
  * 
@@ -12,6 +10,7 @@ import android.util.Log;
  * 
  */
 public final class Track implements ITrackUpdates {
+	@SuppressWarnings("unused")
 	private static final String TAG = "Bookshelf.java";
 	
 	private final String path;
@@ -97,27 +96,6 @@ public final class Track implements ITrackUpdates {
 	 */
 	public int getElapsedTime() {
 		return elapsedTime;
-	}
-	
-	
-	/**
-	 * Increment the elapsed time of the track by a specified
-	 * amount.
-	 * 
-	 * @param time
-	 */
-	public void addToElapsedTime(int time) throws InvalidParameterException {
-		if(time > 0) {
-			if(elapsedTime + time <= duration) {
-				setElapsedTime(elapsedTime + time);
-			} else{
-				elapsedTime = 0;
-			}
-		} else{
-			throw new InvalidParameterException(
-				"Attempting to change track time with illegal value: " + time);
-		}
-		
 	}
 	
 	/**

@@ -26,7 +26,7 @@ public class BookshelfController {
 	 * @param index
 	 */
 	public void setSelectedBook(int index) {
-		shelf.setSelectedBook(index);
+		shelf.setSelectedBookIndex(index);
 	}
 	
 //	/**

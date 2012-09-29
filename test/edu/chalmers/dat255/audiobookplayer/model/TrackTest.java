@@ -1,8 +1,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.model;
 
-import java.security.InvalidParameterException;
-
 import junit.framework.TestCase;
 
 /**
@@ -14,7 +12,6 @@ public class TrackTest extends TestCase {
 	private final String trackPath = "MyTrack.mp3";
 	private final int trackLength = 1238921;
 	private final int elapsedTime = 238238;
-	private final int addition = 2399;
 	private Track t;
 	
 	protected void setUp() throws Exception {
@@ -41,21 +38,6 @@ public class TrackTest extends TestCase {
 		
 		//but assert that they are equal
 		assertTrue(newTrack.equals(t));
-	}
-	
-	
-	public void testAddToElapsedTime() {
-		//add 'addition' to the elapsed time
-		t.addToElapsedTime(addition);
-		
-		//assert that the addition was done correctly
-		assertEquals(elapsedTime + addition, t.getElapsedTime());
-		
-		//test overflow
-		t.addToElapsedTime(trackLength+1);
-		
-		//assert that the track time has been set to zero
-		assertEquals(0, t.getElapsedTime());
 	}
 	
 	public void testGetTrackPath() {

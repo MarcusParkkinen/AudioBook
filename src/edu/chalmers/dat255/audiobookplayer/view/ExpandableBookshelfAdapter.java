@@ -50,6 +50,8 @@ public class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
 
 	private TextView getGenericView() {
 		//temporary
+		// TODO: fix 'deprecated'
+		@SuppressWarnings("deprecation")
 		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 64);
         TextView textView = new TextView(context);
         textView.setLayoutParams(lp);

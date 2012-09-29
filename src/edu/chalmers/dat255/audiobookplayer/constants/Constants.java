@@ -8,13 +8,14 @@ package edu.chalmers.dat255.audiobookplayer.constants;
  */
 public final class Constants {
 	public static final class event {
-		// Bookshelf.class
 		public static final String BOOK_ADDED = "!bookAdded";
 		public static final String BOOK_MOVED = "!bookMoved";
 		public static final String BOOK_REMOVED = "!bookRemoved";
 		public static final String BOOK_SELECTED = "!bookSelected";
+		
+		public static final String BOOK_TITLE_CHANGED = "!bookTitleChanged";
+		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
 
-		// Book.class
 		public static final String TRACK_REMOVED = "!trackRemoved";
 		public static final String TRACK_ADDED = "!trackAdded";
 		public static final String TRACK_ORDER_CHANGED = "!trackOrderChanged";
@@ -27,11 +28,6 @@ public final class Constants {
 		// when the user (through the GUI "next/previous" track) or the audio
 		// player (when the track ends) changes the track index.
 		// TODO: change name? "_BY_USER_OR_PLAYER" suffix.
-		public static final String BOOK_TITLE_CHANGED = "!bookTitleChanged";
-		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
 
-		// Track.class
-		// THIS IS NOT NEEDED!
-		//public static final String TRACK_ELAPSED_TIME_CHANGED = "!timeChanged";
 	}
 }

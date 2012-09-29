@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
@@ -19,6 +20,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * 
  */
 public class BookCreator {
+	private static final String TAG = "BookCreator.class";
 	private static BookCreator instance = null;
 	private Bookshelf bsh;
 
@@ -55,6 +57,7 @@ public class BookCreator {
 		for (int i = 0; i < paths.length; i++) {
 			list.add(new Track(paths[i], ms[i]));
 		}
+//		Log.d(TAG, "adding book to bookshelf");
 		bsh.addBook(new Book(
 				list,
 				"TestBook12312333333333......- ------999999997ujihgyfguhujikolpkojiusduhfjisdofksdpofk"));

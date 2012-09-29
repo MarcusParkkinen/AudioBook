@@ -109,7 +109,7 @@ public class BookTest extends TestCase {
 		for(int i = 0; i < tracks.length-1; i++) {
 			
 			// add a new track to the beginning of the book
-			b.addTrackTo(0, tracks[i]);
+			b.addTrack(tracks[i]);
 			
 			// assert that the selected track index does not change even
 			// when adding tracks to indices before it
@@ -122,11 +122,7 @@ public class BookTest extends TestCase {
 			// assert that the duration is correct
 			assertEquals((duration+=tracks[i].getDuration()), b.getDuration());
 		}
-		
-		// assert that the selected track index is correct when adding
-		// tracks to indices after it
-		b.addTrackTo(tracks.length-1, tracks[tracks.length-1]);
-		assertTrue(b.getCurrentTrack().equals(tracks[0]));
+
 	}
 	
 	public void testSwap() {
@@ -195,7 +191,7 @@ public class BookTest extends TestCase {
 		assertEquals(-1, b.getCurrentTrackIndex());
 		
 		// also assert that this is the case even if we add more tracks to the book
-		b.addTrackTo(0, t0);
+		b.addTrack(t0);
 		assertEquals(-1, b.getCurrentTrackIndex());
 	}
 	

@@ -14,16 +14,6 @@ public interface IBookUpdates {
 	 * @param index
 	 */
 	public void removeTrack(int index);
-	
-	/**
-	 * Adds a track to the collection to the specified index.
-	 * 
-	 * @param index
-	 *            Where to add the track.
-	 * @param t
-	 *            The Track instance to add.
-	 */
-	public void addTrackTo(int index, Track t);
 
 	/**
 	 * Swap location of two tracks.
