@@ -120,6 +120,10 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 			// adjust the duration
 			duration += t.getDuration();
+			
+			if(tracks.size() == 1) {
+				trackIndex = 0;
+			}	
 		}
 	}
 
