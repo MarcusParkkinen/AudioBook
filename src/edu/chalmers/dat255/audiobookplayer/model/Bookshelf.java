@@ -199,11 +199,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	// Extra convenience methods
 
-	public int getBookSelectedDuration() {
+	public int getSelectedBookDuration() {
 		return books.get(selectedBookIndex).getDuration();
 	}
 	
-	public int getTrackDuration() {
+	public int getCurrentTrackDuration() {
 		return books.get(selectedBookIndex).getTrackDuration();
 	}
 
@@ -295,8 +295,18 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		return true;
 	}
 
-	// TODO: remove?
-	public Book getNewestBook() {
-		return books.getLast();
+	/**
+	 * @param track
+	 * @return
+	 */
+	public int getTrackDurationAt(int track) {
+		return books.get(selectedBookIndex).getTrackDurationAt(track);
+	}
+	
+	/**
+	 * @return
+	 */
+	public int getBookElapsedTime() {
+		return books.get(selectedBookIndex).getBookElapsedTime();
 	}
 }

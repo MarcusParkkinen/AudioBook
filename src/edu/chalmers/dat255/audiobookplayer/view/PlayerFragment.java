@@ -23,6 +23,7 @@ import edu.chalmers.dat255.audiobookplayer.R;
  * @version 0.6
  */
 public class PlayerFragment extends Fragment {
+	@SuppressWarnings("unused")
 	private static final String TAG = "PlayerFragment.class";
 	private PlayerUIEventListener fragmentOwner;
 	private SeekBar trackBar;
@@ -143,11 +144,11 @@ public class PlayerFragment extends Fragment {
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				Log.d(TAG, "started tracking");
+//				Log.d(TAG, "started tracking");
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				Log.d(TAG, "stopped tracking");
+//				Log.d(TAG, "stopped tracking");
 			}
 
 		});
@@ -202,14 +203,14 @@ public class PlayerFragment extends Fragment {
 
 	public void updateBookSeekBar(double percentage) {
 		int progress = (int) ((double)bookBar.getMax() * percentage);
-		Log.d(TAG, "Seeking book bar to " + progress + "%");
+//		Log.d(TAG, "Seeking book bar to " + progress + "%");
 		// calls 'onProgressChanged' from code:
 		bookBar.setProgress(progress);
 	}
 
 	public void updateTrackSeekBar(double percentage) {
 		int progress = (int) (trackBar.getMax() * percentage);
-		Log.d(TAG, "Seeking track bar to " + progress + "%");
+//		Log.d(TAG, "Seeking track bar to " + progress + "%");
 		// calls 'onProgressChanged' from code:
 		trackBar.setProgress(progress);
 	}

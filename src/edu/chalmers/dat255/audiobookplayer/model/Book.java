@@ -163,22 +163,18 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 	public void setCurrentTrackIndex(int index) {
 		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: " + this.tracks.size()+")");
+		Log.d(TAG, "Current trackIndex: " + trackIndex);
 		if (index >= 0) {
-			if (index > this.tracks.size() + 1) {
-				index = 0;
+			if (index >= this.tracks.size()) {
+				index = NO_TRACK_SELECTED;
 			}
 			trackIndex = index;
+		} else if (index == NO_TRACK_SELECTED) {
+			index = this.tracks.size() - 2;
 		} else {
 			Log.e(TAG,
 					" attempting to select a track at an illegal index. Skipping operation.");
 		}
-	}
-
-	/**
-	 * Increment the current track index.
-	 * 
-	 */
-	public void incrementTrackIndex() {
 	}
 
 	/* End IBookUpdates */
@@ -255,6 +251,9 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		return paths;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getCurrentTrackPath() {
 		return tracks.get(trackIndex).getTrackPath();
 	}
@@ -369,6 +368,23 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		bookElapsedTime += tracks.get(i).getElapsedTime();
 
 		return bookElapsedTime;
+	}
+
+	/**
+	 * @param track
+	 * @return
+	 */
+	public int getTrackDurationAt(int track) {
+		return tracks.get(track).getDuration();
+	}
+	
+	/**
+	 * Returns the title of the track.
+	 * 
+	 * @return
+	 */
+	public String getTrackTitle() {
+		return this.tracks.get(trackIndex).getTrackTitle();
 	}
 
 }
