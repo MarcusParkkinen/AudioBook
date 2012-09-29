@@ -1,43 +1,52 @@
 Welcome to Claudio
-=========
+=
 Claudio is an Android application that allows you to play your audio files. It can also synch your listening sessions throughout multiple devices.
 
 What is it? / Description
-===========
+==
 
 
 Latest Version
-========
+===
 N/A
 
 Download
-===========
+====
 https://github.com/MarcusParkkinen/AudioBook.git
 
 Installation
-============
+=====
+Install the .apk file.
 
 Uninstallation
-==============
-
-Licensing
-=========
+======
+Delete the .apk file.
 
 Documentation
-=============
+=======
 
 Development
-============
+=======
 
 Incompatibility
-===============
+=======
+This application is compatible with Android devices on API level 10 and above.
+Requires Android 2.2.5 (?)
 
-Known Issues or Bugs / Bug Reporting
-====================
+Known Issues or Bugs
+=======
 
 History
 =======
-<version>, <date> - <description>
+<date>, <version> - <description>
+Version 0.1 (29/19 2012)
+=
+Application core completed. Basic playback controls implemented. Basic book features implemented.
+==
+Version 0.2 ()
+===
+abc
+====
 
 Contact
 =======
@@ -55,5 +64,6 @@ Matej Kadric		matejba@gmail.com		matej.kadric		0739348354
 
 Licensing/Legal
 ===============
-This application is released under the GNU Lesser General Public License.
-The LGPL can be found here: http://www.gnu.org/licenses/lgpl.txt
+This application is released under Creative Commons BY-NC-ND 3.0.
+More information about the license can be found here:
+http://creativecommons.org/licenses/by-nc-nd/3.0/legalcodehttp://creativecommons.org/licenses/by-nc-nd/3.0/legalcode
