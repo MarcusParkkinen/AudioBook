@@ -145,7 +145,8 @@ public class AudioBookActivity extends FragmentActivity implements
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				// Bookshelf
-				Log.d(TAG, "Bookshelf list size (copy): " + bs.getNumberOfBooks());
+				Log.d(TAG,
+						"Bookshelf list size (copy): " + bs.getNumberOfBooks());
 				Book b = bs.getCurrentBook();
 				bookshelfFragment.bookAdded(b);
 
@@ -233,10 +234,12 @@ public class AudioBookActivity extends FragmentActivity implements
 
 		// total duration
 		int trackDuration = b.getTrackDuration();
+		
+		double progress = getProgress(trackElapsedTime, trackDuration);
 
-		Log.d(TAG, "track seeking ratio:  " + trackElapsedTime + "/"
-				+ trackDuration + " = " + trackElapsedTime / trackDuration);
-		playerFragment.updateTrackSeekBar(trackElapsedTime / trackDuration);
+		Log.d(TAG, "track seeking to:  " + trackElapsedTime + "/"
+				+ trackDuration + " = " + progress);
+		playerFragment.updateTrackSeekBar(progress);
 	}
 
 	private void updateBookSeekbar(Book b) {
@@ -245,10 +248,16 @@ public class AudioBookActivity extends FragmentActivity implements
 
 		// total duration
 		int bookDuration = b.getDuration();
+		
+		double progress = getProgress(bookElapsedTime, bookDuration);
 
 		Log.d(TAG, "book seeking ratio:  " + bookElapsedTime + "/"
-				+ bookDuration + " = " + bookElapsedTime / bookDuration);
-		playerFragment.updateBookSeekBar(bookElapsedTime / bookDuration);
+				+ bookDuration + " = " + progress);
+		playerFragment.updateBookSeekBar(progress);
+	}
+	
+	private double getProgress(int elapsedTime, int duration) {
+		return ((double) elapsedTime) / ((double) duration);
 	}
 
 	public void bookSelected(int index) {
@@ -275,13 +284,13 @@ public class AudioBookActivity extends FragmentActivity implements
 		ft.addToBackStack(null);
 		ft.commit();
 	}
-	
-//	public int getTrackDuration() {
-//	return pc.getTrackDuration();
-//}
-//
-//public int getBookDuration() {
-//	return pc.getBookDuration();
-//}
+
+	// public int getTrackDuration() {
+	// return pc.getTrackDuration();
+	// }
+	//
+	// public int getBookDuration() {
+	// return pc.getBookDuration();
+	// }
 
 }

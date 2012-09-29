@@ -83,11 +83,11 @@ public class BookshelfTest extends TestCase {
 		bookshelf.addBook(b);
 		bookshelf.addBook(b);
 		bookshelf.addBook(b);
-		
+
 		// Test the accessor
 		bookshelf.setSelectedBookIndex(2);
 		assertTrue(bookshelf.getSelectedBookIndex() == 2);
-		
+
 		// Test a positive integer beyond the allowed indices
 		bookshelf.setSelectedBookIndex(13);
 		assertFalse(bookshelf.getSelectedBookIndex() == 13);
@@ -95,7 +95,6 @@ public class BookshelfTest extends TestCase {
 		// Test a negative integer (which are always beyond the allowed indices)
 		bookshelf.setSelectedBookIndex(-5);
 		assertFalse(bookshelf.getSelectedBookIndex() == -5);
-
 
 		// Test a positive integer within the allowed indices
 		bookshelf.setSelectedBookIndex(2);
@@ -174,26 +173,35 @@ public class BookshelfTest extends TestCase {
 		Book b2 = new Book("testBook2");
 		Book b3 = new Book("testBook3");
 		Book b4 = new Book("testBook4");
-		
+
 		// Add them to the bookshelf
 		bookshelf.addBook(b0);
 		bookshelf.addBook(b1);
 		bookshelf.addBook(b2);
 		bookshelf.addBook(b3);
 		bookshelf.addBook(b4);
-		
+
 		Bookshelf copy = new Bookshelf(bookshelf);
-		
+
 		// Try to move from an illegal index to an illegal index
 		bookshelf.moveBook(5, 7);
 		assertTrue(copy.equals(bookshelf));
-		
+
 		// Try to move from an illegal index to a legal index
-		
+		bookshelf.moveBook(5, 3);
+		assertTrue(copy.equals(bookshelf));
+
 		// Try to move from a legal index to an illegal index
-		
+		bookshelf.moveBook(1, 7);
+		assertTrue(copy.equals(bookshelf));
+
 		// Try to move from a legal index to a legal index
-		
+		bookshelf.moveBook(1, 3);
+		assertFalse(copy.equals(bookshelf));
+		// Check that it was moved correctly
+		assertTrue(bookshelf.getBookAt(3).equals(copy.getBookAt(1)));
+		assertTrue(bookshelf.getBookAt(2).equals(copy.getBookAt(2)));
+		assertTrue(bookshelf.getBookAt(1).equals(copy.getBookAt(3)));
 	}
 
 	public void testGetCurrentBook() {

@@ -35,8 +35,6 @@ public class PlayerFragment extends Fragment {
 	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
 
-	// 2 Title labels: Track, Book
-	// 2 Time labels: Track, Book
 	// (Picker to seek to given time)
 
 	// TODO: make some methods protected
@@ -55,10 +53,6 @@ public class PlayerFragment extends Fragment {
 		public void seekToPercentageInTrack(double percentage);
 
 		public void seekToPercentageInBook(double percentage);
-
-		// public int getTrackDuration();
-
-		// public int getBookDuration();
 
 	}
 
@@ -143,10 +137,9 @@ public class PlayerFragment extends Fragment {
 					double seekMultiplier = (double) progress
 							* (1.0 / seekBar.getMax());
 
-					// fragmentOwner.seekToTimeInBook(time);
 					fragmentOwner.seekToPercentageInBook(seekMultiplier);
 				} else {
-					Log.d(TAG, "Code used SeekBar");
+					Log.d(TAG, "Code used bookBar");
 				}
 			}
 
@@ -168,13 +161,13 @@ public class PlayerFragment extends Fragment {
 					boolean fromUser) {
 				if (fromUser) {
 					Log.d(TAG, "User used SeekBar");
-					
+
 					double seekPercentage = (double) progress
 							* (1.0 / seekBar.getMax());
 
 					fragmentOwner.seekToPercentageInTrack(seekPercentage);
 				} else {
-					Log.d(TAG, "Code used SeekBar");
+					Log.d(TAG, "Code used trackBar");
 				}
 			}
 
@@ -186,25 +179,25 @@ public class PlayerFragment extends Fragment {
 				Log.d(TAG, "stopped tracking");
 			}
 		});
-		
+
 		trackTitle = (TextView) view.findViewById(R.id.trackTitle);
 		trackTitle.setText("track time");
-		
+
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
 		bookTitle.setText("book time");
-		
+
 		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
 		bookDuration.setText("XX");
-		
+
 		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
 		trackDuration.setText("YY");
-		
+
 		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
 		bookElapsedTime.setText("AA");
-		
+
 		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
 		trackElapsedTime.setText("BB");
-		
+
 		return view;
 	}
 
