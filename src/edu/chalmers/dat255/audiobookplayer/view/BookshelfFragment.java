@@ -38,7 +38,7 @@ public class BookshelfFragment extends Fragment {
 
 		public void bookLongPress(int index);
 
-		public void addButtonPressed();
+		public void addButtonPressed(View v);
 
 	}
 
@@ -93,7 +93,7 @@ public class BookshelfFragment extends Fragment {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
-					fragmentOwner.addButtonPressed();
+					fragmentOwner.addButtonPressed(v);
 				}
 			}
 		});
@@ -111,9 +111,13 @@ public class BookshelfFragment extends Fragment {
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 
+				Log.d(TAG, "OnGroupClick");
+
 				if (getActivity() != null) {
 					fragmentOwner.bookSelected(groupPosition);
 				}
+
+				Log.d(TAG, "OnGroupClick -- after bookSelected");
 
 				return true;
 			}
@@ -129,7 +133,7 @@ public class BookshelfFragment extends Fragment {
 				return true;
 			}
 		});
-
+		
 		bookshelfList.setAdapter(adapter);
 
 		return view;

@@ -30,6 +30,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.model.Book;
+import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 
 public class BrowserActivity extends Activity {
 
@@ -66,6 +68,8 @@ public class BrowserActivity extends Activity {
 
 		populateChildMap();
 		setUpComponents();
+		
+		File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
 		
 		fill(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 	}
@@ -111,7 +115,7 @@ public class BrowserActivity extends Activity {
 				if (name == null) {
 					name = "TITLE";
 				}
-				//bookCreator.addBook(new Book(name, tracks);
+				BookCreator.getInstance().createBook(tracks.toArray(new String[tracks.size()]), name);
 
 				//empty checkedItems and fill the list with unchecked items
 				checkedItems = new TreeSet<File>();
@@ -197,6 +201,7 @@ public class BrowserActivity extends Activity {
 
 		//reverse the list for easier iterating
 		childMap = new TreeMap<TypedFile, List<TypedFile>>();
+		
 		for(Entry<File, File> entry : parentMap.entrySet()) {
 			//if the map does not contain the parent, add the parent with a new list
 			TypedFile parent = new TypedFile(FILETYPE.FOLDER, entry.getValue().getAbsolutePath());

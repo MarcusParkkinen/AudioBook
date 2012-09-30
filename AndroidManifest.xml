@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.BookshelfActivity"
+            android:name=".view.BrowserActivity"
             android:label="@string/title_activity_browser" >
         </activity>
     </application>

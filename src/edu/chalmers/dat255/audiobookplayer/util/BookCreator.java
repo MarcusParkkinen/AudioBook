@@ -15,7 +15,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * Creates Book instances (filling them with metadata).
  * 
- * @author Aki Käkelä
+ * @author Aki Kï¿½kelï¿½
  * @version 0.4
  * 
  */
@@ -39,15 +39,24 @@ public class BookCreator {
 	}
 
 	public void createBook(String[] paths, String path) {
+		System.out.println("CREATING A BOOK!!!");
 		List<Track> trackList = new LinkedList<Track>();
 		for (int i = 0; i < paths.length; i++) {
-			trackList.add(TrackCreator.createTrack(paths[i]));
+			Track t;
+			try {
+				t = TrackCreator.createTrack(paths[i]);
+			} catch(NumberFormatException e) { 
+				// If a track contains malformed data, do not add it to the book
+				continue;
+			}
+			trackList.add(t);
 		}
-		
+		/*
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(path);
 		String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		bsh.addBook(new Book(trackList, title));
+		*/
+		bsh.addBook(new Book(trackList, path));
 	}
 
 	public void createTestBook() {

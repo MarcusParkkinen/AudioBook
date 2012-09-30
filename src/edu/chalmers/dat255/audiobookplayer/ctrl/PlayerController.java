@@ -75,8 +75,13 @@ public class PlayerController {
 	 * path at the selected track index can not be null.
 	 */
 	public void start() {
+		
+		/* DO NOT USE THIS. BOOKSHELFACTIVITY PROVIDES THIS WITH EVERY FILE
 		String path = Environment.getExternalStorageDirectory()
 				.getAbsolutePath();
+		*/
+		String path = "";
+		
 		// we have started playing a file, so start thread that updates time on
 		// Track instance once every second, and
 		if (bs.getCurrentTrackPath() != null) {

@@ -3,12 +3,14 @@ package edu.chalmers.dat255.audiobookplayer.view;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.ctrl.BookshelfController;
@@ -23,7 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventList
  * Main activity of the application. This class should handle all fragment
  * functionality.
  * 
- * @author Marcus Parkkinen, Aki Käkelä
+ * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
  * @version 0.6
  */
 public class AudioBookActivity extends FragmentActivity implements
@@ -84,8 +86,10 @@ public class AudioBookActivity extends FragmentActivity implements
 	}
 
 	/* Player*.class functions */
-	public void addButtonPressed() {
-		bc.createTestBook();
+	public void addButtonPressed(View v) {
+		//bc.createTestBook();
+		Intent intent = new Intent(this, BrowserActivity.class);
+		startActivity(intent);
 	}
 
 	public void previousTrack() {

@@ -5,15 +5,18 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 
 /**
  * Creates Track instances (filling them with metadata).
- * @author Aki Käkelä
+ * @author Aki Kï¿½kelï¿½
  * @version 0.4
  */
 public class TrackCreator {
 
-	public static Track createTrack(String path) {
+	public static Track createTrack(String path) throws NumberFormatException{
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(path);
-		int duration = MediaMetadataRetriever.METADATA_KEY_DURATION;
+		
+		int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+		
+		
 		return new Track(path, duration);
 	}
 
