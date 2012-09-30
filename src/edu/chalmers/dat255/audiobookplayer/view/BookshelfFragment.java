@@ -111,13 +111,9 @@ public class BookshelfFragment extends Fragment {
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 
-				Log.d(TAG, "OnGroupClick");
-
 				if (getActivity() != null) {
 					fragmentOwner.bookSelected(groupPosition);
 				}
-
-				Log.d(TAG, "OnGroupClick -- after bookSelected");
 
 				return true;
 			}

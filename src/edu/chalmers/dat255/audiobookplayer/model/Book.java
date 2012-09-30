@@ -20,10 +20,9 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	private static final int NO_TRACK_SELECTED = -1;
 
 	private LinkedList<Track> tracks;
-	private int trackIndex;
+	private int trackIndex = NO_TRACK_SELECTED;
 	private String title;
 	private int duration;
-	private int elapsedTime;
 
 	/*
 	 * To be implemented later: private Bookmark bookmark; private Tag[] tags;
@@ -35,8 +34,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 */
 	public Book(String title) {
 		tracks = new LinkedList<Track>();
-		trackIndex = NO_TRACK_SELECTED;
-
 		setBookTitle(title);
 	}
 
@@ -95,9 +92,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 			// the subsequent track will be selected
 			if (index < trackIndex) {
 				trackIndex--;
-
-				// adjust elapsed time
-				elapsedTime -= tracks.get(index).getDuration();
 			} else if (tracks.size() == 0) {
 				trackIndex = NO_TRACK_SELECTED;
 			}
@@ -137,10 +131,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		if (isLegalIndex(firstIndex) && isLegalIndex(secondIndex)
 				&& firstIndex < secondIndex) {
 			Collections.swap(tracks, firstIndex, secondIndex);
-
-			// adjust elapsed time
-			updateElapsedTime();
-
 		} else {
 			Log.e(TAG,
 					"attempting to move a track from/to illegal index. Skipping operation.");
@@ -148,7 +138,8 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	}
 
 	/**
-	 * Move a track.
+	 * Move a track from a given index to a given index. Indices inbetween will
+	 * be adjusted.
 	 * 
 	 * @param int from index
 	 * @param int to index
@@ -157,9 +148,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		if (isLegalIndex(from) && isLegalIndex(to) && from != to) {
 			Track t = tracks.remove(from);
 			tracks.add(to, t);
-
-			// adjust elapsed time
-			updateElapsedTime();
 		} else {
 			Log.e(TAG,
 					" attempting to move a track from/to illegal index. Skipping operation.");
@@ -177,80 +165,29 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @param int new index
 	 */
 
-	/*
-	 * OLD VERSION FROM Fri Sep 28, 22:07: public void setCurrentTrackIndex(int
-	 * index) { boolean loop = false; // TODO: change in settings? // Log.d(TAG,
-	 * "Changing trackIndex from " + trackIndex + " to " + // index); trackIndex
-	 * = index; if (trackIndex < 0) { if (loop) { trackIndex =
-	 * this.tracks.size() - 1; // last index } else { trackIndex = -1; // end }
-	 * } if (trackIndex > tracks.size() - 1) { if (loop) { trackIndex = 0; //
-	 * first index } else { trackIndex = -1; // end; book finished } } // TODO:
-	 * test // this.trackIndex = index % this.tracks.size(); Log.d(TAG,
-	 * "new index: " + trackIndex); } NEW VERSION:
-	 */
 	public void setCurrentTrackIndex(int index) {
-		System.out.println("Setting a new track index: " + index);
-
-		if (isLegalIndex(index)) {
+		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: " + this.tracks.size()+")");
+		Log.d(TAG, "Current trackIndex: " + trackIndex);
+		if (index >= 0) {
+			if (index >= this.tracks.size()) {
+				index = NO_TRACK_SELECTED;
+			}
 			trackIndex = index;
-			updateElapsedTime();
+		} else if (index == NO_TRACK_SELECTED) {
+			index = this.tracks.size() - 2;
 		} else {
 			Log.e(TAG,
 					" attempting to select a track at an illegal index. Skipping operation.");
 		}
 	}
 
-	/**
-	 * Increment the current track index.
-	 * 
-	 */
-	public void incrementTrackIndex() {
-		if (isLegalIndex(trackIndex + 1)) {
-			Track t = tracks.get(trackIndex++);
-
-			// adjust elapsed time
-			elapsedTime += t.getDuration() - t.getElapsedTime();
-		} else {
-			trackIndex = NO_TRACK_SELECTED;
-		}
-	}
-
-	/**
-	 * Set the elapsed time of the book
-	 * 
-	 * @param newTime
-	 *            new elapsed time
-	 */
-	public void setBookElapsedTime(int newTime) {
-		if (newTime > 0 && newTime <= this.duration) {
-			// set the correct elapsed time for the current track
-			tracks.get(trackIndex).setElapsedTime(newTime);
-
-			// adjust the elapsed time of the book accordingly
-			elapsedTime = 0;
-			for (int i = 0; i < trackIndex; i++) {
-				elapsedTime += tracks.get(i).getDuration();
-			}
-			elapsedTime += newTime;
-		} else {
-			Log.e(TAG,
-					" attempting to set elapsed time to illegal value. Skipping operation.");
-		}
-
-	}
-
 	/* End IBookUpdates */
 
 	/* ITrackUpdates */
 
-	public void setElapsedTime(int elapsedTime) {
+	public void setElapsedTime(int newTime) {
 		if (trackIndex != NO_TRACK_SELECTED) {
-			Track t = tracks.get(trackIndex);
-
-			// adjust elapsed time
-			elapsedTime -= t.getElapsedTime() + elapsedTime;
-
-			t.setElapsedTime(elapsedTime);
+			this.tracks.get(trackIndex).setElapsedTime(newTime);
 		}
 	}
 
@@ -318,6 +255,9 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		return paths;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getCurrentTrackPath() {
 		return tracks.get(trackIndex).getTrackPath();
 	}
@@ -359,27 +299,12 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	}
 
 	/**
-	 * Update the elapsed time of the book.
-	 */
-	public void updateElapsedTime() {
-		elapsedTime = 0;
-		for (int i = 0; i < trackIndex; i++) {
-			elapsedTime += tracks.get(i).getDuration();
-		}
-		elapsedTime += tracks.get(trackIndex).getElapsedTime();
-	}
-
-	/**
 	 * Get the duration of the book.
 	 * 
 	 * @return duration (ms)
 	 */
 	public int getDuration() {
 		return duration;
-	}
-
-	public int getBookElapsedTime() {
-		return elapsedTime;
 	}
 
 	/**
@@ -400,7 +325,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + duration;
-		result = prime * result + elapsedTime;
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + trackIndex;
 		result = prime * result + ((tracks == null) ? 0 : tracks.hashCode());
@@ -418,8 +342,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		Book other = (Book) obj;
 		if (duration != other.duration)
 			return false;
-		if (elapsedTime != other.elapsedTime)
-			return false;
 		if (title == null) {
 			if (other.title != null)
 				return false;
@@ -433,6 +355,40 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		} else if (!tracks.equals(other.tracks))
 			return false;
 		return true;
+	}
+
+	/**
+	 * Returns the elapsed time of the current book.
+	 * 
+	 * @return
+	 */
+	public int getBookElapsedTime() {
+		int bookElapsedTime = 0;
+		int i = 0;
+		while (i < this.trackIndex) {
+			bookElapsedTime += tracks.get(i).getDuration();
+			i++;
+		}
+		bookElapsedTime += tracks.get(i).getElapsedTime();
+
+		return bookElapsedTime;
+	}
+
+	/**
+	 * @param track
+	 * @return
+	 */
+	public int getTrackDurationAt(int track) {
+		return tracks.get(track).getDuration();
+	}
+	
+	/**
+	 * Returns the title of the track.
+	 * 
+	 * @return
+	 */
+	public String getTrackTitle() {
+		return this.tracks.get(trackIndex).getTrackTitle();
 	}
 
 }

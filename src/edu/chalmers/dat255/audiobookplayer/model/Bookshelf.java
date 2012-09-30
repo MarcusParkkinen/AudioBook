@@ -58,7 +58,6 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void setSelectedBookIndex(int index) {
 		if (isLegalIndex(index)) {
 			selectedBookIndex = index;
-			Log.i(TAG, "Selected a book");
 
 			// notify the view module that we have selected a book
 			pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null,
@@ -110,6 +109,12 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		}
 	}
 
+	/**
+	 * Move a book from a given index to a given index. Indices inbetween will
+	 * be adjusted.
+	 * @param from
+	 * @param to
+	 */
 	public void moveBook(int from, int to) {
 		if (isLegalIndex(from) && isLegalIndex(to)) {
 			if (selectedBookIndex == from) {
@@ -194,11 +199,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	// Extra convenience methods
 
-	public int getBookSelectedDuration() {
+	public int getSelectedBookDuration() {
 		return books.get(selectedBookIndex).getDuration();
 	}
 	
-	public int getTrackDuration() {
+	public int getCurrentTrackDuration() {
 		return books.get(selectedBookIndex).getTrackDuration();
 	}
 
@@ -234,13 +239,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	/* Track methods */
 	public void setElapsedTime(int elapsedTime) {
 		// set elapsed time in the currently playing book
-		// NOTE: this operation sets the time for the currently playing track as
-		// well
-		books.get(selectedBookIndex).setBookElapsedTime(elapsedTime);
-
-		// notify the view module to update its representation by providing the
-		// following:
-		// - a copy of the currently playing book
+		books.get(selectedBookIndex).setElapsedTime(elapsedTime);
+		
 		pcs.firePropertyChange(Constants.event.ELAPSED_TIME_CHANGED, null,
 				new Bookshelf(this));
 	}
@@ -295,8 +295,18 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		return true;
 	}
 
-	// TODO: remove?
-	public Book getNewestBook() {
-		return books.getLast();
+	/**
+	 * @param track
+	 * @return
+	 */
+	public int getTrackDurationAt(int track) {
+		return books.get(selectedBookIndex).getTrackDurationAt(track);
+	}
+	
+	/**
+	 * @return
+	 */
+	public int getBookElapsedTime() {
+		return books.get(selectedBookIndex).getBookElapsedTime();
 	}
 }

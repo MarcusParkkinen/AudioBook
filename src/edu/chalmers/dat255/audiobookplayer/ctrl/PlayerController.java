@@ -1,6 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -164,7 +165,7 @@ public class PlayerController {
 	 * @return
 	 */
 	public int getTrackDuration() {
-		return bs.getTrackDuration();
+		return bs.getCurrentTrackDuration();
 	}
 
 	/**
@@ -173,7 +174,7 @@ public class PlayerController {
 	 * @return
 	 */
 	public int getBookDuration() {
-		return bs.getBookSelectedDuration();
+		return bs.getSelectedBookDuration();
 	}
 
 	/**
@@ -233,12 +234,17 @@ public class PlayerController {
 	 *            book.
 	 */
 	public void seekToPercentageInBook(double percentage) {
-		int seekTime = (int) (bs.getBookSelectedDuration() * percentage);
+		DecimalFormat df = new DecimalFormat("#.##");
+		Log.d(TAG, "percentage: " + df.format(percentage));
+		int bookDuration = bs.getSelectedBookDuration();
+		int seekTime = (int) (bookDuration * percentage);
+		Log.d(TAG, "seekTime: " + seekTime + ". Book duration: " + bookDuration);
 		// seek through the tracks
-		int track = 0;
-		while (seekTime > bs.getTrackDuration()) {
-			seekTime -= bs.getTrackDuration();
+		int track = 0, trackDuration;
+		while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
+			seekTime -= trackDuration;
 			track++;
+			Log.d(TAG, "Skipped a track (" + trackDuration +  "ms) . New seekTime: " + seekTime + ". Track#: " + track);
 		}
 		bs.setCurrentTrackIndex(track);
 		start(); // start the track we seeked to

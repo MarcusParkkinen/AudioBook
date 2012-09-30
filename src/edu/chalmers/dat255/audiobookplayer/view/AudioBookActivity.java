@@ -145,7 +145,6 @@ public class AudioBookActivity extends FragmentActivity implements
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				// Bookshelf
-				Log.d(TAG, "Bookshelf list size (copy): " + bs.getNumberOfBooks());
 				Book b = bs.getCurrentBook();
 				bookshelfFragment.bookAdded(b);
 
@@ -156,9 +155,11 @@ public class AudioBookActivity extends FragmentActivity implements
 				// indicate selected book
 
 				// show the player
+				Log.d(TAG, "Started switching fragments");
 				switchToPlayerFragment();
 				// start the player
 				pc.start();
+//				this.playerFragment.updateBookTitleLabel();
 			} else if (eventName.equals(Constants.event.BOOK_REMOVED)) {
 				// Bookshelf
 				// Do nothing for now
@@ -176,10 +177,22 @@ public class AudioBookActivity extends FragmentActivity implements
 
 				// Player
 				Book b = bs.getCurrentBook();
-				// recalculate the book seekbar
-				updateBookSeekbar(b);
-				// recalculate the track seekbar
-				updateTrackSeekbar(b);
+				// Log.d(TAG, "Updating seek bars...");
+				// Log.d(TAG, "playerFragment is " +
+				// (playerFragment.isAdded()?"":"not ") + "added");
+				if (playerFragment != null && playerFragment.isAdded()) {
+					// recalculate the book seekbar
+					updateBookSeekbar(b);
+					// recalculate the track seekbar
+					updateTrackSeekbar(b);
+					// Log.d(TAG, "...done updating seek bars.");
+
+					// update time labels
+//					this.playerFragment.updateTrackElapsedTimeLabel(""
+//							+ b.getElapsedTime());
+//					this.playerFragment.updateBookElapsedTimeLabel(""
+//							+ b.getBookElapsedTime());
+				}
 			} else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
 				// Bookshelf
 				// remove the track from the list (the child on the given index
@@ -200,12 +213,16 @@ public class AudioBookActivity extends FragmentActivity implements
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
+				Book b = bs.getCurrentBook();
 				// Bookshelf
 				// move the "selected track" indicator to the new index
 
 				// Player
 				// update the track name label
 				// recalculate the track seekbar
+//				this.playerFragment.updateTrackDurationLabel(""
+//						+ b.getTrackDuration());
+//				this.playerFragment.updateTrackTitleLabel(b.getTrackTitle());
 			} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
 				// Bookshelf
 				// update the name of the book (parent) of the given index
@@ -213,15 +230,15 @@ public class AudioBookActivity extends FragmentActivity implements
 				// Player
 				// update the book title label
 				Book b = bs.getCurrentBook();
-				this.playerFragment.updateBookTitleLabel(b.getTitle());
+//				this.playerFragment.updateBookTitleLabel(b.getTitle());
 			} else if (eventName.equals(Constants.event.BOOK_DURATION_CHANGED)) {
 				// Bookshelf
 
 				// Player
 				// update the book duration label
 				Book b = bs.getCurrentBook();
-				this.playerFragment.updateBookDurationLabel(""
-						+ b.getElapsedTime());
+//				this.playerFragment.updateBookDurationLabel(""
+//						+ b.getElapsedTime());
 			}
 		}
 
@@ -234,9 +251,9 @@ public class AudioBookActivity extends FragmentActivity implements
 		// total duration
 		int trackDuration = b.getTrackDuration();
 
-		Log.d(TAG, "track seeking ratio:  " + trackElapsedTime + "/"
-				+ trackDuration + " = " + trackElapsedTime / trackDuration);
-		playerFragment.updateTrackSeekBar(trackElapsedTime / trackDuration);
+		double progress = getProgress(trackElapsedTime, trackDuration);
+
+		playerFragment.updateTrackSeekBar(progress);
 	}
 
 	private void updateBookSeekbar(Book b) {
@@ -246,14 +263,17 @@ public class AudioBookActivity extends FragmentActivity implements
 		// total duration
 		int bookDuration = b.getDuration();
 
-		Log.d(TAG, "book seeking ratio:  " + bookElapsedTime + "/"
-				+ bookDuration + " = " + bookElapsedTime / bookDuration);
-		playerFragment.updateBookSeekBar(bookElapsedTime / bookDuration);
+		double progress = getProgress(bookElapsedTime, bookDuration);
+
+		playerFragment.updateBookSeekBar(progress);
+	}
+
+	private double getProgress(int elapsedTime, int duration) {
+		return ((double) elapsedTime) / ((double) duration);
 	}
 
 	public void bookSelected(int index) {
 		// set the selected book to the new index
-		Log.d(TAG, "bookSelected");
 		bsc.setSelectedBook(index);
 	}
 
@@ -274,14 +294,15 @@ public class AudioBookActivity extends FragmentActivity implements
 		ft.replace(R.id.audiobook_layout, playerFragment);
 		ft.addToBackStack(null);
 		ft.commit();
+		Log.d(TAG, "Finished switching fragments");
 	}
-	
-//	public int getTrackDuration() {
-//	return pc.getTrackDuration();
-//}
-//
-//public int getBookDuration() {
-//	return pc.getBookDuration();
-//}
+
+	// public int getTrackDuration() {
+	// return pc.getTrackDuration();
+	// }
+	//
+	// public int getBookDuration() {
+	// return pc.getBookDuration();
+	// }
 
 }
