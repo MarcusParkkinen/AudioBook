@@ -1,6 +1,13 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
+import java.io.IOException;
+
+import android.content.Context;
+
+import com.google.gson.Gson;
+
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
+import edu.chalmers.dat255.audiobookplayer.util.FileParser;
 
 /**
  * BookController class - used to edit and create all the Books stored in the users bookshelf.
@@ -29,15 +36,30 @@ public class BookshelfController {
 		shelf.setSelectedBookIndex(index);
 	}
 	
-//	/**
-//	 * Returns the index of the currently selected book.
-//	 * 
-//	 * @return index
-//	 */
-//	public int getSelectedBookIndex() {
-//		return shelf.getSelectedBookIndex();
-//	}
+	/**
+	 * Save a JSON representation of the model object tree to file.
+	 * @param Context context
+	 * @param String username
+	 */
+	public boolean saveBookshelf(Context c, String username) {	
+		try{
+			Gson gson = new Gson();
+			FileParser.writeToInternalStorage(username + ".bookmark", c, gson.toJson(shelf));
+		} catch(IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public void loadBookshelf(Context c, String username) {
+		try{
+			Gson gson = new Gson();
+			shelf = gson.fromJson(
+					FileParser.readFromInternalStorage(username, c), Bookshelf.class);
+		} catch(Exception e) {
+			shelf = new Bookshelf();
+		}
+	}
 
-	// sort, swap, move, edit book
-
+	//+ sort, swap, move, edit book
 }
