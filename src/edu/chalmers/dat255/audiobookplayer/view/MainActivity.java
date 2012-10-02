@@ -19,19 +19,23 @@ import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
+import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 import edu.chalmers.dat255.audiobookplayer.view.BookshelfFragment.BookshelfUIEventListener;
 import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventListener;
 
 /**
- * @author Aki Käkelä
+ * @author Aki KÃ¤kelÃ¤, Marcus Parkkinen
  * @version 0.6
  * 
+ * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
+ * @version 0.6
  */
 public class MainActivity extends FragmentActivity implements
 		PlayerUIEventListener, BookshelfUIEventListener, PropertyChangeListener {
 	private final static int PLAYER = 0;
 	private final static int BOOKSHELF = 1;
 	private static final String TAG = "MainActivity.class";
+	private static final String USERNAME = "Default";
 
 	// ViewPager
 	private ViewPagerAdapter adapter;
@@ -52,21 +56,33 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 
 		initPager();
+		
+		/*
+		 *	NOTE: varje gang vi tabbar upp programmet efter multitasking sa kommer allt
+		 *		  i denna metod att koeras. Skapar konstiga problem, boer fixas. Detta gaeller
+		 *		  aeven alla andra viewkomponenter ocksa. 
+		 * 
+		 */
 
-		// TODO: move elsewhere
-		Bookshelf bookshelf = new Bookshelf();
+		// Set up the controller for the bookshelf
+		bsc = new BookshelfController();
+		// Load a bookshelf specified by the username
+		Bookshelf bs = bsc.loadBookshelf(this, USERNAME);
 
 		// Create controllers with the bookshelf reference
-		bsc = new BookshelfController(bookshelf);
-		pc = new PlayerController(bookshelf);
+		pc = new PlayerController(bs);
 		bc = BookCreator.getInstance();
 
-		bc.setBookshelf(bookshelf);
+		bc.setBookshelf(bs);
 
-		// Listen to the model
-		bookshelf.addPropertyChangeListener(this);
+		// Subscribe as a listener to the model
+		bs.addPropertyChangeListener(this);
+		
+		// provide a reference to the bookshelf as a temporary resource
+		Bundle bsReference = new Bundle();
+		bsReference.putString(Constants.reference.BOOKSHELF, JSONParser.toJSON(bs));
+		bookshelf.setArguments(bsReference);
 	}
-
 	private void initPager() {
 		// create a list of our fragments
 		List<Fragment> fragments = new Vector<Fragment>();
@@ -84,8 +100,22 @@ public class MainActivity extends FragmentActivity implements
 		// default selected screen
 		pager.setCurrentItem(BOOKSHELF);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		// Whenever we're quitting the application, a bookmark
+		// should be saved.
+		bsc.saveBookshelf(this, USERNAME);
+	}
 
 	/* PlayerUIEventListener */
+	
+	/*
+	 * The methods below relay user-initiated events from the fragments to
+	 * relevant controller methods.
+	 */
 
 	public void previousTrack() {
 		pc.previousTrack();
@@ -144,6 +174,13 @@ public class MainActivity extends FragmentActivity implements
 		Log.d(TAG, "Tag set");
 	}
 
+	/**
+	 * Whenever the model component changes, an event is received here. The new
+	 * value property of the event contains a reference to a copy of the model.
+	 * 
+	 * @param event
+	 *            Event object that contains information about the change.
+	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
 		if (eventName != Constants.event.ELAPSED_TIME_CHANGED)
@@ -190,6 +227,7 @@ public class MainActivity extends FragmentActivity implements
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)) {
+				System.out.println("Updating time..3");
 				Book b = bs.getCurrentBook();
 				// Bookshelf
 
@@ -250,9 +288,17 @@ public class MainActivity extends FragmentActivity implements
 				updateBookDurationLabel(b);
 			}
 		}
+
 	}
 
 	// Titles
+	
+	/**
+	 * UI mutator method that updates the book title label in
+	 * the player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateBookTitleLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
@@ -260,7 +306,13 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 	}
-
+	
+	/**
+	 * UI mutator method that updates the track title in the
+	 * player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateTrackTitleLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
@@ -268,8 +320,15 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 	}
-
+	
 	// Duration times
+	
+	/**
+	 * UI mutator method that updates the book duration label
+	 * in the player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateBookDurationLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
@@ -277,7 +336,13 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 	}
-
+	
+	/**
+	 * UI mutator method that updates the track duration label
+	 * in the player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateTrackDurationLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
@@ -287,15 +352,30 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	// Elapsed times
+	
+	/**
+	 * UI mutator method that updates the track duration label
+	 * in the player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateElapsedTimeLabels(final Book b) {
-		player.getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				player.updateTrackElapsedTimeLabel(b.getElapsedTime());
-				player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
-			}
-		});
+		if(player.getActivity() != null) {
+			player.getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					player.updateTrackElapsedTimeLabel(b.getElapsedTime());
+					player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
+				}
+			});
+		}
 	}
-
+	
+	/**
+	 * UI mutator method that updates the track seekbar in
+	 * the player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateTrackSeekbar(Book b) {
 		// elapsed time
 		int trackElapsedTime = b.getCurrentTrack().getElapsedTime();
@@ -307,7 +387,13 @@ public class MainActivity extends FragmentActivity implements
 
 		player.updateTrackSeekBar(progress);
 	}
-
+	
+	/**
+	 * UI mutator method that updates the book seekbar in
+	 * the player fragment.
+	 * 
+	 * @param b Book that specifies the change
+	 */
 	private void updateBookSeekbar(Book b) {
 		// elapsed time
 		int bookElapsedTime = b.getBookElapsedTime();
@@ -319,7 +405,14 @@ public class MainActivity extends FragmentActivity implements
 
 		player.updateBookSeekBar(progress);
 	}
-
+	
+	/**
+	 * Private utility method that calculates the progress
+	 * of a book or track.
+	 * 
+	 * @param int elapsed time of the book or track
+	 * @param int duration of the book or track
+	 */
 	private double getProgress(int elapsedTime, int duration) {
 		return ((double) elapsedTime) / ((double) duration);
 	}

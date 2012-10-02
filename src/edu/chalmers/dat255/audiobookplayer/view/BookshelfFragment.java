@@ -1,5 +1,6 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,10 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
+import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
+import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 
 /**
  * Graphical representation of the bookshelf.
@@ -39,7 +43,8 @@ public class BookshelfFragment extends Fragment {
 		public void bookLongPress(int index);
 
 		public void addButtonPressed(View v);
-
+		
+		//public void refillBookshelf(Bookshelf );
 	}
 
 	@Override
@@ -125,10 +130,35 @@ public class BookshelfFragment extends Fragment {
 		});
 		
 		bookshelfList.setAdapter(adapter);
+		
+		// Access the bookshelf reference
+		String s = getArguments().getString(Constants.reference.BOOKSHELF);
+		Bookshelf b = getReferenceFromJSON(s);
+		
+		if(b != null) {
+			// Create graphical representations of all previously stored books
+			for(int i = 0; i < b.getNumberOfBooks(); i++) {
+				bookAdded(b.getBookAt(i));
+			}
+		}
 
 		return view;
 	}
-
+	/**
+	 * Private method that utilizes utility classes to deserialize
+	 * a bookshelf object.
+	 * 
+	 * @param String json representation of the object
+	 */
+	private Bookshelf getReferenceFromJSON(String json) {
+		try{
+			return JSONParser.fromJSON(json, Bookshelf.class);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
 	/**
 	 * Private help class that holds an entry with a key and a value
 	 * 
