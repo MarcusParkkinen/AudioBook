@@ -6,13 +6,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnDragListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -69,7 +75,7 @@ public class BookshelfFragment extends Fragment {
 		if (listData == null && adapter == null) {
 			listData = new ArrayList<Entry<String, List<String>>>();
 			adapter = new ExpandableBookshelfAdapter(view.getContext(),
-					listData);
+					listData, this);
 		}
 
 		/**************************************************************/
@@ -97,11 +103,13 @@ public class BookshelfFragment extends Fragment {
 		/* Get the list layout, and add listener methods and an adapter to it */
 		/**//**/
 		/******************************************************************************/
-		ExpandableListView bookshelfList = (ExpandableListView) view
+		 ExpandableListView bookshelfList = (ExpandableListView) view
 				.findViewById(R.id.bookshelfList);
 
 		// called when a list item is clicked
-		bookshelfList.setOnGroupClickListener(new OnGroupClickListener() {
+		/*
+		 * Does not function at the moment, workaround implemented in adapter.
+		 * bookshelfList.setOnGroupClickListener(new OnGroupClickListener() {
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 
@@ -111,7 +119,8 @@ public class BookshelfFragment extends Fragment {
 
 				return true;
 			}
-		});
+		});*/
+		
 
 		// called when a sub-list item is clicked
 		bookshelfList.setOnChildClickListener(new OnChildClickListener() {
@@ -124,15 +133,23 @@ public class BookshelfFragment extends Fragment {
 			}
 		});
 		
+		
 		bookshelfList.setAdapter(adapter);
 
 		return view;
+	}
+	
+	
+	protected void groupClicked(int groupPosition) {
+		if (getActivity() != null) {
+			parentFragment.bookSelected(groupPosition);
+		}
 	}
 
 	/**
 	 * Private help class that holds an entry with a key and a value
 	 * 
-	 * @author Fredrik Ã…hs
+	 * @author Fredrik Åhs
 	 * @version 0.1
 	 */
 	private class BookshelfEntry<K, V> implements Map.Entry<K, V> {

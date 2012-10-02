@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
- 
-    <TextView android:id="@+id/row_name"
-         android:paddingLeft="50dp"
-         android:textSize="20dp"
-         android:textStyle="normal"
-         android:layout_width="320dp"
-         android:layout_height="wrap_content"/>
- 
-</LinearLayout>
+    android:layout_height="70dp"
+    android:orientation="horizontal"
+    android:paddingBottom="3dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="3dp" >
+
+    <ImageView
+        android:id="@+id/bookshelfBookCover"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/coverText"
+        android:scaleType="centerInside" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/bookshelfBookCover" >
+
+        <TextView
+            android:id="@+id/bookshelfBookTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="5dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textSize="20dp"
+            android:textStyle="normal" />
+
+        <ProgressBar
+            android:id="@+id/bookshelfProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_alignBottom="@id/bookshelfBookTitle"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp" />
+    </RelativeLayout>
+
+</RelativeLayout>
