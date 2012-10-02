@@ -2,13 +2,14 @@ package edu.chalmers.dat255.audiobookplayer.view;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.Vector;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import edu.chalmers.dat255.audiobookplayer.R;
@@ -22,81 +23,69 @@ import edu.chalmers.dat255.audiobookplayer.view.BookshelfFragment.BookshelfUIEve
 import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventListener;
 
 /**
- * Main activity of the application. This class should handle all fragment
- * functionality.
- * 
- * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
  * @version 0.6
+ * 
  */
-public class AudioBookActivity extends FragmentActivity implements
-		BookshelfUIEventListener, PlayerUIEventListener, PropertyChangeListener {
+public class MainActivity extends FragmentActivity implements
+		PlayerUIEventListener, BookshelfUIEventListener, PropertyChangeListener {
+	private final static int PLAYER = 0;
+	private final static int BOOKSHELF = 1;
+	private static final String TAG = "MainActivity.class";
 
-	private static final String TAG = "AudioBookActivity.class";
+	// ViewPager
+	private ViewPagerAdapter adapter;
+	private ViewPager pager;
 
-	// Fragment classes
-	private final BookshelfFragment bookshelfFragment = new BookshelfFragment();
-	private final PlayerFragment playerFragment = new PlayerFragment();
+	// Fragments
+	PlayerFragment player = new PlayerFragment();
+	BookshelfFragment bookshelf = new BookshelfFragment();
 
-	// Controller classes
+	// Controllers
 	private BookshelfController bsc;
 	private PlayerController pc;
 	private BookCreator bc;
 
 	@Override
-	public void onCreate(Bundle savedInstance) {
-		super.onCreate(savedInstance);
-		setContentView(R.layout.activity_audiobook);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-		// Temporary solution: always create a new bookshelf
+		initPager();
+
+		// TODO: move elsewhere
 		Bookshelf bookshelf = new Bookshelf();
 
-		// Instantiate Controller classes
+		// Create controllers with the bookshelf reference
 		bsc = new BookshelfController(bookshelf);
 		pc = new PlayerController(bookshelf);
 		bc = BookCreator.getInstance();
 
 		bc.setBookshelf(bookshelf);
 
+		// Listen to the model
 		bookshelf.addPropertyChangeListener(this);
-
-		// Make sure that audiobook_layout is being used as layout for this
-		// activity and
-		// that we are not resuming from a previous state as this could result
-		// in overlapping
-		// fragments
-		if (findViewById(R.id.audiobook_layout) != null
-				&& savedInstance == null) {
-
-			// In case arguments have been sent through an Intent, forward these
-			// to the
-			// fragments as well
-			bookshelfFragment.setArguments(getIntent().getExtras());
-
-			// Add the STARTING_FRAGMENT to this layout
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
-			ft.add(R.id.audiobook_layout, bookshelfFragment);
-			ft.commit();
-		}
-		
-		// Player fragment
-		if (findViewById(R.id.audiobook_layout) != null) {
-			playerFragment.setArguments(getIntent().getExtras());
-		}
-
 	}
 
-	public void bookLongPress(int index) {
-		// TODO
-		// Show book stats or enable drag&drop to sort
+	private void initPager() {
+		// create a list of our fragments
+		List<Fragment> fragments = new Vector<Fragment>();
+		fragments.add(player);
+		fragments.add(bookshelf);
+
+		// create the adapter
+		this.adapter = new ViewPagerAdapter(super.getSupportFragmentManager(),
+				fragments);
+
+		// create the view pager and set the adapter
+		pager = (ViewPager) super.findViewById(R.id.mytwopanelpager);
+		pager.setAdapter(this.adapter);
+
+		// default selected screen
+		pager.setCurrentItem(BOOKSHELF);
 	}
 
-	/* Player*.class functions */
-	public void addButtonPressed(View v) {
-		// bc.createTestBook();
-		Intent intent = new Intent(this, BrowserActivity.class);
-		startActivity(intent);
-	}
+	/* PlayerUIEventListener */
 
 	public void previousTrack() {
 		pc.previousTrack();
@@ -126,7 +115,26 @@ public class AudioBookActivity extends FragmentActivity implements
 		pc.seekToPercentageInTrack(percentage);
 	}
 
-	/* End player */
+	/* End PlayerUIEventListener */
+
+	/* BookshelfUIListener */
+	public void bookSelected(int index) {
+		// set the selected book to the new index
+		bsc.setSelectedBook(index);
+	}
+
+	public void bookLongPress(int index) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void addButtonPressed(View v) {
+		// bc.createTestBook();
+		Intent intent = new Intent(this, BrowserActivity.class);
+		startActivity(intent);
+	}
+
+	/* End BookshelfUIListener */
 
 	public void bookmarkSet() {
 		Log.d(TAG, "Bookmark set");
@@ -136,35 +144,21 @@ public class AudioBookActivity extends FragmentActivity implements
 		Log.d(TAG, "Tag set");
 	}
 
-	/**
-	 * Whenever the model component changes, an event is received here. The new
-	 * value property of the event contains a reference to a copy of the model.
-	 * 
-	 * @param event
-	 *            Event object that contains information about the change.
-	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-		// Log.d(TAG, "Received update: " + eventName);
+		if (eventName != Constants.event.ELAPSED_TIME_CHANGED)
+			Log.d(TAG, "Received update: " + eventName);
 
 		if (event.getNewValue() instanceof Bookshelf) {
 			// Get the model from the update
 			Bookshelf bs = (Bookshelf) event.getNewValue();
-
-			// Debug playerFragment
-			if (!playerFragment.isAdded()) {
-				Log.e(TAG, "playerFragment has not yet been added.");
-			}
-			if (playerFragment == null) {
-				Log.e(TAG, "playerFragment is null when taking updates.");
-			}
 
 			// Check which event was fired, and do relevant updates in the
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				Book b = bs.getCurrentBook();
 				// Bookshelf
-				bookshelfFragment.bookAdded(b);
+				bookshelf.bookAdded(b);
 
 				// Player
 				// Do nothing
@@ -174,13 +168,15 @@ public class AudioBookActivity extends FragmentActivity implements
 				// indicate selected book
 
 				// show the player UI
-				switchFragment(bookshelfFragment, playerFragment);
+				pager.setCurrentItem(PLAYER);
 				// start the player
 				pc.start();
 				// show the title of the book
 				updateBookTitleLabel(b);
 				// ... and display its duration
 				updateBookDurationLabel(b);
+				// show the duration of the track
+				updateTrackDurationLabel(b);
 			} else if (eventName.equals(Constants.event.BOOK_REMOVED)) {
 				// Bookshelf
 				// Do nothing for now
@@ -194,20 +190,16 @@ public class AudioBookActivity extends FragmentActivity implements
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)) {
+				Book b = bs.getCurrentBook();
 				// Bookshelf
 
 				// Player
-				Book b = bs.getCurrentBook();
-				if (playerFragment != null && playerFragment.isAdded()) {
-					// recalculate the track seekbar
-					updateTrackSeekbar(b);
-					// recalculate the book seekbar
-					updateBookSeekbar(b);
-					// Log.d(TAG, "...done updating seek bars.");
-
-					// update time labels
-					updateElapsedTimeLabels(b);
-				}
+				// recalculate the track seekbar
+				updateTrackSeekbar(b);
+				// recalculate the book seekbar
+				updateBookSeekbar(b);
+				// update time labels
+				updateElapsedTimeLabels(b);
 			} else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
 				Book b = bs.getCurrentBook();
 				// Bookshelf
@@ -215,7 +207,7 @@ public class AudioBookActivity extends FragmentActivity implements
 				// in the given parent)
 
 				// Player
-				// update the book duration label
+				// update book duration label
 				updateBookDurationLabel(b);
 			} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
 				Book b = bs.getCurrentBook();
@@ -223,7 +215,7 @@ public class AudioBookActivity extends FragmentActivity implements
 				// add ... -"-
 
 				// Player
-				// update the book duration label
+				// update book duration label
 				updateBookDurationLabel(b);
 			} else if (eventName.equals(Constants.event.TRACK_ORDER_CHANGED)) {
 				// Bookshelf
@@ -238,7 +230,7 @@ public class AudioBookActivity extends FragmentActivity implements
 				// move the "selected track" indicator to the new index
 
 				// Player
-				// update track title label
+				// update track title and duration labels
 				updateTrackTitleLabel(b);
 				updateTrackDurationLabel(b);
 			} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
@@ -258,50 +250,48 @@ public class AudioBookActivity extends FragmentActivity implements
 				updateBookDurationLabel(b);
 			}
 		}
-
 	}
 
 	// Titles
 	private void updateBookTitleLabel(final Book b) {
-		playerFragment.getActivity().runOnUiThread(new Runnable() {
+		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				playerFragment.updateBookTitleLabel(b.getTitle());
+				player.updateBookTitleLabel(b.getTitle());
 			}
 		});
 	}
 
 	private void updateTrackTitleLabel(final Book b) {
-		playerFragment.getActivity().runOnUiThread(new Runnable() {
+		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				playerFragment.updateTrackTitleLabel(b.getTrackTitle());
+				player.updateTrackTitleLabel(b.getTrackTitle());
 			}
 		});
 	}
 
 	// Duration times
 	private void updateBookDurationLabel(final Book b) {
-		playerFragment.getActivity().runOnUiThread(new Runnable() {
+		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				playerFragment.updateBookDurationLabel(b.getDuration());
+				player.updateBookDurationLabel(b.getDuration());
 			}
 		});
 	}
 
 	private void updateTrackDurationLabel(final Book b) {
-		playerFragment.getActivity().runOnUiThread(new Runnable() {
+		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				playerFragment.updateTrackDurationLabel(b.getTrackDuration());
+				player.updateTrackDurationLabel(b.getTrackDuration());
 			}
 		});
 	}
 
 	// Elapsed times
 	private void updateElapsedTimeLabels(final Book b) {
-		playerFragment.getActivity().runOnUiThread(new Runnable() {
+		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				playerFragment.updateTrackElapsedTimeLabel(b.getElapsedTime());
-				playerFragment.updateBookElapsedTimeLabel(b
-						.getBookElapsedTime());
+				player.updateTrackElapsedTimeLabel(b.getElapsedTime());
+				player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
 			}
 		});
 	}
@@ -315,7 +305,7 @@ public class AudioBookActivity extends FragmentActivity implements
 
 		double progress = getProgress(trackElapsedTime, trackDuration);
 
-		playerFragment.updateTrackSeekBar(progress);
+		player.updateTrackSeekBar(progress);
 	}
 
 	private void updateBookSeekbar(Book b) {
@@ -327,36 +317,11 @@ public class AudioBookActivity extends FragmentActivity implements
 
 		double progress = getProgress(bookElapsedTime, bookDuration);
 
-		playerFragment.updateBookSeekBar(progress);
+		player.updateBookSeekBar(progress);
 	}
 
 	private double getProgress(int elapsedTime, int duration) {
 		return ((double) elapsedTime) / ((double) duration);
 	}
-
-	public void bookSelected(int index) {
-		// set the selected book to the new index
-		bsc.setSelectedBook(index);
-	}
-
-	private void switchFragment(Fragment oldFragment, Fragment newFragment) {
-		FragmentManager fm = getSupportFragmentManager();
-		fm.saveFragmentInstanceState(oldFragment);
-
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.replace(R.id.audiobook_layout, playerFragment);
-		ft.addToBackStack(null);
-		ft.commit();
-		Log.d(TAG, "Finished switching fragments");
-	}
-
-	// public int getTrackDuration() {
-	// return pc.getTrackDuration();
-	// }
-	//
-	// public int getBookDuration() {
-	// return pc.getBookDuration();
-	// }
 
 }

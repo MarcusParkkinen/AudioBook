@@ -11,8 +11,8 @@ import android.util.Log;
  * Represents a collection of Track objects that collectively form a book. Null
  * tracks are not allowed (and will be ignored when added).
  * 
- * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
- * @version 0.5
+ * @author Marcus Parkkinen, Aki Käkelä
+ * @version 0.6
  */
 
 public final class Book implements ITrackUpdates, IBookUpdates {
@@ -24,10 +24,10 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	private String title;
 	private int duration;
 
-	/*
-	 * To be implemented later: private Bookmark bookmark; private Tag[] tags;
-	 * private Stats stats;
-	 */
+	/* To be implemented later: */
+	// private Bookmark bookmark;
+	// private Tag[] tags;
+	// private Stats stats;
 
 	/**
 	 * Create an empty book.
@@ -168,14 +168,12 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	public void setCurrentTrackIndex(int index) {
 		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: "
 				+ this.tracks.size() + ")");
-		Log.d(TAG, "Current trackIndex: " + trackIndex);
 		if (index >= 0) {
 			if (index >= this.tracks.size()) {
 				index = NO_TRACK_SELECTED;
 			}
 			trackIndex = index;
-		} else if (index == NO_TRACK_SELECTED) {
-			index = this.tracks.size() - 2;
+			Log.d(TAG, "New trackIndex: " + trackIndex);
 		} else {
 			Log.e(TAG,
 					" attempting to select a track at an illegal index. Skipping operation.");
@@ -187,7 +185,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	/* ITrackUpdates */
 
 	public void setElapsedTime(int newTime) {
-		if (trackIndex != NO_TRACK_SELECTED) {
+		if (isLegalIndex(trackIndex)) {
 			this.tracks.get(trackIndex).setElapsedTime(newTime);
 		}
 	}

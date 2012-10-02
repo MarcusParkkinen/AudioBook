@@ -7,8 +7,8 @@ import android.util.Log;
 /**
  * Represents a single audio track. Includes its duration and path.
  * 
- * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
- * @version 0.5
+ * @author Marcus Parkkinen Aki Käkelä
+ * @version 0.6
  * 
  */
 public final class Track implements ITrackUpdates {
@@ -111,7 +111,7 @@ public final class Track implements ITrackUpdates {
 		} else if (elapsedTime >= 0) {
 			this.elapsedTime = elapsedTime;
 		} else {
-			throw new InvalidParameterException("Attempting to set elapsed time to negative value.");
+			throw new InvalidParameterException("Attempting to set elapsed time to a negative value.");
 		}
 	}
 

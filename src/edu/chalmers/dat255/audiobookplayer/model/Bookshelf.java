@@ -10,14 +10,14 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 /**
  * The bookshelf class contains a collection of books.
  * 
- * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
- * @version 0.5
+ * @author Marcus Parkkinen, Aki Käkelä
+ * @version 0.6
  * 
  */
 
 public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	private static final String TAG = "Bookshelf.java";
-	private static final int NO_BOOK_SELECTED = -1;
+	private static final int NO_BOOK_CHOSEN = -1;
 
 	private LinkedList<Book> books;
 	private int selectedBookIndex;
@@ -28,7 +28,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	 */
 	public Bookshelf() {
 		books = new LinkedList<Book>();
-		selectedBookIndex = NO_BOOK_SELECTED;
+		selectedBookIndex = NO_BOOK_CHOSEN;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		books.add(b);
 		// select it if it is the first, otherwise move the selection ahead so
 		// that it is pointing at the correct book
-		if (selectedBookIndex == NO_BOOK_SELECTED)
+		if (selectedBookIndex == NO_BOOK_CHOSEN)
 			selectedBookIndex = 0;
 //		Log.d(TAG, "list size (original): " + books.size());
 		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, new Bookshelf(
@@ -308,5 +308,13 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	 */
 	public int getBookElapsedTime() {
 		return books.get(selectedBookIndex).getBookElapsedTime();
+	}
+	
+	/**
+	 * The number of tracks in the selected book.
+	 * @return
+	 */
+	public int getNumberOfTracks() {
+		return books.get(selectedBookIndex).getNumberOfTracks();
 	}
 }

@@ -7,7 +7,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * Wraps a Bookshelf instance.
  * 
  * @author Marcus Parkkinen, Aki Käkelä
- * @version 0.4
+ * @version 0.6
  */
 
 public class BookshelfController {

@@ -5,6 +5,7 @@ package edu.chalmers.dat255.audiobookplayer.model;
  * instances.
  * 
  * @author Aki Käkelä
+ * @version 0.6
  * 
  */
 public interface ITrackUpdates {

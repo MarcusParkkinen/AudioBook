@@ -1,5 +1,6 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
+import edu.chalmers.dat255.audiobookplayer.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,18 +15,16 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import edu.chalmers.dat255.audiobookplayer.R;
 
 /**
- * A graphical UI fragment of AudioBookActivity in charge of PlayerController.
+ * A graphical UI representing the audio player.
  * 
- * @author Aki Käkelä, Marcus Parkkinen
+ * @author Aki Käkelä
  * @version 0.6
+ * 
  */
 public class PlayerFragment extends Fragment {
-	@SuppressWarnings("unused")
 	private static final String TAG = "PlayerFragment.class";
-	private PlayerUIEventListener fragmentOwner;
 	private SeekBar bookBar;
 	private SeekBar trackBar;
 	private TextView bookTitle;
@@ -34,6 +33,7 @@ public class PlayerFragment extends Fragment {
 	private TextView trackDuration;
 	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
+	PlayerUIEventListener parentFragment;
 
 	// private Picker timePicker;
 
@@ -61,18 +61,19 @@ public class PlayerFragment extends Fragment {
 		super.onAttach(activity);
 
 		try {
-			fragmentOwner = (PlayerUIEventListener) activity;
+			parentFragment = (PlayerUIEventListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement PlayerUIEventListener");
+					+ " does not implement PlayerUIEventListener");
 		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		View view = inflater
-				.inflate(R.layout.player_fragment, container, false);
+				.inflate(R.layout.fragment_player, container, false);
 
 		Button seekLeft = (Button) view.findViewById(R.id.seekLeft);
 		seekLeft.setOnTouchListener(new OnTouchListener() {
@@ -107,21 +108,21 @@ public class PlayerFragment extends Fragment {
 		Button playPause = (Button) view.findViewById(R.id.playPause);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				fragmentOwner.playPause();
+				parentFragment.playPause();
 			}
 		});
 
 		Button nextTrack = (Button) view.findViewById(R.id.nextTrack);
 		nextTrack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				fragmentOwner.nextTrack();
+				parentFragment.nextTrack();
 			}
 		});
 
 		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
 		prevTrack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				fragmentOwner.previousTrack();
+				parentFragment.previousTrack();
 			}
 		});
 
@@ -137,7 +138,7 @@ public class PlayerFragment extends Fragment {
 					double seekMultiplier = (double) progress
 							* (1.0 / seekBar.getMax());
 
-					fragmentOwner.seekToPercentageInBook(seekMultiplier);
+					parentFragment.seekToPercentageInBook(seekMultiplier);
 				} else {
 					// Log.d(TAG, "Code used bookBar");
 				}
@@ -165,7 +166,7 @@ public class PlayerFragment extends Fragment {
 					double seekPercentage = (double) progress
 							* (1.0 / (double) seekBar.getMax());
 
-					fragmentOwner.seekToPercentageInTrack(seekPercentage);
+					parentFragment.seekToPercentageInTrack(seekPercentage);
 				} else {
 					// Log.d(TAG, "Code used trackBar");
 				}
@@ -229,11 +230,11 @@ public class PlayerFragment extends Fragment {
 	public void updateBookElapsedTimeLabel(int ms) {
 		bookElapsedTime.setText(formatTime(ms));
 	}
-	
+
 	public void updateTrackElapsedTimeLabel(int ms) {
 		trackElapsedTime.setText(formatTime(ms));
 	}
-	
+
 	// Duration times
 	public void updateBookDurationLabel(int ms) {
 		bookDuration.setText(formatTime(ms));
@@ -244,10 +245,12 @@ public class PlayerFragment extends Fragment {
 	}
 
 	private String formatTime(int ms) {
-		int seconds = (ms / 1000) % (60 * 1000);
-		int minutes = (ms / (60 * 1000)) % (60 * 1000 * 1000);
-		int hours = ms / (60 * 1000 * 1000);
+		int seconds = (ms / 1000) % 60;
+		int minutes = (ms / (1000 * 60)) % 60;
+		int hours = (ms / (1000 * 60 * 60)) % 24;
 
-		return (hours > 0 && hours < 100 ? hours + ":" : "")+ (minutes <= 9 ? "0" : "")  + minutes + ":" + (seconds <= 9 ? "0" : "") + seconds;
+		return (hours > 0 ? hours + ":" : "") + (minutes <= 9 ? "0" : "")
+				+ minutes + ":" + (seconds <= 9 ? "0" : "") + seconds;
 	}
+
 }

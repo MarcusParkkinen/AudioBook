@@ -31,7 +31,7 @@ public class BookshelfFragment extends Fragment {
 	private static final String TAG = "BookshelfFragment.class";
 	private List<Entry<String, List<String>>> listData;
 	private ExpandableBookshelfAdapter adapter;
-	private BookshelfUIEventListener fragmentOwner;
+	private BookshelfUIEventListener parentFragment;
 
 	public interface BookshelfUIEventListener {
 		public void bookSelected(int groupPosition);
@@ -42,21 +42,15 @@ public class BookshelfFragment extends Fragment {
 
 	}
 
-	/**
-	 * Lifecycle method that makes sure that the container activity
-	 * (AudioBookActivity) has implemented the OnBookSelectedListener interface.
-	 * 
-	 * @throws ClassCastException
-	 */
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-			fragmentOwner = (BookshelfUIEventListener) activity;
+			parentFragment = (BookshelfUIEventListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement BookshelfUIEventListener");
+					+ " does not implement PlayerUIEventListener");
 		}
 	}
 
@@ -64,7 +58,7 @@ public class BookshelfFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Provide the layout of this fragment to the parent container
-		View view = inflater.inflate(R.layout.bookshelf_fragment, container,
+		View view = inflater.inflate(R.layout.fragment_bookshelf, container,
 				false);
 
 		/**************************************************************/
@@ -93,7 +87,7 @@ public class BookshelfFragment extends Fragment {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
-					fragmentOwner.addButtonPressed(v);
+					parentFragment.addButtonPressed(v);
 				}
 			}
 		});
@@ -112,7 +106,7 @@ public class BookshelfFragment extends Fragment {
 					int groupPosition, long id) {
 
 				if (getActivity() != null) {
-					fragmentOwner.bookSelected(groupPosition);
+					parentFragment.bookSelected(groupPosition);
 				}
 
 				return true;
@@ -124,7 +118,7 @@ public class BookshelfFragment extends Fragment {
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				if (getActivity() != null) {
-					// fragmentOwner.childSelected();
+					// parentFragment.childSelected();
 				}
 				return true;
 			}

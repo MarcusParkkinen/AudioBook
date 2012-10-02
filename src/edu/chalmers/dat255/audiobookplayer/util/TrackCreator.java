@@ -5,8 +5,8 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 
 /**
  * Creates Track instances (filling them with metadata).
- * @author Aki Kï¿½kelï¿½
- * @version 0.4
+ * @author Aki Käkelä
+ * @version 0.6
  */
 public class TrackCreator {
 
@@ -15,7 +15,6 @@ public class TrackCreator {
 		mmr.setDataSource(path);
 		
 		int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-		
 		
 		return new Track(path, duration);
 	}

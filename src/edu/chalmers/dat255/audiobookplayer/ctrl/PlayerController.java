@@ -5,15 +5,14 @@ import java.text.DecimalFormat;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.os.Environment;
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
- * @author Aki Kï¿½kelï¿½
- * @version 0.3
+ * @author Aki Käkelä
+ * @version 0.6
  */
 public class PlayerController {
 	public static final String TAG = "PlayerController.class";
@@ -32,9 +31,6 @@ public class PlayerController {
 		this.bs = bs;
 	}
 
-	/* * * * * * * * * * * * * * * * * * * * *
-	 * PLAYBACK * * * * * * * * * * * * * * * * * * *
-	 */
 	/**
 	 * Pauses the audio if the player is playing. Resumes or starts otherwise.
 	 */
@@ -51,8 +47,7 @@ public class PlayerController {
 		modelUpdaterThread = new Thread(new Runnable() {
 			public void run() {
 				while (isStarted) {
-					int frequency = 1000; // TODO: this should maybe not be
-											// hard-coded
+					int frequency = 1000;
 					while (isStarted && mp.isPlaying()) {
 						// Log.d(TAG, "Updating track time @"
 						// + (1000/frequency) + "x/s");
@@ -75,25 +70,14 @@ public class PlayerController {
 	 * path at the selected track index can not be null.
 	 */
 	public void start() {
-		
-		/* DO NOT USE THIS. BOOKSHELFACTIVITY PROVIDES THIS WITH EVERY FILE
-		String path = Environment.getExternalStorageDirectory()
-				.getAbsolutePath();
-		*/
-		String path = "";
-		
-		// we have started playing a file, so start thread that updates time on
-		// Track instance once every second, and
+		// we have started playing a file, so start the thread that updates the time
+		// on the Track instance
 		if (bs.getCurrentTrackPath() != null) {
 			isStarted = false;
 			Log.i(TAG, "Resetting MediaPlayer");
 			mp.reset();
 			try {
-				// path = path + "/game.mp3";
-				path = path + bs.getCurrentTrackPath();
-				Log.i(TAG, "Trying to set <" + path + "> as source.");
-				mp.setDataSource(path);
-				Log.i(TAG, "Preparing MediaPlayer");
+				mp.setDataSource(bs.getCurrentTrackPath());
 				mp.prepare();
 			} catch (IllegalArgumentException e) {
 				Log.e(TAG, "Illegal argument");
@@ -106,7 +90,7 @@ public class PlayerController {
 			}
 			mp.setOnCompletionListener(new OnCompletionListener() {
 				public void onCompletion(MediaPlayer mp) {
-					Log.i(TAG, "onComplete: Track finished");
+					Log.i(TAG, "onComplete: Track finished. Starting next track.");
 					nextTrack();
 				}
 			});
@@ -122,79 +106,33 @@ public class PlayerController {
 		}
 	}
 
-	/* * * * * * * * * * * * * * * * * * * * *
-	 * TRACK * * * * * * * * * * * * * * * * * * *
-	 */
-	/**
-	 * Moves the specified track to the specified index.
-	 * 
-	 * @param from
-	 *            Start index.
-	 * @param to
-	 *            Where to put the track.
-	 */
-	public void moveTrack(int from, int to) {
-		bs.moveTrack(from, to);
-	}
-
-	/**
-	 * Moves the specified tracks to the specified index.
-	 * 
-	 * @param from
-	 *            Start index.
-	 * @param to
-	 *            Where to put the tracks.
-	 */
-	public void moveTracks(int[] tracks, int to) {
-		for (int i = 0; i < tracks.length; i++) {
-			moveTrack(tracks[i], to);
-		}
-	}
-
 	public void previousTrack() {
-		// decrement track index
-		bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() - 1);
-		start(); // restart with the next index
+		if (bs.getSelectedTrackIndex() == -1) {
+			// go to the final track (replay it)
+			bs.setCurrentTrackIndex(bs.getNumberOfTracks() - 1);
+		} else {
+			// decrement track index
+			bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() - 1);
+		}
+		start(); // restart the player
 	}
 
 	public void nextTrack() {
-		// increment track index
-		bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() + 1);
-		if (bs.getSelectedTrackIndex() != -1) // check whether we are done
-			start(); // restart with the next index
+		if (bs.getSelectedTrackIndex() != -1) { 
+			// increment track index unless we are done
+			bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() + 1);
+			start(); // restart the player
+		}
 	}
 
-	/**
-	 * The track duration in milliseconds.
-	 * 
-	 * @return
-	 */
-	public int getTrackDuration() {
+	private int getTrackDuration() {
 		return bs.getCurrentTrackDuration();
 	}
 
-	/**
-	 * The book duration in milliseconds.
-	 * 
-	 * @return
-	 */
-	public int getBookDuration() {
-		return bs.getSelectedBookDuration();
-	}
-
-	/**
-	 * Saves the elapsed time of the track at a set frequency.
-	 * 
-	 * @param time
-	 *            ms
-	 */
-	public void updateTrackTime() {
+	private void updateTrackTime() {
 		this.bs.setElapsedTime(mp.getCurrentPosition());
 	}
 
-	/* * * * * * * * * * * * * * * * * * * * *
-	 * SEEK * * * * * * * * * * * * * * * * * * *
-	 */
 	/**
 	 * Seeks to the right (10% of the track duration).
 	 * 
@@ -202,8 +140,8 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekRight() {
-		seekToPercentageInTrack(mp.getCurrentPosition() + getTrackDuration()
-				/ 10);
+		seekToPercentageInTrack(mp.getCurrentPosition() + (getTrackDuration()
+				/ 10));
 	}
 
 	/**
@@ -213,8 +151,8 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekLeft() {
-		seekToPercentageInTrack(mp.getCurrentPosition() - getTrackDuration()
-				/ 10);
+		seekToPercentageInTrack(mp.getCurrentPosition() - (getTrackDuration()
+				/ 10));
 	}
 
 	/**
@@ -225,10 +163,7 @@ public class PlayerController {
 	 *            track.
 	 */
 	public void seekToPercentageInTrack(double percentage) {
-		int seekTime = (int)(mp.getDuration() * percentage);
-		Log.d(TAG, "seekTo: " + mp.getDuration() + " * " + percentage + " = "
-				+ seekTime);
-		seekTo(seekTime);
+		seekTo((int) (mp.getDuration() * percentage));
 	}
 
 	/**
@@ -249,7 +184,8 @@ public class PlayerController {
 		while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
 			seekTime -= trackDuration;
 			track++;
-			Log.d(TAG, "Skipped a track (" + trackDuration +  "ms) . New seekTime: " + seekTime + ". Track#: " + track);
+			Log.d(TAG, "Skipped a track (" + trackDuration
+					+ "ms) . New seekTime: " + seekTime + ". Track#: " + track);
 		}
 		bs.setCurrentTrackIndex(track);
 		start(); // start the track we seeked to

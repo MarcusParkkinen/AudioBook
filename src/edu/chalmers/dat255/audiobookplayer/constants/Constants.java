@@ -4,7 +4,7 @@ package edu.chalmers.dat255.audiobookplayer.constants;
  * Holds unique event property names for events.
  * 
  * @author Aki Käkelä
- * @version 0.4
+ * @version 0.6
  */
 public final class Constants {
 	public static final class event {
