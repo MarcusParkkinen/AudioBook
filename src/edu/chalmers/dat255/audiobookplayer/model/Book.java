@@ -26,7 +26,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 	/* To be implemented later: */
 	// private Bookmark bookmark;
-	// private Tag[] tags;
+	private LinkedList<Tag> tags;
 	// private Stats stats;
 
 	/**
@@ -373,6 +373,23 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 			throw new IllegalArgumentException(
 					"Tried to get selected track title when index is illegal.");
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
+	}
+	
+	public void addTagToCurrentBook(int time) {
+		addTagTo(this.selectedTrackIndex, time);
+	}
+	
+	public void addTagTo(int index, int time) {
+		this.tags.add(new Tag(index, time));
+	}
+	
+	public void removeTag(int index) {
+		if (isLegalTagIndex(index))
+			this.tags.remove(index);
+	}
+	
+	private boolean isLegalTagIndex(int index) {
+		return index >= 0 && index < tags.size();
 	}
 
 	@Override
