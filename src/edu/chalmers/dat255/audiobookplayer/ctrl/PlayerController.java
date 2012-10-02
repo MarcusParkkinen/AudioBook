@@ -70,7 +70,8 @@ public class PlayerController {
 	 * path at the selected track index can not be null.
 	 */
 	public void start() {
-		// we have started playing a file, so start the thread that updates the time
+		// we have started playing a file, so start the thread that updates the
+		// time
 		// on the Track instance
 		if (bs.getCurrentTrackPath() != null) {
 			isStarted = false;
@@ -90,7 +91,8 @@ public class PlayerController {
 			}
 			mp.setOnCompletionListener(new OnCompletionListener() {
 				public void onCompletion(MediaPlayer mp) {
-					Log.i(TAG, "onComplete: Track finished. Starting next track.");
+					Log.i(TAG,
+							"onComplete: Track finished. Starting next track.");
 					nextTrack();
 				}
 			});
@@ -118,7 +120,7 @@ public class PlayerController {
 	}
 
 	public void nextTrack() {
-		if (bs.getSelectedTrackIndex() != -1) { 
+		if (bs.getSelectedTrackIndex() != -1) {
 			// increment track index unless we are done
 			bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() + 1);
 			start(); // restart the player
@@ -140,8 +142,8 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekRight() {
-		seekToPercentageInTrack(mp.getCurrentPosition() + (getTrackDuration()
-				/ 10));
+		seekToPercentageInTrack(mp.getCurrentPosition() + getTrackDuration()
+				/ 10);
 	}
 
 	/**
@@ -151,8 +153,8 @@ public class PlayerController {
 	 *            ms
 	 */
 	public void seekLeft() {
-		seekToPercentageInTrack(mp.getCurrentPosition() - (getTrackDuration()
-				/ 10));
+		seekToPercentageInTrack(mp.getCurrentPosition() - getTrackDuration()
+				/ 10);
 	}
 
 	/**

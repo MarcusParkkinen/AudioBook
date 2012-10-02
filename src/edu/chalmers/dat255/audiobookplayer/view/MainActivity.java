@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity implements
 				fragments);
 
 		// create the view pager and set the adapter
-		pager = (ViewPager) super.findViewById(R.id.mytwopanelpager);
+		pager = (ViewPager) super.findViewById(R.id.twopanelviewpager);
 		pager.setAdapter(this.adapter);
 
 		// default selected screen

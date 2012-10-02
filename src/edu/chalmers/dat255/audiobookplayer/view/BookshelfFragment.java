@@ -50,7 +50,7 @@ public class BookshelfFragment extends Fragment {
 			parentFragment = (BookshelfUIEventListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " does not implement PlayerUIEventListener");
+					+ " does not implement BookshelfUIEventListener");
 		}
 	}
 

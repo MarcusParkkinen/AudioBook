@@ -19,7 +19,7 @@ import android.widget.TextView;
 /**
  * A graphical UI representing the audio player.
  * 
- * @author Aki Käkelä
+ * @author Aki Käkelä, Marcus Parkkinen
  * @version 0.6
  * 
  */
