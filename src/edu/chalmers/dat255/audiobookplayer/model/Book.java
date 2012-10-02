@@ -114,10 +114,10 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 			// adjust the duration
 			duration += t.getDuration();
-			
-			if(tracks.size() == 1) {
+
+			if (tracks.size() == 1) {
 				trackIndex = 0;
-			}	
+			}
 		}
 	}
 
@@ -166,7 +166,8 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 */
 
 	public void setCurrentTrackIndex(int index) {
-		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: " + this.tracks.size()+")");
+		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: "
+				+ this.tracks.size() + ")");
 		Log.d(TAG, "Current trackIndex: " + trackIndex);
 		if (index >= 0) {
 			if (index >= this.tracks.size()) {
@@ -224,7 +225,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	}
 
 	/**
-	 * The track duration in milliseconds.
+	 * The duration of the current track in milliseconds.
 	 * 
 	 * @return
 	 */
@@ -381,7 +382,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	public int getTrackDurationAt(int track) {
 		return tracks.get(track).getDuration();
 	}
-	
+
 	/**
 	 * Returns the title of the track.
 	 * 

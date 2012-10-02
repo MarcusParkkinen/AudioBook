@@ -26,8 +26,8 @@ public class PlayerFragment extends Fragment {
 	@SuppressWarnings("unused")
 	private static final String TAG = "PlayerFragment.class";
 	private PlayerUIEventListener fragmentOwner;
-	private SeekBar trackBar;
 	private SeekBar bookBar;
+	private SeekBar trackBar;
 	private TextView bookTitle;
 	private TextView trackTitle;
 	private TextView bookDuration;
@@ -35,7 +35,7 @@ public class PlayerFragment extends Fragment {
 	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
 
-	// (Picker to seek to given time)
+	// private Picker timePicker;
 
 	// TODO: make some methods protected
 
@@ -139,16 +139,16 @@ public class PlayerFragment extends Fragment {
 
 					fragmentOwner.seekToPercentageInBook(seekMultiplier);
 				} else {
-//					Log.d(TAG, "Code used bookBar");
+					// Log.d(TAG, "Code used bookBar");
 				}
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-//				Log.d(TAG, "started tracking");
+				// Log.d(TAG, "started tracking");
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-//				Log.d(TAG, "stopped tracking");
+				// Log.d(TAG, "stopped tracking");
 			}
 
 		});
@@ -163,11 +163,11 @@ public class PlayerFragment extends Fragment {
 					Log.d(TAG, "User used SeekBar");
 
 					double seekPercentage = (double) progress
-							* (1.0 / (double)seekBar.getMax());
+							* (1.0 / (double) seekBar.getMax());
 
 					fragmentOwner.seekToPercentageInTrack(seekPercentage);
 				} else {
-//					Log.d(TAG, "Code used trackBar");
+					// Log.d(TAG, "Code used trackBar");
 				}
 			}
 
@@ -181,48 +181,42 @@ public class PlayerFragment extends Fragment {
 		});
 
 		trackTitle = (TextView) view.findViewById(R.id.trackTitle);
-		trackTitle.setText("track time");
+		trackTitle.setText("track title");
 
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
-		bookTitle.setText("book time");
+		bookTitle.setText("book title");
 
 		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
-		bookDuration.setText("XX");
+		bookDuration.setText("BD");
 
 		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
-		trackDuration.setText("YY");
+		trackDuration.setText("TD");
 
 		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
-		bookElapsedTime.setText("AA");
+		bookElapsedTime.setText("BET");
 
 		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
-		trackElapsedTime.setText("BB");
+		trackElapsedTime.setText("TET");
 
 		return view;
 	}
 
+	// Seek bars
 	public void updateBookSeekBar(double percentage) {
-		int progress = (int) ((double)bookBar.getMax() * percentage);
-//		Log.d(TAG, "Seeking book bar to " + progress + "%");
+		int progress = (int) ((double) bookBar.getMax() * percentage);
+		// Log.d(TAG, "Seeking book bar to " + progress + "%");
 		// calls 'onProgressChanged' from code:
 		bookBar.setProgress(progress);
 	}
 
 	public void updateTrackSeekBar(double percentage) {
 		int progress = (int) (trackBar.getMax() * percentage);
-//		Log.d(TAG, "Seeking track bar to " + progress + "%");
+		// Log.d(TAG, "Seeking track bar to " + progress + "%");
 		// calls 'onProgressChanged' from code:
 		trackBar.setProgress(progress);
 	}
 
-	public void updateBookElapsedTimeLabel(String label) {
-		bookElapsedTime.setText(label);
-	}
-
-	public void updateTrackElapsedTimeLabel(String label) {
-		trackElapsedTime.setText(label);
-	}
-
+	// Titles
 	public void updateBookTitleLabel(String label) {
 		bookTitle.setText(label);
 	}
@@ -231,11 +225,29 @@ public class PlayerFragment extends Fragment {
 		trackTitle.setText(label);
 	}
 
-	public void updateBookDurationLabel(String label) {
-		bookDuration.setText(label);
+	// Elapsed times
+	public void updateBookElapsedTimeLabel(int ms) {
+		bookElapsedTime.setText(formatTime(ms));
+	}
+	
+	public void updateTrackElapsedTimeLabel(int ms) {
+		trackElapsedTime.setText(formatTime(ms));
+	}
+	
+	// Duration times
+	public void updateBookDurationLabel(int ms) {
+		bookDuration.setText(formatTime(ms));
 	}
 
-	public void updateTrackDurationLabel(String label) {
-		trackDuration.setText(label);
+	public void updateTrackDurationLabel(int ms) {
+		trackDuration.setText(formatTime(ms));
+	}
+
+	private String formatTime(int ms) {
+		int seconds = (ms / 1000) % (60 * 1000);
+		int minutes = (ms / (60 * 1000)) % (60 * 1000 * 1000);
+		int hours = ms / (60 * 1000 * 1000);
+
+		return (hours > 0 && hours < 100 ? hours + ":" : "")+ (minutes <= 9 ? "0" : "")  + minutes + ":" + (seconds <= 9 ? "0" : "") + seconds;
 	}
 }

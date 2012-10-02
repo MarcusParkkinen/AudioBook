@@ -111,13 +111,9 @@ public class BookshelfFragment extends Fragment {
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
 
-				Log.d(TAG, "OnGroupClick");
-
 				if (getActivity() != null) {
 					fragmentOwner.bookSelected(groupPosition);
 				}
-
-				Log.d(TAG, "OnGroupClick -- after bookSelected");
 
 				return true;
 			}
@@ -179,7 +175,5 @@ public class BookshelfFragment extends Fragment {
 				.getPaths()));
 		// Notify the adapter that the list has changed
 		adapter.notifyDataSetChanged();
-		// else if.. for all bookshelf, book, track events (see
-		// Constants.event.*)
 	}
 }

@@ -57,73 +57,85 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 
-    <EditText
+    <TextView
         android:id="@+id/trackTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/trackElapsedTime"
         android:layout_alignParentLeft="true"
+        android:clickable="false"
         android:ems="10"
-        android:inputType="text" />
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
-    <EditText
+    <TextView
         android:id="@+id/bookTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bookElapsedTime"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/bookElapsedTime"
+        android:clickable="false"
         android:ems="10"
-        android:inputType="text" />
-    
-	<EditText
-	    android:id="@+id/bookDuration"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_below="@+id/bookBar"
-	    android:layout_toRightOf="@+id/playPause"
-	    android:ems="10"
-	    android:inputType="text" />
-	
-	<EditText
-	    android:id="@+id/trackDuration"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_above="@+id/trackBar"
-	    android:layout_alignParentRight="true"
-	    android:layout_toRightOf="@+id/playPause"
-	    android:ems="10"
-	    android:inputType="text" />
-	
-	<EditText
-	    android:id="@+id/trackElapsedTime"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_above="@+id/trackBar"
-	    android:layout_alignParentLeft="true"
-	    android:layout_toLeftOf="@+id/playPause"
-	    android:ems="10"
-	    android:inputType="text" />
-		
-	<EditText
-	    android:id="@+id/bookElapsedTime"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_below="@+id/bookBar"
-	    android:layout_toLeftOf="@+id/playPause"
-	    android:ems="10"
-	    android:inputType="text" />
-
-	<ImageView
-	    android:id="@+id/imageView1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_above="@+id/trackTitle"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignRight="@+id/trackTitle"
-	    android:layout_below="@+id/bookTitle"
-	    android:src="@drawable/ic_launcher" 
-	    android:contentDescription="@string/coverText" />
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <TextView
+        android:id="@+id/bookDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/bookBar"
+        android:layout_toRightOf="@+id/playPause"
+        android:clickable="false"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <TextView
+        android:id="@+id/trackDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/trackBar"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/playPause"
+        android:clickable="false"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <TextView
+        android:id="@+id/trackElapsedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/trackBar"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/playPause"
+        android:clickable="false"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <TextView
+        android:id="@+id/bookElapsedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/bookBar"
+        android:layout_toLeftOf="@+id/playPause"
+        android:clickable="false"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/trackTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/trackTitle"
+        android:layout_below="@+id/bookTitle"
+        android:contentDescription="@string/coverText"
+        android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>
