@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.FileParser;
+import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 
 /**
  * BookController class - used to edit and create all the Books stored in the users bookshelf.
@@ -43,22 +44,29 @@ public class BookshelfController {
 	 */
 	public boolean saveBookshelf(Context c, String username) {	
 		try{
-			Gson gson = new Gson();
-			FileParser.writeToInternalStorage(username + ".bookmark", c, gson.toJson(shelf));
+			FileParser.writeToInternalStorage(username + ".bookmark", c, JSONParser.toJSON(shelf));
 		} catch(IOException e) {
 			return false;
 		}
+		System.out.println("Successfully saved.");
 		return true;
 	}
 	
 	public void loadBookshelf(Context c, String username) {
 		try{
-			Gson gson = new Gson();
-			shelf = gson.fromJson(
-					FileParser.readFromInternalStorage(username, c), Bookshelf.class);
+			Object obj = JSONParser.fromJSON(
+					FileParser.readFromInternalStorage(username +".bookmark", c),
+					Bookshelf.class);
+			if(obj instanceof Bookshelf) {
+				shelf = (Bookshelf) obj;
+			}
 		} catch(Exception e) {
 			shelf = new Bookshelf();
 		}
+	}
+	
+	public Bookshelf getBookshelf() {
+		return shelf;
 	}
 
 	//+ sort, swap, move, edit book

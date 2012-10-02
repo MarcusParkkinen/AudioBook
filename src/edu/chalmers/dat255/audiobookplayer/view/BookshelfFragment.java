@@ -39,7 +39,8 @@ public class BookshelfFragment extends Fragment {
 		public void bookLongPress(int index);
 
 		public void addButtonPressed(View v);
-
+		
+		public void refillBookshelf();
 	}
 
 	/**
@@ -135,10 +136,11 @@ public class BookshelfFragment extends Fragment {
 		});
 		
 		bookshelfList.setAdapter(adapter);
+		fragmentOwner.refillBookshelf();
 
 		return view;
 	}
-
+	
 	/**
 	 * Private help class that holds an entry with a key and a value
 	 * 

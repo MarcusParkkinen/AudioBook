@@ -18,6 +18,7 @@ import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
+import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 import edu.chalmers.dat255.audiobookplayer.view.BookshelfFragment.BookshelfUIEventListener;
 import edu.chalmers.dat255.audiobookplayer.view.PlayerFragment.PlayerUIEventListener;
 
@@ -32,6 +33,7 @@ public class AudioBookActivity extends FragmentActivity implements
 		BookshelfUIEventListener, PlayerUIEventListener, PropertyChangeListener {
 
 	private static final String TAG = "AudioBookActivity.class";
+	private static final String USERNAME = "Default";
 
 	// Fragment classes
 	private final BookshelfFragment bookshelfFragment = new BookshelfFragment();
@@ -41,38 +43,36 @@ public class AudioBookActivity extends FragmentActivity implements
 	private BookshelfController bsc;
 	private PlayerController pc;
 	private BookCreator bc;
-
+	
 	@Override
-	public void onCreate(Bundle savedInstance) {
+	protected void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		setContentView(R.layout.activity_audiobook);
 
-		// Temporary solution: always create a new bookshelf
-		Bookshelf bookshelf = new Bookshelf();
+		// Set up the controller for the bookshelf
+		bsc = new BookshelfController(this, USERNAME);
+		// Request a reference to the bookshelf
+		Bookshelf bookshelf = bsc.getBookshelf();
 
 		// Instantiate Controller classes
-		bsc = new BookshelfController(bookshelf);
 		pc = new PlayerController(bookshelf);
 		bc = BookCreator.getInstance();
-
 		bc.setBookshelf(bookshelf);
 
+		// Add this class as a property change listener to the model
 		bookshelf.addPropertyChangeListener(this);
 
 		// Make sure that audiobook_layout is being used as layout for this
-		// activity and
-		// that we are not resuming from a previous state as this could result
-		// in overlapping
-		// fragments
+		// activity and that we are not resuming from a previous state as
+		//this could result in overlapping fragments
 		if (findViewById(R.id.audiobook_layout) != null
 				&& savedInstance == null) {
 
 			// In case arguments have been sent through an Intent, forward these
-			// to the
-			// fragments as well
+			// to the fragments as well
 			bookshelfFragment.setArguments(getIntent().getExtras());
 
-			// Add the STARTING_FRAGMENT to this layout
+			// Add the bookshelf fragment to this layout
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 			ft.add(R.id.audiobook_layout, bookshelfFragment);
@@ -80,14 +80,21 @@ public class AudioBookActivity extends FragmentActivity implements
 		}
 
 	}
-
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		bsc.saveBookshelf(this, USERNAME);
+	}
+	
 	public void bookLongPress(int index) {
 		// TODO
 	}
 
 	/* Player*.class functions */
 	public void addButtonPressed(View v) {
-		//bc.createTestBook();
+		
+		// Start the browser activity
 		Intent intent = new Intent(this, BrowserActivity.class);
 		startActivity(intent);
 	}
@@ -300,7 +307,18 @@ public class AudioBookActivity extends FragmentActivity implements
 		ft.commit();
 		Log.d(TAG, "Finished switching fragments");
 	}
-
+	
+	/**
+	 * Utility method that empties and fills the bookshelf fragment list.
+	 */
+	public void refillBookshelf() {
+		Bookshelf bs = bsc.getBookshelf();
+		
+		for(int i = 0; i < bs.getNumberOfBooks(); i++) {
+			bookshelfFragment.bookAdded(bs.getBookAt(i));
+		}
+	}
+	
 	// public int getTrackDuration() {
 	// return pc.getTrackDuration();
 	// }

@@ -21,7 +21,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	private LinkedList<Book> books;
 	private int selectedBookIndex;
-	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+	private PropertyChangeSupport pcs;
 
 	/**
 	 * Creates an empty bookshelf.
@@ -49,7 +49,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		}
 	}
 
-	/* Bookshelf methods */
+	/* Bookshelf methods */	
 	/**
 	 * The book that the player will use (read from) is set here.
 	 * 
@@ -246,8 +246,9 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	}
 
 	/* End Track methods */
-
+	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs = new PropertyChangeSupport(this);
 		pcs.addPropertyChangeListener(listener);
 	}
 
