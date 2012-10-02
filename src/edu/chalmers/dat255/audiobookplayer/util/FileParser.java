@@ -1,5 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.util;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,19 +19,19 @@ public class FileParser {
 			throws IOException {
 		
 		FileOutputStream outputStream = c.openFileOutput(file, Context.MODE_PRIVATE);
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 		
-		outputStreamWriter.write(content);
+		dataOutputStream.writeUTF(content);
+		dataOutputStream.close();
 	}
 	
 	public static String readFromInternalStorage(String file, Context c)
 			throws FileNotFoundException, IOException{
 		FileInputStream inputStream = c.openFileInput(file);
-		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+		DataInputStream dataInputStream = new DataInputStream(inputStream);
 		
-		char[] buffer = new char[1024];
-		inputStreamReader.read(buffer);
-		
-		return buffer.toString();
+		String result = dataInputStream.readUTF();
+		dataInputStream.close();
+		return result;
 	}
 }

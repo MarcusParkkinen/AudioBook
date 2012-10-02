@@ -25,8 +25,8 @@ public class BookshelfController {
 	 * 
 	 * @param Bookshelf a reference to the Bookshelf to control.
 	 */
-	public BookshelfController(Bookshelf shelf) {
-		this.shelf = shelf;
+	public BookshelfController(Context c, String username) {
+		loadBookshelf(c, username);
 	}
 	/**
 	 * Selects a given book in the bookshelf.
