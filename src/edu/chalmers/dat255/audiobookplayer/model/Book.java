@@ -20,7 +20,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	private static final int NO_TRACK_SELECTED = -1;
 
 	private LinkedList<Track> tracks;
-	private int trackIndex = NO_TRACK_SELECTED;
+	private int selectedTrackIndex = NO_TRACK_SELECTED;
 	private String title;
 	private int duration;
 
@@ -54,7 +54,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		}
 
 		// adjust the track index now that we have tracks
-		trackIndex = 0;
+		selectedTrackIndex = 0;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 		// copy primitive member variables
 		this.duration = original.duration;
-		this.trackIndex = original.trackIndex;
+		this.selectedTrackIndex = original.selectedTrackIndex;
 
 		// also create deep copies of the tracks
 		for (Track t : original.tracks) {
@@ -79,7 +79,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	/**
 	 * Remove a track from the book.
 	 * 
-	 * @param int index
+	 * @param int index >= 0
 	 */
 	public void removeTrack(int index) {
 		if (isLegalIndex(index)) {
@@ -87,14 +87,19 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 			// remove the track and adjust the duration
 			duration -= tracks.remove(index).getDuration();
 
-			// adjust trackIndex if necessary
-			// In case we are removing the current track,
-			// the subsequent track will be selected
-			if (index < trackIndex) {
-				trackIndex--;
-			} else if (tracks.size() == 0) {
-				trackIndex = NO_TRACK_SELECTED;
+			// check whether this was the last track
+			if (tracks.size() == 0) {
+				selectedTrackIndex = NO_TRACK_SELECTED;
+			} else {
+				if (index < selectedTrackIndex) {
+					// adjust the index if we removed one earlier in the list
+					selectedTrackIndex--;
+				} else if (index == selectedTrackIndex) {
+					// if we removed the selected one then mark the first
+					selectedTrackIndex = 0;
+				}
 			}
+
 		} else {
 			Log.e(TAG,
 					"attempting to remove a track from an illegal index. Skipping operation.");
@@ -116,7 +121,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 			duration += t.getDuration();
 
 			if (tracks.size() == 1) {
-				trackIndex = 0;
+				selectedTrackIndex = 0;
 			}
 		}
 	}
@@ -172,8 +177,8 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 			if (index >= this.tracks.size()) {
 				index = NO_TRACK_SELECTED;
 			}
-			trackIndex = index;
-			Log.d(TAG, "New trackIndex: " + trackIndex);
+			selectedTrackIndex = index;
+			Log.d(TAG, "New trackIndex: " + selectedTrackIndex);
 		} else {
 			Log.e(TAG,
 					" attempting to select a track at an illegal index. Skipping operation.");
@@ -185,8 +190,8 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	/* ITrackUpdates */
 
 	public void setElapsedTime(int newTime) {
-		if (isLegalIndex(trackIndex)) {
-			this.tracks.get(trackIndex).setElapsedTime(newTime);
+		if (isLegalIndex(selectedTrackIndex)) {
+			this.tracks.get(selectedTrackIndex).setElapsedTime(newTime);
 		}
 	}
 
@@ -201,7 +206,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @return boolean
 	 */
 	private boolean isLegalIndex(int index) {
-		return (index >= 0 && index < tracks.size()) ? true : false;
+		return index >= 0 && index < tracks.size();
 	}
 
 	/**
@@ -218,8 +223,11 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * 
 	 * @return int index
 	 */
-	public int getSelectedTrackIndex() {
-		return this.trackIndex;
+	public int getSelectedTrackIndex() throws IllegalArgumentException {
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track index when index is illegal.");
+		return this.selectedTrackIndex;
 	}
 
 	/**
@@ -227,8 +235,11 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * 
 	 * @return
 	 */
-	public int getTrackDuration() {
-		return tracks.get(trackIndex).getDuration();
+	public int getTrackDuration() throws IllegalArgumentException {
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track duration when index is illegal.");
+		return tracks.get(selectedTrackIndex).getDuration();
 	}
 
 	/**
@@ -237,7 +248,10 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @return elapsed time
 	 */
 	public int getElapsedTime() {
-		return this.tracks.get(trackIndex).getElapsedTime();
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track elapsed time when index is illegal.");
+		return this.tracks.get(selectedTrackIndex).getElapsedTime();
 	}
 
 	/**
@@ -258,7 +272,10 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @return
 	 */
 	public String getCurrentTrackPath() {
-		return tracks.get(trackIndex).getTrackPath();
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track path when index is illegal.");
+		return tracks.get(selectedTrackIndex).getTrackPath();
 	}
 
 	/**
@@ -312,11 +329,50 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @return the selected track
 	 */
 	public Track getCurrentTrack() {
-		if (tracks.size() > 0) {
-			return this.tracks.get(trackIndex);
-		} else {
-			return null;
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track duration when index is illegal.");
+		return this.tracks.get(selectedTrackIndex);
+	}
+
+	/**
+	 * Returns the elapsed time of the current book.
+	 * 
+	 * @return
+	 */
+	public int getBookElapsedTime() {
+		int bookElapsedTime = 0;
+		int i = 0;
+		while (i < this.selectedTrackIndex) {
+			bookElapsedTime += tracks.get(i).getDuration();
+			i++;
 		}
+		bookElapsedTime += tracks.get(i).getElapsedTime();
+
+		return bookElapsedTime;
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public int getTrackDurationAt(int index) {
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get 'track duration at' when index is illegal.");
+		return tracks.get(index).getDuration();
+	}
+
+	/**
+	 * Returns the title of the track.
+	 * 
+	 * @return
+	 */
+	public String getTrackTitle() {
+		if (!isLegalIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track title when index is illegal.");
+		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
 
 	@Override
@@ -325,7 +381,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		int result = 1;
 		result = prime * result + duration;
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + trackIndex;
+		result = prime * result + selectedTrackIndex;
 		result = prime * result + ((tracks == null) ? 0 : tracks.hashCode());
 		return result;
 	}
@@ -346,7 +402,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 				return false;
 		} else if (!title.equals(other.title))
 			return false;
-		if (trackIndex != other.trackIndex)
+		if (selectedTrackIndex != other.selectedTrackIndex)
 			return false;
 		if (tracks == null) {
 			if (other.tracks != null)
@@ -354,40 +410,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		} else if (!tracks.equals(other.tracks))
 			return false;
 		return true;
-	}
-
-	/**
-	 * Returns the elapsed time of the current book.
-	 * 
-	 * @return
-	 */
-	public int getBookElapsedTime() {
-		int bookElapsedTime = 0;
-		int i = 0;
-		while (i < this.trackIndex) {
-			bookElapsedTime += tracks.get(i).getDuration();
-			i++;
-		}
-		bookElapsedTime += tracks.get(i).getElapsedTime();
-
-		return bookElapsedTime;
-	}
-
-	/**
-	 * @param track
-	 * @return
-	 */
-	public int getTrackDurationAt(int track) {
-		return tracks.get(track).getDuration();
-	}
-
-	/**
-	 * Returns the title of the track.
-	 * 
-	 * @return
-	 */
-	public String getTrackTitle() {
-		return this.tracks.get(trackIndex).getTrackTitle();
 	}
 
 }

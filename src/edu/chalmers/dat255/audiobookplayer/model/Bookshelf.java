@@ -17,7 +17,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
 public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	private static final String TAG = "Bookshelf.java";
-	private static final int NO_BOOK_CHOSEN = -1;
+	private static final int NO_BOOK_SELECTED = -1;
 
 	private LinkedList<Book> books;
 	private int selectedBookIndex;
@@ -28,7 +28,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	 */
 	public Bookshelf() {
 		books = new LinkedList<Book>();
-		selectedBookIndex = NO_BOOK_CHOSEN;
+		selectedBookIndex = NO_BOOK_SELECTED;
 	}
 
 	/**
@@ -38,12 +38,12 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	 */
 	public Bookshelf(Bookshelf original) {
 		this();
-		
+
 		// copy instance variables
 		this.selectedBookIndex = original.selectedBookIndex;
-		
+
 		// make deep copies of Book in the list
-		
+
 		for (Book b : original.books) {
 			this.books.add(new Book(b));
 		}
@@ -79,9 +79,9 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		books.add(b);
 		// select it if it is the first, otherwise move the selection ahead so
 		// that it is pointing at the correct book
-		if (selectedBookIndex == NO_BOOK_CHOSEN)
+		if (selectedBookIndex == NO_BOOK_SELECTED)
 			selectedBookIndex = 0;
-//		Log.d(TAG, "list size (original): " + books.size());
+		// Log.d(TAG, "list size (original): " + books.size());
 		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, new Bookshelf(
 				this));
 	}
@@ -94,16 +94,21 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void removeBook(int index) {
 		if (isLegalIndex(index)) {
 			books.remove(index);
-			
-			// adjust the selected book index
-			
-			if (selectedBookIndex == index || selectedBookIndex == 0)
-				selectedBookIndex = 0;
-			else if (index < selectedBookIndex)
-				selectedBookIndex--;
-			
-			// notify the view module of the change, provide a bookshelf copy as
-			// reference
+
+			// check whether this was the last book
+			if (books.size() == 0) {
+				selectedBookIndex = NO_BOOK_SELECTED;
+			} else {
+				if (index < selectedBookIndex) {
+					// adjust the index if we removed one earlier in the list
+					selectedBookIndex--;
+				} else if (index == selectedBookIndex) {
+					// if we removed the selected one then mark the first
+					selectedBookIndex = 0;
+				}
+			}
+
+			// notify the listeners about this change
 			pcs.firePropertyChange(Constants.event.BOOK_REMOVED, null,
 					new Bookshelf(this));
 		}
@@ -112,6 +117,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	/**
 	 * Move a book from a given index to a given index. Indices inbetween will
 	 * be adjusted.
+	 * 
 	 * @param from
 	 * @param to
 	 */
@@ -125,10 +131,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 				books.add(from, temp);
 				pcs.firePropertyChange(Constants.event.BOOK_MOVED, null,
 						new Bookshelf(this));
-			} else {
-				Log.e(TAG,
-						" attempting to move a track from/to illegal index. Skipping operation.");
 			}
+		} else {
+			Log.e(TAG,
+					" attempting to move a track from/to illegal index. Skipping operation.");
 		}
 	}
 
@@ -137,6 +143,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	/* Book methods */
 
 	public void removeTrack(int index) {
+		if (!isLegalIndex(index)) {
+			throw new IllegalArgumentException(
+					"Tried to remove track at index when index is illegal.");
+		}
 		this.books.get(selectedBookIndex).removeTrack(index);
 		pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null,
 				new Bookshelf(this));
@@ -161,7 +171,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		 * since we removed a track we need to recalculate the duration of the
 		 * book
 		 */
-		 updateBookDuration();
+		updateBookDuration();
 	}
 
 	public void swap(int firstIndex, int secondIndex) {
@@ -202,7 +212,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public int getSelectedBookDuration() {
 		return books.get(selectedBookIndex).getDuration();
 	}
-	
+
 	public int getCurrentTrackDuration() {
 		return books.get(selectedBookIndex).getTrackDuration();
 	}
@@ -215,7 +225,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public int getSelectedTrackIndex() {
 		return books.get(selectedBookIndex).getSelectedTrackIndex();
 	}
-	
+
 	public int getSelectedBookIndex() {
 		return this.selectedBookIndex;
 	}
@@ -229,7 +239,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	 * @return boolean
 	 */
 	private boolean isLegalIndex(int index) {
-		return (index >= 0 && index < books.size()) ? true : false;
+		return index >= 0 && index < books.size();
 	}
 
 	// End convenience methods
@@ -240,7 +250,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public void setElapsedTime(int elapsedTime) {
 		// set elapsed time in the currently playing book
 		books.get(selectedBookIndex).setElapsedTime(elapsedTime);
-		
+
 		pcs.firePropertyChange(Constants.event.ELAPSED_TIME_CHANGED, null,
 				new Bookshelf(this));
 	}
@@ -258,11 +268,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public Book getCurrentBook() {
 		return this.books.get(selectedBookIndex);
 	}
-	
+
 	public Book getBookAt(int index) {
 		return this.books.get(index);
 	}
-	
+
 	public int getNumberOfBooks() {
 		return this.books.size();
 	}
@@ -302,16 +312,17 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public int getTrackDurationAt(int track) {
 		return books.get(selectedBookIndex).getTrackDurationAt(track);
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public int getBookElapsedTime() {
 		return books.get(selectedBookIndex).getBookElapsedTime();
 	}
-	
+
 	/**
 	 * The number of tracks in the selected book.
+	 * 
 	 * @return
 	 */
 	public int getNumberOfTracks() {
