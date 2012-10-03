@@ -35,17 +35,15 @@ public class PlayerController implements IPlayerEvents {
 	private void startTimer() {
 		trackTimeUpdateThread = new Thread(new Runnable() {
 			public void run() {
-				while (isStarted) {
+				while (isStarted && mp.isPlaying()) {
 					int frequency = 1000;
-					while (isStarted && mp.isPlaying()) {
-						// Log.d(TAG, "Updating track time @"
-						// + (1000/frequency) + "x/s");
-						updateTrackTime();
-						try {
-							Thread.sleep(frequency);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+					// Log.d(TAG, "Updating track time @"
+					// + (1000/frequency) + "x/s");
+					updateTrackTime();
+					try {
+						Thread.sleep(frequency);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -61,12 +59,12 @@ public class PlayerController implements IPlayerEvents {
 	public void start() {
 		// we have started playing a file, so start the thread that updates the
 		// time on the Track instance
-		if (bs.getCurrentTrackPath() != null) {
+		if (bs.getSelectedTrackIndex() != -1 && bs.getSelectedTrackPath() != null) {
 			isStarted = false;
 			Log.i(TAG, "Resetting MediaPlayer");
 			mp.reset();
 			try {
-				mp.setDataSource(bs.getCurrentTrackPath());
+				mp.setDataSource(bs.getSelectedTrackPath());
 				mp.prepare();
 			} catch (IllegalArgumentException e) {
 				Log.e(TAG, "Illegal argument");
@@ -90,14 +88,17 @@ public class PlayerController implements IPlayerEvents {
 			mp.start();
 			isStarted = true;
 			Log.i(TAG, "Playing: " + (bs.getSelectedTrackIndex() + 1) + ". "
-					+ bs.getCurrentTrackPath() + " @" + mp.getDuration() + "ms");
+					+ bs.getSelectedTrackPath() + " @" + mp.getDuration() + "ms");
 		} else {
-			Log.e(TAG, "Start: tried to start without choosing data source.");
+			if (bs.getSelectedTrackIndex() == -1) 
+				Log.d(TAG, "Index is -1. Should not be playing.");
+			else
+				Log.e(TAG, "Start: tried to start with track path == null");
 		}
 	}
 
 	private int getTrackDuration() {
-		return bs.getCurrentTrackDuration();
+		return bs.getSelectedTrackDuration();
 	}
 
 	private void updateTrackTime() {
@@ -116,10 +117,10 @@ public class PlayerController implements IPlayerEvents {
 	public void previousTrack() {
 		if (bs.getSelectedTrackIndex() == -1) {
 			// go to the final track (replay it)
-			bs.setCurrentTrackIndex(bs.getNumberOfTracks() - 1);
+			bs.setSelectedTrackIndex(bs.getNumberOfTracks() - 1);
 		} else {
 			// decrement track index
-			bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() - 1);
+			bs.setSelectedTrackIndex(bs.getSelectedTrackIndex() - 1);
 		}
 		start(); // restart the player
 	}
@@ -127,7 +128,7 @@ public class PlayerController implements IPlayerEvents {
 	public void nextTrack() {
 		if (bs.getSelectedTrackIndex() != -1) {
 			// increment track index unless we are done
-			bs.setCurrentTrackIndex(bs.getSelectedTrackIndex() + 1);
+			bs.setSelectedTrackIndex(bs.getSelectedTrackIndex() + 1);
 			start(); // restart the player
 		}
 	}
@@ -160,7 +161,7 @@ public class PlayerController implements IPlayerEvents {
 			Log.d(TAG, "Skipped a track (" + trackDuration
 					+ "ms) . New seekTime: " + seekTime + ". Track#: " + track);
 		}
-		bs.setCurrentTrackIndex(track);
+		bs.setSelectedTrackIndex(track);
 		start(); // start the track we seeked to
 		mp.seekTo(seekTime); // seek to the time within that track
 	}

@@ -126,7 +126,7 @@ public class BookTest extends TestCase {
 	}
 	
 	public void testSwap() {
-		b.setCurrentTrackIndex(1);
+		b.setSelectedTrackIndex(1);
 		
 		// swap tracks 0 and 1
 		b.swap(0, 1);
@@ -143,7 +143,7 @@ public class BookTest extends TestCase {
 	}
 	
 	public void testMoveTrack() {
-		b.setCurrentTrackIndex(1);
+		b.setSelectedTrackIndex(1);
 		
 		// assert that the current track is t1
 		assertTrue(b.getCurrentTrack().equals(tracks[1]));
@@ -159,7 +159,7 @@ public class BookTest extends TestCase {
 	}
 	
 	public void setCurrentTrackIndex() {
-		b.setCurrentTrackIndex(tracks.length-1);
+		b.setSelectedTrackIndex(tracks.length-1);
 		
 		// assert that the index is set correctly
 		assertEquals(tracks.length-1, b.getSelectedTrackIndex());

@@ -4,6 +4,7 @@ import android.view.View;
 
 /**
  * @author Aki Käkelä
+ * @version 0.6
  * 
  */
 public interface IBookshelfEvents {

@@ -36,7 +36,7 @@ public class BookshelfTest extends TestCase {
 	public void testBookshelf() {
 		assertTrue(bookshelf.getSelectedBookIndex() == -1); // not selected
 		try {
-			bookshelf.getCurrentBook();
+			bookshelf.getSelectedBook();
 			fail("Current book on an empty bookshelf should not exist.");
 		} catch (IndexOutOfBoundsException e) {
 		}
@@ -135,7 +135,7 @@ public class BookshelfTest extends TestCase {
 		Book b = new Book("testBook");
 		bookshelf.addBook(b);
 		// Since this is the first book, it should be the 'current' book
-		assertTrue(bookshelf.getCurrentBook() == b);
+		assertTrue(bookshelf.getSelectedBook() == b);
 		bookshelf.addBook(b);
 		bookshelf.addBook(b);
 		bookshelf.addBook(b);

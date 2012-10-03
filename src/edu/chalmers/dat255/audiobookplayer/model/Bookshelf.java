@@ -191,10 +191,23 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	// public void setBookmark(int trackIndex, int time) { }
 	// public void setTag(int trackIndex, int time) { }
 
-	public void setCurrentTrackIndex(int index) {
-		this.books.get(selectedBookIndex).setCurrentTrackIndex(index);
-		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
-				new Bookshelf(this));
+	public void setSelectedTrackIndex(int index) {
+		this.books.get(selectedBookIndex).setSelectedTrackIndex(index);
+
+		/*
+		 * only send an update if the new index is legal (i.e. something should
+		 * happen in the GUI).
+		 */
+		boolean legal = this.books.get(selectedBookIndex).isLegalIndex(index);
+
+		Log.d(TAG, "(Bookshelf.setSelectedTrackindex) new track index: "
+				+ index + "(" + (legal ? "legal" : "illegal") + ")");
+
+		if (legal) {
+			Log.d(TAG, "Firing update event (Bookshelf.setSelectedTrackindex)");
+			pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public void setBookTitle(String newTitle) {
@@ -215,13 +228,12 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		return books.get(selectedBookIndex).getDuration();
 	}
 
-	public int getCurrentTrackDuration() {
+	public int getSelectedTrackDuration() {
 		return books.get(selectedBookIndex).getTrackDuration();
 	}
 
-	public String getCurrentTrackPath() {
-		Book b = books.get(selectedBookIndex);
-		return b.getCurrentTrackPath();
+	public String getSelectedTrackPath() {
+			return books.get(selectedBookIndex).getSelectedTrackPath();
 	}
 
 	public int getSelectedTrackIndex() {
@@ -270,7 +282,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		pcs.removePropertyChangeListener(listener);
 	}
 
-	public Book getCurrentBook() {
+	public Book getSelectedBook() {
 		return this.books.get(selectedBookIndex);
 	}
 

@@ -93,7 +93,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 			// check whether this was the last track
 			if (tracks.size() == 0) {
-				selectedTrackIndex = NO_TRACK_SELECTED;
+				deselectTrack();
 			} else {
 				if (index < selectedTrackIndex) {
 					// adjust the index if we removed one earlier in the list
@@ -174,14 +174,16 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @param int new index
 	 */
 
-	public void setCurrentTrackIndex(int index) {
+	public void setSelectedTrackIndex(int index) {
 		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: "
 				+ this.tracks.size() + ")");
 		if (index >= 0) {
-			if (index >= this.tracks.size()) {
-				index = NO_TRACK_SELECTED;
+			if (index < tracks.size()) {
+				selectedTrackIndex = index;
+				return;
 			}
-			selectedTrackIndex = index;
+			// the track list is completed, so deselect the track.
+			deselectTrack();
 			Log.d(TAG, "New trackIndex: " + selectedTrackIndex);
 		} else {
 			Log.e(TAG,
@@ -209,7 +211,9 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 *            index
 	 * @return boolean
 	 */
-	private boolean isLegalIndex(int index) {
+	public boolean isLegalIndex(int index) {
+		Log.d(TAG, (index >= 0 && index < tracks.size()) ? "legal" : "illegal"
+				+ " index: 0 <= " + index + " < " + tracks.size());
 		return index >= 0 && index < tracks.size();
 	}
 
@@ -228,9 +232,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @return int index
 	 */
 	public int getSelectedTrackIndex() throws IllegalArgumentException {
-		if (!isLegalIndex(selectedTrackIndex))
-			throw new IllegalArgumentException(
-					"Tried to get selected track index when index is illegal.");
 		return this.selectedTrackIndex;
 	}
 
@@ -273,9 +274,11 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	}
 
 	/**
+	 * Gets the track path of the currently selected track.
+	 * 
 	 * @return
 	 */
-	public String getCurrentTrackPath() {
+	public String getSelectedTrackPath() {
 		if (!isLegalIndex(selectedTrackIndex))
 			throw new IllegalArgumentException(
 					"Tried to get selected track path when index is illegal.");
@@ -335,7 +338,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	public Track getCurrentTrack() {
 		if (!isLegalIndex(selectedTrackIndex))
 			throw new IllegalArgumentException(
-					"Tried to get selected track duration when index is illegal.");
+					"Tried to get selected track when index is illegal.");
 		return this.tracks.get(selectedTrackIndex);
 	}
 
@@ -394,6 +397,10 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 
 	private boolean isLegalTagIndex(int index) {
 		return index >= 0 && index < tags.size();
+	}
+
+	private void deselectTrack() {
+		selectedTrackIndex = NO_TRACK_SELECTED;
 	}
 
 	@Override

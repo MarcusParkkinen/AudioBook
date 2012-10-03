@@ -185,7 +185,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-		if (eventName != Constants.event.ELAPSED_TIME_CHANGED)
+//		if (eventName != Constants.event.ELAPSED_TIME_CHANGED)
 			Log.d(TAG, "Received update: " + eventName);
 
 		if (event.getNewValue() instanceof Bookshelf) {
@@ -195,14 +195,14 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// Check which event was fired, and do relevant updates in the
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				bookshelf.bookAdded(b);
 
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.event.BOOK_SELECTED)) {
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// indicate selected book
 
@@ -230,7 +230,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Do nothing
 			} else if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)) {
 				System.out.println("Updating time..3");
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 
 				// Player
@@ -241,7 +241,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// update time labels
 				updateElapsedTimeLabels(b);
 			} else if (eventName.equals(Constants.event.TRACK_REMOVED)) {
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// remove the track from the list (the child on the given index
 				// in the given parent)
@@ -250,7 +250,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// update book duration label
 				updateBookDurationLabel(b);
 			} else if (eventName.equals(Constants.event.TRACK_ADDED)) {
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// add ... -"-
 
@@ -265,7 +265,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Do nothing
 			} else if (eventName.equals(Constants.event.TRACK_INDEX_CHANGED)) {
 				// A new track is playing
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// move the "selected track" indicator to the new index
 
@@ -273,8 +273,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// update track title and duration labels
 				updateTrackTitleLabel(b);
 				updateTrackDurationLabel(b);
+				// set times to zero
 			} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// update the name of the book (parent) of the given index
 
@@ -282,7 +283,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// update the book title label
 				updateBookTitleLabel(b);
 			} else if (eventName.equals(Constants.event.BOOK_DURATION_CHANGED)) {
-				Book b = bs.getCurrentBook();
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 
 				// Player
@@ -305,6 +306,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateBookTitleLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
+				// TODO: check if bookshelf selectedBookIndex != -1
 				player.updateBookTitleLabel(b.getTitle());
 			}
 		});
@@ -319,7 +321,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateTrackTitleLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				player.updateTrackTitleLabel(b.getTrackTitle());
+				if (b.getSelectedTrackIndex() != -1)
+					player.updateTrackTitleLabel(b.getTrackTitle());
 			}
 		});
 	}
@@ -336,6 +339,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateBookDurationLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
+				// TODO: check if bookshelf selectedBookIndex != -1
 				player.updateBookDurationLabel(b.getDuration());
 			}
 		});
@@ -351,7 +355,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateTrackDurationLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				player.updateTrackDurationLabel(b.getTrackDuration());
+				if (b.getSelectedTrackIndex() != -1)
+					player.updateTrackDurationLabel(b.getTrackDuration());
 			}
 		});
 	}
@@ -369,8 +374,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		if (player.getActivity() != null) {
 			player.getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					player.updateTrackElapsedTimeLabel(b.getElapsedTime());
-					player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
+					// TODO: check if bookshelf selectedBookIndex != -1
+					if (b.getSelectedTrackIndex() != -1) {
+						player.updateTrackElapsedTimeLabel(b.getElapsedTime());
+						player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
+					}
 				}
 			});
 		}
@@ -383,15 +391,17 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateTrackSeekbar(Book b) {
-		// elapsed time
-		int trackElapsedTime = b.getCurrentTrack().getElapsedTime();
-
-		// total duration
-		int trackDuration = b.getTrackDuration();
-
-		double progress = getProgress(trackElapsedTime, trackDuration);
-
-		player.updateTrackSeekBar(progress);
+		if (b.getSelectedTrackIndex() != -1) {
+			// elapsed time
+			int trackElapsedTime = b.getCurrentTrack().getElapsedTime();
+			
+			// total duration
+			int trackDuration = b.getTrackDuration();
+			
+			double progress = getProgress(trackElapsedTime, trackDuration);
+			
+			player.updateTrackSeekBar(progress);
+		}
 	}
 
 	/**
@@ -401,15 +411,17 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateBookSeekbar(Book b) {
-		// elapsed time
-		int bookElapsedTime = b.getBookElapsedTime();
-
-		// total duration
-		int bookDuration = b.getDuration();
-
-		double progress = getProgress(bookElapsedTime, bookDuration);
-
-		player.updateBookSeekBar(progress);
+		if (b.getSelectedTrackIndex() != -1) {
+			// elapsed time
+			int bookElapsedTime = b.getBookElapsedTime();
+			
+			// total duration
+			int bookDuration = b.getDuration();
+			
+			double progress = getProgress(bookElapsedTime, bookDuration);
+			
+			player.updateBookSeekBar(progress);
+		}
 	}
 
 	/**

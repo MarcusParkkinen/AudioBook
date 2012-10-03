@@ -52,7 +52,7 @@ public interface IBookUpdates {
 	 * 
 	 * @param index
 	 */
-	public void setCurrentTrackIndex(int index);
+	public void setSelectedTrackIndex(int index);
 
 	/**
 	 * Changes the title of the book.
