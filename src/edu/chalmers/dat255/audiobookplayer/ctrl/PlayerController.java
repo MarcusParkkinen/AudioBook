@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
@@ -14,11 +15,11 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * @author Aki Käkelä
  * @version 0.6
  */
-public class PlayerController {
+public class PlayerController implements IPlayerEvents {
 	public static final String TAG = "PlayerController.class";
 	private MediaPlayer mp;
 	private Bookshelf bs;
-	private Thread modelUpdaterThread;
+	private Thread trackTimeUpdateThread;
 
 	private boolean isStarted = false;
 
@@ -31,20 +32,8 @@ public class PlayerController {
 		this.bs = bs;
 	}
 
-	/**
-	 * Pauses the audio if the player is playing. Resumes or starts otherwise.
-	 */
-	public void playPause() {
-		if (isStarted) {
-			if (mp.isPlaying())
-				mp.pause();
-			else
-				mp.start();
-		}
-	}
-
 	private void startTimer() {
-		modelUpdaterThread = new Thread(new Runnable() {
+		trackTimeUpdateThread = new Thread(new Runnable() {
 			public void run() {
 				while (isStarted) {
 					int frequency = 1000;
@@ -62,7 +51,7 @@ public class PlayerController {
 			}
 
 		});
-		modelUpdaterThread.start();
+		trackTimeUpdateThread.start();
 	}
 
 	/**
@@ -71,8 +60,7 @@ public class PlayerController {
 	 */
 	public void start() {
 		// we have started playing a file, so start the thread that updates the
-		// time
-		// on the Track instance
+		// time on the Track instance
 		if (bs.getCurrentTrackPath() != null) {
 			isStarted = false;
 			Log.i(TAG, "Resetting MediaPlayer");
@@ -96,7 +84,7 @@ public class PlayerController {
 					nextTrack();
 				}
 			});
-			if (modelUpdaterThread == null) {
+			if (trackTimeUpdateThread == null) {
 				startTimer();
 			}
 			mp.start();
@@ -105,6 +93,23 @@ public class PlayerController {
 					+ bs.getCurrentTrackPath() + " @" + mp.getDuration() + "ms");
 		} else {
 			Log.e(TAG, "Start: tried to start without choosing data source.");
+		}
+	}
+
+	private int getTrackDuration() {
+		return bs.getCurrentTrackDuration();
+	}
+
+	private void updateTrackTime() {
+		this.bs.setElapsedTime(mp.getCurrentPosition());
+	}
+
+	public void playPause() {
+		if (isStarted) {
+			if (mp.isPlaying())
+				mp.pause();
+			else
+				mp.start();
 		}
 	}
 
@@ -127,54 +132,20 @@ public class PlayerController {
 		}
 	}
 
-	private int getTrackDuration() {
-		return bs.getCurrentTrackDuration();
-	}
-
-	private void updateTrackTime() {
-		this.bs.setElapsedTime(mp.getCurrentPosition());
-	}
-
-	/**
-	 * Seeks to the right (10% of the track duration).
-	 * 
-	 * @param time
-	 *            ms
-	 */
 	public void seekRight() {
 		seekToPercentageInTrack(mp.getCurrentPosition() + getTrackDuration()
 				/ 10);
 	}
 
-	/**
-	 * Seeks to the left (10% of the track duration).
-	 * 
-	 * @param time
-	 *            ms
-	 */
 	public void seekLeft() {
 		seekToPercentageInTrack(mp.getCurrentPosition() - getTrackDuration()
 				/ 10);
 	}
 
-	/**
-	 * Seeks to the given progress percentage of the track.
-	 * 
-	 * @param percentage
-	 *            e.g. input value "50" will seek halfway (50%) through the
-	 *            track.
-	 */
 	public void seekToPercentageInTrack(double percentage) {
 		seekTo((int) (mp.getDuration() * percentage));
 	}
 
-	/**
-	 * Seeks <i>time</i> ms through the tracks of the book.
-	 * 
-	 * @param percentage
-	 *            e.g. input value "50" will seek halfway (50%) through the
-	 *            book.
-	 */
 	public void seekToPercentageInBook(double percentage) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		Log.d(TAG, "percentage: " + df.format(percentage));

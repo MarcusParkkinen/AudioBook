@@ -1,4 +1,4 @@
-package edu.chalmers.dat255.audiobookplayer.model;
+package edu.chalmers.dat255.audiobookplayer.interfaces;
 
 /**
  * Used to assert that implementing classes can handle updates on Book
@@ -41,6 +41,7 @@ public interface IBookUpdates {
 	 * @param time
 	 *            The time at which to add the bookmark (in ms).
 	 */
+
 	// public void setBookmark(int trackIndex, int time);
 
 	// public void setTag();
@@ -59,9 +60,10 @@ public interface IBookUpdates {
 	 * @param newTitle
 	 */
 	public void setBookTitle(String newTitle);
-	
+
 	/**
-	 * Updates the duration of the book to the sum of the duration of its tracks.
+	 * Updates the duration of the book to the sum of the duration of its
+	 * tracks.
 	 */
 	public void updateBookDuration();
 

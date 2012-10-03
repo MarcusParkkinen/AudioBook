@@ -1,6 +1,5 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
-import edu.chalmers.dat255.audiobookplayer.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 
 /**
  * A graphical UI representing the audio player.
@@ -33,38 +34,21 @@ public class PlayerFragment extends Fragment {
 	private TextView trackDuration;
 	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
-	PlayerUIEventListener parentFragment;
+	IPlayerEvents parentFragment;
 
 	// private Picker timePicker;
 
 	// TODO: make some methods protected
-
-	public interface PlayerUIEventListener {
-		public void previousTrack();
-
-		public void playPause();
-
-		public void nextTrack();
-
-		public void seekLeft();
-
-		public void seekRight();
-
-		public void seekToPercentageInTrack(double percentage);
-
-		public void seekToPercentageInBook(double percentage);
-
-	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-			parentFragment = (PlayerUIEventListener) activity;
+			parentFragment = (IPlayerEvents) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " does not implement PlayerUIEventListener");
+					+ " does not implement " + IPlayerEvents.class.getName());
 		}
 	}
 
@@ -203,6 +187,11 @@ public class PlayerFragment extends Fragment {
 	}
 
 	// Seek bars
+	/**
+	 * Sets the progress on the book seek bar to the given percentage.
+	 * 
+	 * @param percentage
+	 */
 	public void updateBookSeekBar(double percentage) {
 		int progress = (int) ((double) bookBar.getMax() * percentage);
 		// Log.d(TAG, "Seeking book bar to " + progress + "%");
@@ -210,6 +199,11 @@ public class PlayerFragment extends Fragment {
 		bookBar.setProgress(progress);
 	}
 
+	/**
+	 * Sets the progress on the track seek bar to the given percentage.
+	 * 
+	 * @param percentage
+	 */
 	public void updateTrackSeekBar(double percentage) {
 		int progress = (int) (trackBar.getMax() * percentage);
 		// Log.d(TAG, "Seeking track bar to " + progress + "%");
@@ -217,33 +211,78 @@ public class PlayerFragment extends Fragment {
 		trackBar.setProgress(progress);
 	}
 
-	// Titles
-	public void updateBookTitleLabel(String label) {
-		bookTitle.setText(label);
+	/* Titles */
+	/**
+	 * Sets the title of the book to the given title.
+	 * 
+	 * @param title
+	 */
+	public void updateBookTitleLabel(String title) {
+		bookTitle.setText(title);
 	}
 
-	public void updateTrackTitleLabel(String label) {
-		trackTitle.setText(label);
+	/**
+	 * Sets the title of the track to the given title.
+	 * 
+	 * @param title
+	 */
+	public void updateTrackTitleLabel(String title) {
+		trackTitle.setText(title);
 	}
 
-	// Elapsed times
+	/* Elapsed time labels */
+	/**
+	 * Sets the elapsed time label of the book to the given time in
+	 * milliseconds. Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
 	public void updateBookElapsedTimeLabel(int ms) {
 		bookElapsedTime.setText(formatTime(ms));
 	}
 
+	/**
+	 * Sets the elapsed time label of the track to the given time in
+	 * milliseconds. Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
 	public void updateTrackElapsedTimeLabel(int ms) {
 		trackElapsedTime.setText(formatTime(ms));
 	}
 
-	// Duration times
+	/* Duration labels */
+	/**
+	 * Sets the duration label of the book to the given time in milliseconds.
+	 * Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
 	public void updateBookDurationLabel(int ms) {
 		bookDuration.setText(formatTime(ms));
 	}
 
+	/**
+	 * Sets the duration label of the track to the given time in milliseconds.
+	 * Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
 	public void updateTrackDurationLabel(int ms) {
 		trackDuration.setText(formatTime(ms));
 	}
 
+	/**
+	 * Formats a given time in milliseconds to MM:SS.
+	 * <p>
+	 * 
+	 * If the number of hours is greater than zero or nine the time will be
+	 * formatted to H:MM:SS or HH:MM:SS, respectively. If it surpasses 23, it
+	 * will start from zero again (modulus 24).
+	 * 
+	 * @param ms
+	 * @return
+	 */
 	private String formatTime(int ms) {
 		int seconds = (ms / 1000) % 60;
 		int minutes = (ms / (1000 * 60)) % 60;

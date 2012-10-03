@@ -2,6 +2,8 @@ package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.security.InvalidParameterException;
 
+import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
+
 import android.util.Log;
 
 /**
@@ -13,7 +15,7 @@ import android.util.Log;
  */
 public final class Track implements ITrackUpdates {
 	private static final String TAG = "Bookshelf.java";
-	
+
 	private final String path;
 	private final int duration;
 	private int elapsedTime;
@@ -91,27 +93,30 @@ public final class Track implements ITrackUpdates {
 	protected int getDuration() {
 		return duration;
 	}
-	
+
 	/**
 	 * @return The elapsed time of the track.
 	 */
 	public int getElapsedTime() {
 		return elapsedTime;
 	}
-	
+
 	/**
 	 * Set the elapsed time of the track to a specified amount.
 	 * 
 	 * @param new time
 	 */
-	public void setElapsedTime(int elapsedTime) throws InvalidParameterException {
+	public void setElapsedTime(int elapsedTime)
+			throws InvalidParameterException {
 		if (elapsedTime >= duration) {
-			Log.e(TAG, "elapsedTime (" + elapsedTime + ") set to duration (" + duration + ")");
+			Log.e(TAG, "elapsedTime (" + elapsedTime + ") set to duration ("
+					+ duration + ")");
 			this.elapsedTime = duration;
 		} else if (elapsedTime >= 0) {
 			this.elapsedTime = elapsedTime;
 		} else {
-			throw new InvalidParameterException("Attempting to set elapsed time to a negative value.");
+			throw new InvalidParameterException(
+					"Attempting to set elapsed time to a negative value.");
 		}
 	}
 

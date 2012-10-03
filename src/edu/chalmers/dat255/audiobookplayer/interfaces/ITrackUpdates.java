@@ -1,4 +1,4 @@
-package edu.chalmers.dat255.audiobookplayer.model;
+package edu.chalmers.dat255.audiobookplayer.interfaces;
 
 /**
  * Used to assert that implementing classes can handle updates on Track

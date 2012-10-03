@@ -40,17 +40,17 @@ public class BookCreator {
 			Track t;
 			try {
 				t = TrackCreator.createTrack(paths[i]);
-			} catch(NumberFormatException e) { 
+			} catch (NumberFormatException e) {
 				// If a track contains malformed data, do not add it to the book
 				continue;
 			}
 			trackList.add(t);
 		}
 		/*
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-		mmr.setDataSource(path);
-		String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		*/
+		 * MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+		 * mmr.setDataSource(path); String title =
+		 * mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+		 */
 		bsh.addBook(new Book(trackList, path));
 	}
 

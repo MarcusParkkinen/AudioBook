@@ -3,18 +3,18 @@ package edu.chalmers.dat255.audiobookplayer.constants;
 /**
  * Holds unique event property names for events.
  * 
- * @author Aki Kï¿½kelï¿½
- * @version 0.5
+ * @author Aki Käkelä
+ * @version 0.6
  */
 public final class Constants {
 	public static final class event {
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
-		
+
 		public static final String BOOK_ADDED = "!bookAdded";
 		public static final String BOOK_MOVED = "!bookMoved";
 		public static final String BOOK_REMOVED = "!bookRemoved";
 		public static final String BOOK_SELECTED = "!bookSelected";
-		
+
 		public static final String BOOK_TITLE_CHANGED = "!bookTitleChanged";
 		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
 
@@ -31,7 +31,8 @@ public final class Constants {
 		// player (when the track ends) changes the track index.
 		// TODO: change name? "_BY_USER_OR_PLAYER" suffix.
 	}
-	public static final class reference{
+
+	public static final class reference {
 		public static final String BOOKSHELF = "@bookshelf";
 	}
 }

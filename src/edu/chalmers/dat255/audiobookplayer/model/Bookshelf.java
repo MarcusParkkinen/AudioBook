@@ -6,6 +6,8 @@ import java.util.LinkedList;
 
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
+import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
 /**
  * The bookshelf class contains a collection of books.
@@ -49,7 +51,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		}
 	}
 
-	/* Bookshelf methods */	
+	/* Bookshelf methods */
 	/**
 	 * The book that the player will use (read from) is set here.
 	 * 
@@ -256,12 +258,12 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	}
 
 	/* End Track methods */
-	
+
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs = new PropertyChangeSupport(this);
 		pcs.addPropertyChangeListener(listener);
-		pcs.firePropertyChange(Constants.event.BOOKSHELF_UPDATED,
-				null, new Bookshelf(this));
+		pcs.firePropertyChange(Constants.event.BOOKSHELF_UPDATED, null,
+				new Bookshelf(this));
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
