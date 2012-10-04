@@ -63,7 +63,7 @@ public class BookTest extends TestCase {
 		assertFalse(newBook == b);
 		
 		// assert that the track objects are deep copies as well
-		assertFalse(newBook.getCurrentTrack() == b.getCurrentTrack());
+		assertFalse(newBook.getSelectedTrack() == b.getSelectedTrack());
 				
 		// assert that both books are equal
 		assertTrue(newBook.equals(b));
@@ -86,7 +86,7 @@ public class BookTest extends TestCase {
 		// for all tracks in the book..
 		for(int i = 0; i < tracks.length; i++) {
 			// assert that the current track index adjusts accordingly
-			assertTrue(b.getCurrentTrack().equals(tracks[i]));
+			assertTrue(b.getSelectedTrack().equals(tracks[i]));
 			
 			// remove the track that is on the first index
 			b.removeTrack(0);
@@ -113,7 +113,7 @@ public class BookTest extends TestCase {
 			
 			// assert that the selected track index does not change even
 			// when adding tracks to indices before it
-			assertTrue(b.getCurrentTrack().equals(tracks[0]));
+			assertTrue(b.getSelectedTrack().equals(tracks[0]));
 			
 			
 			// assert that the amount of tracks changes accordingly
@@ -129,15 +129,15 @@ public class BookTest extends TestCase {
 		b.setSelectedTrackIndex(1);
 		
 		// swap tracks 0 and 1
-		b.swap(0, 1);
-		assertTrue(b.getCurrentTrack().equals(t0));
+		b.swapTracks(0, 1);
+		assertTrue(b.getSelectedTrack().equals(t0));
 		
 		// assert that elapsed time of the book adjusts accordingly
 		assertEquals(t1.getDuration(), b.getBookElapsedTime());
 		
 		// swap tracks 0 and 1 again
-		b.swap(0, 1);
-		assertTrue(b.getCurrentTrack().equals(t1));
+		b.swapTracks(0, 1);
+		assertTrue(b.getSelectedTrack().equals(t1));
 		
 		assertEquals(t0.getDuration(), b.getBookElapsedTime());
 	}
@@ -146,13 +146,13 @@ public class BookTest extends TestCase {
 		b.setSelectedTrackIndex(1);
 		
 		// assert that the current track is t1
-		assertTrue(b.getCurrentTrack().equals(tracks[1]));
+		assertTrue(b.getSelectedTrack().equals(tracks[1]));
 		
 		// swap t0 and t1
 		b.moveTrack(0, 1);
 		
 		// assert that the current track now is t0
-		assertTrue(b.getCurrentTrack().equals(tracks[0]));
+		assertTrue(b.getSelectedTrack().equals(tracks[0]));
 		
 		// also assert that the elapsed time has adjusted accordingly
 		assertEquals(tracks[1].getDuration(), b.getBookElapsedTime());
@@ -181,12 +181,12 @@ public class BookTest extends TestCase {
 			fail("managed to set book title with null string");
 		} catch(IllegalArgumentException e) {
 			//assert that the old name still applies
-			assertEquals(bookName, b.getTitle());
+			assertEquals(bookName, b.getBookTitle());
 		}
 		
 		// but that we can set it to a new valid name
 		String anotherTitle = "e";
 		b.setBookTitle(anotherTitle);
-		assertEquals(anotherTitle, b.getTitle());
+		assertEquals(anotherTitle, b.getBookTitle());
 	}
 }

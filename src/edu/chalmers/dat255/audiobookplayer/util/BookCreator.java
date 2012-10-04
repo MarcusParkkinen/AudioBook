@@ -29,12 +29,18 @@ public class BookCreator {
 		return instance;
 	}
 
+	/**
+	 * @param bsh
+	 */
 	public void setBookshelf(Bookshelf bsh) {
 		this.bsh = bsh;
 	}
 
+	/**
+	 * @param paths
+	 * @param path
+	 */
 	public void createBook(String[] paths, String path) {
-		System.out.println("CREATING A BOOK!!!");
 		List<Track> trackList = new LinkedList<Track>();
 		for (int i = 0; i < paths.length; i++) {
 			Track t;
@@ -51,7 +57,7 @@ public class BookCreator {
 		 * mmr.setDataSource(path); String title =
 		 * mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 		 */
-		bsh.addBook(new Book(trackList, path));
+		bsh.addBook(new Book(trackList, path, "temp"));
 	}
 
 }

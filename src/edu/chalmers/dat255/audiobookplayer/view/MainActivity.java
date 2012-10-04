@@ -307,7 +307,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// TODO: check if bookshelf selectedBookIndex != -1
-				player.updateBookTitleLabel(b.getTitle());
+				player.updateBookTitleLabel(b.getBookTitle());
 			}
 		});
 	}
@@ -356,7 +356,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				if (b.getSelectedTrackIndex() != -1)
-					player.updateTrackDurationLabel(b.getTrackDuration());
+					player.updateTrackDurationLabel(b.getSelectedTrackDuration());
 			}
 		});
 	}
@@ -376,7 +376,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				public void run() {
 					// TODO: check if bookshelf selectedBookIndex != -1
 					if (b.getSelectedTrackIndex() != -1) {
-						player.updateTrackElapsedTimeLabel(b.getElapsedTime());
+						player.updateTrackElapsedTimeLabel(b.getSelectedTrackElapsedTime());
 						player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
 					}
 				}
@@ -393,10 +393,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateTrackSeekbar(Book b) {
 		if (b.getSelectedTrackIndex() != -1) {
 			// elapsed time
-			int trackElapsedTime = b.getCurrentTrack().getElapsedTime();
+			int trackElapsedTime = b.getSelectedTrackElapsedTime();
 			
 			// total duration
-			int trackDuration = b.getTrackDuration();
+			int trackDuration = b.getSelectedTrackDuration();
 			
 			double progress = getProgress(trackElapsedTime, trackDuration);
 			

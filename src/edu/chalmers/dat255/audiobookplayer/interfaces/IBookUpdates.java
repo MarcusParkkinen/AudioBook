@@ -1,5 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.interfaces;
 
+import edu.chalmers.dat255.audiobookplayer.model.Track;
+
 /**
  * Used to assert that implementing classes can handle updates on Book
  * instances.
@@ -9,6 +11,15 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
  * 
  */
 public interface IBookUpdates {
+
+	/**
+	 * Add a track to the list.
+	 * 
+	 * @param t
+	 *            Track to add.
+	 */
+	public void addTrack(Track t);
+
 	/**
 	 * Removes a track from the collection on the specified index.
 	 * 
@@ -17,19 +28,19 @@ public interface IBookUpdates {
 	public void removeTrack(int index);
 
 	/**
-	 * Swap location of two tracks.
+	 * Swaps the position of two tracks in the list.
 	 * 
 	 * @param firstIndex
 	 * @param secondIndex
 	 */
-	public void swap(int firstIndex, int secondIndex);
+	public void swapTracks(int firstIndex, int secondIndex);
 
 	/**
-	 * Move the track at the specified index to a new index.
+	 * Move a track from a given index to a given index. Indices inbetween will
+	 * be adjusted.
 	 * 
-	 * @param oldIndex
-	 *            index of the track
-	 * @param newIndex
+	 * @param from
+	 * @param to
 	 */
 	public void moveTrack(int from, int to);
 
@@ -44,8 +55,6 @@ public interface IBookUpdates {
 
 	// public void setBookmark(int trackIndex, int time);
 
-	// public void setTag();
-
 	/**
 	 * Sets the track index of the book. Rolls over if the index is out of
 	 * bounds.
@@ -55,7 +64,7 @@ public interface IBookUpdates {
 	public void setSelectedTrackIndex(int index);
 
 	/**
-	 * Changes the title of the book.
+	 * Set the title of the book.
 	 * 
 	 * @param newTitle
 	 */

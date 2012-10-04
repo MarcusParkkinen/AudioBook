@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 
@@ -34,7 +35,8 @@ public class PlayerFragment extends Fragment {
 	private TextView trackDuration;
 	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
-	IPlayerEvents parentFragment;
+	private IPlayerEvents parentFragment;
+//	private TimePicker timePicker;
 
 	// private Picker timePicker;
 

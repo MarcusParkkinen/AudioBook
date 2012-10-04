@@ -1,8 +1,10 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
 /**
- * A time stamp and a track index to be put in a book to keep track of certain
- * positions.
+ * A time stamp to be put in a track. Used to keep track of certain times.
+ * <p>
+ * The time is immutable, so the object must be destroyed and recreated to
+ * "move" a tag.
  * 
  * @author Aki Käkelä
  * @version 0.6
@@ -10,7 +12,8 @@ package edu.chalmers.dat255.audiobookplayer.model;
  */
 public class Tag {
 	private int time;
-	private int trackIndex;
+
+	// private int trackIndex;
 
 	/**
 	 * Creates a tag which contains a track index and a time in milliseconds.
@@ -18,9 +21,9 @@ public class Tag {
 	 * @param time
 	 * @param trackIndex
 	 */
-	public Tag(int time, int trackIndex) {
+	public Tag(int time/* , int trackIndex */) {
 		this.time = time;
-		this.trackIndex = trackIndex;
+		// this.trackIndex = trackIndex;
 	}
 
 	/**
@@ -30,21 +33,27 @@ public class Tag {
 		return time;
 	}
 
-	public void setTime(int time) {
-		this.time = time;
-	}
+	// /**
+	// * @param time
+	// */
+	// public void setTime(int time) {
+	// this.time = time;
+	// }
 
-	/**
-	 * Get the track index that the tag was saved on.
-	 * 
-	 * @return
-	 */
-	public int getTrackIndex() {
-		return trackIndex;
-	}
+	// /**
+	// * Get the track index that the tag was saved on.
+	// *
+	// * @return
+	// */
+	// public int getTrackIndex() {
+	// return trackIndex;
+	// }
 
-	public void setTrackIndex(int trackIndex) {
-		this.trackIndex = trackIndex;
-	}
+	// /**
+	// * @param trackIndex
+	// */
+	// public void setTrackIndex(int trackIndex) {
+	// this.trackIndex = trackIndex;
+	// }
 
 }

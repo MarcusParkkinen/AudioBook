@@ -1,13 +1,17 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.security.InvalidParameterException;
+import java.util.LinkedList;
 
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
 import android.util.Log;
 
 /**
- * Represents a single audio track. Includes its duration and path.
+ * Represents a single audio track. Includes its duration, current elapsed time
+ * and file path.
+ * <p>
+ * Duration and track path are immutable.
  * 
  * @author Marcus Parkkinen Aki Käkelä
  * @version 0.6
@@ -19,6 +23,7 @@ public final class Track implements ITrackUpdates {
 	private final String path;
 	private final int duration;
 	private int elapsedTime;
+	private LinkedList<Tag> tags;
 
 	/**
 	 * Constructor for a track. Path to the data source as well as the length of
@@ -37,37 +42,6 @@ public final class Track implements ITrackUpdates {
 			throw new InvalidParameterException(
 					"Attempting to create track with either null path or negative duration.");
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + duration;
-		result = prime * result + elapsedTime;
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Track other = (Track) obj;
-		if (duration != other.duration)
-			return false;
-		if (elapsedTime != other.elapsedTime)
-			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!path.equals(other.path))
-			return false;
-		return true;
 	}
 
 	/**
@@ -106,7 +80,7 @@ public final class Track implements ITrackUpdates {
 	 * 
 	 * @param new time
 	 */
-	public void setElapsedTime(int elapsedTime)
+	public void setSelectedTrackElapsedTime(int elapsedTime)
 			throws InvalidParameterException {
 		if (elapsedTime >= duration) {
 			Log.e(TAG, "elapsedTime (" + elapsedTime + ") set to duration ("
@@ -123,9 +97,55 @@ public final class Track implements ITrackUpdates {
 	/**
 	 * Returns the title of the track.
 	 * 
-	 * @return
+	 * @return The title of the track (the path without the parent folders).
 	 */
 	public String getTrackTitle() {
-		return this.path; // TODO: just get the track name, not path
+		return this.path; // TODO: just get the track name, not the path
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + duration;
+		result = prime * result + elapsedTime;
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Track other = (Track) obj;
+		if (duration != other.duration)
+			return false;
+		if (elapsedTime != other.elapsedTime)
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		return true;
+	}
+
+	public void addTag(int time) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeTag() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeTagAt(int tagIndex) {
+		// TODO Auto-generated method stub
+		
 	}
 }

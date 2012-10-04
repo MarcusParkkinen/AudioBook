@@ -18,7 +18,7 @@ public class TrackTest extends TestCase {
 		super.setUp();
 		
 		t = new Track(trackPath, trackLength);
-		t.setElapsedTime(elapsedTime);
+		t.setSelectedTrackElapsedTime(elapsedTime);
 	}
 
 	protected void tearDown() throws Exception {
@@ -50,12 +50,12 @@ public class TrackTest extends TestCase {
 	
 	public void testSetElapsedTime() {
 		//test legal bound values
-		t.setElapsedTime(trackLength);
-		t.setElapsedTime(0);
+		t.setSelectedTrackElapsedTime(trackLength);
+		t.setSelectedTrackElapsedTime(0);
 		
 		//try setting a negative value for the track
 		try{
-			t.setElapsedTime(-1);
+			t.setSelectedTrackElapsedTime(-1);
 			fail("managed to set time to negative value.");
 		} catch(IllegalArgumentException e) {
 			
@@ -63,7 +63,7 @@ public class TrackTest extends TestCase {
 		
 		//try setting a time > duration
 		try{
-			t.setElapsedTime(trackLength+1);
+			t.setSelectedTrackElapsedTime(trackLength+1);
 			fail("managed to set time to negative value.");
 		} catch(IllegalArgumentException e) {
 			

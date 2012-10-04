@@ -187,8 +187,8 @@ public class BookshelfFragment extends Fragment {
 	public void bookAdded(Book b) {
 		Log.d(TAG, "Book added");
 		// Add a new entry to 'values'
-		listData.add(new BookshelfEntry<String, List<String>>(b.getTitle(), b
-				.getPaths()));
+		listData.add(new BookshelfEntry<String, List<String>>(b.getBookTitle(), b
+				.getTrackPaths()));
 		// Notify the adapter that the list has changed
 		adapter.notifyDataSetChanged();
 	}

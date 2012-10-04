@@ -97,13 +97,22 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/**
+	 * Convenience method.
+	 * @return
+	 */
 	private int getTrackDuration() {
 		return bs.getSelectedTrackDuration();
 	}
 
+	/**
+	 * Convenience method.
+	 */
 	private void updateTrackTime() {
-		this.bs.setElapsedTime(mp.getCurrentPosition());
+		this.bs.setSelectedTrackElapsedTime(mp.getCurrentPosition());
 	}
+	
+	/* IPlayerEvents */
 
 	public void playPause() {
 		if (isStarted) {
@@ -165,6 +174,8 @@ public class PlayerController implements IPlayerEvents {
 		start(); // start the track we seeked to
 		mp.seekTo(seekTime); // seek to the time within that track
 	}
+	
+	/* End IPlayerEvents */
 
 	/**
 	 * Seeks to the given time.

@@ -142,42 +142,39 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	/* End Bookshelf methods */
 
-	/* Book methods */
+	/* IBookUpdates */
 
 	public void removeTrack(int index) {
-		if (!isLegalIndex(index)) {
+		if (!isLegalIndex(index))
 			throw new IllegalArgumentException(
 					"Tried to remove track at index when index is illegal.");
-		}
 		this.books.get(selectedBookIndex).removeTrack(index);
+
+		/*
+		 * since we removed a track we need to recalculate the duration of the
+		 * book
+		 */
+		updateBookDuration();
+
 		pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null,
 				new Bookshelf(this));
-
-		/*
-		 * since we removed a track we need to recalculate the duration of the
-		 * book
-		 */
-		updateBookDuration();
 	}
 
-	/**
-	 * Adds a track to the end of the collection.
-	 * 
-	 * @param t
-	 */
 	public void addTrack(Track t) {
 		this.books.get(selectedBookIndex).addTrack(t);
-		pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
-				new Bookshelf(this));
+
 		/*
 		 * since we removed a track we need to recalculate the duration of the
 		 * book
 		 */
 		updateBookDuration();
+
+		pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
+				new Bookshelf(this));
 	}
 
-	public void swap(int firstIndex, int secondIndex) {
-		this.books.get(selectedBookIndex).swap(firstIndex, secondIndex);
+	public void swapTracks(int firstIndex, int secondIndex) {
+		this.books.get(selectedBookIndex).swapTracks(firstIndex, secondIndex);
 		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null,
 				new Bookshelf(this));
 	}
@@ -189,16 +186,16 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	}
 
 	// public void setBookmark(int trackIndex, int time) { }
-	// public void setTag(int trackIndex, int time) { }
 
 	public void setSelectedTrackIndex(int index) {
 		this.books.get(selectedBookIndex).setSelectedTrackIndex(index);
 
 		/*
-		 * only send an update if the new index is legal (i.e. something should
-		 * happen in the GUI).
+		 * only send an update if the new index is legal (i.e. something changed
+		 * in the model so therefore the GUI should update).
 		 */
-		boolean legal = this.books.get(selectedBookIndex).isLegalIndex(index);
+		boolean legal = this.books.get(selectedBookIndex).isLegalTrackIndex(
+				index);
 
 		Log.d(TAG, "(Bookshelf.setSelectedTrackindex) new track index: "
 				+ index + "(" + (legal ? "legal" : "illegal") + ")");
@@ -222,54 +219,129 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 				new Bookshelf(this));
 	}
 
-	// Extra convenience methods
+	/* End IBookUpdates */
 
+	/* ITrackUpdates */
+
+	public void setSelectedTrackElapsedTime(int elapsedTime) {
+		// set elapsed time in the currently playing book
+		books.get(selectedBookIndex).setSelectedTrackElapsedTime(elapsedTime);
+
+		pcs.firePropertyChange(Constants.event.ELAPSED_TIME_CHANGED, null,
+				new Bookshelf(this));
+	}
+	
+	public void addTag(int time) {
+		this.books.get(selectedBookIndex).addTag(time);
+	}
+
+	public void removeTag() {
+		this.books.get(selectedBookIndex).removeTag();
+	}
+
+	public void removeTagAt(int tagIndex) {
+		this.books.get(selectedBookIndex).removeTagAt(tagIndex);
+	}
+
+	/* End ITrackUpdates */
+
+	/*
+	 * Accessors to Book and Track.
+	 */
+	/**
+	 * @return
+	 */
 	public int getSelectedBookDuration() {
 		return books.get(selectedBookIndex).getDuration();
 	}
 
+	/**
+	 * @return
+	 */
 	public int getSelectedTrackDuration() {
-		return books.get(selectedBookIndex).getTrackDuration();
+		return books.get(selectedBookIndex).getSelectedTrackDuration();
 	}
 
+	/**
+	 * @return
+	 */
 	public String getSelectedTrackPath() {
-			return books.get(selectedBookIndex).getSelectedTrackPath();
+		return books.get(selectedBookIndex).getSelectedTrackPath();
 	}
 
-	public int getSelectedTrackIndex() {
-		return books.get(selectedBookIndex).getSelectedTrackIndex();
-	}
-
+	/**
+	 * ** currently unused **
+	 * @return
+	 */
 	public int getSelectedBookIndex() {
 		return this.selectedBookIndex;
 	}
 
 	/**
-	 * Private method that checks whether a provided index is within the legal
-	 * bounds of the list of books.
+	 * @return
+	 */
+	public int getSelectedTrackIndex() {
+		return books.get(selectedBookIndex).getSelectedTrackIndex();
+	}
+	
+	/**
+	 * @return
+	 */
+	public Book getSelectedBook() {
+		return this.books.get(selectedBookIndex);
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public Book getBookAt(int index) {
+		return this.books.get(index);
+	}
+
+	/**
+	 * @return
+	 */
+	public int getNumberOfBooks() {
+		return this.books.size();
+	}
+	
+	/**
+	 * @param track
+	 * @return
+	 */
+	public int getTrackDurationAt(int track) {
+		return books.get(selectedBookIndex).getTrackDurationAt(track);
+	}
+
+	/**
+	 * ** currently unused **
+	 * @return
+	 */
+	public int getBookElapsedTime() {
+		return books.get(selectedBookIndex).getBookElapsedTime();
+	}
+
+	/**
+	 * The number of tracks in the selected book.
+	 * 
+	 * @return
+	 */
+	public int getNumberOfTracks() {
+		return books.get(selectedBookIndex).getNumberOfTracks();
+	}
+
+	/**
+	 * Checks whether a given index is within the legal bounds of the list of
+	 * books.
 	 * 
 	 * @param index
-	 *            index
-	 * @return boolean
+	 *            Index to check.
+	 * @return True if within bounds.
 	 */
 	private boolean isLegalIndex(int index) {
 		return index >= 0 && index < books.size();
 	}
-
-	// End convenience methods
-
-	/* End Book methods */
-
-	/* Track methods */
-	public void setElapsedTime(int elapsedTime) {
-		// set elapsed time in the currently playing book
-		books.get(selectedBookIndex).setElapsedTime(elapsedTime);
-
-		pcs.firePropertyChange(Constants.event.ELAPSED_TIME_CHANGED, null,
-				new Bookshelf(this));
-	}
-
-	/* End Track methods */
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs = new PropertyChangeSupport(this);
@@ -280,18 +352,6 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
-	}
-
-	public Book getSelectedBook() {
-		return this.books.get(selectedBookIndex);
-	}
-
-	public Book getBookAt(int index) {
-		return this.books.get(index);
-	}
-
-	public int getNumberOfBooks() {
-		return this.books.size();
 	}
 
 	@Override
@@ -322,27 +382,4 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		return true;
 	}
 
-	/**
-	 * @param track
-	 * @return
-	 */
-	public int getTrackDurationAt(int track) {
-		return books.get(selectedBookIndex).getTrackDurationAt(track);
-	}
-
-	/**
-	 * @return
-	 */
-	public int getBookElapsedTime() {
-		return books.get(selectedBookIndex).getBookElapsedTime();
-	}
-
-	/**
-	 * The number of tracks in the selected book.
-	 * 
-	 * @return
-	 */
-	public int getNumberOfTracks() {
-		return books.get(selectedBookIndex).getNumberOfTracks();
-	}
 }

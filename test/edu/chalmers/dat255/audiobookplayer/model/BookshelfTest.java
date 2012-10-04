@@ -63,7 +63,7 @@ public class BookshelfTest extends TestCase {
 		tracks.add(new Track("path1", 111));
 		tracks.add(new Track("path2", 222));
 		tracks.add(new Track("path3", 333));
-		Book book3 = new Book(tracks, "3");
+		Book book3 = new Book(tracks, "3", "author");
 		// Add them into the same bookshelf
 		bookshelf.addBook(book1);
 		bookshelf.addBook(book2);
