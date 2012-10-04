@@ -156,7 +156,9 @@ public class MainActivity extends FragmentActivity implements
 			// Check which event was fired, and do relevant updates in the
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
-				Book b = bs.getCurrentBook();
+				int lastBookIndex = bs.getNumberOfBooks() - 1;
+				//assumes this event is never fired unless atleast one book is added.
+				Book b = bs.getBookAt(lastBookIndex);
 				// Bookshelf
 				bookshelf.bookAdded(b);
 
@@ -166,7 +168,7 @@ public class MainActivity extends FragmentActivity implements
 				Book b = bs.getCurrentBook();
 				// Bookshelf
 				// indicate selected book
-
+//				bookshelf.selectedBookChanged(b);
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
 				// start the player
@@ -324,4 +326,8 @@ public class MainActivity extends FragmentActivity implements
 		return ((double) elapsedTime) / ((double) duration);
 	}
 
+	public void childSelected(int groupPosition, int childPosition) {
+		// TODO Auto-generated method stub
+		
+	}
 }

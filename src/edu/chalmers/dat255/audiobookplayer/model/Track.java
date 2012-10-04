@@ -18,6 +18,8 @@ public final class Track implements ITrackUpdates {
 	private final int duration;
 	private int elapsedTime;
 
+	private String title;
+
 	/**
 	 * Constructor for a track. Path to the data source as well as the length of
 	 * the track must be provided. The path may not be an empty string ("").
@@ -31,6 +33,17 @@ public final class Track implements ITrackUpdates {
 		if (path != null && path.length() > 0 && duration > 0) {
 			this.path = path;
 			this.duration = duration;
+		} else {
+			throw new InvalidParameterException(
+					"Attempting to create track with either null path or negative duration.");
+		}
+	}
+	
+	public Track(String path, String title, int duration) throws InvalidParameterException {
+		if (path != null && path.length() > 0 && duration > 0) {
+			this.path = path;
+			this.duration = duration;
+			this.setTitle(title);
 		} else {
 			throw new InvalidParameterException(
 					"Attempting to create track with either null path or negative duration.");
@@ -74,7 +87,7 @@ public final class Track implements ITrackUpdates {
 	 * @param other
 	 */
 	public Track(Track original) {
-		this(original.path, original.duration);
+		this(original.path, original.title, original.duration);
 		this.elapsedTime = original.elapsedTime;
 	}
 
@@ -121,6 +134,10 @@ public final class Track implements ITrackUpdates {
 	 * @return
 	 */
 	public String getTrackTitle() {
-		return this.path; // TODO: just get the track name, not path
+		return this.title; // TODO: just get the track name, not path
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

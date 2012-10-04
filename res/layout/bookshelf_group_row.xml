@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="70dp"
+    android:layout_height="100dp"
+    android:layout_marginBottom="2dp"
     android:orientation="horizontal"
-    android:paddingBottom="3dp"
+    android:paddingBottom="5dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="3dp" >
+    android:paddingTop="5dp" >
 
     <ImageView
         android:id="@+id/bookshelfBookCover"
-        android:layout_width="50dp"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:contentDescription="@string/coverText"
         android:scaleType="centerInside" />
@@ -25,7 +26,9 @@
         <TextView
             android:id="@+id/bookshelfBookTitle"
             android:layout_width="fill_parent"
-            android:layout_height="30dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -33,17 +36,48 @@
             android:paddingLeft="5dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="normal" />
 
+        <TextView
+            android:id="@+id/bookshelfAuthor"
+            android:layout_width="fill_parent"
+            android:layout_height="18dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/bookshelfBookTitle"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:textSize="14dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/bookshelfBookPosition"
+            android:layout_width="fill_parent"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/bookshelfAuthor"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:textSize="12dp"
+            android:textStyle="normal" />
+        <TextView
+            android:id="@+id/bookshelfBookDuration"
+            android:layout_width="fill_parent"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/bookshelfBookPosition"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:textSize="12dp"
+            android:textStyle="normal" />
+        
         <ProgressBar
             android:id="@+id/bookshelfProgressBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:layout_alignBottom="@id/bookshelfBookTitle"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp" />
+            android:layout_alignParentLeft="true" />
     </RelativeLayout>
 
 </RelativeLayout>

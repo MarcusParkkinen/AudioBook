@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/bookshelfTrackTitle"
         android:layout_width="fill_parent"
-        android:layout_height="30dp"
+        android:layout_height="25dp"
         android:layout_marginLeft="40dp"
         android:ellipsize="marquee"
         android:focusable="true"
@@ -20,27 +20,17 @@
         android:paddingLeft="5dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textSize="15dp"
+        android:textSize="16dp"
         android:textStyle="normal" />
 
     <TextView
         android:id="@+id/bookshelfTrackTime"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/bookshelfTrackTitle"
+        android:layout_below="@id/bookshelfTrackTitle"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="50dp"
         android:paddingLeft="5dp"
-        android:textSize="10dp"
+        android:textSize="16dp"
         android:textStyle="normal" />
-
-    <View
-        android:id="@+id/bookshelfChildProgress"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignLeft="@id/bookshelfTrackTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:background="#FFFFFF" />
-
 </RelativeLayout>

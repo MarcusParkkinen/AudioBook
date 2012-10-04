@@ -1,5 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.util;
 
+import java.io.File;
+
 import android.media.MediaMetadataRetriever;
 import edu.chalmers.dat255.audiobookplayer.model.Track;
 
@@ -15,8 +17,15 @@ public class TrackCreator {
 		mmr.setDataSource(path);
 		
 		int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-		
-		return new Track(path, duration);
+		String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+		if(title == null || title.length() == 0) {
+			title = (new File(path)).getName();
+			int periodPosition;
+			if((periodPosition = title.lastIndexOf('.')) != -1)  {
+				title = title.substring(0, periodPosition);
+			}
+		}
+		return new Track(path, title, duration);
 	}
 
 }

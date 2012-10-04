@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 /**
  * Represents a collection of Track objects that collectively form a book. Null
@@ -28,7 +29,12 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	// private Bookmark bookmark;
 	private LinkedList<Tag> tags;
 	// private Stats stats;
+	private String author;
 
+	public Book(Collection<Track> c, String title, String author) {
+		this(c,title);
+		this.setAuthor(author);
+	}
 	/**
 	 * Create an empty book.
 	 */
@@ -68,6 +74,7 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		// copy primitive member variables
 		this.duration = original.duration;
 		this.selectedTrackIndex = original.selectedTrackIndex;
+		setAuthor(original.getAuthor());
 
 		// also create deep copies of the tracks
 		for (Track t : original.tracks) {
@@ -286,6 +293,18 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	public String getTitle() {
 		return title;
 	}
+	/* Get a list of all the tracktitles of the book.
+	 * 
+	 * @return Title
+	 */
+	public List<String> getTrackTitles() {
+		List<String> trackTitles = new LinkedList<String>();
+		for(Track t : tracks) {
+			trackTitles.add(t.getTrackTitle());
+		}
+		return trackTitles;
+	}
+
 
 	/**
 	 * Set the title of the book.
@@ -374,20 +393,20 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 					"Tried to get selected track title when index is illegal.");
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
-	
+
 	public void addTagToCurrentBook(int time) {
 		addTagTo(this.selectedTrackIndex, time);
 	}
-	
+
 	public void addTagTo(int index, int time) {
 		this.tags.add(new Tag(index, time));
 	}
-	
+
 	public void removeTag(int index) {
 		if (isLegalTagIndex(index))
 			this.tags.remove(index);
 	}
-	
+
 	private boolean isLegalTagIndex(int index) {
 		return index >= 0 && index < tags.size();
 	}
@@ -427,6 +446,12 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 		} else if (!tracks.equals(other.tracks))
 			return false;
 		return true;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 }
