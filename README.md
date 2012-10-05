@@ -11,8 +11,6 @@ Claudio is an Android application that allows you to play your audio books. It c
 See [the main branch](http://github.com/MarcusParkkinen/AudioBook.git) for the latest release.
 See [the development branch](https://www.google.se/) for the latest updates.
 
-https://github.com/MarcusParkkinen/AudioBook/tree/development
-
 ## Installation
 
 Install the .apk file.
@@ -42,18 +40,11 @@ TBA
 
 ### 05/10 20120 - Version 0.1 ###
 Application core completed:
-
 * Added basic playback controls.
 * Implemented viewing created books and playing them.
 * Implemented seeking and seek bars for tracks and books.
 * Created Initial UI design and made sketches for the future.
 * Implemented browsing through the file system for audio files only. These can be viewed in a UI and the user may choose which tracks to use in creating a playlist (a 'book').
-
-## Contact
-
-
-## Credits
-
 
 ## Authors
 
