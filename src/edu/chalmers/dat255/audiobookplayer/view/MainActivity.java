@@ -26,7 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 /**
  * The main activity of the application. TODO: insert license
  * 
- * @author Aki Käkelä, Marcus Parkkinen
+ * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
  * @version 0.6
  * 
  */
@@ -78,10 +78,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// Subscribe as a listener to the model
 		bs.addPropertyChangeListener(this);
 
-		// provide a reference to the bookshelf as a temporary resource
+		// Provide a reference to the bookshelf as an argument in the bundle
 		Bundle bsReference = new Bundle();
-		bsReference.putString(Constants.reference.BOOKSHELF,
-				JSONParser.toJSON(bs));
+		bsReference.putSerializable(Constants.reference.BOOKSHELF, bs);
 		bookshelf.setArguments(bsReference);
 	}
 

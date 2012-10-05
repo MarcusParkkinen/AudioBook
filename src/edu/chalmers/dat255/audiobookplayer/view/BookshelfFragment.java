@@ -122,12 +122,9 @@ public class BookshelfFragment extends Fragment {
 		bookshelfList.setAdapter(adapter);
 
 		// Access the bookshelf reference
-		String s = getArguments().getString(Constants.reference.BOOKSHELF);
-		Bookshelf b = getReferenceFromJSON(s);
-
-		if (b != null) {
-			// Create graphical representations of all previously stored books
-			for (int i = 0; i < b.getNumberOfBooks(); i++) {
+		if(getArguments().getSerializable(Constants.reference.BOOKSHELF) instanceof Bookshelf) {
+			Bookshelf b = (Bookshelf)getArguments().getSerializable(Constants.reference.BOOKSHELF);
+			for(int i = 0; i < b.getNumberOfBooks(); i++){
 				bookAdded(b.getBookAt(i));
 			}
 		}
