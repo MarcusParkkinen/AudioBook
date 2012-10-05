@@ -1,6 +1,5 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -230,8 +229,8 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	 * @return True if the given index is within bounds of the track list.
 	 */
 	public boolean isLegalTrackIndex(int index) {
-		Log.d(TAG, (index >= 0 && index < tracks.size()) ? "legal" : "illegal"
-				+ " index: 0 <= " + index + " < " + tracks.size());
+//		Log.d(TAG, (index >= 0 && index < tracks.size()) ? "legal" : "illegal"
+//				+ " index: 0 <= " + index + " < " + tracks.size());
 		return index >= 0 && index < tracks.size();
 	}
 

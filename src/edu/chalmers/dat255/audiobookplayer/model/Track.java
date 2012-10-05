@@ -135,17 +135,14 @@ public final class Track implements ITrackUpdates {
 	}
 
 	public void addTag(int time) {
-		// TODO Auto-generated method stub
-		
+		this.tags.add(new Tag(time));
 	}
 
 	public void removeTag() {
-		// TODO Auto-generated method stub
-		
+		this.tags.remove();
 	}
 
 	public void removeTagAt(int tagIndex) {
-		// TODO Auto-generated method stub
-		
+		this.tags.remove(tagIndex);
 	}
 }

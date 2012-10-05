@@ -32,13 +32,22 @@ public class PlayerController implements IPlayerEvents {
 		this.bs = bs;
 	}
 
+	// TODO stop the thread
+	private void stop() {
+		if (this.trackTimeUpdateThread != null) {
+			this.trackTimeUpdateThread.interrupt();
+		}
+	}
+
 	private void startTimer() {
+		Log.d(TAG, "Update timer started. isStarted=" + isStarted
+				+ ", mp.isPlaying=" + mp.isPlaying());
 		trackTimeUpdateThread = new Thread(new Runnable() {
 			public void run() {
 				while (isStarted && mp.isPlaying()) {
 					int frequency = 1000;
-					// Log.d(TAG, "Updating track time @"
-					// + (1000/frequency) + "x/s");
+					// Log.d(TAG, "Updating track time @" + (1000 / frequency)
+					// + "x/s");
 					updateTrackTime();
 					try {
 						Thread.sleep(frequency);
@@ -59,7 +68,9 @@ public class PlayerController implements IPlayerEvents {
 	public void start() {
 		// we have started playing a file, so start the thread that updates the
 		// time on the Track instance
-		if (bs.getSelectedTrackIndex() != -1 && bs.getSelectedTrackPath() != null) {
+		if (bs.getSelectedTrackIndex() != -1
+				&& bs.getSelectedTrackPath() != null) {
+			// we haven't started the audio yet
 			isStarted = false;
 			Log.i(TAG, "Resetting MediaPlayer");
 			mp.reset();
@@ -82,15 +93,17 @@ public class PlayerController implements IPlayerEvents {
 					nextTrack();
 				}
 			});
-			if (trackTimeUpdateThread == null) {
-				startTimer();
-			}
-			mp.start();
+			// set the 'isStarted' status to true
 			isStarted = true;
+			// and start the timer
+			startTimer();
+			// then start the media player
+			mp.start();
 			Log.i(TAG, "Playing: " + (bs.getSelectedTrackIndex() + 1) + ". "
-					+ bs.getSelectedTrackPath() + " @" + mp.getDuration() + "ms");
+					+ bs.getSelectedTrackPath() + " @" + mp.getDuration()
+					+ "ms");
 		} else {
-			if (bs.getSelectedTrackIndex() == -1) 
+			if (bs.getSelectedTrackIndex() == -1)
 				Log.d(TAG, "Index is -1. Should not be playing.");
 			else
 				Log.e(TAG, "Start: tried to start with track path == null");
@@ -99,6 +112,7 @@ public class PlayerController implements IPlayerEvents {
 
 	/**
 	 * Convenience method.
+	 * 
 	 * @return
 	 */
 	private int getTrackDuration() {
@@ -111,7 +125,7 @@ public class PlayerController implements IPlayerEvents {
 	private void updateTrackTime() {
 		this.bs.setSelectedTrackElapsedTime(mp.getCurrentPosition());
 	}
-	
+
 	/* IPlayerEvents */
 
 	public void playPause() {
@@ -174,7 +188,7 @@ public class PlayerController implements IPlayerEvents {
 		start(); // start the track we seeked to
 		mp.seekTo(seekTime); // seek to the time within that track
 	}
-	
+
 	/* End IPlayerEvents */
 
 	/**

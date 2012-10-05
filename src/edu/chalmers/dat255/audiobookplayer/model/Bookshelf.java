@@ -128,12 +128,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 			if (selectedBookIndex == from) {
 				selectedBookIndex = to;
 			}
-			if (books.size() < from && books.size() < to) {
-				Book temp = books.remove(to);
-				books.add(from, temp);
-				pcs.firePropertyChange(Constants.event.BOOK_MOVED, null,
-						new Bookshelf(this));
-			}
+			Book temp = books.remove(to);
+			books.add(from, temp);
+			pcs.firePropertyChange(Constants.event.BOOK_MOVED, null,
+					new Bookshelf(this));
 		} else {
 			Log.e(TAG,
 					" attempting to move a track from/to illegal index. Skipping operation.");
@@ -204,6 +202,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 			Log.d(TAG, "Firing update event (Bookshelf.setSelectedTrackindex)");
 			pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
 					new Bookshelf(this));
+		} else {
+			Log.d(TAG, "No update sent since index " + selectedBookIndex
+					+ " is an illegal index. (books.size(): " + books.size()
+					+ ")");
 		}
 	}
 
@@ -230,7 +232,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 		pcs.firePropertyChange(Constants.event.ELAPSED_TIME_CHANGED, null,
 				new Bookshelf(this));
 	}
-	
+
 	public void addTag(int time) {
 		this.books.get(selectedBookIndex).addTag(time);
 	}
@@ -271,6 +273,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	/**
 	 * ** currently unused **
+	 * 
 	 * @return
 	 */
 	public int getSelectedBookIndex() {
@@ -283,7 +286,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public int getSelectedTrackIndex() {
 		return books.get(selectedBookIndex).getSelectedTrackIndex();
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -305,7 +308,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 	public int getNumberOfBooks() {
 		return this.books.size();
 	}
-	
+
 	/**
 	 * @param track
 	 * @return
@@ -316,6 +319,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates {
 
 	/**
 	 * ** currently unused **
+	 * 
 	 * @return
 	 */
 	public int getBookElapsedTime() {

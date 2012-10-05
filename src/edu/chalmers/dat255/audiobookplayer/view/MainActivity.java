@@ -229,7 +229,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)) {
-				System.out.println("Updating time..3");
 				Book b = bs.getSelectedBook();
 				// Bookshelf
 
