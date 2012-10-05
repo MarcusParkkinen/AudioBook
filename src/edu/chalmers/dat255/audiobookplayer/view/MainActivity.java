@@ -185,7 +185,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-//		if (eventName != Constants.event.ELAPSED_TIME_CHANGED)
+		if (eventName != Constants.event.ELAPSED_TIME_CHANGED)
 			Log.d(TAG, "Received update: " + eventName);
 
 		if (event.getNewValue() instanceof Bookshelf) {
@@ -228,6 +228,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 				// Player
 				// Do nothing
+			} else if (eventName.equals(Constants.event.BOOK_FINISHED)) {
+				// TODO
+				// pc.stop();
 			} else if (eventName.equals(Constants.event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf

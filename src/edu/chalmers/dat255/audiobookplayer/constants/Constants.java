@@ -30,6 +30,8 @@ public final class Constants {
 		// when the user (through the GUI "next/previous" track) or the audio
 		// player (when the track ends) changes the track index.
 		// TODO: change name? "_BY_USER_OR_PLAYER" suffix.
+
+		public static final String BOOK_FINISHED = "!bookFinished";
 	}
 
 	public static final class reference {

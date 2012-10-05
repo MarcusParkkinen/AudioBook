@@ -32,33 +32,29 @@ public class PlayerController implements IPlayerEvents {
 		this.bs = bs;
 	}
 
-	// TODO stop the thread
-	private void stop() {
-		if (this.trackTimeUpdateThread != null) {
+	// TODO stop the updates
+	private void stopTimer() {
+		if (this.trackTimeUpdateThread != null)
 			this.trackTimeUpdateThread.interrupt();
-		}
 	}
 
 	private void startTimer() {
-		Log.d(TAG, "Update timer started. isStarted=" + isStarted
-				+ ", mp.isPlaying=" + mp.isPlaying());
-		trackTimeUpdateThread = new Thread(new Runnable() {
-			public void run() {
-				while (isStarted && mp.isPlaying()) {
-					int frequency = 1000;
-					// Log.d(TAG, "Updating track time @" + (1000 / frequency)
-					// + "x/s");
-					updateTrackTime();
-					try {
-						Thread.sleep(frequency);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
+		// stop the old timer
+		stopTimer();
+		
+		// start a new timer
+		this.trackTimeUpdateThread = new Thread(new TrackElapsedTimeUpdater());
+		this.trackTimeUpdateThread.start();
+		
+		Log.d(TAG, "interrupted=" + trackTimeUpdateThread.isInterrupted()
+				+ " \t alive=" + trackTimeUpdateThread.isAlive());
 
-		});
-		trackTimeUpdateThread.start();
+		Log.d(TAG,
+				"isStarted=" + isStarted + " \t mp.isPlaying=" + mp.isPlaying());
+
+	}
+
+	public void stop() {
 	}
 
 	/**
@@ -72,7 +68,8 @@ public class PlayerController implements IPlayerEvents {
 				&& bs.getSelectedTrackPath() != null) {
 			// we haven't started the audio yet
 			isStarted = false;
-			Log.i(TAG, "Resetting MediaPlayer");
+			// Log.i(TAG, "Resetting MediaPlayer");
+			// prepare the media player by resetting and setting the source
 			mp.reset();
 			try {
 				mp.setDataSource(bs.getSelectedTrackPath());
@@ -103,9 +100,11 @@ public class PlayerController implements IPlayerEvents {
 					+ bs.getSelectedTrackPath() + " @" + mp.getDuration()
 					+ "ms");
 		} else {
-			if (bs.getSelectedTrackIndex() == -1)
+			if (bs.getSelectedTrackIndex() == -1) {
 				Log.d(TAG, "Index is -1. Should not be playing.");
-			else
+				// stop the timer
+				stopTimer();
+			} else
 				Log.e(TAG, "Start: tried to start with track path == null");
 		}
 	}
@@ -201,4 +200,23 @@ public class PlayerController implements IPlayerEvents {
 		mp.seekTo(time);
 	}
 
+	private class TrackElapsedTimeUpdater implements Runnable {
+
+		public void run() {
+			while (isStarted && mp.isPlaying()) {
+				int frequency = 1000;
+				Log.d(TAG, "Updating TET");
+				// Log.d(TAG, "Updating track time @" + (1000 / frequency)
+				// + "x/s");
+				updateTrackTime();
+				try {
+					Thread.sleep(frequency);
+				} catch (InterruptedException e) {
+					// the thread was interrupted, so stop the run method
+					return;
+				}
+			}
+		}
+
+	}
 }

@@ -205,6 +205,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 			pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
 					new Bookshelf(this));
 		} else {
+			pcs.firePropertyChange(Constants.event.BOOK_FINISHED, null, new Bookshelf(this));
 			Log.d(TAG, "No update sent since index " + selectedBookIndex
 					+ " is an illegal index. (books.size(): " + books.size()
 					+ ")");
