@@ -8,8 +8,8 @@ Latest Version
 
 Download
 ========
-See [Release][3] for the latest release.
-See [Development][4] for the latest updates.
+See [the main branch](https://github.com/MarcusParkkinen/AudioBook.git) for the latest release.
+See [the development branch](https://github.com/MarcusParkkinen/AudioBook/tree/development) for the latest updates.
 
 See
 https://github.com/MarcusParkkinen/AudioBook/tree/development
@@ -25,7 +25,7 @@ Delete the .apk file.
 
 Documentation
 =============
-[Docs][2]
+See the [docs folder](https://github.com/MarcusParkkinen/AudioBook/tree/development/doc) in the project for the latest documentation.
 
 Incompatibility
 ===============
@@ -34,13 +34,11 @@ Requires Android 2.2.5 (?)
 
 Known Issues or Bugs
 ====================
-[Issues][1]
+See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on the project for the latest list of known issues or bugs.
 
 Known limitations of application
 ================================
 TBA
-
-for a list of known issues.
 
 Changelog
 =================================
@@ -72,8 +70,3 @@ Licensing/Legal
 This application is released under Creative Commons BY-NC-ND 3.0.
 More information about the license can be found here:
 http://creativecommons.org/licenses/by-nc-nd/3.0/legalcodehttp://creativecommons.org/licenses/by-nc-nd/3.0/legalcode
-
-[1]: https://github.com/MarcusParkkinen/AudioBook/issues        	"Issues"
-[2]: https://github.com/MarcusParkkinen/AudioBook/tree/development/doc 	"Docs"
-[3]: https://github.com/MarcusParkkinen/AudioBook.git			"Release"
-[4]: https://github.com/MarcusParkkinen/AudioBook/tree/development	"Development"
