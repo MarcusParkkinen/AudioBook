@@ -2,6 +2,7 @@ package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 import android.util.Log;
@@ -17,13 +18,14 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
  * 
  */
 
-public class Bookshelf implements IBookUpdates, ITrackUpdates {
+public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	private static final String TAG = "Bookshelf.java";
 	private static final int NO_BOOK_SELECTED = -1;
+	private static final long serialVersionUID = 1;
 
 	private LinkedList<Book> books;
 	private int selectedBookIndex;
-	private PropertyChangeSupport pcs;
+	private transient PropertyChangeSupport pcs;
 
 	/**
 	 * Creates an empty bookshelf.

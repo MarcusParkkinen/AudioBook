@@ -1,5 +1,6 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.LinkedList;
 
@@ -13,12 +14,13 @@ import android.util.Log;
  * <p>
  * Duration and track path are immutable.
  * 
- * @author Marcus Parkkinen Aki Käkelä
+ * @author Marcus Parkkinen Aki Kï¿½kelï¿½
  * @version 0.6
  * 
  */
-public final class Track implements ITrackUpdates {
+public final class Track implements ITrackUpdates, Serializable {
 	private static final String TAG = "Bookshelf.java";
+	private static final long serialVersionUID = 3;
 
 	private final String path;
 	private final int duration;

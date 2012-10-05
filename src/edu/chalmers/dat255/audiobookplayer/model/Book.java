@@ -1,5 +1,6 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -17,9 +18,10 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
  * @version 0.6
  */
 
-public final class Book implements ITrackUpdates, IBookUpdates {
+public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private static final String TAG = "Book.java";
 	private static final int NO_TRACK_SELECTED = -1;
+	private static final long serialVersionUID = 2;
 
 	private LinkedList<Track> tracks;
 	private int selectedTrackIndex = NO_TRACK_SELECTED;
