@@ -14,7 +14,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
  * Represents a collection of Track objects. Null tracks are not allowed (and
  * will be ignored when added).
  * 
- * @author Marcus Parkkinen, Aki Käkelä
+ * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
  * @version 0.6
  */
 
@@ -83,16 +83,6 @@ public final class Book implements ITrackUpdates, IBookUpdates {
 	// TODO: only used by test.
 	public Book(Collection<Track> col, String title) {
 		this(col, title, "N/A");
-
-		for (Track t : col) {
-			if (t != null) {
-				tracks.add(t);
-				duration += t.getDuration();
-			}
-		}
-
-		// adjust the track index now that we have tracks
-		selectedTrackIndex = 0;
 	}
 	//
 
