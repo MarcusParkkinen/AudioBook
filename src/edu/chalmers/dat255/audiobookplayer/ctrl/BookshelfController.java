@@ -73,12 +73,12 @@ public class BookshelfController {
 					.readFromInternalStorage(username + ".bookmark", c),
 					Bookshelf.class);
 			if (obj instanceof Bookshelf) {
-				shelf = (Bookshelf) obj;
+				return (shelf = (Bookshelf) obj);
 			}
 		} catch (Exception e) {
-			shelf = new Bookshelf();
+			// If anything goes wrong, just continue..
 		}
-		return shelf;
+		return (shelf = new Bookshelf());
 	}
 	// + sort, swap, move, edit book
 }
