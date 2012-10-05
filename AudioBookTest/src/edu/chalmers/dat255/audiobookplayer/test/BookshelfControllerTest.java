@@ -22,10 +22,8 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		bsc = new BookshelfController();
 		
-		Track[] t = new Track[]{new Track("trackPath", 1)};
-		newBook = new Book(Arrays.asList(t), "BookTitle");
-		//newBookshelf = new Bookshelf();
-		//newBookshelf.addBook(newBook);
+		// Create a book object for testing
+		newBook = new Book(Arrays.asList(new Track[]{new Track("trackPath", 1)}), "BookTitle");
 		
 		super.setUp();
 	}
