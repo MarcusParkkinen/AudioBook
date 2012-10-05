@@ -48,7 +48,7 @@ public class TrackTest extends TestCase {
 		assertEquals(elapsedTime, t.getElapsedTime());
 	}
 	
-	public void testSetElapsedTime() {
+	public void testSetSelectedTrackElapsedTime() {
 		//test legal bound values
 		t.setSelectedTrackElapsedTime(trackLength);
 		t.setSelectedTrackElapsedTime(0);
@@ -62,12 +62,8 @@ public class TrackTest extends TestCase {
 		}
 		
 		//try setting a time > duration
-		try{
-			t.setSelectedTrackElapsedTime(trackLength+1);
-			fail("managed to set time to negative value.");
-		} catch(IllegalArgumentException e) {
-			
-		}
+		t.setSelectedTrackElapsedTime(trackLength+1);
+		assertEquals(trackLength, t.getElapsedTime());
 	}
 	
 	public void testConstructor() {
