@@ -9,19 +9,18 @@ import junit.framework.TestCase;
  * 
  */
 public class TagTest extends TestCase {
+	private Tag tag;
+	private int time;
 
 	public TagTest(String name) {
 		super(name);
 	}
 
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
-	}
-
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		time = 21600000; // 6 hours
+		tag = new Tag(time);
 	}
 
 	protected void tearDown() throws Exception {
@@ -33,23 +32,23 @@ public class TagTest extends TestCase {
 	}
 
 	public void testGetTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetTime() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetTrackIndex() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetTrackIndex() {
-		fail("Not yet implemented");
+		assertTrue(tag.getTime() == time);
 	}
 
 	public void testEqualsObject() {
-		fail("Not yet implemented");
+		Tag dummy = new Tag(tag.getTime());
+		Tag otherDummy = new Tag(dummy.getTime());
+		
+		// reflexive test
+		assertTrue(dummy.equals(dummy));
+		assertTrue(tag.equals(tag));
+		
+		// symmetric test
+		assertTrue(tag.equals(dummy));
+		assertTrue(dummy.equals(tag));
+		
+		// transitive test
+		assertTrue(tag.equals(otherDummy));
 	}
 
 }

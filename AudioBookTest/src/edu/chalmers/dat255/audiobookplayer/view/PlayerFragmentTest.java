@@ -1,6 +1,8 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
-import junit.framework.TestCase;
+import android.test.ActivityInstrumentationTestCase2;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 /**
  * Test case for the player fragment class.
@@ -8,20 +10,16 @@ import junit.framework.TestCase;
  * @author Aki Käkelä
  * 
  */
-public class PlayerFragmentTest extends TestCase {
+public class PlayerFragmentTest extends ActivityInstrumentationTestCase2 {
 
-	public PlayerFragmentTest(String name) {
-		super(name);
-	}
-
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
+	public PlayerFragmentTest(Class activityClass) {
+		super(activityClass);
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
+
+		setActivityInitialTouchMode(false);
 	}
 
 	protected void tearDown() throws Exception {
@@ -36,6 +34,11 @@ public class PlayerFragmentTest extends TestCase {
 		fail("Not yet implemented");
 	}
 
+	public void testStateDestroy() {
+		// TODO: mock activity
+	}
+
+	// Updates
 	public void testUpdateBookSeekBar() {
 		fail("Not yet implemented");
 	}

@@ -32,10 +32,10 @@ import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		IBookshelfEvents, PropertyChangeListener {
-	private final static int PLAYER = 0;
-	private final static int BOOKSHELF = 1;
 	private static final String TAG = "MainActivity.class";
 	private static final String USERNAME = "Default";
+	private static final int PLAYER = 0;
+	private static final int BOOKSHELF = 1;
 
 	// ViewPager
 	private ViewPagerAdapter adapter;
@@ -357,7 +357,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				if (b.getSelectedTrackIndex() != -1)
-					player.updateTrackDurationLabel(b.getSelectedTrackDuration());
+					player.updateTrackDurationLabel(b
+							.getSelectedTrackDuration());
 			}
 		});
 	}
@@ -377,8 +378,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				public void run() {
 					// TODO: check if bookshelf selectedBookIndex != -1
 					if (b.getSelectedTrackIndex() != -1) {
-						player.updateTrackElapsedTimeLabel(b.getSelectedTrackElapsedTime());
-						player.updateBookElapsedTimeLabel(b.getBookElapsedTime());
+						player.updateTrackElapsedTimeLabel(b
+								.getSelectedTrackElapsedTime());
+						player.updateBookElapsedTimeLabel(b
+								.getBookElapsedTime());
 					}
 				}
 			});
@@ -395,12 +398,12 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		if (b.getSelectedTrackIndex() != -1) {
 			// elapsed time
 			int trackElapsedTime = b.getSelectedTrackElapsedTime();
-			
+
 			// total duration
 			int trackDuration = b.getSelectedTrackDuration();
-			
+
 			double progress = getProgress(trackElapsedTime, trackDuration);
-			
+
 			player.updateTrackSeekBar(progress);
 		}
 	}
@@ -415,12 +418,12 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		if (b.getSelectedTrackIndex() != -1) {
 			// elapsed time
 			int bookElapsedTime = b.getBookElapsedTime();
-			
+
 			// total duration
 			int bookDuration = b.getDuration();
-			
+
 			double progress = getProgress(bookElapsedTime, bookDuration);
-			
+
 			player.updateBookSeekBar(progress);
 		}
 	}
@@ -428,11 +431,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	/**
 	 * Private utility method that calculates the progress of a book or track.
 	 * 
-	 * @param int elapsed time of the book or track
-	 * @param int duration of the book or track
+	 * @param int Elapsed time of the book or track in milliseconds.
+	 * @param int Duration of the book or track in milliseconds.
 	 */
 	private double getProgress(int elapsedTime, int duration) {
-		return ((double) elapsedTime) / ((double) duration);
+		return ((double) elapsedTime) / duration;
 	}
 
 }

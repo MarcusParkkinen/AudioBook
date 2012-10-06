@@ -1,6 +1,7 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
-import junit.framework.TestCase;
+import android.app.Instrumentation;
+import android.test.ActivityInstrumentationTestCase2;
 
 /**
  * Test case for the main activity of the application.
@@ -8,28 +9,32 @@ import junit.framework.TestCase;
  * @author Aki Käkelä
  * 
  */
-public class MainActivityTest extends TestCase {
+public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
+	private MainActivity activity;
 
-	public MainActivityTest(String name) {
-		super(name);
-	}
-
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
+	public MainActivityTest() {
+		super("edu.chalmers.dat255.audiobookplayer.view.MainActivity", MainActivity.class);
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		activity = getActivity();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
 
+	// test states
+	//instr.callactivity*(activity);
 	public void testOnDestroy() {
 		fail("Not yet implemented");
+	}
+	
+	public void testStatePause() {
+		Instrumentation instr = this.getInstrumentation();
+		instr.callActivityOnPause(activity);
 	}
 
 	public void testOnCreateBundle() {

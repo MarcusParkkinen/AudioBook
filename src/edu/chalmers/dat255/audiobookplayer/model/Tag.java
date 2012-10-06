@@ -33,27 +33,26 @@ public class Tag {
 		return time;
 	}
 
-	// /**
-	// * @param time
-	// */
-	// public void setTime(int time) {
-	// this.time = time;
-	// }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + time;
+		return result;
+	}
 
-	// /**
-	// * Get the track index that the tag was saved on.
-	// *
-	// * @return
-	// */
-	// public int getTrackIndex() {
-	// return trackIndex;
-	// }
-
-	// /**
-	// * @param trackIndex
-	// */
-	// public void setTrackIndex(int trackIndex) {
-	// this.trackIndex = trackIndex;
-	// }
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tag other = (Tag) obj;
+		if (time != other.time)
+			return false;
+		return true;
+	}
+	
 }
