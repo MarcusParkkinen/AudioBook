@@ -25,8 +25,8 @@ See the [docs folder](https://github.com/MarcusParkkinen/AudioBook/tree/developm
 
 ## Incompatibility
 
-This application is compatible with Android devices on API level 8/10 and above.
-Requires Android 2.2.5 (?)
+This application is compatible with Android devices on API level 10 and above.
+Requires Android 2.3.3
 
 ## Known Issues or Bugs
 
