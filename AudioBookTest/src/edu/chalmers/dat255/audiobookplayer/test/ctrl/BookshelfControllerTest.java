@@ -1,4 +1,4 @@
-package edu.chalmers.dat255.audiobookplayer.test;
+package edu.chalmers.dat255.audiobookplayer.test.ctrl;
 
 import java.util.Arrays;
 
