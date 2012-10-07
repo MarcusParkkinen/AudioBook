@@ -128,7 +128,7 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 
-	public void addButtonPressed(View v) {
+	public void addButtonPressed() {
 		// bc.createTestBook();
 		Intent intent = new Intent(this, BrowserActivity.class);
 		startActivity(intent);
@@ -327,6 +327,16 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void childSelected(int groupPosition, int childPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void deleteBook(int groupPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void editBook(int groupPosition, String newName) {
 		// TODO Auto-generated method stub
 		
 	}
