@@ -332,9 +332,11 @@ public class MainActivity extends FragmentActivity implements
 			return;
 		}
 		int selectedBookPosition = bsc.getSelectedBookPosition();
+		//if the book is not currently selected, select it
 		if(selectedBookPosition != groupPosition ) {
 			bookSelected(groupPosition);
 		}
+		//as the book is selected, track can be selected.
 		bsc.getSelectedBook().setCurrentTrackIndex(childPosition);
 	}
 

@@ -88,7 +88,7 @@ public class BookshelfFragment extends Fragment {
 
 	}
 
-	
+
 	private interface IContextMenuItem {
 		public String getText();
 	}
@@ -229,21 +229,21 @@ public class BookshelfFragment extends Fragment {
 		} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
 			menuItems = GroupContextMenuItem.values();
 		}
-		
+
 		//check that item has correct id (should not be needed)
 		int itemId = item.getItemId();
 		if (itemId >= menuItems.length) {
 			return false;
 		}
-		
+
 		IContextMenuItem menuItem = menuItems[itemId];
-		
+
 		//if the type of the context menu is group
 		if(type == ExpandableListView.PACKED_POSITION_TYPE_GROUP && menuItem instanceof GroupContextMenuItem) {
 			//perform the correct task
-			
+
 			switch ((GroupContextMenuItem)menuItem) {
-			
+
 			case Delete: 
 				deleteBook(groupPosition);
 				break;
@@ -252,7 +252,7 @@ public class BookshelfFragment extends Fragment {
 				break;
 			default: 
 				break;
-				
+
 			}
 		}
 		//if the type of the context menu is that of a child
@@ -262,7 +262,7 @@ public class BookshelfFragment extends Fragment {
 			//TODO implement functionality of a context menu for children
 			default: 
 				break;
-				
+
 			}
 		}
 		return true;
@@ -383,10 +383,12 @@ public class BookshelfFragment extends Fragment {
 			//inform the bookshelfFragment's listener that a child has been selected
 			convertView.setOnClickListener(new OnClickListener() {			
 				public void onClick(View v) {
+					selectedIndex = groupPosition;
+					expandableListView.invalidateViews();
 					BookshelfFragment.this.childClicked(groupPosition, childPosition);
 				}
 			});
-			
+
 			//set long click to show the child's context menu
 			convertView.setOnLongClickListener(new OnLongClickListener() {
 
@@ -396,7 +398,7 @@ public class BookshelfFragment extends Fragment {
 				}
 
 			});
-			
+
 			return convertView;
 		}
 
