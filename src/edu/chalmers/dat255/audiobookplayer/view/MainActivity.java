@@ -159,7 +159,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	}
 
-	public void addButtonPressed(View v) {
+	public void addButtonPressed() {
 		// bc.createTestBook();
 		Intent intent = new Intent(this, BrowserActivity.class);
 		startActivity(intent);
@@ -194,7 +194,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// Check which event was fired, and do relevant updates in the
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
-				Book b = bs.getSelectedBook();
+				int lastBookIndex = bs.getNumberOfBooks() - 1;
+				//assumes this event is never fired unless atleast one book is added.
+				Book b = bs.getBookAt(lastBookIndex);
 				// Bookshelf
 				bookshelf.bookAdded(b);
 
@@ -204,7 +206,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// indicate selected book
-
+//				bookshelf.selectedBookChanged(b);
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
 				// start the player
@@ -438,4 +440,27 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return ((double) elapsedTime) / duration;
 	}
 
+	public void childSelected(int groupPosition, int childPosition) {
+		// TODO Auto-generated method stub
+		if(childPosition == -1 || groupPosition == -1) {
+			return;
+		}
+		int selectedBookPosition = bsc.getSelectedBookPosition();
+		//if the book is not currently selected, select it
+		if(selectedBookPosition != groupPosition ) {
+			bookSelected(groupPosition);
+		}
+		//as the book is selected, track can be selected.
+		bsc.getSelectedBook().setSelectedTrackIndex(childPosition);
+	}
+
+	public void deleteBook(int groupPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void editBook(int groupPosition, String updatedTitle) {
+		// TODO Auto-generated method stub
+		
+	}
 }

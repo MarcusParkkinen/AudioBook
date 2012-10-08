@@ -10,6 +10,7 @@ import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
+
 /**
  * Represents a collection of Track objects. Null tracks are not allowed (and
  * will be ignored when added).
@@ -28,6 +29,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private String author; // immutable
 	private String title;
 	private int duration;
+	private LinkedList<Tag> tags;
 
 	/* To be implemented later: */
 	// private Bookmark bookmark;
@@ -35,6 +37,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	// private Stats stats;
 	
 	// TODO: only used by test.
+
 	/**
 	 * Used when no author is given.
 	 * 
@@ -98,6 +101,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 		// copy primitive member variables
 		this.duration = original.duration;
 		this.selectedTrackIndex = original.selectedTrackIndex;
+		setAuthor(original.getAuthor());
 
 		// also create deep copies of the tracks
 		for (Track t : original.tracks) {
@@ -312,13 +316,20 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	public String getBookTitle() {
 		return title;
 	}
-	
-	/**
-	 * @return the author
+
+	/* Get a list of all the tracktitles of the book.
+	 * 
+	 * @return Title
 	 */
-	public String getAuthor() {
-		return author;
+	public List<String> getTrackTitles() {
+		List<String> trackTitles = new LinkedList<String>();
+		for(Track t : tracks) {
+			trackTitles.add(t.getTrackTitle());
+		}
+		return trackTitles;
 	}
+
+
 
 	/**
 	 * Gets the duration of the book.
@@ -390,7 +401,22 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * Sets the selected track index to '-1', which means unselected.
 	 */
 	private void deselectTrack() {
-		selectedTrackIndex = NO_TRACK_SELECTED;
+		selectedTrackIndex = NO_TRACK_SELECTED;	}
+	public void addTagToCurrentBook(int time) {
+		addTagTo(this.selectedTrackIndex, time);
+	}
+
+	public void addTagTo(int index, int time) {
+		this.tags.add(new Tag(time));
+	}
+
+	public void removeTag(int index) {
+		if (isLegalTagIndex(index))
+			this.tags.remove(index);
+	}
+
+	private boolean isLegalTagIndex(int index) {
+		return index >= 0 && index < tags.size();
 	}
 
 	@Override
@@ -428,6 +454,12 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 		} else if (!tracks.equals(other.tracks))
 			return false;
 		return true;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	public void addTag(int time) {

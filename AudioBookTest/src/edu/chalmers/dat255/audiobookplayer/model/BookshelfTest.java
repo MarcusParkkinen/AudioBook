@@ -27,6 +27,7 @@ public class BookshelfTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		bookshelf = new Bookshelf();
+		bookshelf.addPropertyChangeListener(null);
 	}
 
 	protected void tearDown() throws Exception {
@@ -102,6 +103,7 @@ public class BookshelfTest extends TestCase {
 
 		// Test index when adding a book
 		bookshelf = new Bookshelf();
+		bookshelf.addPropertyChangeListener(null);
 		bookshelf.addBook(b); // index 0
 		bookshelf.addBook(b);
 		bookshelf.addBook(b);

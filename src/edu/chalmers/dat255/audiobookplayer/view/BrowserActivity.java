@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,23 +35,23 @@ import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 public class BrowserActivity extends Activity {
 
 	public enum FILETYPE {
-    	FILE {
-    		public String toString() {
-    			return "File";
-    		}
-    	},
-    	FOLDER {
-    		public String toString() {
-    			return "Folder";
-    		}
-    	}, 
-    	PARENT {
-    		public String toString() {
-    			return "Parent Folder";
-    		}
-    	};
-    }
-	
+		FILE {
+			public String toString() {
+				return "File";
+			}
+		},
+		FOLDER {
+			public String toString() {
+				return "Folder";
+			}
+		}, 
+		PARENT {
+			public String toString() {
+				return "Parent Folder";
+			}
+		};
+	}
+
 	private BrowserArrayAdapter adapter;
 	private ListView listView;
 
@@ -66,9 +67,9 @@ public class BrowserActivity extends Activity {
 
 		populateChildMap();
 		setUpComponents();
-		
+
 		File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-		
+
 		fill(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
 	}
 
@@ -98,23 +99,21 @@ public class BrowserActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-//				bookCreator.addBook(new Book("BOK", checkedItems));
 				List<String> tracks = new ArrayList<String>();
 				String name = null;
 				for(File f : checkedItems) {
 					//only add tracks, not folders
 					if(f.isFile()) {
-						if(name == null) {
+						if(tracks.size() == 0) {
 							name = f.getParentFile().getName();
 						}
 						tracks.add(f.getAbsolutePath());
 					}
 				}
-				if (name == null) {
-					name = "TITLE";
-				}
-				BookCreator.getInstance().createBook(tracks.toArray(new String[tracks.size()]), name);
+				
 
+				BookCreator.getInstance().createBook(tracks, name, null);
+				Toast.makeText(BrowserActivity.this, "Book added: " + name, Toast.LENGTH_SHORT).show();
 				//empty checkedItems and fill the list with unchecked items
 				checkedItems = new TreeSet<File>();
 				fill(currentDirectory);
@@ -137,7 +136,7 @@ public class BrowserActivity extends Activity {
 		List<TypedFile> directories = new ArrayList<TypedFile>();
 		//store files separately for correct sorting
 		List<TypedFile> files = new ArrayList<TypedFile>();        	
-		
+
 		for(TypedFile f : childMap.get(root)) {
 			if (f.isDirectory()) {
 				directories.add(f);
@@ -145,13 +144,13 @@ public class BrowserActivity extends Activity {
 				files.add(f);
 			}
 		}
-		
+
 		//sort found directories and files
 		Collections.sort(directories);
 		Collections.sort(files);
 		//add all files under the directories
 		directories.addAll(files);
-		
+
 		// adds an item listed as ".." of type parent topmost in the list
 		if( ! root.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
 			directories.add(0, new TypedFile(FILETYPE.PARENT, root.getParent()));
@@ -169,11 +168,11 @@ public class BrowserActivity extends Activity {
 	private void populateChildMap() {
 		//this will prevent files such as notifications and ringtones to appear in the list
 		String filtering = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-		
+
 		String[] projection = {
 				MediaStore.Audio.Media.DATA //path to the audiofile
 		};
-		
+
 		//this cursor will point at the paths of all music
 		Cursor cursor = this.managedQuery(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -181,7 +180,7 @@ public class BrowserActivity extends Activity {
 				filtering,
 				null,
 				null);
-		
+
 		TreeMap<File, File> parentMap = new TreeMap<File, File>();
 		//cursor.moveToNext will iterate through all music on the device
 		while(cursor.moveToNext()){
@@ -199,7 +198,7 @@ public class BrowserActivity extends Activity {
 
 		//reverse the list for easier iterating
 		childMap = new TreeMap<TypedFile, List<TypedFile>>();
-		
+
 		for(Entry<File, File> entry : parentMap.entrySet()) {
 			//if the map does not contain the parent, add the parent with a new list
 			TypedFile parent = new TypedFile(FILETYPE.FOLDER, entry.getValue().getAbsolutePath());
@@ -220,7 +219,7 @@ public class BrowserActivity extends Activity {
 	{
 		Toast.makeText(this, "File Clicked: " + o.getName(), Toast.LENGTH_SHORT).show();
 	}
-	
+
 	private class BrowserArrayAdapter extends ArrayAdapter<TypedFile> {
 		private Context c;
 		private int id;
@@ -245,7 +244,7 @@ public class BrowserActivity extends Activity {
 			this.checkedItems = checkedItems;
 			this.childMap = childMap;
 		}
-		
+
 		/**
 		 * Creates the view of each listview item
 		 */
@@ -273,7 +272,7 @@ public class BrowserActivity extends Activity {
 			CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox);
 			boolean checkState = checkedItems.contains(file);
 			cb.setChecked(checkState);
-			
+
 			cb.setOnClickListener(new OnClickListener() {				
 				public void onClick(View v) {
 					CheckBox c = (CheckBox) v;
@@ -281,7 +280,7 @@ public class BrowserActivity extends Activity {
 					checkAllChildren(file, c.isChecked());
 				}
 			});
-			
+
 			return view;
 		}
 
@@ -294,13 +293,13 @@ public class BrowserActivity extends Activity {
 			}			
 			List<TypedFile> list;
 			if(childMap.containsKey(file) && (list = childMap.get(file)) != null) {
-				 for(File f : list) {
+				for(File f : list) {
 					checkItem(f, checkState);
 					checkAllChildren(f, checkState);
 				}
 			} 
 		}
-		
+
 		private void checkItem(File file, boolean checkState) {
 			if(checkState) {
 				checkedItems.add(file);
@@ -309,7 +308,7 @@ public class BrowserActivity extends Activity {
 			}
 		}
 	}
-	
+
 	/**
 	 * Simple class which extends File by also having a FILETYPE which identifies it in the list.
 	 * @author Fredrik
@@ -318,16 +317,16 @@ public class BrowserActivity extends Activity {
 	private class TypedFile extends File {
 
 		private FILETYPE type;
-		
+
 		public TypedFile(FILETYPE type, String path) {
 			super(path);
 			this.type = type;
 		}
-		
+
 		public FILETYPE getType() {
 			return type;
 		}
-		
+
 		@Override
 		public String getName() {
 			if(type.equals(FILETYPE.PARENT)) {
@@ -336,5 +335,5 @@ public class BrowserActivity extends Activity {
 			return super.getName();
 		}
 	}
-	
+
 }

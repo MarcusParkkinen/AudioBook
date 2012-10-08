@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.content.Context;
 
+import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.FileParser;
 import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
@@ -36,6 +37,23 @@ public class BookshelfController {
 			shelf.setSelectedBookIndex(index);
 		}
 	}
+	public int getSelectedBookPosition() {
+		return shelf.getSelectedBookIndex();
+	}
+	public Book getSelectedBook() {
+		return shelf.getSelectedBook();
+	}
+	
+//	/**
+//	 * Returns the index of the currently selected book.
+//	 * 
+//	 * @return index
+//	 */
+//	public int getSelectedBookIndex() {
+//		return shelf.getSelectedBookIndex();
+//	}
+
+	// sort, swap, move, edit book
 
 	/**
 	 * Save a JSON representation of the model object tree to file.
