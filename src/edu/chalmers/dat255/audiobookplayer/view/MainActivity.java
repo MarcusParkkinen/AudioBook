@@ -328,7 +328,14 @@ public class MainActivity extends FragmentActivity implements
 
 	public void childSelected(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
-		
+		if(childPosition == -1 || groupPosition == -1) {
+			return;
+		}
+		int selectedBookPosition = bsc.getSelectedBookPosition();
+		if(selectedBookPosition != groupPosition ) {
+			bookSelected(groupPosition);
+		}
+		bsc.getSelectedBook().setCurrentTrackIndex(childPosition);
 	}
 
 	public void deleteBook(int groupPosition) {
@@ -336,7 +343,7 @@ public class MainActivity extends FragmentActivity implements
 		
 	}
 
-	public void editBook(int groupPosition, String newName) {
+	public void editBook(int groupPosition, String updatedTitle) {
 		// TODO Auto-generated method stub
 		
 	}

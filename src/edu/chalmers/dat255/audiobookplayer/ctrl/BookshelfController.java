@@ -1,5 +1,6 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
+import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
@@ -27,6 +28,12 @@ public class BookshelfController {
 	 */
 	public void setSelectedBook(int index) {
 		shelf.setSelectedBookIndex(index);
+	}
+	public int getSelectedBookPosition() {
+		return shelf.getSelectedBookIndex();
+	}
+	public Book getSelectedBook() {
+		return shelf.getCurrentBook();
 	}
 	
 //	/**

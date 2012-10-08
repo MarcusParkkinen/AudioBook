@@ -90,42 +90,34 @@ public class BookshelfFragment extends Fragment {
 
 	
 	private interface IContextMenuItem {
-		public String toString();
+		public String getText();
 	}
 	//enum providing name and id for contextmenuitems
 	private enum GroupContextMenuItem implements IContextMenuItem{
 		Delete {
-			@Override
-			public String toString() {
+			public String getText() {
 				return "Delete";
 			}
 		},
 		Edit {
-			@Override
-			public String toString() {
+			public String getText() {
 				return "Edit";
 			}			
 		};
-
-		public abstract String toString();
 	}
 
 	//enum providing name and id for contextmenuitems
 	private enum ChildContextMenuItem implements IContextMenuItem{
 		Delete {
-			@Override
-			public String toString() {
+			public String getText() {
 				return "Delete";
 			}
 		},
 		Edit {
-			@Override
-			public String toString() {
+			public String getText() {
 				return "Edit";
 			}			
 		};
-
-		public abstract String toString();
 	}
 
 	@Override
@@ -218,7 +210,7 @@ public class BookshelfFragment extends Fragment {
 			menu.setHeaderTitle(title);
 			//populate the context menu with items in the order they were declared in the enum declaration.
 			for(IContextMenuItem item : menuItems) {
-				menu.add(Menu.NONE, ((Enum)item).ordinal(), ((Enum)item).ordinal(), item.toString());
+				menu.add(Menu.NONE, ((Enum)item).ordinal(), ((Enum)item).ordinal(), item.getText());
 			}
 		}
 	}
@@ -231,20 +223,20 @@ public class BookshelfFragment extends Fragment {
 		int childPosition = ExpandableListView.getPackedPositionChild(info.packedPosition);
 		int type = ExpandableListView.getPackedPositionType(info.packedPosition);
 
-		IContextMenuItem[] menuitems = new IContextMenuItem[0];
+		IContextMenuItem[] menuItems = new IContextMenuItem[0];
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-			menuitems = ChildContextMenuItem.values();
+			menuItems = ChildContextMenuItem.values();
 		} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP){
-			menuitems = GroupContextMenuItem.values();
+			menuItems = GroupContextMenuItem.values();
 		}
 		
 		//check that item has correct id (should not be needed)
 		int itemId = item.getItemId();
-		if (itemId >= menuitems.length) {
+		if (itemId >= menuItems.length) {
 			return false;
 		}
 		
-		IContextMenuItem menuItem = menuitems[itemId];
+		IContextMenuItem menuItem = menuItems[itemId];
 		
 		//if the type of the context menu is group
 		if(type == ExpandableListView.PACKED_POSITION_TYPE_GROUP && menuItem instanceof GroupContextMenuItem) {
