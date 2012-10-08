@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="AudioBook">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../usr/lib/eclipse"/>
+    <property name="AudioBookTest.location" value="AudioBookTest"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
+    <path id="Android 4.1.libraryclasspath">
+        <pathelement location="../../android-sdk-linux/platforms/android-16/android.jar"/>
+    </path>
+    <path id="Android Dependencies.libraryclasspath">
+        <pathelement location="libs/gson-2.2.2.jar"/>
+        <pathelement location="libs/android-support-v4.jar"/>
+    </path>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/dropins/jdt/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/dropins/jdt/plugins/org.hamcrest.core_1.1.0.jar"/>
+    </path>
+    <path id="AudioBook.classpath">
+        <pathelement location="bin/classes"/>
+        <path refid="Android 4.1.libraryclasspath"/>
+        <path refid="Android Dependencies.libraryclasspath"/>
+        <pathelement location="libs/android-support-v4.jar"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="libs/gson-2.2.2.jar"/>
+    </path>
+    <path id="run.BookTest.classpath">
+        <path refid="Android 4.1.libraryclasspath"/>
+        <path refid="AudioBook.classpath"/>
+    </path>
+    <path id="run.BookTest.bootclasspath"/>
+    <path id="run.BookTest.testConstructor.classpath">
+        <path refid="Android 4.1.libraryclasspath"/>
+        <path refid="AudioBook.classpath"/>
+    </path>
+    <path id="run.BookTest.testConstructor.bootclasspath"/>
+    <path id="run.TrackTest.classpath">
+        <path refid="Android 4.1.libraryclasspath"/>
+        <path refid="AudioBook.classpath"/>
+    </path>
+    <path id="run.TrackTest.bootclasspath"/>
+    <path id="run.edu.chalmers.dat255.audiobookplayer.model.classpath">
+        <path refid="Android 4.1.libraryclasspath"/>
+        <path refid="AudioBook.classpath"/>
+    </path>
+    <path id="run.edu.chalmers.dat255.audiobookplayer.model.bootclasspath"/>
+    <path id="run.BookTest (2).classpath">
+        <path refid="Android 4.1.libraryclasspath"/>
+        <path refid="AudioBook.classpath"/>
+    </path>
+    <path id="run.BookTest (2).bootclasspath"/>
+    <target name="init">
+        <mkdir dir="bin/classes"/>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="gen">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="AudioBookTest/src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin/classes"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin/classes" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="AudioBook.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin/classes" source="${source}" target="${target}">
+            <src path="gen"/>
+            <classpath refid="AudioBook.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin/classes" source="${source}" target="${target}">
+            <src path="AudioBookTest/src"/>
+            <classpath refid="AudioBook.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${AudioBookTest.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${AudioBookTest.location}" inheritAll="false" target="build">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="BookTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <classpath refid="run.BookTest.classpath"/>
+            <bootclasspath>
+                <path refid="run.BookTest.bootclasspath"/>
+            </bootclasspath>
+        </junit>
+    </target>
+    <target name="BookTest.testConstructor">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="edu.chalmers.dat255.audiobookplayer.model.BookTest" todir="${junit.output.dir}"/>
+            <classpath refid="run.BookTest.testConstructor.classpath"/>
+            <bootclasspath>
+                <path refid="run.BookTest.testConstructor.bootclasspath"/>
+            </bootclasspath>
+        </junit>
+    </target>
+    <target name="TrackTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="edu.chalmers.dat255.audiobookplayer.model.TrackTest" todir="${junit.output.dir}"/>
+            <classpath refid="run.TrackTest.classpath"/>
+            <bootclasspath>
+                <path refid="run.TrackTest.bootclasspath"/>
+            </bootclasspath>
+        </junit>
+    </target>
+    <target name="edu.chalmers.dat255.audiobookplayer.model">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <classpath refid="run.edu.chalmers.dat255.audiobookplayer.model.classpath"/>
+            <bootclasspath>
+                <path refid="run.edu.chalmers.dat255.audiobookplayer.model.bootclasspath"/>
+            </bootclasspath>
+        </junit>
+    </target>
+    <target name="BookTest (2)">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="edu.chalmers.dat255.audiobookplayer.model.BookTest" todir="${junit.output.dir}"/>
+            <classpath refid="run.BookTest (2).classpath"/>
+            <bootclasspath>
+                <path refid="run.BookTest (2).bootclasspath"/>
+            </bootclasspath>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
