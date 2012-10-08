@@ -3,30 +3,32 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:label="@string/app_name"
+        android:targetPackage="edu.chalmers.dat255.audiobookplayer" />
+
     <uses-sdk
-        android:minSdkVersion="4"
+        android:minSdkVersion="10"
         android:targetSdkVersion="16" />
 
-    <application
+    <application>
+        <uses-library android:name="android.test.runner" />
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        
-		<activity
-            android:name=".view.AudioBookActivity"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".view.MainActivity"
             android:label="@string/title_activity_audiobook" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
-            android:name=".view.BookshelfActivity"
+            android:name=".view.BrowserActivity"
             android:label="@string/title_activity_browser" >
-        </activity> 
-        
+        </activity>
     </application>
 
 </manifest>

@@ -1,10 +1,5 @@
 package edu.chalmers.dat255.audiobookplayer.view;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import edu.chalmers.dat255.audiobookplayer.R;
-import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,86 +13,79 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 
 /**
- * A graphical UI fragment to PlayerController.
+ * A graphical UI representing the audio player.
  * 
- * @author Aki K√§kel√§, Marcus Parkkinen
- * @version 0.4
+ * @author Aki K‰kel‰, Marcus Parkkinen
+ * @version 0.6
+ * 
  */
+public class PlayerFragment extends Fragment {
+	private static final String TAG = "PlayerFragment.class";
+	private SeekBar bookBar;
+	private SeekBar trackBar;
+	private TextView bookTitle;
+	private TextView trackTitle;
+	private TextView bookDuration;
+	private TextView trackDuration;
+	private TextView bookElapsedTime;
+	private TextView trackElapsedTime;
+	private IPlayerEvents parentFragment;
+//	private TimePicker timePicker;
 
-public class PlayerFragment extends Fragment implements PropertyChangeListener {
-	private PlayerUIEventListener fragmentOwner;
-	private PlayerAdapter adapter;
+	// private Picker timePicker;
 
-	public interface PlayerUIEventListener {
-		public void previousTrack();
-
-		public void playPause();
-
-		public void nextTrack();
-
-		public void seekLeft();
-
-		public void seekRight();
-
-		public void seekToPercentage(double seekPercentage);
-	}
+	// TODO: make some methods protected
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-			fragmentOwner = (PlayerUIEventListener) activity;
+			parentFragment = (IPlayerEvents) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement PlayerUIEventListener");
+					+ " does not implement " + IPlayerEvents.class.getName());
 		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		View view = inflater
-				.inflate(R.layout.player_fragment, container, false);
-		
-		if (adapter == null /* && */) {
-			adapter = new PlayerAdapter(view.getContext());
-		}
-
-		// TODO: call to start playing audio
-		// pc.start();
-
-		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
-		prevTrack.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				fragmentOwner.previousTrack();
-			}
-		});
-		prevTrack.setEnabled(false);
+				.inflate(R.layout.fragment_player, container, false);
 
 		Button seekLeft = (Button) view.findViewById(R.id.seekLeft);
 		seekLeft.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN) {
-					//fragmentOwner.seekLeft();
-					Log.i("Seek", "Seeking LEFT");
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					Log.i("Seek", "Stopped seeking LEFT");
+				int ev = event.getAction();
+				if (ev == MotionEvent.ACTION_DOWN) {
+					Log.i("Seek", "Seeking LEFT (ACTION_DOWN)");
+				} else if (ev == MotionEvent.ACTION_UP) {
+					Log.i("Seek", "Stopped seeking LEFT (ACTION_UP)");
+				} else if (ev == MotionEvent.ACTION_CANCEL) {
+					Log.i("Seek", "Cancelled seeking LEFT (ACTION_CANCEL)");
 				}
 				return false;
 			}
 		});
-		
+
 		Button seekRight = (Button) view.findViewById(R.id.seekRight);
 		seekRight.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN) {
-					//fragmentOwner.seekRight();
-					Log.i("Seek", "Seeking RIGHT");
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					Log.i("Seek", "Stopped seeking RIGHT");
+				int ev = event.getAction();
+				if (ev == MotionEvent.ACTION_DOWN) {
+					Log.i("Seek", "Seeking RIGHT (ACTION_DOWN)");
+				} else if (ev == MotionEvent.ACTION_UP) {
+					Log.i("Seek", "Stopped seeking RIGHT (ACTION_UP)");
+				} else if (ev == MotionEvent.ACTION_CANCEL) {
+					Log.i("Seek", "Cancelled seeking RIGHT (ACTION_CANCEL)");
 				}
 				return false;
 			}
@@ -106,42 +94,72 @@ public class PlayerFragment extends Fragment implements PropertyChangeListener {
 		Button playPause = (Button) view.findViewById(R.id.playPause);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				fragmentOwner.playPause();
+				parentFragment.playPause();
 			}
 		});
 
 		Button nextTrack = (Button) view.findViewById(R.id.nextTrack);
 		nextTrack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				fragmentOwner.nextTrack();
+				parentFragment.nextTrack();
 			}
 		});
 
-		SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar);
-		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			static final String TAG = "seekBar";
+		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
+		prevTrack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				parentFragment.previousTrack();
+			}
+		});
+
+		bookBar = (SeekBar) view.findViewById(R.id.bookBar);
+		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			static final String TAG = "bookBar";
 
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
+				if (fromUser) {
+					Log.d(TAG, "User used SeekBar");
 
-				double seekPercentage = (double) progress
-						* (1.0 / seekBar.getMax());
-				int displayPercentage = (100 * progress) / (seekBar.getMax());
+					double seekMultiplier = (double) progress
+							* (1.0 / seekBar.getMax());
 
-				Log.d(TAG,
-						"progress is " + progress + " out of "
-								+ seekBar.getMax() + "(" + displayPercentage
-								+ "%)");
+					parentFragment.seekToPercentageInBook(seekMultiplier);
+				} else {
+					// Log.d(TAG, "Code used bookBar");
+				}
+			}
 
-				fragmentOwner.seekToPercentage(seekPercentage);
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// Log.d(TAG, "started tracking");
+			}
+
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// Log.d(TAG, "stopped tracking");
+			}
+
+		});
+
+		trackBar = (SeekBar) view.findViewById(R.id.trackBar);
+		trackBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			static final String TAG = "trackBar";
+
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					Log.d(TAG, "User used SeekBar");
+
+					double seekPercentage = (double) progress
+							* (1.0 / (double) seekBar.getMax());
+
+					parentFragment.seekToPercentageInTrack(seekPercentage);
+				} else {
+					// Log.d(TAG, "Code used trackBar");
+				}
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				Log.d(TAG, "started tracking");
-
-				// InputMethodManager imm = (InputMethodManager)
-				// getSystemService(Context.INPUT_METHOD_SERVICE);
-				// imm.hideSoftInputFromWindow(mSeekBar.getWindowToken(), 0);
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -149,16 +167,131 @@ public class PlayerFragment extends Fragment implements PropertyChangeListener {
 			}
 		});
 
+		trackTitle = (TextView) view.findViewById(R.id.trackTitle);
+		trackTitle.setText("track title");
+
+		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
+		bookTitle.setText("book title");
+
+		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
+		bookDuration.setText("BD");
+
+		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
+		trackDuration.setText("TD");
+
+		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
+		bookElapsedTime.setText("BET");
+
+		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
+		trackElapsedTime.setText("TET");
+
 		return view;
 	}
 
-	public void propertyChange(PropertyChangeEvent event) {
-		String eventName = event.getPropertyName();
-		if (eventName.equals(Constants.event.BOOK_SELECTED)) {
-			;
-			// What to get:
-			// BOOK_SELECTED
-			// TRACK_INDEX_CHANGED (change audio file)
-		}
+	// Seek bars
+	/**
+	 * Sets the progress on the book seek bar to the given percentage.
+	 * 
+	 * @param percentage
+	 */
+	public void updateBookSeekBar(double percentage) {
+		int progress = (int) ((double) bookBar.getMax() * percentage);
+		// Log.d(TAG, "Seeking book bar to " + progress + "%");
+		// calls 'onProgressChanged' from code:
+		bookBar.setProgress(progress);
 	}
+
+	/**
+	 * Sets the progress on the track seek bar to the given percentage.
+	 * 
+	 * @param percentage
+	 */
+	public void updateTrackSeekBar(double percentage) {
+		int progress = (int) (trackBar.getMax() * percentage);
+		// Log.d(TAG, "Seeking track bar to " + progress + "%");
+		// calls 'onProgressChanged' from code:
+		trackBar.setProgress(progress);
+	}
+
+	/* Titles */
+	/**
+	 * Sets the title of the book to the given title.
+	 * 
+	 * @param title
+	 */
+	public void updateBookTitleLabel(String title) {
+		bookTitle.setText(title);
+	}
+
+	/**
+	 * Sets the title of the track to the given title.
+	 * 
+	 * @param title
+	 */
+	public void updateTrackTitleLabel(String title) {
+		trackTitle.setText(title);
+	}
+
+	/* Elapsed time labels */
+	/**
+	 * Sets the elapsed time label of the book to the given time in
+	 * milliseconds. Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
+	public void updateBookElapsedTimeLabel(int ms) {
+		bookElapsedTime.setText(formatTime(ms));
+	}
+
+	/**
+	 * Sets the elapsed time label of the track to the given time in
+	 * milliseconds. Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
+	public void updateTrackElapsedTimeLabel(int ms) {
+		trackElapsedTime.setText(formatTime(ms));
+	}
+
+	/* Duration labels */
+	/**
+	 * Sets the duration label of the book to the given time in milliseconds.
+	 * Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
+	public void updateBookDurationLabel(int ms) {
+		bookDuration.setText(formatTime(ms));
+	}
+
+	/**
+	 * Sets the duration label of the track to the given time in milliseconds.
+	 * Formats the time (see {@link #formatTime(int)})
+	 * 
+	 * @param ms
+	 */
+	public void updateTrackDurationLabel(int ms) {
+		trackDuration.setText(formatTime(ms));
+	}
+
+	/**
+	 * Formats a given time in milliseconds to MM:SS.
+	 * <p>
+	 * 
+	 * If the number of hours is greater than zero or nine the time will be
+	 * formatted to H:MM:SS or HH:MM:SS, respectively. If it surpasses 23, it
+	 * will start from zero again (modulus 24).
+	 * 
+	 * @param ms
+	 * @return
+	 */
+	private String formatTime(int ms) {
+		int seconds = (ms / 1000) % 60;
+		int minutes = (ms / (1000 * 60)) % 60;
+		int hours = (ms / (1000 * 60 * 60)) % 24;
+
+		return (hours > 0 ? hours + ":" : "") + (minutes <= 9 ? "0" : "")
+				+ minutes + ":" + (seconds <= 9 ? "0" : "") + seconds;
+	}
+
 }

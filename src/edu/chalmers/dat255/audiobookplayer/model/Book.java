@@ -1,160 +1,245 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.util.Log;
-import edu.chalmers.dat255.audiobookplayer.constants.Constants;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
+import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
+
 
 /**
- * Represents a collection of Track objects that 
- * collectively form a book.
+ * Represents a collection of Track objects. Null tracks are not allowed (and
+ * will be ignored when added).
  * 
- * @author Marcus Parkkinen, Aki Käkelä
- * @version 0.4
+ * @author Marcus Parkkinen, Aki K�kel�
+ * @version 0.6
  */
 
-public class Book {
+public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private static final String TAG = "Book.java";
+	private static final int NO_TRACK_SELECTED = -1;
+	private static final long serialVersionUID = 2;
 
 	private LinkedList<Track> tracks;
-	private int trackIndex;
-	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
+	private int selectedTrackIndex = NO_TRACK_SELECTED;
+	private String author; // immutable
 	private String title;
-	@SuppressWarnings("unused")
 	private int duration;
+	private LinkedList<Tag> tags;
 
+	/* To be implemented later: */
 	// private Bookmark bookmark;
-	// private Tag[] tags;
+
 	// private Stats stats;
+	
+	// TODO: only used by test.
 
 	/**
-	 * Create an empty book.
+	 * Used when no author is given.
+	 * 
+	 * @param title
 	 */
-	public Book() {
+	public Book(String title) {
+		this(title, "N/A");
+	}
+	// --
+
+	/**
+	 * Creates an empty book with the given title and author.
+	 */
+	public Book(String title, String author) {
 		tracks = new LinkedList<Track>();
+		setBookTitle(title);
+
+		// when a book is created, it should be ensured that the author is
+		// appropriate.
+		this.author = author;
 	}
 
 	/**
-	 * Create a book from the referenced collection of Tracks.
+	 * Creates a book from the referenced collection of Tracks.
 	 * 
-	 * @param c
-	 *            A collection containing Track instances.
+	 * @param col
+	 *            The collection of tracks.
+	 * @param title
+	 *            The title of the book.
+	 * @param author
+	 *            The author of the book.
 	 */
-	public Book(Collection<Track> c, String title) {
-		this();
-		this.setTitle(title);
-		
-		for (Track t : c) {
+	public Book(Collection<Track> col, String title, String author) {
+		this(title, author);
+
+		for (Track t : col) {
 			if (t != null) {
 				tracks.add(t);
+				duration += t.getDuration();
+			}
+		}
+
+		// adjust the track index now that we have tracks
+		selectedTrackIndex = 0;
+	}
+	
+	// TODO: only used by test.
+	public Book(Collection<Track> col, String title) {
+		this(col, title, "N/A");
+	}
+	//
+
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param original
+	 */
+	public Book(Book original) {
+		this(original.getBookTitle(), original.getAuthor());
+
+		// copy primitive member variables
+		this.duration = original.duration;
+		this.selectedTrackIndex = original.selectedTrackIndex;
+		setAuthor(original.getAuthor());
+
+		// also create deep copies of the tracks
+		for (Track t : original.tracks) {
+			this.tracks.add(new Track(t));
+		}
+	}
+
+	/* IBookUpdates */
+	/**
+	 * Remove a track from the book.
+	 * 
+	 * @param int index >= 0
+	 */
+	public void removeTrack(int index) {
+		if (isLegalTrackIndex(index)) {
+
+			// remove the track and adjust the duration
+			duration -= tracks.remove(index).getDuration();
+
+			// check whether this was the last track
+			if (tracks.size() == 0) {
+				deselectTrack();
+			} else {
+				if (index < selectedTrackIndex) {
+					// adjust the index if we removed one earlier in the list
+					selectedTrackIndex--;
+				} else if (index == selectedTrackIndex) {
+					// if we removed the selected one then mark the first
+					selectedTrackIndex = 0;
+				}
+			}
+
+		} else {
+			Log.e(TAG,
+					"attempting to remove a track from an illegal index. Skipping operation.");
+		}
+	}
+
+	public void addTrack(Track t) {
+		if (t != null) {
+			// add the track
+			tracks.add(t);
+
+			// adjust the duration
+			duration += t.getDuration();
+
+			if (tracks.size() == 1) {
+				selectedTrackIndex = 0;
 			}
 		}
 	}
 
-	public Track getSelectedTrack() {
-		return tracks.get(trackIndex);
-	}
-
-	/**
-	 * Removes a track from the collection on the specified index.
-	 * 
-	 * @param index
-	 */
-	public void removeTrack(int index) {
-		if (tracks.size() < index) {
-			tracks.remove(index);
-			pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null,
-					null);
-		}
-	}
-
-	/**
-	 * Adds a track to the collection to the specified index.
-	 * 
-	 * @param index
-	 *            Where to add the track.
-	 * @param t
-	 *            The Track instance to add.
-	 */
-	public void addTrack(int index, Track t) {
-		if (t != null) {
-			tracks.add(index, t);
-			pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
-					null);
-		}
-	}
-
-	/**
-	 * Adds a track to the end of the collection.
-	 * 
-	 * @param t
-	 */
-	public void addTrack(Track t) {
-		addTrack(tracks.size(), t);
-	}
-
-	/**
-	 * Add a collection of tracks.
-	 * 
-	 * @param c
-	 *            Collection that contains references to the tracks
-	 */
-
-	public void addTracks(Collection<Track> c) {
-		for (Track t : c) {
-			addTrack(t);
-		}
-	}
-
-	/**
-	 * Swap location of two tracks.
-	 * 
-	 * @param firstIndex
-	 * @param secondIndex
-	 */
-	public void swap(int firstIndex, int secondIndex) {
-		try {
+	public void swapTracks(int firstIndex, int secondIndex) {
+		if (isLegalTrackIndex(firstIndex) && isLegalTrackIndex(secondIndex)
+				&& firstIndex < secondIndex) {
 			Collections.swap(tracks, firstIndex, secondIndex);
-			// TODO: see catch; does not always swap?
-			pcs.firePropertyChange(Constants.event.TRACK_SWAPPED, null,
-					null);
-		} catch (IndexOutOfBoundsException e) {
+		} else {
 			Log.e(TAG,
-					" attempting to move a track from/to illegal index. Skipping operation.");
+					"attempting to move a track from/to illegal index. Skipping operation.");
 		}
 	}
 
-	/**
-	 * Move the track at the specified index to a new index.
-	 * 
-	 * @param oldIndex
-	 *            index of the track
-	 * @param newIndex
-	 */
-	public void move(int from, int to) {
-		if (tracks.size() < from && tracks.size() < to) {
-			Track temp = tracks.remove(from);
-			tracks.add(to, temp);
-			pcs.firePropertyChange(Constants.event.TRACK_MOVED, null,
-					null);
+	public void moveTrack(int from, int to) {
+		if (isLegalTrackIndex(from) && isLegalTrackIndex(to) && from != to) {
+			Track t = tracks.remove(from);
+			tracks.add(to, t);
 		} else {
 			Log.e(TAG,
 					" attempting to move a track from/to illegal index. Skipping operation.");
 		}
+		// TODO: test
+		// Collections.rotate(tracks.subList(from, to + 1), -1);
 	}
 
-	// TODO: test/delete
-	public void moveTrack(int from, int to) {
-		Collections.rotate(tracks.subList(from, to + 1), -1);
+	// public void setBookmark(int trackIndex, int time) { }
+	// public void setTag(int trackIndex, int time) { }
+
+	public void setSelectedTrackIndex(int index) {
+		Log.d(TAG, "Attempting to set trackIndex to " + index + " (listSize: "
+				+ this.tracks.size() + ")");
+		if (index >= 0) {
+			if (index < tracks.size()) {
+				selectedTrackIndex = index;
+				return;
+			}
+			// the track list is completed, so deselect the track.
+			deselectTrack();
+			Log.d(TAG, "New trackIndex: " + selectedTrackIndex);
+		} else {
+			Log.e(TAG,
+					" attempting to select a track at an illegal index. Skipping operation.");
+		}
 	}
 
-	// ------
+	public void setBookTitle(String title) throws IllegalArgumentException {
+		if (title != null) {
+			this.title = title;
+		} else {
+			throw new IllegalArgumentException(
+					" Trying to set illegal title to book. Skipping operation");
+		}
+
+	}
+
+	public void updateBookDuration() {
+		this.duration = 0;
+		for (Track t : tracks) {
+			this.duration += t.getDuration();
+		}
+	}
+
+	/* End IBookUpdates */
+
+	/* ITrackUpdates */
+
+	public void setSelectedTrackElapsedTime(int newTime) {
+		if (isLegalTrackIndex(selectedTrackIndex)) {
+			this.tracks.get(selectedTrackIndex).setSelectedTrackElapsedTime(
+					newTime);
+		}
+	}
+
+	/* End ITrackUpdates */
+
+	/**
+	 * Checks whether a provided index is within the legal bounds of the list of
+	 * tracks.
+	 * 
+	 * @param index
+	 *            Index to check.
+	 * @return True if the given index is within bounds of the track list.
+	 */
+	public boolean isLegalTrackIndex(int index) {
+//		Log.d(TAG, (index >= 0 && index < tracks.size()) ? "legal" : "illegal"
+//				+ " index: 0 <= " + index + " < " + tracks.size());
+		return index >= 0 && index < tracks.size();
+	}
+
 	/**
 	 * Returns the number of elements (tracks) in the book.
 	 * 
@@ -165,123 +250,231 @@ public class Book {
 	}
 
 	/**
+	 * Returns the index of the currently selected track.
 	 * 
-	 * @return the path that is playing (or is ready to be played).
+	 * @return int index
 	 */
-	public Track getCurrentTrack() {
-		return this.tracks.get(trackIndex);
+	public int getSelectedTrackIndex() {
+		return this.selectedTrackIndex;
 	}
 
 	/**
-	 * @param index
-	 * @return The track at index <i>index</i> of the book.
-	 */
-	public Track getTrackAt(int index) {
-		return tracks.get(index);
-	}
-
-	/**
-	 * @return The list of tracks.
-	 */
-	public List<Track> getTracks() {
-		return tracks;
-	}
-
-	// ----
-
-	/**
-	 * Set the bookmark to point at a track and a specific time in that track.
+	 * The duration of the current track in milliseconds.
 	 * 
-	 * @param trackIndex
-	 *            Index of the track in the book
-	 * @param time
-	 *            The time at which to add the bookmark (in ms).
+	 * @return
 	 */
-	public void setBookmark(int trackIndex, int time) {
-		// this.bookmark = new Bookmark(trackIndex, time);
-		pcs.firePropertyChange(Constants.event.BOOKMARK_SET, null, null);
+	public int getSelectedTrackDuration() throws IllegalArgumentException {
+		if (!isLegalTrackIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track duration when index is illegal.");
+		return tracks.get(selectedTrackIndex).getDuration();
 	}
 
 	/**
-	 * Sets the track index of the book. Rolls over if the index is out of
-	 * bounds.
+	 * Returns the elapsed time of the selected track in the selected book.
 	 * 
-	 * @param index
+	 * @return elapsed time
 	 */
-	public void setCurrentTrackIndex(int index) {
-		this.trackIndex = index % this.tracks.size();
-		pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
-				null);
+	public int getSelectedTrackElapsedTime() throws IllegalArgumentException {
+		if (!isLegalTrackIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track elapsed time when index is illegal.");
+		return this.tracks.get(selectedTrackIndex).getElapsedTime();
 	}
 
 	/**
-	 * @return the index of the path either currently open or ready to be opened
-	 *         by the player
+	 * Gets the track path of the currently selected track.
+	 * 
+	 * @return
 	 */
-	public int getCurrentTrackIndex() {
-		return this.trackIndex;
-	}
-
-	/**
-	 * Increases the index to be played by the player by 1, or sets it to 0 if
-	 * there isn't a later element in the queue.
-	 */
-	public void incrementTrackIndex() {
-		setCurrentTrackIndex(this.trackIndex + 1);
-	}
-
-	/**
-	 * Decreases the index to be played by the player by 1, or sets it to the
-	 * index of the last element if the current element index is 0.
-	 */
-	public void decrementTrackIndex() {
-		setCurrentTrackIndex(this.trackIndex - 1);
+	public String getSelectedTrackPath() throws IllegalArgumentException {
+		if (!isLegalTrackIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track path when index is illegal.");
+		return tracks.get(selectedTrackIndex).getTrackPath();
 	}
 
 	/**
 	 * Returns a list containing references to all tracks contained in this
 	 * book.
 	 * 
-	 * @return List<String> the list
+	 * @return the list
 	 */
-	public List<String> getPaths() {
-		LinkedList<String> l = new LinkedList<String>();
+	public List<String> getTrackPaths() {
+		List<String> paths = new LinkedList<String>();
 		for (Track t : tracks) {
-			l.add(t.getTrackPath());
+			paths.add(t.getTrackPath());
 		}
-		return l;
+		return paths;
 	}
 
 	/**
-	 * Corrects the duration of the book to the sum of the duration of its
-	 * tracks.
+	 * Get the title of the book.
+	 * 
+	 * @return Title
 	 */
-	public void updateDuration() {
-		for (Track t : tracks) {
-			duration += t.getTrackDuration();
-		}
-		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED,
-				null, null);
-	}
-
-	public int getTrackDuration() {
-		return tracks.get(trackIndex).getTrackDuration();
-	}
-
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(listener);
-	}
-
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
-	}
-
-	public String getTitle() {
+	public String getBookTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	/* Get a list of all the tracktitles of the book.
+	 * 
+	 * @return Title
+	 */
+	public List<String> getTrackTitles() {
+		List<String> trackTitles = new LinkedList<String>();
+		for(Track t : tracks) {
+			trackTitles.add(t.getTrackTitle());
+		}
+		return trackTitles;
+	}
+
+
+
+	/**
+	 * Gets the duration of the book.
+	 * 
+	 * @return duration (ms)
+	 */
+	public int getDuration() {
+		return duration;
+	}
+
+	// TODO: not needed, tests rely on it
+	/**
+	 * Gets the currently selected track.
+	 * 
+	 * @return the selected track
+	 */
+	public Track getSelectedTrack() {
+		if (!isLegalTrackIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track when index is illegal.");
+		return this.tracks.get(selectedTrackIndex);
+	}
+
+	// --
+
+	/**
+	 * Returns the elapsed time of the current book.
+	 * 
+	 * @return
+	 */
+	public int getBookElapsedTime() {
+		int bookElapsedTime = 0;
+		int i = 0;
+		while (i < this.selectedTrackIndex) {
+			bookElapsedTime += tracks.get(i).getDuration();
+			i++;
+		}
+		bookElapsedTime += tracks.get(i).getElapsedTime();
+
+		return bookElapsedTime;
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	public int getTrackDurationAt(int index) {
+		if (!isLegalTrackIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get 'track duration at' when index is illegal.");
+		return tracks.get(index).getDuration();
+	}
+
+	/**
+	 * Returns the title of the track.
+	 * 
+	 * @return
+	 */
+	public String getTrackTitle() {
+		if (!isLegalTrackIndex(selectedTrackIndex))
+			throw new IllegalArgumentException(
+					"Tried to get selected track title when index is illegal.");
+		return this.tracks.get(selectedTrackIndex).getTrackTitle();
+	}
+
+	/**
+	 * Convenience method.
+	 * <p>
+	 * Sets the selected track index to '-1', which means unselected.
+	 */
+	private void deselectTrack() {
+		selectedTrackIndex = NO_TRACK_SELECTED;	}
+	public void addTagToCurrentBook(int time) {
+		addTagTo(this.selectedTrackIndex, time);
+	}
+
+	public void addTagTo(int index, int time) {
+		this.tags.add(new Tag(time));
+	}
+
+	public void removeTag(int index) {
+		if (isLegalTagIndex(index))
+			this.tags.remove(index);
+	}
+
+	private boolean isLegalTagIndex(int index) {
+		return index >= 0 && index < tags.size();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + duration;
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + selectedTrackIndex;
+		result = prime * result + ((tracks == null) ? 0 : tracks.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		if (duration != other.duration)
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (selectedTrackIndex != other.selectedTrackIndex)
+			return false;
+		if (tracks == null) {
+			if (other.tracks != null)
+				return false;
+		} else if (!tracks.equals(other.tracks))
+			return false;
+		return true;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public void addTag(int time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void removeTag() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void removeTagAt(int tagIndex) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

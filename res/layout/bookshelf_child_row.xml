@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:paddingBottom="3dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="3dp" >
+
+    <TextView
+        android:id="@+id/bookshelfTrackTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:layout_marginLeft="40dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingLeft="5dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textSize="16dp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/bookshelfTrackTime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bookshelfTrackTitle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="50dp"
+        android:paddingLeft="5dp"
+        android:textSize="16dp"
+        android:textStyle="normal" />
+</RelativeLayout>

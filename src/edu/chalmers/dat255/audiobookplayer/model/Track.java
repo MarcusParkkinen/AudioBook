@@ -1,44 +1,73 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.security.InvalidParameterException;
+import java.util.LinkedList;
 
-import edu.chalmers.dat255.audiobookplayer.constants.Constants;
+import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
 import android.util.Log;
 
 /**
- * Represents a single audio track. Includes its duration and path.
+ * Represents a single audio track. Includes its duration, current elapsed time
+ * and file path.
+ * <p>
+ * Duration and track path are immutable.
  * 
- * @author Marcus Parkkinen, Aki Käkelä
- * @version 0.4
+ * @author Marcus Parkkinen Aki K�kel�
+ * @version 0.6
  * 
  */
+public final class Track implements ITrackUpdates, Serializable {
+	private static final String TAG = "Bookshelf.java";
+	private static final long serialVersionUID = 3;
 
-public class Track {
-	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-	private String path;
-	private int elapsedTime; 
-	private int duration;
+	private final String path;
+	private final int duration;
+	private int elapsedTime;
+	private LinkedList<Tag> tags;
+
+	private String title;
 
 	/**
 	 * Constructor for a track. Path to the data source as well as the length of
-	 * the track must be provided.
+	 * the track must be provided. The path may not be an empty string ("").
 	 * 
 	 * @param path
 	 *            Path to the track
 	 * @param duration
 	 *            Playing time of the track in ms.
 	 */
-	public Track(String path, int duration) {
-		if (path != null) {
+	public Track(String path, int duration) throws InvalidParameterException {
+		if (path != null && path.length() > 0 && duration > 0) {
 			this.path = path;
 			this.duration = duration;
 		} else {
-			Log.e("Track", "Path to track is null in constructor");
-			throw new InvalidParameterException();
+			throw new InvalidParameterException(
+					"Attempting to create track with either null path or negative duration.");
 		}
+	}
+	
+	public Track(String path, String title, int duration) throws InvalidParameterException {
+		if (path != null && path.length() > 0 && duration > 0) {
+			this.path = path;
+			this.duration = duration;
+			this.setTitle(title);
+		} else {
+			throw new InvalidParameterException(
+					"Attempting to create track with either null path or negative duration.");
+		}
+	}
+
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param other
+	 */
+	public Track(Track original) {
+		this(original.path, original.title, original.duration);
+		this.elapsedTime = original.elapsedTime;
+		this.title = original.title;
 	}
 
 	/**
@@ -51,27 +80,89 @@ public class Track {
 	/**
 	 * @return The playing time of the track.
 	 */
-	protected int getTrackDuration() {
+	protected int getDuration() {
 		return duration;
 	}
 
 	/**
-	 * @param time
+	 * @return The elapsed time of the track.
 	 */
-	public void setTime(int time) {
-		this.elapsedTime = time;
-		pcs.firePropertyChange(Constants.event.TRACK_TIME_CHANGED, null, null);
+	public int getElapsedTime() {
+		return elapsedTime;
 	}
 
-	public int getTime() {
-		return this.elapsedTime;
+	/**
+	 * Set the elapsed time of the track to a specified amount.
+	 * 
+	 * @param new time
+	 */
+	public void setSelectedTrackElapsedTime(int elapsedTime)
+			throws InvalidParameterException {
+		if (elapsedTime >= duration) {
+			Log.e(TAG, "elapsedTime (" + elapsedTime + ") set to duration ("
+					+ duration + ")");
+			this.elapsedTime = duration;
+		} else if (elapsedTime >= 0) {
+			this.elapsedTime = elapsedTime;
+		} else {
+			throw new InvalidParameterException(
+					"Attempting to set elapsed time to a negative value.");
+		}
 	}
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(listener);
+	/**
+	 * Returns the title of the track.
+	 * 
+	 * @return The title of the track (the path without the parent folders).
+	 */
+	public String getTrackTitle() {
+		return this.title; // TODO: just get the track name, not path
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + duration;
+		result = prime * result + elapsedTime;
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Track other = (Track) obj;
+		if (duration != other.duration)
+			return false;
+		if (elapsedTime != other.elapsedTime)
+			return false;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		return true;
+	}
+
+	public void addTag(int time) {
+		this.tags.add(new Tag(time));
+	}
+
+	public void removeTag() {
+		this.tags.remove();
+	}
+
+	public void removeTagAt(int tagIndex) {
+		this.tags.remove(tagIndex);
 	}
 }

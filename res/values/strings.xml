@@ -1,11 +1,10 @@
 <resources>
 
-    <string name="app_name">AudioBookPlayer</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Claudio</string>
     <string name="menu_settings">Settings</string>
     
     <string name="title_activity_browser">BrowserActivity</string>
-    <string name="title_activity_audiobook">Cloudio</string>
+    <string name="title_activity_audiobook">Claudio</string>
     <string name="title_activity_player">PlayerActivity</string>
     
     <string name="add_button_text">Add new testbook</string>
@@ -15,5 +14,6 @@
 	<string name="playPause">||</string>
 	<string name="seekRight">&gt;&gt;</string>
 	<string name="nextTrack">|&gt;</string>
+	<string name="coverText">&lt;Cover art&gt;</string>
 
 </resources>
