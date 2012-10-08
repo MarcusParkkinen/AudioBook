@@ -34,7 +34,10 @@ See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on
 
 ## Known limitations of application
 
-TBA
+* UI design is still work-in-progress.
+* Metadata of tracks is not displayed correctly.
+* The users bookshelf cannot be edited.
+* Audio playback does not stop while receiving a system notification or a call.
 
 ## Changelog
 
@@ -46,10 +49,14 @@ Application core completed:
 * Created Initial UI design and made sketches for the future.
 * Implemented browsing through the file system for audio files only. These can be viewed in a UI and the user may choose which tracks to use in creating a playlist (a 'book').
 
+Additional features:
+* The users bookshelf and progress in books are now saved when closing the application.
+* Added support for seeking within either the current track or the whole book by using seekbars.
+
 ## Authors
 
-* Aki Käkelä
-* Fredrik Åhs
+* Aki Kï¿½kelï¿½
+* Fredrik ï¿½hs
 * Marcus Parkkinen
 * Matej Kadric
 
