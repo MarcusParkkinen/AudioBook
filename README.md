@@ -1,4 +1,4 @@
-# Welcome to Claudio
+﻿# Welcome to Claudio
 
 Claudio is an Android application that allows you to play your audio books. It can also synch your listening sessions through multiple devices, and help you store your audio books in the cloud for easy acces.
 
@@ -8,8 +8,7 @@ Claudio is an Android application that allows you to play your audio books. It c
 
 ## Download
 
-See [the main branch](http://github.com/MarcusParkkinen/AudioBook.git) for the latest release.
-See [the development branch](https://www.google.se/) for the latest updates.
+See [the master branch](http://github.com/MarcusParkkinen/AudioBook.git) for the latest release candidate.
 
 ## Installation
 
@@ -21,23 +20,26 @@ Delete the .apk file.
 
 ## Documentation
 
-See the [docs folder](https://github.com/MarcusParkkinen/AudioBook/tree/development/doc) in the project for the latest documentation.
+See the [docs folder](https://github.com/MarcusParkkinen/AudioBook/doc) in the project for the latest documentation.
 
 ## Incompatibility
 
 This application is compatible with Android devices on API level 10 and above.
 Requires Android 2.3.3
 
-## Known Issues or Bugs
+## <a id="bugs">Known Issues or Bugs</a>
 
-See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on the project for the latest list of known issues or bugs.
+See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on the project site for the latest list of known issues or bugs.
 
-## Known limitations of application
+## <a id="lim">Known limitations of application</a>
 
-* UI design is still work-in-progress.
+* UI design is still a work in progress.
 * Metadata of tracks is not displayed correctly.
-* The users bookshelf cannot be edited.
+* The user's bookshelf cannot be edited.
+* The bookshelf UI and player UI are not updated 1:1.
+* There are still issues (crashes). See [Known Issues or Bugs](#bugs).
 * Audio playback does not stop while receiving a system notification or a call.
+* Some features of milstone 2 and milestones 3 and 4 are not yet implemented.
 
 ## Changelog
 

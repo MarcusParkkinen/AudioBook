@@ -43,11 +43,11 @@ public class PlayerController implements IPlayerEvents {
 	private void startTimer() {
 		// stop the old timer
 		stopTimer();
-		
+
 		// start a new timer
 		this.trackTimeUpdateThread = new Thread(new TrackElapsedTimeUpdater());
 		this.trackTimeUpdateThread.start();
-		
+
 		Log.d(TAG, "interrupted=" + trackTimeUpdateThread.isInterrupted()
 				+ " \t alive=" + trackTimeUpdateThread.isAlive());
 
@@ -56,12 +56,19 @@ public class PlayerController implements IPlayerEvents {
 
 	}
 
+	/**
+	 * Stops the audio player. Stops updating the model.
+	 */
 	public void stop() {
+		stopTimer();
+		mp.stop();
 	}
 
 	/**
-	 * Starts the audio player. The Bookshelf must have been initialized and the
-	 * path at the selected track index can not be null.
+	 * Starts the audio player. Starts updating the model.
+	 * 
+	 * @precondition The Bookshelf must have been initialized and the path at
+	 *               the selected track index can not be null.
 	 */
 	public void start() {
 		// we have started playing a file, so start the thread that updates the
@@ -213,7 +220,8 @@ public class PlayerController implements IPlayerEvents {
 				try {
 					Thread.sleep(UPDATE_FREQUENCY);
 				} catch (InterruptedException e) {
-					// the thread was interrupted, so stop the run method
+					// the thread was interrupted, so simply end run.
+					Log.d(TAG, "Track elapsed time updater stopped.");
 					return;
 				}
 			}
