@@ -7,13 +7,10 @@
     <string name="title_activity_browser">BrowserActivity</string>
     <string name="title_activity_audiobook">Cloudio</string>
     <string name="title_activity_player">PlayerActivity</string>
-    
-    <string name="add_button_text">Add new testbook</string>
-    
-    <string name="prevTrack">&lt;|</string>
-	<string name="seekLeft">&lt;&lt;</string>
-	<string name="playPause">||</string>
-	<string name="seekRight">&gt;&gt;</string>
-	<string name="nextTrack">|&gt;</string>
+	<string name="trackNum">&quot;Track 1&quot;</string>
+	<string name="bookDetails">&quot;Ernest Hemingway - The Sun Also Rises&quot;</string>
+	<string name="currentTrack">&quot;(1/25)&quot;</string>
+	<string name="elapsedTime">&quot;01:50&quot;</string>
+	<string name="add_button_text">&quot;Add Book&quot;</string>
 
 </resources>
