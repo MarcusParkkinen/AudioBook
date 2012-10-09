@@ -27,17 +27,17 @@ See the [docs folder](https://github.com/MarcusParkkinen/AudioBook/doc) in the p
 This application is compatible with Android devices on API level 10 and above.
 Requires Android 2.3.3
 
-## <a id="bugs"></a>Known Issues or Bugs
+## Known Issues or Bugs
 
 See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on the project site for the latest list of known issues or bugs.
 
-## <a id="lim"></a>Known limitations of application
+## Known limitations of application
 
 * UI design is still a work in progress.
 * Metadata of tracks is not displayed correctly.
 * The user's bookshelf cannot be edited.
 * The bookshelf UI and player UI are not updated 1:1.
-* There are still issues (crashes). See [Known Issues or Bugs](#bugs). [Known Issues or Bugs][]
+* There are still issues (crashes). See [Known Issues or Bugs](https://github.com/MarcusParkkinen/AudioBook#known-issues-or-bugs). [Bugs](#known-issues-or-bug).
 * Audio playback does not stop while receiving a system notification or a call.
 * Some features of milstone 2 and milestones 3 and 4 are not yet implemented.
 
