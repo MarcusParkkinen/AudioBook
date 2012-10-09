@@ -37,9 +37,9 @@ See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on
 * Metadata of tracks is not displayed correctly.
 * The user's bookshelf cannot be edited.
 * The bookshelf UI and player UI are not updated 1:1.
-* There are still issues (crashes). See [Known Issues or Bugs](https://github.com/MarcusParkkinen/AudioBook#known-issues-or-bugs). [Bugs](#known-issues-or-bug).
+* There are still issues (crashes). See [Known Issues or Bugs](https://github.com/MarcusParkkinen/AudioBook#known-issues-or-bugs).
 * Audio playback does not stop while receiving a system notification or a call.
-* Some features of milstone 2 and milestones 3 and 4 are not yet implemented.
+* Some features of milestone 2 and milestones 3 and 4 are not yet implemented.
 
 ## Changelog
 
@@ -57,8 +57,8 @@ Additional features:
 
 ## Authors
 
-* Aki K�kel�
-* Fredrik �hs
+* Aki Kakela
+* Fredrik Ahs
 * Marcus Parkkinen
 * Matej Kadric
 
