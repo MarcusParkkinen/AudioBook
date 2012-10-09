@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
@@ -22,6 +23,7 @@ public class PlayerController implements IPlayerEvents {
 	private Thread trackTimeUpdateThread;
 
 	private boolean isStarted = false;
+	public static final int UPDATE_FREQUENCY = Constants.values.UPDATE_FREQUENCY;
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
@@ -41,11 +43,11 @@ public class PlayerController implements IPlayerEvents {
 	private void startTimer() {
 		// stop the old timer
 		stopTimer();
-		
+
 		// start a new timer
 		this.trackTimeUpdateThread = new Thread(new TrackElapsedTimeUpdater());
 		this.trackTimeUpdateThread.start();
-		
+
 		Log.d(TAG, "interrupted=" + trackTimeUpdateThread.isInterrupted()
 				+ " \t alive=" + trackTimeUpdateThread.isAlive());
 
@@ -204,13 +206,12 @@ public class PlayerController implements IPlayerEvents {
 
 		public void run() {
 			while (isStarted && mp.isPlaying()) {
-				int frequency = 1000;
-				Log.d(TAG, "Updating TET");
-				// Log.d(TAG, "Updating track time @" + (1000 / frequency)
+				Log.d(TAG, "Updating Track El. T.");
+				// Log.d(TAG, "Updating track time @" + (1000 / UPDATE_FREQUENCY)
 				// + "x/s");
 				updateTrackTime();
 				try {
-					Thread.sleep(frequency);
+					Thread.sleep(UPDATE_FREQUENCY);
 				} catch (InterruptedException e) {
 					// the thread was interrupted, so stop the run method
 					return;

@@ -37,4 +37,9 @@ public final class Constants {
 	public static final class reference {
 		public static final String BOOKSHELF = "@bookshelf";
 	}
+
+	public static final class values {
+		public static final int UPDATE_FREQUENCY = 500;
+	}
+
 }
