@@ -1,0 +1,42 @@
+
+	<!--
+	
+	
+	
+	
+				XML File that defines the pattern of background that represents progress
+				on a seekbar1 in our UI
+	
+	
+	
+	  -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <nine-patch
+            xmlns:android="http://schemas.android.com/apk/res/android"
+           
+           
+           
+            android:src="@drawable/seekbar_bg"
+            android:dither="true"
+         />
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <gradient
+                    android:startColor="#ff8800"
+                    android:centerColor="#ff8800"
+                    android:centerY="0.75"
+                    android:endColor="#ff8800"
+                    android:angle="270"
+                />
+            </shape>
+        </clip>
+    </item>
+    <item
+        android:id="@android:id/progress"
+        android:drawable="@drawable/seekbar1_prog_bg"
+    />
+</layer-list>
