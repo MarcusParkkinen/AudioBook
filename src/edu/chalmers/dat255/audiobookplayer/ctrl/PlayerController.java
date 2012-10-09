@@ -214,7 +214,7 @@ public class PlayerController implements IPlayerEvents {
 		public void run() {
 			while (isStarted && mp.isPlaying()) {
 				Log.d(TAG, "Updating Track Elapsed Time");
-				// Log.d(TAG, "Updating track time @" + (1000 / frequency)
+				// Log.d(TAG, "Updating track time @" + (1000 / UPDATE_FREQUENCY)
 				// + "x/s");
 				updateTrackTime();
 				try {
