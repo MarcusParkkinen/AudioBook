@@ -16,18 +16,28 @@
         <uses-library android:name="android.test.runner" />
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_audiobook" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.BrowserActivity"
             android:label="@string/title_activity_browser" >
+        </activity>
+        <activity
+            android:name=".view.PreferencesActivity"
+            android:label="@string/title_activity_preferences" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

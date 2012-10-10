@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.ctrl.BookshelfController;
@@ -21,7 +20,6 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
-import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 
 /**
  * The main activity of the application. TODO: insert license
@@ -58,7 +56,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		initPager();
 
 		/*
-		 * NOTE: varje gang vi tabbar upp programmet efter multitasking sa
+		 * TODO NOTE: varje gang vi tabbar upp programmet efter multitasking sa
 		 * kommer allt i denna metod att koeras. Skapar konstiga problem, boer
 		 * fixas. Detta gaeller aeven alla andra viewkomponenter ocksa.
 		 */
@@ -165,6 +163,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		startActivity(intent);
 	}
 
+	public void preferencesButtonPressed() {
+		Intent intent = new Intent(this, PreferencesActivity.class);
+		startActivity(intent);
+	}
+
 	/* End BookshelfUIListener */
 
 	public void bookmarkSet() {
@@ -195,7 +198,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// fragments
 			if (eventName.equals(Constants.event.BOOK_ADDED)) {
 				int lastBookIndex = bs.getNumberOfBooks() - 1;
-				//assumes this event is never fired unless atleast one book is added.
+				// assumes this event is never fired unless atleast one book is
+				// added.
 				Book b = bs.getBookAt(lastBookIndex);
 				// Bookshelf
 				bookshelf.bookAdded(b);
@@ -206,7 +210,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// indicate selected book
-//				bookshelf.selectedBookChanged(b);
+				// bookshelf.selectedBookChanged(b);
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
 				// start the player
@@ -297,8 +301,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	}
 
-	// Titles
-
+	/*
+	 * Titles
+	 */
 	/**
 	 * UI mutator method that updates the book title label in the player
 	 * fragment.
@@ -330,8 +335,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		});
 	}
 
-	// Duration times
-
+	/*
+	 * Duration times
+	 */
 	/**
 	 * UI mutator method that updates the book duration label in the player
 	 * fragment.
@@ -365,8 +371,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		});
 	}
 
-	// Elapsed times
-
+	/*
+	 * Elapsed times
+	 */
 	/**
 	 * UI mutator method that updates the track duration label in the player
 	 * fragment.
@@ -435,6 +442,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * 
 	 * @param int Elapsed time of the book or track in milliseconds.
 	 * @param int Duration of the book or track in milliseconds.
+	 * @return The ratio between the elapsed time and the duration.
 	 */
 	private double getProgress(int elapsedTime, int duration) {
 		return ((double) elapsedTime) / duration;
@@ -442,25 +450,25 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	public void childSelected(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
-		if(childPosition == -1 || groupPosition == -1) {
+		if (childPosition == -1 || groupPosition == -1) {
 			return;
 		}
 		int selectedBookPosition = bsc.getSelectedBookPosition();
-		//if the book is not currently selected, select it
-		if(selectedBookPosition != groupPosition ) {
+		// if the book is not currently selected, select it
+		if (selectedBookPosition != groupPosition) {
 			bookSelected(groupPosition);
 		}
-		//as the book is selected, track can be selected.
+		// as the book is selected, track can be selected.
 		bsc.getSelectedBook().setSelectedTrackIndex(childPosition);
 	}
 
 	public void deleteBook(int groupPosition) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void editBook(int groupPosition, String updatedTitle) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

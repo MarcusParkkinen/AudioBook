@@ -10,6 +10,12 @@
         android:text="@string/add_button_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+    
+    <Button 
+        android:id="@+id/prefs"
+        android:text="@string/prefs_button_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
     <ExpandableListView
         android:id="@+id/bookshelfList"
