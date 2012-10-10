@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 
 /**
@@ -27,6 +27,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
  */
 public class PlayerFragment extends Fragment {
 	private static final String TAG = "PlayerFragment.class";
+	private static final int NUMBER_OF_SEEK_BAR_ZONES = Constants.values.NUMBER_OF_SEEK_BAR_ZONES;
 	private SeekBar bookBar;
 	private SeekBar trackBar;
 	private TextView bookTitle;
@@ -36,7 +37,8 @@ public class PlayerFragment extends Fragment {
 	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
 	private IPlayerEvents parentFragment;
-//	private TimePicker timePicker;
+
+	// private TimePicker timePicker;
 
 	// private Picker timePicker;
 
@@ -113,6 +115,7 @@ public class PlayerFragment extends Fragment {
 		});
 
 		bookBar = (SeekBar) view.findViewById(R.id.bookBar);
+		bookBar.setMax(NUMBER_OF_SEEK_BAR_ZONES);
 		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "bookBar";
 
@@ -141,6 +144,7 @@ public class PlayerFragment extends Fragment {
 		});
 
 		trackBar = (SeekBar) view.findViewById(R.id.trackBar);
+		trackBar.setMax(NUMBER_OF_SEEK_BAR_ZONES);
 		trackBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "trackBar";
 
@@ -188,7 +192,9 @@ public class PlayerFragment extends Fragment {
 		return view;
 	}
 
-	// Seek bars
+	/*
+	 * Seek bars
+	 */
 	/**
 	 * Sets the progress on the book seek bar to the given percentage.
 	 * 
@@ -208,12 +214,14 @@ public class PlayerFragment extends Fragment {
 	 */
 	public void updateTrackSeekBar(double percentage) {
 		int progress = (int) (trackBar.getMax() * percentage);
-		// Log.d(TAG, "Seeking track bar to " + progress + "%");
+//		Log.d(TAG, "Seeking track bar to " + progress + "%" + " (" + percentage + "%)");
 		// calls 'onProgressChanged' from code:
 		trackBar.setProgress(progress);
 	}
 
-	/* Titles */
+	/*
+	 * Titles
+	 */
 	/**
 	 * Sets the title of the book to the given title.
 	 * 
@@ -232,7 +240,9 @@ public class PlayerFragment extends Fragment {
 		trackTitle.setText(title);
 	}
 
-	/* Elapsed time labels */
+	/*
+	 * Elapsed time labels
+	 */
 	/**
 	 * Sets the elapsed time label of the book to the given time in
 	 * milliseconds. Formats the time (see {@link #formatTime(int)})
@@ -253,7 +263,9 @@ public class PlayerFragment extends Fragment {
 		trackElapsedTime.setText(formatTime(ms));
 	}
 
-	/* Duration labels */
+	/*
+	 * Duration labels
+	 */
 	/**
 	 * Sets the duration label of the book to the given time in milliseconds.
 	 * Formats the time (see {@link #formatTime(int)})

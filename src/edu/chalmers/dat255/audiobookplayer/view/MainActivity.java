@@ -277,10 +277,12 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// move the "selected track" indicator to the new index
 
 				// Player
-				// update track title and duration labels
+				// update track title label
 				updateTrackTitleLabel(b);
-				updateTrackDurationLabel(b);
+//				// update track book duration label
+//				updateTrackDurationLabel(b);
 				// set times to zero
+				// TODO
 			} else if (eventName.equals(Constants.event.BOOK_TITLE_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
