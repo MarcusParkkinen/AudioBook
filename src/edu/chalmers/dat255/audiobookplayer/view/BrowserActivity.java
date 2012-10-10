@@ -30,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.chalmers.dat255.audiobookplayer.R;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 
 public class BrowserActivity extends Activity {
@@ -99,24 +100,25 @@ public class BrowserActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				List<String> tracks = new ArrayList<String>();
-				String name = null;
-				for(File f : checkedItems) {
-					//only add tracks, not folders
-					if(f.isFile()) {
-						if(tracks.size() == 0) {
-							name = f.getParentFile().getName();
+				if(!checkedItems.isEmpty()) {
+					List<String> tracks = new ArrayList<String>();
+					String name = null;
+					for(File f : checkedItems) {
+						//only add tracks, not folders
+						if(f.isFile()) {
+							if(tracks.size() == 0) {
+								name = f.getParentFile().getName();
+							}
+							tracks.add(f.getAbsolutePath());
 						}
-						tracks.add(f.getAbsolutePath());
 					}
+					
+					BookCreator.getInstance().createBook(tracks, name, null);
+					Toast.makeText(BrowserActivity.this, "Book added: " + name, Toast.LENGTH_SHORT).show();
+					//empty checkedItems and fill the list with unchecked items
+					checkedItems = new TreeSet<File>();
+					fill(currentDirectory);
 				}
-				
-
-				BookCreator.getInstance().createBook(tracks, name, null);
-				Toast.makeText(BrowserActivity.this, "Book added: " + name, Toast.LENGTH_SHORT).show();
-				//empty checkedItems and fill the list with unchecked items
-				checkedItems = new TreeSet<File>();
-				fill(currentDirectory);
 			}
 		});
 
@@ -136,29 +138,38 @@ public class BrowserActivity extends Activity {
 		List<TypedFile> directories = new ArrayList<TypedFile>();
 		//store files separately for correct sorting
 		List<TypedFile> files = new ArrayList<TypedFile>();        	
-
-		for(TypedFile f : childMap.get(root)) {
-			if (f.isDirectory()) {
-				directories.add(f);
-			} else {
-				files.add(f);
+		
+		if(childMap.get(root) != null) {
+			for(TypedFile f : childMap.get(root)) {
+				if (f.isDirectory()) {
+					directories.add(f);
+				} else {
+					files.add(f);
+				}
 			}
+
+			//sort found directories and files
+			Collections.sort(directories);
+			Collections.sort(files);
+			//add all files under the directories
+			directories.addAll(files);
+
+			// adds an item listed as ".." of type parent topmost in the list
+			if( ! root.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+				directories.add(0, new TypedFile(FILETYPE.PARENT, root.getParent()));
+			}
+
+			//create a new adapter with the found files/directories and add it to the listview
+			adapter = new BrowserArrayAdapter(this, R.layout.file_view, directories, checkedItems, childMap);
+			listView.setAdapter(adapter);
+		} else {
+			Toast t = Toast.makeText(getApplicationContext(), 
+					Constants.messages.NO_AUDIO_FILES_FOUND,
+					Toast.LENGTH_SHORT);
+			t.show();
 		}
-
-		//sort found directories and files
-		Collections.sort(directories);
-		Collections.sort(files);
-		//add all files under the directories
-		directories.addAll(files);
-
-		// adds an item listed as ".." of type parent topmost in the list
-		if( ! root.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-			directories.add(0, new TypedFile(FILETYPE.PARENT, root.getParent()));
-		}
-
-		//create a new adapter with the found files/directories and add it to the listview
-		adapter = new BrowserArrayAdapter(this, R.layout.file_view, directories, checkedItems, childMap);
-		listView.setAdapter(adapter);
+		
+		
 	}
 
 

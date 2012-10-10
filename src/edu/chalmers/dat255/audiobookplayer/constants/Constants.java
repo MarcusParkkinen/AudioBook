@@ -3,7 +3,7 @@ package edu.chalmers.dat255.audiobookplayer.constants;
 /**
  * Holds unique event property names for events.
  * 
- * @author Aki Käkelä
+ * @author Aki Kï¿½kelï¿½
  * @version 0.6
  */
 public final class Constants {
@@ -40,5 +40,9 @@ public final class Constants {
 	
 	public static final class values {
 		public static final int UPDATE_FREQUENCY = 250;
+	}
+	
+	public static final class messages {
+		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
 	}
 }
