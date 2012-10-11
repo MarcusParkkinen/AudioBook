@@ -1,3 +1,16 @@
+/**
+*  This work is licensed under the Creative Commons Attribution-NonCommercial-
+*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+*  94041, USA.
+* 
+*  Use of this work is permitted only in accordance with license rights granted.
+*  Materials provided "AS IS"; no representations or warranties provided.
+* 
+*  Copyright Â© 2012 Marcus Parkkinen, Aki KÃ¤kelÃ¤, Fredrik Ã…hs.
+**/
+
 package edu.chalmers.dat255.audiobookplayer.view;
 
 import java.util.ArrayList;
@@ -39,7 +52,7 @@ import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
 /**
  * Graphical representation of the bookshelf.
  * 
- * @author Marcus Parkkinen, Fredrik Åhs
+ * @author Marcus Parkkinen, Fredrik ï¿½hs
  * @version 0.6
  */
 
@@ -308,7 +321,7 @@ public class BookshelfFragment extends Fragment {
 	/**
 	 * Private help class that holds an entry with a key and a value
 	 * 
-	 * @author Fredrik Åhs
+	 * @author Fredrik ï¿½hs
 	 * @version 0.1
 	 */
 	private class BookshelfEntry<K, V> implements Map.Entry<K, V> {
@@ -355,7 +368,7 @@ public class BookshelfFragment extends Fragment {
 	 * Private class used to populate the ExpandableListView used in
 	 * BookshelfFragment
 	 * 
-	 * @author Fredrik Åhs
+	 * @author Fredrik ï¿½hs
 	 * 
 	 */
 	private class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
