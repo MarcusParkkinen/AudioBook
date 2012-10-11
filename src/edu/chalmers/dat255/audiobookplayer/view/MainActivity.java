@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		initPager();
 
 		/*
-		 * TODO NOTE: varje gang vi tabbar upp programmet efter multitasking sa
+		 * TODO(anyone): Note: varje gang vi tabbar upp programmet efter multitasking sa
 		 * kommer allt i denna metod att koeras. Skapar konstiga problem, boer
 		 * fixas. Detta gaeller aeven alla andra viewkomponenter ocksa.
 		 */
@@ -200,8 +200,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-		if (eventName != Constants.Event.ELAPSED_TIME_CHANGED)
+		if (eventName != Constants.Event.ELAPSED_TIME_CHANGED) {
 			Log.d(TAG, "Received update: " + eventName);
+		}
 
 		if (event.getNewValue() instanceof Bookshelf) {
 			// Get the model from the update
@@ -344,8 +345,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateTrackTitleLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				if (b.getSelectedTrackIndex() != -1)
+				if (b.getSelectedTrackIndex() != -1) {
 					player.updateTrackTitleLabel(b.getTrackTitle());
+				}
 			}
 		});
 	}
@@ -379,9 +381,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateTrackDurationLabel(final Book b) {
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				if (b.getSelectedTrackIndex() != -1)
+				if (b.getSelectedTrackIndex() != -1) {
 					player.updateTrackDurationLabel(b
 							.getSelectedTrackDuration());
+				}
 			}
 		});
 	}

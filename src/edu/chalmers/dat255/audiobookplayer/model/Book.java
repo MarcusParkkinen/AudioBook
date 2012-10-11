@@ -277,9 +277,10 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * @return
 	 */
 	public int getSelectedTrackDuration() throws IllegalArgumentException {
-		if (!isLegalTrackIndex(selectedTrackIndex))
+		if (!isLegalTrackIndex(selectedTrackIndex)) {
 			throw new IllegalArgumentException(
 					"Tried to get selected track duration when index is illegal.");
+		}
 		return tracks.get(selectedTrackIndex).getDuration();
 	}
 
@@ -289,9 +290,10 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * @return elapsed time
 	 */
 	public int getSelectedTrackElapsedTime() throws IllegalArgumentException {
-		if (!isLegalTrackIndex(selectedTrackIndex))
+		if (!isLegalTrackIndex(selectedTrackIndex)) {
 			throw new IllegalArgumentException(
 					"Tried to get selected track elapsed time when index is illegal.");
+		}
 		return this.tracks.get(selectedTrackIndex).getElapsedTime();
 	}
 
@@ -301,9 +303,10 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * @return
 	 */
 	public String getSelectedTrackPath() throws IllegalArgumentException {
-		if (!isLegalTrackIndex(selectedTrackIndex))
+		if (!isLegalTrackIndex(selectedTrackIndex)) {
 			throw new IllegalArgumentException(
 					"Tried to get selected track path when index is illegal.");
+		}
 		return tracks.get(selectedTrackIndex).getTrackPath();
 	}
 

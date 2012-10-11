@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.model;
 
@@ -17,9 +17,8 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.LinkedList;
 
-import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
-
 import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
 /**
  * Represents a single audio track. Includes its duration, current elapsed time
@@ -60,16 +59,21 @@ public final class Track implements ITrackUpdates, Serializable {
 					"Attempting to create track with either null path or negative duration.");
 		}
 	}
-	
-	public Track(String path, String title, int duration) throws InvalidParameterException {
-		if (path != null && path.length() > 0 && duration > 0) {
-			this.path = path;
-			this.duration = duration;
-			this.setTitle(title);
-		} else {
-			throw new InvalidParameterException(
-					"Attempting to create track with either null path or negative duration.");
-		}
+
+	/**
+	 * Constructor for a track. Path to the data source as well as the title of
+	 * the book and the length of the track must be provided. The path may not
+	 * be an empty string ("").
+	 * 
+	 * @param path
+	 * @param title
+	 * @param duration
+	 * @throws InvalidParameterException
+	 */
+	public Track(String path, String title, int duration)
+			throws InvalidParameterException {
+		this(path, duration);
+		this.setTitle(title);
 	}
 
 	/**
@@ -104,11 +108,6 @@ public final class Track implements ITrackUpdates, Serializable {
 		return elapsedTime;
 	}
 
-	/**
-	 * Set the elapsed time of the track to a specified amount.
-	 * 
-	 * @param new time
-	 */
 	public void setSelectedTrackElapsedTime(int elapsedTime)
 			throws InvalidParameterException {
 		if (elapsedTime >= duration) {
@@ -132,6 +131,11 @@ public final class Track implements ITrackUpdates, Serializable {
 		return this.title; // TODO: just get the track name, not path
 	}
 
+	/**
+	 * Sets the title of the track.
+	 * 
+	 * @param title
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
