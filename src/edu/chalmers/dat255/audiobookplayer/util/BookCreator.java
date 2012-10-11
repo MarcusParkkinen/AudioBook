@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.media.MediaMetadataRetriever;
-
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;

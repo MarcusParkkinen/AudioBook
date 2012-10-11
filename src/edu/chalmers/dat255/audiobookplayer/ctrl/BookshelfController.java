@@ -20,7 +20,7 @@ import android.content.Context;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.FileParser;
-import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
+import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
 
 /**
  * Manages setting the current book and bookshelf, as well as saving it when the
@@ -79,7 +79,7 @@ public class BookshelfController {
 	public boolean saveBookshelf(Context c, String username) {
 		try {
 			FileParser.writeToInternalStorage(username + ".bookmark", c,
-					JSONParser.toJSON(shelf));
+					JsonParser.toJSON(shelf));
 		} catch (IOException e) {
 			return false;
 		}
@@ -100,7 +100,7 @@ public class BookshelfController {
 	 */
 	public Bookshelf loadBookshelf(Context c, String username) {
 		try {
-			Object obj = JSONParser.fromJSON(FileParser
+			Object obj = JsonParser.fromJSON(FileParser
 					.readFromInternalStorage(username + ".bookmark", c),
 					Bookshelf.class);
 			if (obj instanceof Bookshelf) {

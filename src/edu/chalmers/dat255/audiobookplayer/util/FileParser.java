@@ -21,6 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import android.content.Context;
 
+/**
+ * @author Marcus Parkkinen
+ *
+ */
 public class FileParser {
 	private static final String TAG = "FileParser.java";
 	

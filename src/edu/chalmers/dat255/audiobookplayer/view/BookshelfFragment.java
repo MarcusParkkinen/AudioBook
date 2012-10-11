@@ -47,7 +47,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
-import edu.chalmers.dat255.audiobookplayer.util.JSONParser;
+import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
 
 /**
  * Graphical representation of the bookshelf.
@@ -311,7 +311,7 @@ public class BookshelfFragment extends Fragment {
 	 */
 	private Bookshelf getReferenceFromJSON(String json) {
 		try {
-			return JSONParser.fromJSON(json, Bookshelf.class);
+			return JsonParser.fromJSON(json, Bookshelf.class);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;

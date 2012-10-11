@@ -15,7 +15,11 @@ package edu.chalmers.dat255.audiobookplayer.util;
 
 import com.google.gson.Gson;
 
-public class JSONParser {
+/**
+ * @author Marcus Parkkinen
+ *
+ */
+public class JsonParser {
 	public static <T> T fromJSON(String JSONString, Class<T> type) {
 		return (new Gson()).fromJson(JSONString, type);
 	}

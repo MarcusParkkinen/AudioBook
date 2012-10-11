@@ -29,7 +29,8 @@ public class TrackCreator {
 	public static Track createTrack(String path) throws NumberFormatException {
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(path);
-		int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+		String durationText = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+		int duration = Integer.parseInt(durationText);
 		String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 		if(title == null || title.length() == 0) {
 			title = (new File(path)).getName();
