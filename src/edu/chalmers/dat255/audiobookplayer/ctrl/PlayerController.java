@@ -17,13 +17,14 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * @version 0.6
  */
 public class PlayerController implements IPlayerEvents {
-	public static final String TAG = "PlayerController.class";
+	
+	private static final String TAG = "PlayerController.class";
 	private MediaPlayer mp;
 	private Bookshelf bs;
 	private Thread trackTimeUpdateThread;
 
 	private boolean isStarted = false;
-	private static final int UPDATE_FREQUENCY = Constants.values.UPDATE_FREQUENCY;
+	private static final int UPDATE_FREQUENCY = Constants.Values.UPDATE_FREQUENCY;
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
@@ -34,12 +35,18 @@ public class PlayerController implements IPlayerEvents {
 		this.bs = bs;
 	}
 
-	// TODO stop the updates
+	/**
+	 * Stops the model update thread.
+	 */
 	private void stopTimer() {
-		if (this.trackTimeUpdateThread != null)
+		if (this.trackTimeUpdateThread != null) {
 			this.trackTimeUpdateThread.interrupt();
+		}
 	}
 
+	/**
+	 * Starts a new model update thread.
+	 */
 	private void startTimer() {
 		// stop the old timer
 		stopTimer();
@@ -138,10 +145,11 @@ public class PlayerController implements IPlayerEvents {
 
 	public void playPause() {
 		if (isStarted) {
-			if (mp.isPlaying())
+			if (mp.isPlaying()) {
 				mp.pause();
-			else
+			} else {
 				mp.start();
+			}
 		}
 	}
 
@@ -214,7 +222,8 @@ public class PlayerController implements IPlayerEvents {
 		public void run() {
 			while (isStarted && mp.isPlaying()) {
 				Log.d(TAG, "Updating Track Elapsed Time");
-				// Log.d(TAG, "Updating track time @" + (1000 / UPDATE_FREQUENCY)
+				// Log.d(TAG, "Updating track time @" + (1000 /
+				// UPDATE_FREQUENCY)
 				// + "x/s");
 				updateTrackTime();
 				try {

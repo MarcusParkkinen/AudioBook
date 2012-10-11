@@ -64,7 +64,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 			selectedBookIndex = index;
 
 			// notify the view module that we have selected a book
-			pcs.firePropertyChange(Constants.event.BOOK_SELECTED, null,
+			pcs.firePropertyChange(Constants.Event.BOOK_SELECTED, null,
 					new Bookshelf(this));
 		} else {
 			Log.e(TAG,
@@ -86,7 +86,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		if (selectedBookIndex == NO_BOOK_SELECTED)
 			selectedBookIndex = 0;
 		// Log.d(TAG, "list size (original): " + books.size());
-		pcs.firePropertyChange(Constants.event.BOOK_ADDED, null, new Bookshelf(
+		pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null, new Bookshelf(
 				this));
 	}
 
@@ -113,7 +113,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 			}
 
 			// notify the listeners about this change
-			pcs.firePropertyChange(Constants.event.BOOK_REMOVED, null,
+			pcs.firePropertyChange(Constants.Event.BOOK_REMOVED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -132,7 +132,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 			}
 			Book temp = books.remove(to);
 			books.add(from, temp);
-			pcs.firePropertyChange(Constants.event.BOOK_MOVED, null,
+			pcs.firePropertyChange(Constants.Event.BOOK_MOVED, null,
 					new Bookshelf(this));
 		} else {
 			Log.e(TAG,
@@ -156,7 +156,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		 */
 		updateBookDuration();
 
-		pcs.firePropertyChange(Constants.event.TRACK_REMOVED, null,
+		pcs.firePropertyChange(Constants.Event.TRACK_REMOVED, null,
 				new Bookshelf(this));
 	}
 
@@ -169,19 +169,19 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		 */
 		updateBookDuration();
 
-		pcs.firePropertyChange(Constants.event.TRACK_ADDED, null,
+		pcs.firePropertyChange(Constants.Event.TRACK_ADDED, null,
 				new Bookshelf(this));
 	}
 
 	public void swapTracks(int firstIndex, int secondIndex) {
 		this.books.get(selectedBookIndex).swapTracks(firstIndex, secondIndex);
-		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null,
+		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
 				new Bookshelf(this));
 	}
 
 	public void moveTrack(int from, int to) {
 		this.books.get(selectedBookIndex).moveTrack(from, to);
-		pcs.firePropertyChange(Constants.event.TRACK_ORDER_CHANGED, null,
+		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
 				new Bookshelf(this));
 	}
 
@@ -202,10 +202,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 		if (legal) {
 			Log.d(TAG, "Firing update event (Bookshelf.setSelectedTrackindex)");
-			pcs.firePropertyChange(Constants.event.TRACK_INDEX_CHANGED, null,
+			pcs.firePropertyChange(Constants.Event.TRACK_INDEX_CHANGED, null,
 					new Bookshelf(this));
 		} else {
-			pcs.firePropertyChange(Constants.event.BOOK_FINISHED, null, new Bookshelf(this));
+			pcs.firePropertyChange(Constants.Event.BOOK_FINISHED, null, new Bookshelf(this));
 			Log.d(TAG, "No update sent since index " + selectedBookIndex
 					+ " is an illegal index. (books.size(): " + books.size()
 					+ ")");
@@ -214,13 +214,13 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	public void setBookTitle(String newTitle) {
 		this.books.get(selectedBookIndex).setBookTitle(newTitle);
-		pcs.firePropertyChange(Constants.event.BOOK_TITLE_CHANGED, null,
+		pcs.firePropertyChange(Constants.Event.BOOK_TITLE_CHANGED, null,
 				new Bookshelf(this));
 	}
 
 	public void updateBookDuration() {
 		this.books.get(selectedBookIndex).updateBookDuration();
-		pcs.firePropertyChange(Constants.event.BOOK_DURATION_CHANGED, null,
+		pcs.firePropertyChange(Constants.Event.BOOK_DURATION_CHANGED, null,
 				new Bookshelf(this));
 	}
 
@@ -232,7 +232,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		// set elapsed time in the currently playing book
 		books.get(selectedBookIndex).setSelectedTrackElapsedTime(elapsedTime);
 
-		pcs.firePropertyChange(Constants.event.ELAPSED_TIME_CHANGED, null,
+		pcs.firePropertyChange(Constants.Event.ELAPSED_TIME_CHANGED, null,
 				new Bookshelf(this));
 	}
 
@@ -353,7 +353,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		pcs = new PropertyChangeSupport(this);
 		pcs.addPropertyChangeListener(listener);
-		pcs.firePropertyChange(Constants.event.BOOKSHELF_UPDATED, null,
+		pcs.firePropertyChange(Constants.Event.BOOKSHELF_UPDATED, null,
 				new Bookshelf(this));
 	}
 

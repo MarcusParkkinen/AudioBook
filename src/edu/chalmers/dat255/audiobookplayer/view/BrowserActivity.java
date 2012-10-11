@@ -164,7 +164,7 @@ public class BrowserActivity extends Activity {
 			listView.setAdapter(adapter);
 		} else {
 			Toast t = Toast.makeText(getApplicationContext(), 
-					Constants.messages.NO_AUDIO_FILES_FOUND,
+					Constants.Messages.NO_AUDIO_FILES_FOUND,
 					Toast.LENGTH_SHORT);
 			t.show();
 		}

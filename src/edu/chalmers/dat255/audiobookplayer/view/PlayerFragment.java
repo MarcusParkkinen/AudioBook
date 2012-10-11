@@ -27,7 +27,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
  */
 public class PlayerFragment extends Fragment {
 	private static final String TAG = "PlayerFragment.class";
-	private static final int NUMBER_OF_SEEK_BAR_ZONES = Constants.values.NUMBER_OF_SEEK_BAR_ZONES;
+	private static final int NUMBER_OF_SEEK_BAR_ZONES = Constants.Values.NUMBER_OF_SEEK_BAR_ZONES;
 	private SeekBar bookBar;
 	private SeekBar trackBar;
 	private TextView bookTitle;

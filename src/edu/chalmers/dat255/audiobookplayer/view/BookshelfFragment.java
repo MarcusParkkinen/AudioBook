@@ -155,9 +155,9 @@ public class BookshelfFragment extends Fragment {
 		registerForContextMenu(bookshelfList);
 		bookshelfList.setAdapter(adapter);
 		// Access the bookshelf reference
-		if (getArguments().getSerializable(Constants.reference.BOOKSHELF) instanceof Bookshelf) {
+		if (getArguments().getSerializable(Constants.Reference.BOOKSHELF) instanceof Bookshelf) {
 			Bookshelf b = (Bookshelf) getArguments().getSerializable(
-					Constants.reference.BOOKSHELF);
+					Constants.Reference.BOOKSHELF);
 			for (int i = 0; i < b.getNumberOfBooks(); i++) {
 				bookAdded(b.getBookAt(i));
 			}

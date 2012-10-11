@@ -1,13 +1,20 @@
 package edu.chalmers.dat255.audiobookplayer.constants;
 
 /**
- * Holds unique event property names for events.
+ * Holds unique property names ensuring that for example event property names
+ * match if intended to do so and that property name changing is simple.
  * 
  * @author Aki Käkelä
  * @version 0.6
  */
 public final class Constants {
-	public static final class event {
+	/**
+	 * Contains update event property names.
+	 * 
+	 * @author Aki Käkelä, Marcus Parkkinen
+	 * 
+	 */
+	public static final class Event {
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
 
 		public static final String BOOK_ADDED = "!bookAdded";
@@ -29,24 +36,42 @@ public final class Constants {
 		// due to modifying the track order in the book. It should only trigger
 		// when the user (through the GUI "next/previous" track) or the audio
 		// player (when the track ends) changes the track index.
-		// TODO: change name? "_BY_USER_OR_PLAYER" suffix.
+		// TODO(anyone): change this variable name "_BY_USER_OR_PLAYER" suffix.
 
 		public static final String BOOK_FINISHED = "!bookFinished";
 	}
 
-	public static final class reference {
+	/**
+	 * 
+	 * 
+	 * @author Aki Käkelä, Marcus Parkkinen
+	 * 
+	 */
+	public static final class Reference {
 		public static final String BOOKSHELF = "@bookshelf";
 	}
 
-	public static final class values {
+	/**
+	 * Contains hard-coded values.
+	 * 
+	 * @author Aki Käkelä, Marcus Parkkinen
+	 * 
+	 */
+	public static final class Values {
 		// The frequency for GUI updates. Lower value means updates more often.
 		public static final int UPDATE_FREQUENCY = 100; // default 1000
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
 	}
 
-	public static final class messages {
+	/**
+	 * Contains string messages.
+	 * 
+	 * @author Aki Käkelä, Marcus Parkkinen
+	 * 
+	 */
+	public static final class Messages {
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
 	}
-	
+
 }
