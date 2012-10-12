@@ -87,7 +87,7 @@ public class BookCreator {
 		for (String path : paths) {
 			try {
 				trackList.add(TrackCreator.createTrack(path));
-			} catch(NumberFormatException e) { 
+			} catch(Exception e) { 
 				// If a track contains malformed data, do not add it to the book
 				continue;
 			}

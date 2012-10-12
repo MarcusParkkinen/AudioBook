@@ -7,7 +7,7 @@ import junit.framework.TestCase;
  * JUnit test for TrackCreator class.
  * 
  * NOTE: in order for the test to pass, a valid path
- * to a audio track on the device must be specified 
+ * to an audio track on the device must be specified 
  * in VALID_PATH.
  */
 
@@ -35,5 +35,6 @@ public class TrackCreatorTest extends TestCase  {
 		
 		// If we however specify a valid path, track creation should work
 		Track t = TrackCreator.createTrack(VALID_PATH);
+		assertNotNull(t);
 	}
 }
