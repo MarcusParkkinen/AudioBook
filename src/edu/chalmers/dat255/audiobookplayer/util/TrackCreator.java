@@ -26,7 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  */
 public class TrackCreator {
 
-	public static Track createTrack(String path) throws NumberFormatException {
+	public static Track createTrack(String path) throws NumberFormatException, IllegalArgumentException {
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(path);
 		String durationText = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
