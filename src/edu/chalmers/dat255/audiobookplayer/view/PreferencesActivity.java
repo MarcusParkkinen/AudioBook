@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.view;
 
@@ -19,15 +19,13 @@ import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Button;
 import edu.chalmers.dat255.audiobookplayer.R;
 
 /**
  * Preferences for the application.
  * 
- * @author Aki K�kel�
+ * @author Aki K�kel�
  * @version 0.1
  * 
  */
@@ -65,14 +63,14 @@ public class PreferencesActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 
-            // Make sure default values are applied.  In a real app, you would
-            // want this in a shared function that is used to retrieve the
-            // SharedPreferences wherever they are needed.
-//            PreferenceManager.setDefaultValues(getActivity(),
-//                    R.xml.advanced_preferences, false);
+			// Make sure default values are applied. In a real app, you would
+			// want this in a shared function that is used to retrieve the
+			// SharedPreferences wherever they are needed.
+			// PreferenceManager.setDefaultValues(getActivity(),
+			// R.xml.advanced_preferences, false);
 
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.preferences_fragment);
+			// Load the preferences from an XML resource
+			addPreferencesFromResource(R.xml.preferences_fragment);
 		}
 	}
 }

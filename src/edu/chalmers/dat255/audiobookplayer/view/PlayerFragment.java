@@ -35,7 +35,7 @@ import edu.chalmers.dat255.audiobookplayer.util.TimeFormatter;
 /**
  * A graphical UI representing the audio player.
  * 
- * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
+ * @author Aki Käkelä
  * @version 0.6
  * 
  */
@@ -103,7 +103,8 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 
-		final ImageButton playPause = (ImageButton) view.findViewById(R.id.playPause);
+		final ImageButton playPause = (ImageButton) view
+				.findViewById(R.id.playPause);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (paused) {

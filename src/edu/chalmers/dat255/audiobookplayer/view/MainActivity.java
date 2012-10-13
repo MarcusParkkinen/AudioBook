@@ -37,7 +37,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 /**
  * The main activity of the application. TODO: insert license
  * 
- * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
+ * @author Aki Käkelä, Marcus Parkkinen
  * @version 0.6
  * 
  */
@@ -497,5 +497,5 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// TODO Auto-generated method stub
 
 	}
-	
+
 }
