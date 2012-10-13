@@ -57,11 +57,15 @@ public interface IPlayerEvents {
 
 	/**
 	 * Seeks to the left (rewinds).
+	 * <p>
+	 * Sets the track progress to (current progress - 0.1 * total track duration).
 	 */
 	public void seekLeft();
 
 	/**
 	 * Seeks to the right (fast-forwards).
+	 * <p>
+	 * Sets the track progress to (current progress + 0.1 * total track duration).
 	 */
 	public void seekRight();
 

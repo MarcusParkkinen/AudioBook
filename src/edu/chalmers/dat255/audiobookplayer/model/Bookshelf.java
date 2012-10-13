@@ -283,7 +283,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/**
 	 * @return
 	 */
-	public String getSelectedTrackPath() {
+	public String getSelectedTrackPath() throws IllegalArgumentException {
 		return books.get(selectedBookIndex).getSelectedTrackPath();
 	}
 

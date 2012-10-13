@@ -499,7 +499,7 @@ public class BookshelfFragment extends Fragment {
 			ImageView imageView = (ImageView) convertView
 					.findViewById(R.id.bookshelfBookCover);
 			// TODO acquire correct cover art
-			imageView.setImageResource(R.drawable.no_cover);
+			imageView.setImageResource(R.drawable.img_no_cover);
 			// click the cover art to 'open or close the book' and show tracks
 			// (expands/collapses book)
 			imageView.setOnClickListener(new OnClickListener() {
