@@ -22,7 +22,7 @@ Delete the .apk file.
 
 See the [docs folder](https://github.com/MarcusParkkinen/AudioBook/doc) in the project for the latest documentation.
 
-## Incompatibility
+## Requirements and Compatibility
 
 This application is compatible with Android devices on API level 10 and above.
 Requires Android 2.3.3
@@ -31,7 +31,7 @@ Requires Android 2.3.3
 
 See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on the project site for the latest list of known issues or bugs.
 
-## Known limitations of application
+## Limitations of the Application
 
 * UI design is still a work in progress.
 * Metadata of tracks is not displayed correctly.

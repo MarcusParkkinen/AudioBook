@@ -1,0 +1,36 @@
+TODO
+#####################
+--
+
+
+Drive
+#####################
+Acceptance tests
+
+Definition of done
+
+10 requirements
+
+WIP
+#####################
+User guide
+
+Release notes/notice
+
+Test report + Test results
+
+Project description
+
+
+DONE
+#####################
+Product backlog
+
+Scrum planning
+
+Sprint 1-4 logs
+
+Architecture specification (+ UML Appendix)
+
+Developer manual
+
