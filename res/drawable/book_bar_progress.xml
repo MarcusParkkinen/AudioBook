@@ -28,6 +28,6 @@
     </item>
     <item
         android:id="@android:id/progress"
-        android:drawable="@drawable/book_bar_progress_background"/>
+        android:drawable="@drawable/sb_book_bar_progress"/>
 
 </layer-list>

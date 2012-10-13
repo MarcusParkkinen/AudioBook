@@ -52,7 +52,9 @@ public class PlayerFragment extends Fragment {
 	private TextView trackElapsedTime;
 	private IPlayerEvents fragmentOwner;
 
-	private boolean paused = false;
+	private ImageButton playPause;
+
+	private boolean isPlaying = true;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -103,17 +105,23 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 
-		final ImageButton playPause = (ImageButton) view.findViewById(R.id.playPause);
+		// this is a toggle button
+		playPause = (ImageButton) view.findViewById(R.id.playPause);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				if (paused) {
-					fragmentOwner.play();
+				/*
+				 * if it is player when the user presses pause, then pause and
+				 * show the play button (toggle pause/play and the isPlaying
+				 * value).
+				 */
+				if (isPlaying) {
+					fragmentOwner.pause();
 					playPause.setImageResource(R.drawable.pb_play_default);
 				} else {
-					fragmentOwner.pause();
+					fragmentOwner.play();
 					playPause.setImageResource(R.drawable.pb_pause_default);
 				}
-				paused = !paused;
+				isPlaying = !isPlaying;
 			}
 		});
 
@@ -201,10 +209,10 @@ public class PlayerFragment extends Fragment {
 		// trackDuration.setText("TD");
 		//
 		// bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
-		// bookElapsedTime.setText("BET");
+		// bookElapsedTime.setText(Constants.Value.NO_BOOK_TIME_TO_DISPLAY);
 
 		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
-		trackElapsedTime.setText("TET");
+		trackElapsedTime.setText(Constants.Value.NO_TRACK_TIME_TO_DISPLAY);
 
 		return view;
 	}
@@ -324,6 +332,15 @@ public class PlayerFragment extends Fragment {
 	 */
 	private boolean isBadTitle(String title) {
 		return title == null || title.equals("");
+	}
+
+	/**
+	 * Sets the play/pause button to show as pause, since audio is playing. Used
+	 * when books are selected. Otherwise this class will handle toggling the
+	 * state by itself.
+	 */
+	public void setToPlaying() {
+		// playPause.setImageResource(R.drawable.pb_pause_default);
 	}
 
 }

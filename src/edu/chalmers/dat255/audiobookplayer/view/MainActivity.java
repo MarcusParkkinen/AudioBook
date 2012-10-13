@@ -242,6 +242,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				updateBookDurationLabel(b);
 				// show the duration of the track
 				updateTrackDurationLabel(b);
+				/*
+				 * make sure that the UI knows we are playing now (we will want
+				 * to show the pause button since we are playing).
+				 */
+				setToPlaying();
 			} else if (eventName.equals(Constants.Event.BOOK_REMOVED)) {
 				// Bookshelf
 				// Do nothing for now
@@ -322,6 +327,20 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			}
 		}
 
+	}
+
+	/**
+	 * Ensures that the Player UI changes the play/pause button correctly when a
+	 * book is selected.
+	 * 
+	 * @param b
+	 */
+	private void setToPlaying() {
+		player.getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				player.setToPlaying();
+			}
+		});
 	}
 
 	/*
@@ -497,5 +516,5 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// TODO Auto-generated method stub
 
 	}
-	
+
 }
