@@ -12,6 +12,8 @@
     <string name="seekRight">&gt;&gt;</string>
     <string name="nextTrack">|&gt;</string>
     
+    <string name="playPauseText">Play</string>
+    
     <string name="title_activity_audiobook">Claudio</string>
     
     <string name="title_activity_browser">BrowserActivity</string>
@@ -19,5 +21,8 @@
     <string name="title_activity_preferences">PreferencesActivity</string>
     
     <string name="dialog_title_edittext_preference">dialog_title</string>
+    
+	<string name="cover_image_text_replacement">&lt; Cover art &gt;</string>
+	<string name="jump_image_text_replacement">&lt; Jump to time &gt;</string>
 
 </resources>

@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.interfaces;
 
@@ -22,12 +22,20 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
  * 
  */
 public interface IPlayerEvents {
+
 	/**
-	 * Toggles play/pause depending on the current status.
+	 * Resumes playback if the player is already in a started state.
 	 * <p>
-	 * Pauses the audio if the player is playing. Resumes or starts otherwise.
+	 * Does nothing if the player was already paused.
 	 */
-	public void playPause();
+	public void play();
+
+	/**
+	 * Pauses playback if the player is already in a started state.
+	 * <p>
+	 * Does nothing if the player was already paused.
+	 */
+	public void pause();
 
 	/**
 	 * Sets the selected track to the previous track.
@@ -72,4 +80,5 @@ public interface IPlayerEvents {
 	 *            0 <= x <= 1
 	 */
 	public void seekToPercentageInBook(double percentage);
+
 }

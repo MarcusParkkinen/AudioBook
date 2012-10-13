@@ -1,142 +1,305 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <Button
-        android:id="@+id/playPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/playPause" />
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#232421" >
 
-    <Button
-        android:id="@+id/nextTrack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/nextTrack" />
+    <!-- 
+    			Book seek bar (Seek bar 1) 
+	
+	Seek bar for browsing through the book    -->
 
-    <Button
-        android:id="@+id/seekRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/playPause"
-        android:text="@string/seekRight" />
-
-    <Button
-        android:id="@+id/seekLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/playPause"
-        android:text="@string/seekLeft" />
-
-    <Button
-        android:id="@+id/prevTrack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/seekLeft"
-        android:text="@string/prevTrack" />
-
-    <SeekBar
-        android:id="@+id/trackBar"
+    <LinearLayout
+        android:id="@+id/seek_bar_1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/playPause"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="30dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#232421" >
 
-    <SeekBar
-        android:id="@+id/bookBar"
+        <SeekBar
+            android:id="@+id/bookBar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:maxHeight="26dp"
+            android:minHeight="26dp"
+            android:progressDrawable="@drawable/book_bar_progress"
+            android:thumb="@drawable/ic_book_seek_bar_thumb" />
+    </LinearLayout>
+    <!-- Cover Art Layer -->
+
+    <LinearLayout
+        android:id="@+id/tumb"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_height="200dp"
+        android:layout_below="@id/seek_bar_1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#131212" >
 
-    <TextView
-        android:id="@+id/trackTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/trackElapsedTime"
-        android:layout_alignParentLeft="true"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+        <ImageView
+            android:id="@+id/cover_art"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/cover_image_text_replacement"
+            android:gravity="center"
+            android:src="@drawable/img_the_sun" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/bookTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/bookElapsedTime"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+    <!-- 
+    			Play Details UI Layer
+				
+	Track,author/book details are displayed in this section.
+	Its position is under books coverart.
+	Every element in this section is broken in indvidual
+	sublayers so that future redesign would be easier 
+    -->
 
-    <TextView
-        android:id="@+id/bookDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/bookBar"
-        android:layout_toRightOf="@+id/playPause"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+    <RelativeLayout
+        android:id="@+id/player_stat"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/tumb"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2dp"
+        android:background="#131212" >
 
-    <TextView
-        android:id="@+id/trackDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/trackBar"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/playPause"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+        <!-- Sublayer for displaying the book title -->
 
-    <TextView
-        android:id="@+id/trackElapsedTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/trackBar"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/playPause"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+        <LinearLayout
+            android:id="@+id/book_info"
+            android:layout_width="240dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="5dp"
+            android:background="#131212" >
 
-    <TextView
-        android:id="@+id/bookElapsedTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/bookBar"
-        android:layout_toLeftOf="@+id/playPause"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
+            <TextView
+                android:id="@+id/bookTitle"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="11dp"
+                android:typeface="normal" />
+        </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/trackTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/trackTitle"
-        android:layout_below="@+id/bookTitle"
-        android:contentDescription="@string/coverText"
-        android:src="@drawable/ic_launcher" />
+        <!-- Sublayer for displaying the track title -->
+
+        <LinearLayout
+            android:id="@+id/track_title"
+            android:layout_width="240dp"
+            android:layout_height="22dp"
+            android:layout_below="@id/book_info"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#131212" >
+
+            <TextView
+                android:id="@+id/trackTitle"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp"
+                android:typeface="normal" />
+        </LinearLayout>
+
+        <!-- Sublayer for displaying elapsed time of current track -->
+
+        <LinearLayout
+            android:id="@+id/et_text"
+            android:layout_width="47dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="55dp" >
+
+            <TextView
+                android:id="@+id/trackElapsedTime"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="6dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14dp"
+                android:typeface="normal" />
+        </LinearLayout>
+
+        <!--
+				Track seek bar (Seek bar 2)
+				
+		Seekbar that shows progress of the current track playing
+        -->
+
+        <LinearLayout
+            android:id="@+id/seek_bar_2"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="45dp" >
+
+            <SeekBar
+                android:id="@+id/trackBar"
+                android:layout_width="fill_parent"
+                android:layout_height="16dp"
+                android:layout_marginTop="18dp"
+                android:maxHeight="14dp"
+                android:minHeight="14dp"
+                android:progressDrawable="@drawable/track_bar_progress"
+                android:thumb="@drawable/ic_track_seek_bar_thumb" />
+        </LinearLayout>
+
+        <!--
+        		Sublayer for TimeJump icon
+							
+		
+		TimeJump is an function that allows user to choose
+		a specific time point in the book, to go to.
+        -->
+
+        <LinearLayout
+            android:id="@+id/time_jump"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/trackElapsedTime"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:background="#131212" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:contentDescription="@string/jump_image_text_replacement"
+                android:src="@drawable/img_clock_icon" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--
+  				Player Playback Controls UI Layer
+  				
+  	Last layer of UI components that is on the bottom.
+  	Here, as well as on previous layer, every button
+  	has it's own sublayer that allows easy managing 
+  	of all objects in this layer
+    -->
+
+    <RelativeLayout
+        android:id="@+id/player_controls"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/player_stat"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="4dp"
+        android:background="#131212" >
+
+        <!-- Sublayer for Play and Pause buttons -->
+
+        <LinearLayout
+            android:id="@+id/play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player_controls"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="4dp"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/playPause"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/play_pause_button_states" />
+        </LinearLayout>
+
+        <!-- Sublayer for seek back button -->
+
+        <LinearLayout
+            android:id="@+id/seek_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player_controls"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/play_pause" >
+
+            <Button
+                android:id="@+id/seekLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/seek_left_button_states" />
+        </LinearLayout>
+
+        <!-- Sublayer for seek forward button -->
+
+        <LinearLayout
+            android:id="@+id/seek_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player_controls"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/play_pause" >
+
+            <Button
+                android:id="@+id/seekRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/seek_right_button_states"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Sublayer for Previous track button -->
+
+        <LinearLayout
+            android:id="@+id/prev_track"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player_controls"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/seek_left" >
+
+            <Button
+                android:id="@+id/prevTrack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/previous_track_button_states" />
+        </LinearLayout>
+
+        <!-- Sublayer for Next track buttons -->
+
+        <LinearLayout
+            android:id="@+id/next_track"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player_controls"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/seek_right" >
+
+            <Button
+                android:id="@+id/nextTrack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/next_track_button_states" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

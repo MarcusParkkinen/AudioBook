@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.view;
 
@@ -69,9 +69,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		initPager();
 
 		/*
-		 * TODO(anyone): Note: varje gang vi tabbar upp programmet efter multitasking sa
-		 * kommer allt i denna metod att koeras. Skapar konstiga problem, boer
-		 * fixas. Detta gaeller aeven alla andra viewkomponenter ocksa.
+		 * TODO(anyone): Note: varje gang vi tabbar upp programmet efter
+		 * multitasking sa kommer allt i denna metod att koeras. Skapar konstiga
+		 * problem, boer fixas. Detta gaeller aeven alla andra viewkomponenter
+		 * ocksa.
 		 */
 
 		// Set up the controller for the bookshelf
@@ -81,7 +82,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Bookshelf bs = bsc.loadBookshelf(this, USERNAME);
 
 		// Create controllers with the bookshelf reference
+		// TODO(anyone): see issues #15; overlapping players
 		pc = new PlayerController(bs);
+		// --
 		bc = BookCreator.getInstance();
 
 		bc.setBookshelf(bs);
@@ -133,8 +136,12 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		pc.previousTrack();
 	}
 
-	public void playPause() {
-		pc.playPause();
+	public void play() {
+		pc.play();
+	}
+
+	public void pause() {
+		pc.pause();
 	}
 
 	public void nextTrack() {
@@ -293,8 +300,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// update track title label
 				updateTrackTitleLabel(b);
-//				// update track book duration label
-//				updateTrackDurationLabel(b);
+				// // update track book duration label
+				// updateTrackDurationLabel(b);
 				// set times to zero
 				// TODO
 			} else if (eventName.equals(Constants.Event.BOOK_TITLE_CHANGED)) {
@@ -346,6 +353,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		player.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				if (b.getSelectedTrackIndex() != -1) {
+					Log.d(TAG, "Setting track title to: " + b.getTrackTitle());
 					player.updateTrackTitleLabel(b.getTrackTitle());
 				}
 			}
@@ -489,4 +497,5 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// TODO Auto-generated method stub
 
 	}
+	
 }

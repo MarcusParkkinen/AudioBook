@@ -70,11 +70,14 @@ public final class Constants {
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
 	 */
-	public static final class Values {
+	public static final class Value {
 		// The frequency for GUI updates. Lower value means updates more often.
 		public static final int UPDATE_FREQUENCY = 100; // default 1000
+		
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
+		
+		
 	}
 
 	/**
@@ -83,7 +86,7 @@ public final class Constants {
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
 	 */
-	public static final class Messages {
+	public static final class Message {
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
 	}
 

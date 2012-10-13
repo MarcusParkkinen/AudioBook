@@ -1,0 +1,33 @@
+<!--
+				XML File that defines the pattern of background that represents progress
+				on a seekbar1 in our UI
+				
+				
+				The secondary progress displays for example buffer.
+-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@android:id/background">
+        <nine-patch
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:dither="true"
+            android:src="@drawable/seekbar_bg" />
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <gradient
+                    android:angle="270"
+                    android:centerColor="#ff8800"
+                    android:centerY="0.75"
+                    android:endColor="#ff8800"
+                    android:startColor="#ff8800" />
+            </shape>
+        </clip>
+    </item>
+    <item
+        android:id="@android:id/progress"
+        android:drawable="@drawable/track_bar_progress_background"/>
+
+</layer-list>

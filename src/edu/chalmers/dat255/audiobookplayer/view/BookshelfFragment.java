@@ -60,7 +60,7 @@ public class BookshelfFragment extends Fragment {
 	private static final String TAG = "BookshelfFragment.class";
 	private List<Entry<Book, List<String>>> listData;
 	private ExpandableBookshelfAdapter adapter;
-	private IBookshelfEvents parentFragment;
+	private IBookshelfEvents fragmentOwner;
 
 	private interface IContextMenuItem {
 		public String getText();
@@ -99,7 +99,7 @@ public class BookshelfFragment extends Fragment {
 		super.onAttach(activity);
 
 		try {
-			parentFragment = (IBookshelfEvents) activity;
+			fragmentOwner = (IBookshelfEvents) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " does not implement " + IBookshelfEvents.class.getName());
@@ -139,7 +139,7 @@ public class BookshelfFragment extends Fragment {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
-					parentFragment.addButtonPressed();
+					fragmentOwner.addButtonPressed();
 				}
 			}
 		});
@@ -149,7 +149,7 @@ public class BookshelfFragment extends Fragment {
 		prefButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (getActivity() != null) {
-					parentFragment.preferencesButtonPressed();
+					fragmentOwner.preferencesButtonPressed();
 				}
 			}
 		});
@@ -275,7 +275,7 @@ public class BookshelfFragment extends Fragment {
 
 	private void deleteBook(int groupPosition) {
 		if (getActivity() != null) {
-			parentFragment.deleteBook(groupPosition);
+			fragmentOwner.deleteBook(groupPosition);
 			Toast.makeText(getActivity(), "DELETE " + groupPosition,
 					Toast.LENGTH_SHORT).show();
 		}
@@ -284,7 +284,7 @@ public class BookshelfFragment extends Fragment {
 	private void editBook(int groupPosition) {
 		if (getActivity() != null) {
 			// TODO add some way to change name of book
-			parentFragment.editBook(groupPosition, "NEWBOOKNAME");
+			fragmentOwner.editBook(groupPosition, "NEWBOOKNAME");
 			Toast.makeText(getActivity(), "DELETE " + groupPosition,
 					Toast.LENGTH_SHORT).show();
 		}
@@ -292,13 +292,13 @@ public class BookshelfFragment extends Fragment {
 
 	protected void childClicked(int groupPosition, int childPosition) {
 		if (getActivity() != null) {
-			parentFragment.childSelected(groupPosition, childPosition);
+			fragmentOwner.childSelected(groupPosition, childPosition);
 		}
 	}
 
 	protected void groupClicked(int groupPosition) {
 		if (getActivity() != null) {
-			parentFragment.bookSelected(groupPosition);
+			fragmentOwner.bookSelected(groupPosition);
 		}
 	}
 

@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.view;
 
@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
+import edu.chalmers.dat255.audiobookplayer.util.TimeFormatter;
 
 /**
  * A graphical UI representing the audio player.
@@ -40,29 +42,25 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
  */
 public class PlayerFragment extends Fragment {
 	private static final String TAG = "PlayerFragment.class";
-	private static final int NUMBER_OF_SEEK_BAR_ZONES = Constants.Values.NUMBER_OF_SEEK_BAR_ZONES;
+	private static final int NUMBER_OF_SEEK_BAR_ZONES = Constants.Value.NUMBER_OF_SEEK_BAR_ZONES;
 	private SeekBar bookBar;
 	private SeekBar trackBar;
 	private TextView bookTitle;
 	private TextView trackTitle;
-	private TextView bookDuration;
-	private TextView trackDuration;
-	private TextView bookElapsedTime;
+	// private TextView bookDuration;
+	// private TextView trackDuration;
+	// private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
-	private IPlayerEvents parentFragment;
+	private IPlayerEvents fragmentOwner;
 
-	// private TimePicker timePicker;
-
-	// private Picker timePicker;
-
-	// TODO: make some methods protected
+	private boolean paused = true;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-			parentFragment = (IPlayerEvents) activity;
+			fragmentOwner = (IPlayerEvents) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " does not implement " + IPlayerEvents.class.getName());
@@ -109,21 +107,26 @@ public class PlayerFragment extends Fragment {
 		Button playPause = (Button) view.findViewById(R.id.playPause);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				parentFragment.playPause();
+				if (paused) {
+					fragmentOwner.play();
+				} else {
+					fragmentOwner.pause();
+				}
+				paused = !paused;
 			}
 		});
 
 		Button nextTrack = (Button) view.findViewById(R.id.nextTrack);
 		nextTrack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				parentFragment.nextTrack();
+				fragmentOwner.nextTrack();
 			}
 		});
 
 		Button prevTrack = (Button) view.findViewById(R.id.prevTrack);
 		prevTrack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				parentFragment.previousTrack();
+				fragmentOwner.previousTrack();
 			}
 		});
 
@@ -140,7 +143,7 @@ public class PlayerFragment extends Fragment {
 					double seekMultiplier = (double) progress
 							* (1.0 / seekBar.getMax());
 
-					parentFragment.seekToPercentageInBook(seekMultiplier);
+					fragmentOwner.seekToPercentageInBook(seekMultiplier);
 				} else {
 					// Log.d(TAG, "Code used bookBar");
 				}
@@ -169,7 +172,7 @@ public class PlayerFragment extends Fragment {
 					double seekPercentage = (double) progress
 							* (1.0 / (double) seekBar.getMax());
 
-					parentFragment.seekToPercentageInTrack(seekPercentage);
+					fragmentOwner.seekToPercentageInTrack(seekPercentage);
 				} else {
 					// Log.d(TAG, "Code used trackBar");
 				}
@@ -190,14 +193,14 @@ public class PlayerFragment extends Fragment {
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
 		bookTitle.setText("book title");
 
-		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
-		bookDuration.setText("BD");
-
-		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
-		trackDuration.setText("TD");
-
-		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
-		bookElapsedTime.setText("BET");
+		// bookDuration = (TextView) view.findViewById(R.id.bookDuration);
+		// bookDuration.setText("BD");
+		//
+		// trackDuration = (TextView) view.findViewById(R.id.trackDuration);
+		// trackDuration.setText("TD");
+		//
+		// bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
+		// bookElapsedTime.setText("BET");
 
 		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
 		trackElapsedTime.setText("TET");
@@ -227,7 +230,8 @@ public class PlayerFragment extends Fragment {
 	 */
 	public void updateTrackSeekBar(double percentage) {
 		int progress = (int) (trackBar.getMax() * percentage);
-//		Log.d(TAG, "Seeking track bar to " + progress + "%" + " (" + percentage + "%)");
+		// Log.d(TAG, "Seeking track bar to " + progress + "%" + " (" +
+		// percentage + "%)");
 		// calls 'onProgressChanged' from code:
 		trackBar.setProgress(progress);
 	}
@@ -241,7 +245,11 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateBookTitleLabel(String title) {
-		bookTitle.setText(title);
+		if (isBadTitle(title)) {
+			bookTitle.setText("N/A");
+		} else {
+			bookTitle.setText(title);
+		}
 	}
 
 	/**
@@ -250,7 +258,11 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateTrackTitleLabel(String title) {
-		trackTitle.setText(title);
+		if (isBadTitle(title)) {
+			trackTitle.setText("N/A");
+		} else {
+			trackTitle.setText(title);
+		}
 	}
 
 	/*
@@ -263,7 +275,7 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateBookElapsedTimeLabel(int ms) {
-		bookElapsedTime.setText(formatTime(ms));
+		// bookElapsedTime.setText(TimeFormatter.formatTimeFromMillis(ms));
 	}
 
 	/**
@@ -273,7 +285,7 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateTrackElapsedTimeLabel(int ms) {
-		trackElapsedTime.setText(formatTime(ms));
+		trackElapsedTime.setText(TimeFormatter.formatTimeFromMillis(ms));
 	}
 
 	/*
@@ -281,42 +293,36 @@ public class PlayerFragment extends Fragment {
 	 */
 	/**
 	 * Sets the duration label of the book to the given time in milliseconds.
-	 * Formats the time (see {@link #formatTime(int)})
+	 * <p>
+	 * Formates the time. (see {@link TimeFormatter#formatTimeFromMillis(int)
+	 * formatTimeFromMillis})
 	 * 
 	 * @param ms
 	 */
 	public void updateBookDurationLabel(int ms) {
-		bookDuration.setText(formatTime(ms));
+		// bookDuration.setText(formatTime(ms));
 	}
 
 	/**
 	 * Sets the duration label of the track to the given time in milliseconds.
-	 * Formats the time (see {@link #formatTime(int)})
+	 * <p>
+	 * Formates the time. (see {@link TimeFormatter#formatTimeFromMillis(int)
+	 * formatTimeFromMillis})
 	 * 
 	 * @param ms
 	 */
 	public void updateTrackDurationLabel(int ms) {
-		trackDuration.setText(formatTime(ms));
+		// trackDuration.setText(formatTime(ms));
 	}
 
 	/**
-	 * Formats a given time in milliseconds to MM:SS.
-	 * <p>
+	 * Checks if a string is null or empty ("").
 	 * 
-	 * If the number of hours is greater than zero or nine the time will be
-	 * formatted to H:MM:SS or HH:MM:SS, respectively. If it surpasses 23, it
-	 * will start from zero again (modulus 24).
-	 * 
-	 * @param ms
+	 * @param title
 	 * @return
 	 */
-	private String formatTime(int ms) {
-		int seconds = (ms / 1000) % 60;
-		int minutes = (ms / (1000 * 60)) % 60;
-		int hours = (ms / (1000 * 60 * 60)) % 24;
-
-		return (hours > 0 ? hours + ":" : "") + (minutes <= 9 ? "0" : "")
-				+ minutes + ":" + (seconds <= 9 ? "0" : "") + seconds;
+	private boolean isBadTitle(String title) {
+		return title == null || title.equals("");
 	}
 
 }

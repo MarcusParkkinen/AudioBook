@@ -1,0 +1,33 @@
+<!--
+				XML File that defines the pattern of background that represents progress
+				on a seekbar1 in our UI
+-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <clip>
+            <shape>
+                <gradient
+                    android:angle="270"
+                    android:centerColor="#ff8800"
+                    android:centerY="0.1"
+                    android:endColor="#ff8800"
+                    android:startColor="#ff8800" />
+            </shape>
+        </clip>
+    </item>
+    <item>
+        <clip>
+            <bitmap
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:antialias="true"
+                android:dither="false"
+                android:filter="false"
+                android:gravity="left"
+                android:src="@drawable/ic_book_bar_progress"
+                android:tileMode="repeat" />
+        </clip>
+    </item>
+
+</layer-list>

@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
@@ -19,6 +19,7 @@ import java.text.DecimalFormat;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+import android.view.View;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
@@ -30,14 +31,14 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * @version 0.6
  */
 public class PlayerController implements IPlayerEvents {
-	
+
 	private static final String TAG = "PlayerController.class";
 	private MediaPlayer mp;
 	private Bookshelf bs;
 	private Thread trackTimeUpdateThread;
 
 	private boolean isStarted = false;
-	private static final int UPDATE_FREQUENCY = Constants.Values.UPDATE_FREQUENCY;
+	private static final int UPDATE_FREQUENCY = Constants.Value.UPDATE_FREQUENCY;
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
@@ -165,6 +166,22 @@ public class PlayerController implements IPlayerEvents {
 			}
 		}
 	}
+	
+	public void pause() {
+		if (isStarted) {
+			if (mp.isPlaying()) {
+				mp.pause();
+			}
+		}
+	}
+	
+	public void play() {
+		if (isStarted) {
+			if (!mp.isPlaying()) {
+				mp.start();
+			}
+		}
+	}
 
 	public void previousTrack() {
 		if (bs.getSelectedTrackIndex() == -1) {
@@ -234,7 +251,7 @@ public class PlayerController implements IPlayerEvents {
 
 		public void run() {
 			while (isStarted && mp.isPlaying()) {
-				Log.d(TAG, "Updating Track Elapsed Time");
+				// Log.d(TAG, "Updating Track Elapsed Time");
 				// Log.d(TAG, "Updating track time @" + (1000 /
 				// UPDATE_FREQUENCY)
 				// + "x/s");
@@ -249,5 +266,9 @@ public class PlayerController implements IPlayerEvents {
 			}
 		}
 
+	}
+
+	public void showTimePickerDialog(View v) {
+		Log.d(TAG, "PC dialog");
 	}
 }
