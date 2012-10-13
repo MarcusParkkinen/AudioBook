@@ -5,7 +5,7 @@
     android:background="#232421" >
 
     <!--
-    			Book seek bar (Seek bar 1) 
+    			Book seek bar
 	
 	Seek bar for browsing through the book
     -->
@@ -24,14 +24,14 @@
             android:layout_height="30dp"
             android:maxHeight="26dp"
             android:minHeight="26dp"
-            android:progressDrawable="@drawable/book_bar_progress"
+            android:progressDrawable="@drawable/book_bar_progress_background"
             android:thumb="@drawable/sb_book_thumb" />
     </LinearLayout>
 
     <!-- Cover Art Layer -->
 
     <LinearLayout
-        android:id="@+id/tumb"
+        android:id="@+id/cover_art_layout"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:layout_below="@id/seek_bar_1"
@@ -56,14 +56,14 @@
 	Track,author/book details are displayed in this section.
 	Its position is under books coverart.
 	Every element in this section is broken in indvidual
-	sublayers so that future redesign would be easier 
+	sublayers so that future redesign would be easier 
     -->
 
     <RelativeLayout
         android:id="@+id/player_stat"
         android:layout_width="fill_parent"
         android:layout_height="80dp"
-        android:layout_below="@id/tumb"
+        android:layout_below="@id/cover_art_layout"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="2dp"
@@ -72,11 +72,12 @@
         <!-- Sublayer for displaying the book title -->
 
         <LinearLayout
-            android:id="@+id/book_info"
+            android:id="@+id/book_title_layout"
             android:layout_width="240dp"
             android:layout_height="15dp"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
             android:background="#131212" >
 
             <TextView
@@ -92,13 +93,13 @@
         <!-- Sublayer for displaying the track title -->
 
         <LinearLayout
-            android:id="@+id/track_title"
+            android:id="@+id/track_title_layout"
             android:layout_width="240dp"
             android:layout_height="22dp"
-            android:layout_below="@id/book_info"
+            android:layout_below="@id/book_title_layout"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:background="#131212" >
 
             <TextView
@@ -114,7 +115,7 @@
         <!-- Sublayer for displaying elapsed time of current track -->
 
         <LinearLayout
-            android:id="@+id/et_text"
+            android:id="@+id/elapsed_time_text"
             android:layout_width="47dp"
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
@@ -131,23 +132,22 @@
         </LinearLayout>
 
         <!--
-				Track seek bar (Seek bar 2)
+				Track seek bar
 				
-		Seekbar that shows progress of the current track playing
+		Seek bar that shows progress of the current track playing
         -->
-
+
         <LinearLayout
             android:id="@+id/seek_bar_2"
             android:layout_width="fill_parent"
             android:layout_height="15dp"
+            android:layout_alignLeft="@id/elapsed_time_text"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="45dp"
-            android:background="@android:color/white" >
-
-            <!-- android:background="#232421" -->
-
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="55dp"
+            android:background="#232421" >
+
             <SeekBar
                 android:id="@+id/trackBar"
                 android:layout_width="match_parent"
@@ -155,18 +155,18 @@
                 android:background="@android:color/darker_gray"
                 android:maxHeight="13dp"
                 android:minHeight="13dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:progressDrawable="@drawable/track_bar_progress"
+                android:paddingLeft="16dip"
+                android:paddingRight="16dip"
+                android:progressDrawable="@drawable/track_bar_progress_background"
                 android:thumb="@drawable/sb_track_thumb" />
+
         </LinearLayout>
 
         <!--
         		Sublayer for TimeJump icon
-							
 		
 		TimeJump is an function that allows user to choose
-		a specific time point in the book, to go to.
+		a specific time point in the book, to go to.
         -->
 
         <LinearLayout
@@ -193,7 +193,7 @@
   	Last layer of UI components that is on the bottom.
   	Here, as well as on previous layer, every button
   	has it's own sublayer that allows easy managing 
-  	of all objects in this layer
+  	of all objects in this layer
     -->
 
     <RelativeLayout
@@ -223,8 +223,7 @@
                 android:id="@+id/playPause"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/play_pause_button_states" 
-                android:contentDescription="@string/playPause"/>
+                android:contentDescription="@string/playPause" />
         </LinearLayout>
 
         <!-- Sublayer for seek back button -->
@@ -244,8 +243,8 @@
                 android:id="@+id/seekLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/seek_left_button_states" 
-                android:contentDescription="@string/seekLeft"/>
+                android:background="@drawable/seek_left_button_states"
+                android:contentDescription="@string/seekLeft" />
         </LinearLayout>
 
         <!-- Sublayer for seek forward button -->
@@ -266,8 +265,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/seek_right_button_states"
-                android:gravity="center" 
-                android:contentDescription="@string/seekRight"/>
+                android:contentDescription="@string/seekRight"
+                android:gravity="center" />
         </LinearLayout>
 
         <!-- Sublayer for Previous track button -->
@@ -287,8 +286,8 @@
                 android:id="@+id/prevTrack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/previous_track_button_states" 
-                android:contentDescription="@string/prevTrack"/>
+                android:background="@drawable/previous_track_button_states"
+                android:contentDescription="@string/prevTrack" />
         </LinearLayout>
 
         <!-- Sublayer for Next track buttons -->
@@ -308,8 +307,8 @@
                 android:id="@+id/nextTrack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/next_track_button_states" 
-                android:contentDescription="@string/nextTrack"/>
+                android:background="@drawable/next_track_button_states"
+                android:contentDescription="@string/nextTrack" />
         </LinearLayout>
     </RelativeLayout>
 

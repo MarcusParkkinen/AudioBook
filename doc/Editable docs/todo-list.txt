@@ -1,0 +1,41 @@
+TODO
+#####################
+http://129.16.157.207/dat255/wp-content/uploads/2012/09/Betygv%C3%A4rdering-dat255-ht12-Betygs-information-20121011.pdf
+
+Refl. :
+Team
+Doc
+SE
+
+
+Drive
+#####################
+Acceptance tests
+
+Definition of done
+
+10 requirements
+
+WIP
+#####################
+User guide
+
+Release notes/notice
+
+Test report + Test results
+
+Project description
+
+
+DONE
+#####################
+Product backlog
+
+Scrum planning
+
+Sprint 1-4 logs
+
+Architecture specification (+ UML Appendix)
+
+Developer manual
+

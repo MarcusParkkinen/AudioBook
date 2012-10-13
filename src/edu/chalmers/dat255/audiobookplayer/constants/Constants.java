@@ -1,28 +1,24 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.constants;
 
-/**
- * Holds unique property names ensuring that for example event property names
- * match if intended to do so and that property name changing is simple.
- * 
- * @author Aki K�kel�
- * @version 0.6
- */
 public final class Constants {
 	/**
-	 * Contains update event property names.
+	 * Holds unique property names ensuring that property names match if
+	 * intended to do so and that property name changing is simple.
+	 * <p>
+	 * Also contains hard-coded fields.
 	 * 
 	 * @author Aki K�kel�, Marcus Parkkinen
 	 * 
@@ -73,11 +69,13 @@ public final class Constants {
 	public static final class Value {
 		// The frequency for GUI updates. Lower value means updates more often.
 		public static final int UPDATE_FREQUENCY = 100; // default 1000
-		
+
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
 		
-		
+		public static final String NO_TRACK_TIME_TO_DISPLAY = "N/A";
+		public static final String NO_BOOK_TIME_TO_DISPLAY = "N/A";
+
 	}
 
 	/**

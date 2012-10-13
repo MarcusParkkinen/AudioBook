@@ -80,6 +80,7 @@ public class PlayerController implements IPlayerEvents {
 	 * Stops the audio player. Stops updating the model.
 	 */
 	public void stop() {
+		isStarted = false;
 		stopTimer();
 		mp.stop();
 	}
@@ -92,8 +93,9 @@ public class PlayerController implements IPlayerEvents {
 	 *               is done.
 	 */
 	public void start() {
-		setup();
-		mp.start();
+		if (setup()) {
+			mp.start();
+		}
 	}
 
 	/**
@@ -108,9 +110,10 @@ public class PlayerController implements IPlayerEvents {
 	 *            Time in milliseconds to seek to before starting.
 	 */
 	public void startAt(int ms) {
-		setup();
-		mp.seekTo(ms);
-		mp.start();
+		if (setup()) {
+			mp.seekTo(ms);
+			mp.start();
+		}
 	}
 
 	/**
@@ -142,6 +145,9 @@ public class PlayerController implements IPlayerEvents {
 				 * it is not started yet
 				 */
 				isStarted = false;
+				if (this.trackTimeUpdateThread != null && this.trackTimeUpdateThread.isAlive()) {
+					stopTimer();
+				}
 				// Log.i(TAG, "Resetting MediaPlayer");
 				// prepare the media player after resetting it and providing a
 				// file path
@@ -250,17 +256,27 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekRight() {
-		seekToPercentageInTrack(mp.getCurrentPosition() + getTrackDuration()
-				/ 10);
+		if (isAllowed()) {
+			seekToPercentageInTrack(mp.getCurrentPosition()
+					+ getTrackDuration() / 10);
+		}
 	}
 
 	public void seekLeft() {
-		seekToPercentageInTrack(mp.getCurrentPosition() - getTrackDuration()
-				/ 10);
+		if (isAllowed()) {
+			seekToPercentageInTrack(mp.getCurrentPosition()
+					- getTrackDuration() / 10);
+		}
 	}
 
 	public void seekToPercentageInTrack(double percentage) {
-		seekTo((int) (mp.getDuration() * percentage));
+		if (isAllowed()) {
+			seekTo((int) (mp.getDuration() * percentage));
+		}
+	}
+
+	private boolean isAllowed() {
+		return bs.getSelectedTrackIndex() != -1;
 	}
 
 	public void seekToPercentageInBook(double percentage) {
@@ -315,6 +331,16 @@ public class PlayerController implements IPlayerEvents {
 
 	}
 
+	/**
+	 * Checks if the player is currently playing audio (not paused, stopped or
+	 * uninitialized).
+	 * 
+	 * @return
+	 */
+	public boolean isStarted() {
+		return isStarted;
+	}
+
 	/*
 	 * *** FOR TESTING PURPOSES ONLY ***
 	 */
@@ -330,9 +356,6 @@ public class PlayerController implements IPlayerEvents {
 		return trackTimeUpdateThread;
 	}
 
-	public boolean isStarted() {
-		return isStarted;
-	}
 	/*
 	 * *** ---
 	 */
