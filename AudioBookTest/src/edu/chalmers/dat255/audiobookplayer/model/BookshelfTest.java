@@ -31,10 +31,10 @@ public class BookshelfTest extends TestCase {
 		super(name);
 	}
 
-	protected static void setUpBeforeClass() throws Exception {
+	protected static void setUpBeforeClass() {
 	}
 
-	protected static void tearDownAfterClass() throws Exception {
+	protected static void tearDownAfterClass() {
 	}
 
 	protected void setUp() throws Exception {
@@ -222,11 +222,11 @@ public class BookshelfTest extends TestCase {
 	}
 
 	public void testGetCurrentBook() {
-		// fail("Not yet implemented");
+		// not yet implemented
 	}
 
 	public void testGetNumberOfBooks() {
-		// fail("Not yet implemented");
+		// not yet implemented
 	}
 
 	public void testEqualsObject() {

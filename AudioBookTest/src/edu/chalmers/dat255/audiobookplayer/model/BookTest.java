@@ -14,6 +14,7 @@
 package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -22,7 +23,7 @@ import junit.framework.TestCase;
  * @version 0.1
  */
 public class BookTest extends TestCase {
-	private ArrayList<Track> bList;
+	private List<Track> bList;
 	private String bookName = "MyTestBook";
 	private Book b;
 	
@@ -45,10 +46,6 @@ public class BookTest extends TestCase {
 		}
 		
 		b = new Book(bList, bookName);
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 	
 	public void testConstructor() {
@@ -108,7 +105,8 @@ public class BookTest extends TestCase {
 			assertEquals(3-i, b.getNumberOfTracks());
 			
 			// assert that the duration adjusts accordingly
-			assertEquals((duration-=tracks[i].getDuration()), b.getDuration());
+			duration -= tracks[i].getDuration();
+			assertEquals(duration, b.getDuration());
 		}
 		
 		// assert that no track is selected if the book is lacking tracks
@@ -133,7 +131,8 @@ public class BookTest extends TestCase {
 			assertEquals(i+1, b.getNumberOfTracks());
 			
 			// assert that the duration is correct
-			assertEquals((duration+=tracks[i].getDuration()), b.getDuration());
+			duration += tracks[i].getDuration();
+			assertEquals(duration, b.getDuration());
 		}
 
 	}
