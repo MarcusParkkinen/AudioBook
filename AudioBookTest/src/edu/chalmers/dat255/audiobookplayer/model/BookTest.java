@@ -35,8 +35,6 @@ public class BookTest extends TestCase {
 	private Track t3 = new Track("/thePath/theTrack4.mp3", 20);
 	private Track[] tracks = {t0, t1, t2, t3};
 	
-	private Track t5 = null;
-	
 	protected void setUp() throws Exception {
 		super.setUp();
 		
@@ -56,7 +54,7 @@ public class BookTest extends TestCase {
 		assertEquals(4, b.getNumberOfTracks());
 		
 		// add a null track to the list
-		bList.add(t5);
+		bList.add(null);
 		
 		// assert that the null track doesn't get added to the book
 		b = new Book(bList, bookName, bookAuthor);

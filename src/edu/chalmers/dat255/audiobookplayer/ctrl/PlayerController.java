@@ -146,6 +146,8 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	private boolean setup() {
 		// TODO(aki): check if already playing; don't always restart
+		Log.d(TAG, "Setting up player."
+				+ " Should not happen when using track seek bar");
 		if (bs.getSelectedTrackIndex() == -1) {
 			Log.d(TAG, "Index is -1. Should not continue playing.");
 			stop();

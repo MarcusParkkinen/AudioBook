@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
@@ -35,7 +34,6 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private static final String TAG = "Book.java";
 	private static final String TRACK_INDEX_ILLEGAL = " Track index is illegal";
-	private static final String TAG_INDEX_ILLEGAL = " Tag index is illegal";
 
 	private static final int NO_TRACK_SELECTED = -1;
 	private static final long serialVersionUID = 2;
@@ -45,7 +43,6 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private String author; // immutable
 	private String title;
 	private int duration;
-	private List<Tag> tags;
 
 	/**
 	 * Used when no author is given.
@@ -455,7 +452,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 					+ TRACK_INDEX_ILLEGAL);
 		}
 
-		tags.add(new Tag(time));
+		this.tracks.get(selectedTrackIndex).addTag(time);
 	}
 
 	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
@@ -464,16 +461,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 					+ TRACK_INDEX_ILLEGAL);
 		}
 
-		if (!isLegalTagIndex(tagIndex)) {
-			throw new IllegalArgumentException(TAG + " removeTagAt"
-					+ TAG_INDEX_ILLEGAL);
-		}
-
-		tags.remove(tagIndex);
-	}
-
-	private boolean isLegalTagIndex(int tagIndex) {
-		return tagIndex >= 0 && tagIndex < tags.size();
+		this.tracks.get(selectedTrackIndex).removeTagAt(tagIndex);
 	}
 
 	/*

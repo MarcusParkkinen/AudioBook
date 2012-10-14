@@ -15,7 +15,6 @@ package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.io.Serializable;
 import java.security.InvalidParameterException;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.util.Log;
@@ -33,6 +32,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
  */
 public final class Track implements ITrackUpdates, Serializable {
 	private static final String TAG = "Bookshelf.java";
+	private static final String TAG_INDEX_ILLEGAL = " Tag index is illegal";
 	private static final long serialVersionUID = 3;
 
 	private final String path;
@@ -178,18 +178,22 @@ public final class Track implements ITrackUpdates, Serializable {
 		}
 		return true;
 	}
-
-	public void addTag(int time) {
+	
+	public void addTag(int time) throws IllegalArgumentException {
 		this.tags.add(new Tag(time));
 	}
 
-	public void removeTag() {
-		if(tags.size() > 0) {
-			this.tags.remove(tags.size()-1);
+	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
+		if (!isLegalTagIndex(tagIndex)) {
+			throw new IllegalArgumentException(TAG + " removeTagAt"
+					+ TAG_INDEX_ILLEGAL);
 		}
-	}
 
-	public void removeTagAt(int tagIndex) {
 		this.tags.remove(tagIndex);
 	}
+
+	private boolean isLegalTagIndex(int tagIndex) {
+		return tagIndex >= 0 && tagIndex < tags.size();
+	}
+
 }
