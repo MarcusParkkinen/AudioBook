@@ -38,12 +38,12 @@ public interface IBookshelfEvents {
 	/**
 	 * Informs the listener that the add button has been pressed.
 	 */
-	public void addButtonPressed();
+	public void addBookButtonPressed();
 
-	/**
-	 * Informs the listener that the preferences button has been pressed.
-	 */
-	public void preferencesButtonPressed();
+//	/**
+//	 * Informs the listener that the preferences button has been pressed.
+//	 */
+//	public void preferencesButtonPressed();
 
 	/**
 	 * Informs the listener that the currently selected child should change.

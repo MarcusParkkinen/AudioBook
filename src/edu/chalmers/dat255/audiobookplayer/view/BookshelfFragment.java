@@ -35,9 +35,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -130,7 +130,7 @@ public class BookshelfFragment extends Fragment {
 		/**//**/
 		/**************************************************************/
 
-		Button addButton = (Button) view.findViewById(R.id.addBook);
+		ImageButton addButton = (ImageButton) view.findViewById(R.id.addBook);
 
 		addButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -139,20 +139,20 @@ public class BookshelfFragment extends Fragment {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
-					fragmentOwner.addButtonPressed();
+					fragmentOwner.addBookButtonPressed();
 				}
 			}
 		});
 
-		Button prefButton = (Button) view.findViewById(R.id.prefs);
-
-		prefButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (getActivity() != null) {
-					fragmentOwner.preferencesButtonPressed();
-				}
-			}
-		});
+		// Button prefButton = (Button) view.findViewById(R.id.prefs);
+		//
+		// prefButton.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// if (getActivity() != null) {
+		// fragmentOwner.preferencesButtonPressed();
+		// }
+		// }
+		// });
 
 		/******************************************************************************/
 		/**//**/

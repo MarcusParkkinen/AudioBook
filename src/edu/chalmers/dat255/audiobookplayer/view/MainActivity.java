@@ -43,7 +43,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		IBookshelfEvents, PropertyChangeListener {
-	private static final String TAG = "MainActivity.class";
+	private static final String TAG = "MainActivity";
 	private static final String USERNAME = "Default";
 	private static final int PLAYER = 0;
 	private static final int BOOKSHELF = 1;
@@ -98,6 +98,15 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		bookshelf.setArguments(bsReference);
 	}
 
+	@Override
+	public void onBackPressed() {
+		Log.i(TAG, "Back pressed in Main Activity");
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
+
 	private void initPager() {
 		// create a list of our fragments
 		List<Fragment> fragments = new Vector<Fragment>();
@@ -123,7 +132,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// Whenever we're quitting the application, a bookmark
 		// should be saved.
 		bsc.saveBookshelf(this, USERNAME);
-		
+
 		Log.d(TAG, "onDestroy()");
 		pc.stop();
 	}
@@ -180,16 +189,16 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	}
 
-	public void addButtonPressed() {
+	public void addBookButtonPressed() {
 		// bc.createTestBook();
 		Intent intent = new Intent(this, BrowserActivity.class);
 		startActivity(intent);
 	}
 
-	public void preferencesButtonPressed() {
-		Intent intent = new Intent(this, PreferencesActivity.class);
-		startActivity(intent);
-	}
+	// public void preferencesButtonPressed() {
+	// Intent intent = new Intent(this, PreferencesActivity.class);
+	// startActivity(intent);
+	// }
 
 	/* End BookshelfUIListener */
 

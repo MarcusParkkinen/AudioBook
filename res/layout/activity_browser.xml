@@ -3,18 +3,40 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    
-		<Button
-		android:id="@+id/createBook"
-		android:text="Create book"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		 />
 
-		<ListView
-		    android:id="@+id/browserList"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content" >
-		</ListView>
+    <LinearLayout
+        android:id="@+id/browser_top_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#232421"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/createBook"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:maxHeight="26dp"
+            android:maxWidth="26dp"
+            android:layout_weight="1"
+            android:text="@string/create_book" />
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="26dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_button_states"
+            android:contentDescription="@string/back"
+            android:minHeight="26dp"
+            android:minWidth="26dp"
+            android:text="@string/back" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/browserList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>

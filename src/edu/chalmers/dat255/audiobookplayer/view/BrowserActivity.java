@@ -29,6 +29,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,8 +47,19 @@ import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 
+/**
+ * @author Fredrik Åhs
+ * 
+ */
 public class BrowserActivity extends Activity {
+	protected static final String TAG = "BrowserActivity";
 
+	/**
+	 * The different possible file types when browsing
+	 * 
+	 * @author Fredrik Åhs
+	 * 
+	 */
 	public enum FILETYPE {
 		FILE {
 			public String toString() {
@@ -85,8 +98,7 @@ public class BrowserActivity extends Activity {
 		File f = new File(Environment.getExternalStorageDirectory()
 				.getAbsolutePath());
 
-		fill(new File(Environment.getExternalStorageDirectory()
-				.getAbsolutePath()));
+		fill(f);
 	}
 
 	/**
@@ -111,8 +123,8 @@ public class BrowserActivity extends Activity {
 		});
 
 		// set listener for button "Create Book"
-		Button button = (Button) findViewById(R.id.createBook);
-		button.setOnClickListener(new OnClickListener() {
+		Button createBookButton = (Button) findViewById(R.id.createBook);
+		createBookButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				if (!checkedItems.isEmpty()) {
@@ -136,6 +148,18 @@ public class BrowserActivity extends Activity {
 					fill(currentDirectory);
 				}
 			}
+		});
+
+		// create and listen to the back button
+		ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				// finish this activity
+				finish();
+				Log.d(TAG, "Backed from browser.");
+			}
+
 		});
 
 	}
@@ -369,6 +393,7 @@ public class BrowserActivity extends Activity {
 	 */
 	private class TypedFile extends File {
 
+		private static final long serialVersionUID = 1L;
 		private FILETYPE type;
 
 		public TypedFile(FILETYPE type, String path) {

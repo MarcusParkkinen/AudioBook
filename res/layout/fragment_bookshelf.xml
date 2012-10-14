@@ -5,17 +5,24 @@
     android:orientation="vertical"
     android:weightSum="1" >
 
-    <Button
-        android:id="@+id/addBook"
-        android:text="@string/add_button_text"
+    <LinearLayout
+        android:id="@+id/bookshelf_top_layout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-    
-    <Button 
-        android:id="@+id/prefs"
-        android:text="@string/prefs_button_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="50dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#232421" >
+
+        <ImageButton
+            android:id="@+id/addBook"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/create_book_button_states"
+            android:contentDescription="@string/create_book"
+            android:maxHeight="50dp"
+            android:maxWidth="50dp"
+            android:text="@string/add_button_text" />
+    </LinearLayout>
 
     <ExpandableListView
         android:id="@+id/bookshelfList"
