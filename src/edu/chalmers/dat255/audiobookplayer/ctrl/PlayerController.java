@@ -67,23 +67,19 @@ public class PlayerController implements IPlayerEvents {
 		// start a new timer
 		this.trackTimeUpdateThread = new Thread(new TrackElapsedTimeUpdater());
 		this.trackTimeUpdateThread.start();
-
-		Log.d(TAG, "interrupted=" + trackTimeUpdateThread.isInterrupted()
-				+ " \t alive=" + trackTimeUpdateThread.isAlive());
-
-		Log.d(TAG,
-				"isStarted=" + isStarted + " \t mp.isPlaying=" + mp.isPlaying());
-
 	}
 
 	/**
 	 * Stops the audio player. Stops updating the model.
+	 * <p>
+	 * Call when activities are paused or stopped to free resources.
 	 */
 	public void stop() {
 		if (isStarted) {
 			isStarted = false;
 			stopTimer();
 			mp.stop();
+			mp.release();
 		}
 	}
 
@@ -283,11 +279,14 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekToPercentageInBook(double percentage) {
-		DecimalFormat df = new DecimalFormat("#.##");
-		Log.d(TAG, "percentage: " + df.format(percentage));
+		// get the duration of the book
 		int bookDuration = bs.getSelectedBookDuration();
+
+		// calculate the seekTime (ms)
 		int seekTime = (int) (bookDuration * percentage);
+
 		Log.d(TAG, "seekTime: " + seekTime + ". Book duration: " + bookDuration);
+
 		// seek through the tracks
 		int track = 0, trackDuration;
 		while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
@@ -296,9 +295,15 @@ public class PlayerController implements IPlayerEvents {
 			Log.d(TAG, "Skipped a track (" + trackDuration
 					+ "ms) . New seekTime: " + seekTime + ". Track#: " + track);
 		}
+		
+		// set the correct track
 		bs.setSelectedTrackIndex(track);
-		start(); // start the track we seeked to
-		mp.seekTo(seekTime); // seek to the time within that track
+		
+		// start the track we seeked to
+		start();
+		
+		// and finishing seeking within that track
+		seekTo(seekTime); 
 	}
 
 	/* End IPlayerEvents */

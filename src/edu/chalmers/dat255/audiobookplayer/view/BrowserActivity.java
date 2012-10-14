@@ -89,7 +89,7 @@ public class BrowserActivity extends Activity {
 	private TreeMap<TypedFile, List<TypedFile>> childMap;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browser);
 
@@ -100,6 +100,12 @@ public class BrowserActivity extends Activity {
 				.getAbsolutePath());
 
 		fill(f);
+	}
+	
+	@Override
+	 protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "onDestroy()");
 	}
 	
 	@Override
