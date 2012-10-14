@@ -42,16 +42,12 @@ public class JsonParserTest extends AndroidTestCase{
 		super.setUp();
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
 	public void testToAndFromJSON() {
 		// First convert the object tree to its JSON representation
-		String JSONRepresentation = JsonParser.toJSON(bs);
+		String jsonRepresentation = JsonParser.toJSON(bs);
 		
 		// And then convert it back
-		Bookshelf newBookshelf = JsonParser.fromJSON(JSONRepresentation, Bookshelf.class);
+		Bookshelf newBookshelf = JsonParser.fromJSON(jsonRepresentation, Bookshelf.class);
 		
 		// Assert that the new bookshelf is equal to the original
 		assertEquals(bs, newBookshelf);
