@@ -189,7 +189,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 						.get(trackIndex);
 			} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 				menuItems = GroupContextMenuItem.values();
-				title = listData.get(bookIndex).getKey().getBookTitle();
+				title = listData.get(bookIndex).getKey().getSelectedBookTitle();
 			}
 			// set the title
 			menu.setHeaderTitle(title);
@@ -265,13 +265,13 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 	private void childClicked(int bookIndex, int trackIndex) {
 		if (getActivity() != null) {
-			selectTrack(bookIndex, trackIndex);
+			setSelectedTrack(bookIndex, trackIndex);
 		}
 	}
 
 	private void groupClicked(int bookIndex) {
 		if (getActivity() != null) {
-			selectBook(bookIndex);
+			setSelectedBook(bookIndex);
 		}
 	}
 
@@ -428,7 +428,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 			// set title, author, time and duration of book
 			setTextViewText(convertView, R.id.bookshelfBookTitle,
-					book.getBookTitle());
+					book.getSelectedBookTitle());
 			if (bookIndex == selectedIndex) {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.RED);
@@ -531,12 +531,12 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		fragmentOwner.addBookButtonPressed();
 	}
 
-	public void selectBook(int bookIndex) {
-		fragmentOwner.selectBook(bookIndex);
+	public void setSelectedBook(int bookIndex) {
+		fragmentOwner.setSelectedBook(bookIndex);
 	}
 
-	public void selectTrack(int bookIndex, int trackIndex) {
-		fragmentOwner.selectTrack(bookIndex, trackIndex);
+	public void setSelectedTrack(int bookIndex, int trackIndex) {
+		fragmentOwner.setSelectedTrack(bookIndex, trackIndex);
 	}
 
 	public void removeBook(int bookIndex) {

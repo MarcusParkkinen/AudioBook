@@ -19,7 +19,7 @@ import java.security.InvalidParameterException;
  * Used to assert that implementing classes can handle updates on Track
  * instances.
  * 
- * @author Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
  * @version 0.6
  * 
  */
@@ -32,7 +32,7 @@ public interface ITrackUpdates {
 	 * @throws InvalidParameterException
 	 *             If the elapsedTime is negative.
 	 */
-	public void setSelectedTrackElapsedTime(int elapsedTime);
+	public void setSelectedTrackElapsedTime(int elapsedTime) throws IllegalArgumentException;
 
 	/*
 	 * Tags
@@ -42,16 +42,19 @@ public interface ITrackUpdates {
 	 * 
 	 * @param time
 	 */
-	public void addTag(int time);
+	public void addTag(int time) throws IllegalArgumentException;
 
 	/**
-	 * Removes the last track in the list. Does nothing if the list is empty.
+	 * Removes the latest tag in the list. Does nothing if the list is empty.
 	 */
-	public void removeTag();
+	public void removeTag() throws IllegalArgumentException;
 
 	/**
+	 * Removes the tag at the specified index. Does nothing if the list is
+	 * empty.
+	 * 
 	 * @param tagIndex
 	 */
-	public void removeTagAt(int tagIndex);
+	public void removeTagAt(int tagIndex) throws IllegalArgumentException;
 
 }

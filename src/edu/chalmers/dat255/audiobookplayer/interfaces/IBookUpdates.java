@@ -38,7 +38,7 @@ public interface IBookUpdates {
 	 * 
 	 * @param index
 	 */
-	public void removeTrack(int index);
+	public void removeTrack(int index) throws IllegalArgumentException;
 
 	/**
 	 * Swaps the position of two tracks in the list.
@@ -46,7 +46,8 @@ public interface IBookUpdates {
 	 * @param firstIndex
 	 * @param secondIndex
 	 */
-	public void swapTracks(int firstIndex, int secondIndex);
+	public void swapTracks(int firstIndex, int secondIndex)
+			throws IllegalArgumentException;
 
 	/**
 	 * Move a track from a given index to a given index. Indices inbetween will
@@ -55,7 +56,7 @@ public interface IBookUpdates {
 	 * @param from
 	 * @param to
 	 */
-	public void moveTrack(int from, int to);
+	public void moveTrack(int from, int to) throws IllegalArgumentException;
 
 	/**
 	 * Set the bookmark to point at a track and a specific time in that track.
@@ -72,14 +73,22 @@ public interface IBookUpdates {
 	 * 
 	 * @param index
 	 */
-	public void setSelectedTrackIndex(int index);
+	public void setSelectedTrackIndex(int index)
+			throws IllegalArgumentException;
 
 	/**
 	 * Set the title of the book.
 	 * 
 	 * @param newTitle
 	 */
-	public void setBookTitle(String newTitle);
+	public void setSelectedBookTitle(String newTitle) throws IllegalArgumentException;
+
+	/**
+	 * Get the title of the book.
+	 * 
+	 * @return The title of the book.
+	 */
+	public String getSelectedBookTitle() throws IllegalArgumentException;
 
 	/**
 	 * Updates the duration of the book to the sum of the duration of its

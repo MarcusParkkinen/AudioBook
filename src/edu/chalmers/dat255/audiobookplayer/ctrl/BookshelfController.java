@@ -13,15 +13,9 @@
 
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
-import java.io.IOException;
-
-import android.content.Context;
-
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
-import edu.chalmers.dat255.audiobookplayer.util.FileParser;
-import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
 
 /**
  * Manages setting the current book and bookshelf, as well as saving it when the
@@ -70,21 +64,17 @@ public class BookshelfController implements IBookshelfEvents {
 
 	// sort, swap, move, edit book
 
-	public void selectBook(int bookIndex) {
-		bookshelf.setSelectedBookIndex(bookIndex);
-	}
-
-	public void selectTrack(int bookIndex, int trackIndex) {
+	public void setSelectedTrack(int bookIndex, int trackIndex) {
 		bookshelf.setSelectedBookIndex(bookIndex);
 		bookshelf.setSelectedTrackIndex(trackIndex);
 	}
 
 	public void removeBook(int groupPosition) {
-		bookshelf.removeBook(groupPosition);
+		bookshelf.removeBookAt(groupPosition);
 	}
 
 	public void setBookTitleAt(int groupPosition, String newTitle) {
-		bookshelf.setBookTitle(newTitle);
+		bookshelf.setSelectedBookTitle(newTitle);
 	}
 
 	public void removeTrack(int trackIndex) {

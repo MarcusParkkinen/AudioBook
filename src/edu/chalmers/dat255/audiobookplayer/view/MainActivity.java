@@ -292,7 +292,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	/* End IPlayerEvents */
 
 	/* BookshelfUIListener */
-	public void selectBook(int index) {
+	public void setSelectedBook(int index) {
 		// set the selected book to the new index
 		bookshelfController.setSelectedBook(index);
 	}
@@ -486,7 +486,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// TODO: check if bookshelf selectedBookIndex != -1
-				playerFragment.updateBookTitleLabel(b.getBookTitle());
+				playerFragment.updateBookTitleLabel(b.getSelectedBookTitle());
 			}
 		});
 	}
@@ -622,7 +622,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return ((double) elapsedTime) / duration;
 	}
 
-	public void selectTrack(int groupPosition, int childPosition) {
+	public void setSelectedTrack(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
 		if (childPosition == -1 || groupPosition == -1) {
 			return;
@@ -631,7 +631,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				.getSelectedBookPosition();
 		// if the book is not currently selected, select it
 		if (selectedBookPosition != groupPosition) {
-			selectBook(groupPosition);
+			setSelectedBook(groupPosition);
 		}
 		// as the book is selected, track can be selected.
 		bookshelfController.getSelectedBook().setSelectedTrackIndex(

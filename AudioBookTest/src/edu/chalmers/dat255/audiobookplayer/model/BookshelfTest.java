@@ -145,18 +145,18 @@ public class BookshelfTest extends TestCase {
 		// Assert that the number of books is the same if the index is illegal
 		int nbrOfBooks = bookshelf.getNumberOfBooks();
 		assertTrue(nbrOfBooks == 7);
-		bookshelf.removeBook(7);
+		bookshelf.removeBookAt(7);
 		assertTrue(bookshelf.getNumberOfBooks() == nbrOfBooks);
-		bookshelf.removeBook(-1);
+		bookshelf.removeBookAt(-1);
 		assertTrue(bookshelf.getNumberOfBooks() == nbrOfBooks);
 
 		// Test index when removing a book
 		bookshelf.setSelectedBookIndex(2);
 		// nothing should happen to selected index since this is the last
 		// element
-		bookshelf.removeBook(6);
+		bookshelf.removeBookAt(6);
 		assertTrue(bookshelf.getSelectedBookIndex() == 2);
-		bookshelf.removeBook(1);
+		bookshelf.removeBookAt(1);
 		// we removed something earlier in the list, so the index should
 		// decrement
 		assertTrue(bookshelf.getSelectedBookIndex() == 1);
@@ -178,7 +178,7 @@ public class BookshelfTest extends TestCase {
 
 	public void testRemoveBook() {
 		// Assert that removing a book does nothing to an empty bookshelf
-		bookshelf.removeBook(0);
+		bookshelf.removeBookAt(0);
 		Bookshelf testBookshelf = new Bookshelf(bookshelf);
 		assertTrue(testBookshelf.equals(bookshelf));
 
@@ -186,7 +186,7 @@ public class BookshelfTest extends TestCase {
 		bookshelf.addBook(b0);
 		bookshelf.addBook(b1);
 		bookshelf.addBook(b2);
-		bookshelf.removeBook(0);
+		bookshelf.removeBookAt(0);
 		assertTrue(bookshelf.getBookAt(0).equals(b1));
 		assertTrue(bookshelf.getBookAt(1).equals(b2));
 

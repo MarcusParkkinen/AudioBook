@@ -26,7 +26,7 @@ public interface IBookshelfEvents {
 	 * @param bookIndex
 	 *            The index of the book that now should be selected.
 	 */
-	public void selectBook(int bookIndex);
+	public void setSelectedBook(int bookIndex);
 
 	/**
 	 * Selects the given track in the given book.
@@ -36,7 +36,7 @@ public interface IBookshelfEvents {
 	 * @param trackIndex
 	 *            Position of the track.
 	 */
-	public void selectTrack(int bookIndex, int trackIndex);
+	public void setSelectedTrack(int bookIndex, int trackIndex);
 
 	/**
 	 * Removes the book at the given index.

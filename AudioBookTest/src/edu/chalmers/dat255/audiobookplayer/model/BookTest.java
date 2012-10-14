@@ -189,16 +189,16 @@ public class BookTest extends TestCase {
 	public void testSetBookTitle() {
 		// assert that we cannot set the book name with a null string
 		try{
-			b.setBookTitle(null);
+			b.setSelectedBookTitle(null);
 			fail("managed to set book title with null string");
 		} catch(IllegalArgumentException e) {
 			//assert that the old name still applies
-			assertEquals(bookName, b.getBookTitle());
+			assertEquals(bookName, b.getSelectedBookTitle());
 		}
 		
 		// but that we can set it to a new valid name
 		String anotherTitle = "e";
-		b.setBookTitle(anotherTitle);
-		assertEquals(anotherTitle, b.getBookTitle());
+		b.setSelectedBookTitle(anotherTitle);
+		assertEquals(anotherTitle, b.getSelectedBookTitle());
 	}
 }
