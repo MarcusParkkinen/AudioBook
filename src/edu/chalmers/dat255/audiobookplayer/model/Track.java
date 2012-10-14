@@ -16,6 +16,7 @@ package edu.chalmers.dat255.audiobookplayer.model;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.LinkedList;
+import java.util.List;
 
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
@@ -37,7 +38,7 @@ public final class Track implements ITrackUpdates, Serializable {
 	private final String path;
 	private final int duration;
 	private int elapsedTime;
-	private LinkedList<Tag> tags;
+	private List<Tag> tags;
 
 	private String title;
 
@@ -176,7 +177,9 @@ public final class Track implements ITrackUpdates, Serializable {
 	}
 
 	public void removeTag() {
-		this.tags.remove();
+		if(tags.size() > 0) {
+			this.tags.remove(tags.size()-1);
+		}
 	}
 
 	public void removeTagAt(int tagIndex) {
