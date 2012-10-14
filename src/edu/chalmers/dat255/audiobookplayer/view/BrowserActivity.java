@@ -25,6 +25,7 @@ import java.util.TreeSet;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
@@ -99,6 +100,12 @@ public class BrowserActivity extends Activity {
 				.getAbsolutePath());
 
 		fill(f);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Log.i(TAG, "Back pressed in Browser Activity");
+		finish();
 	}
 
 	/**

@@ -195,11 +195,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		startActivity(intent);
 	}
 
-	// public void preferencesButtonPressed() {
-	// Intent intent = new Intent(this, PreferencesActivity.class);
-	// startActivity(intent);
-	// }
-
 	/* End BookshelfUIListener */
 
 	public void bookmarkSet() {
