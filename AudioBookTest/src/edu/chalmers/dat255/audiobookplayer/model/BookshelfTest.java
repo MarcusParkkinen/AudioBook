@@ -181,7 +181,7 @@ public class BookshelfTest extends TestCase {
 		bookshelf.removeBook(0);
 		Bookshelf testBookshelf = new Bookshelf(bookshelf);
 		assertTrue(testBookshelf.equals(bookshelf));
-		
+
 		// Assert that a book is removed and that it is the correct one
 		bookshelf.addBook(b0);
 		bookshelf.addBook(b1);
@@ -219,7 +219,7 @@ public class BookshelfTest extends TestCase {
 		// Try to move from a legal index to a legal index
 		bookshelf.moveBook(1, 3);
 		assertFalse(copy.equals(bookshelf));
-		
+
 		// Assert that it was moved correctly
 		assertTrue(bookshelf.getBookAt(3).equals(copy.getBookAt(1)));
 		assertTrue(bookshelf.getBookAt(2).equals(copy.getBookAt(2)));
@@ -229,12 +229,12 @@ public class BookshelfTest extends TestCase {
 	public void testGetNumberOfBooks() {
 		// An empty bookshelf should have zero books
 		assertTrue(bookshelf.getNumberOfBooks() == 0);
-		
+
 		// Add 3 books
 		bookshelf.addBook(b0);
 		bookshelf.addBook(b1);
 		bookshelf.addBook(b2);
-		
+
 		// Assert that the number of books is now 3
 		assertTrue(bookshelf.getNumberOfBooks() == 3);
 	}

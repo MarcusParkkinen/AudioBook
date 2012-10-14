@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;
@@ -24,7 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * Creates Book instances (filling them with metadata).
  * 
- * @author Aki Aki Käkelä
+ * @author Aki Aki Kï¿½kelï¿½
  * @version 0.6
  * 
  */
@@ -73,7 +74,7 @@ public class BookCreator {
 			mmr.setDataSource(paths.get(0));
 
 		} catch (IllegalArgumentException e) {
-			System.out.println("BOOK PATH TO TRACK 0 INVALID");
+			Log.d(TAG, " invalid path to book provided. Skipping operation.");
 			return;
 		}
 

@@ -33,10 +33,6 @@ public class FileParserTest extends AndroidTestCase{
 		fileName = "FileParserTestFile";
 		super.setUp();
 	}
-	
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
 
 	
 	public void testWriteAndReadFromInternalStorage() {
