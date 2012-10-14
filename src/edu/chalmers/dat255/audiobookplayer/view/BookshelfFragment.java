@@ -100,7 +100,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			fragmentOwner = (IBookshelfGUIEvents) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " does not implement " + IBookshelfGUIEvents.class.getName());
+					+ " does not implement "
+					+ IBookshelfGUIEvents.class.getName());
 		}
 	}
 
@@ -150,8 +151,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		ExpandableListView bookshelfList = (ExpandableListView) view
 				.findViewById(R.id.bookshelfList);
 
-		// hides the by default visible arrow indicating a whether a group is
-		// expanded or not
+		/*
+		 * hides the by default visible arrow indicating a whether a group is
+		 * expanded or not
+		 */
 		bookshelfList.setGroupIndicator(null);
 		registerForContextMenu(bookshelfList);
 		bookshelfList.setAdapter(adapter);
@@ -185,8 +188,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			// fill the context menu with the correct items
 			if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 				menuItems = ChildContextMenuItem.values();
-				title = listData.get(bookIndex).getValue()
-						.get(trackIndex);
+				title = listData.get(bookIndex).getValue().get(trackIndex);
 			} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 				menuItems = GroupContextMenuItem.values();
 				title = listData.get(bookIndex).getKey().getSelectedBookTitle();
@@ -211,7 +213,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		// will be -1 if the type is group
 		int trackIndex = ExpandableListView
 				.getPackedPositionChild(info.packedPosition);
-		
+
 		int type = ExpandableListView
 				.getPackedPositionType(info.packedPosition);
 
@@ -265,7 +267,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 	private void childClicked(int bookIndex, int trackIndex) {
 		if (getActivity() != null) {
-			Log.d(TAG, "Child clicked at + [" + bookIndex + ", " + trackIndex + "]");
+			Log.d(TAG, "Child clicked at + [" + bookIndex + ", " + trackIndex
+					+ "]");
 			setSelectedTrack(bookIndex, trackIndex);
 		}
 	}
@@ -277,7 +280,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	}
 
 	/**
-	 * Private help class that holds an entry with a key and a value
+	 * Private help class that holds an entry with a key and a value.
 	 * 
 	 * @author Fredrik �hs
 	 * @version 0.1
@@ -324,7 +327,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 	/**
 	 * Private class used to populate the ExpandableListView used in
-	 * BookshelfFragment
+	 * BookshelfFragment.
 	 * 
 	 * @author Fredrik �hs
 	 * 
@@ -354,9 +357,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			return listData.get(bookIndex).getValue().size();
 		}
 
-		public View getChildView(final int bookIndex,
-				final int trackIndex, boolean isLastChild, View convertView,
-				ViewGroup parent) {
+		public View getChildView(final int bookIndex, final int trackIndex,
+				boolean isLastChild, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater vi = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -368,8 +370,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			setTextViewText(convertView, R.id.bookshelfTrackTitle,
 					getChild(bookIndex, trackIndex));
 
-			int duration = getGroup(bookIndex).getTrackDurationAt(
-					trackIndex) / 1000;
+			int duration = getGroup(bookIndex).getTrackDurationAt(trackIndex) / 1000;
 			// set the duration of the track
 			setTextViewText(convertView, R.id.bookshelfTrackTime,
 					DateUtils.formatElapsedTime(duration));
@@ -380,8 +381,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				public void onClick(View v) {
 					selectedIndex = bookIndex;
 					expandableListView.invalidateViews();
-					BookshelfFragment.this.childClicked(bookIndex,
-							trackIndex);
+					BookshelfFragment.this.childClicked(bookIndex, trackIndex);
 				}
 			});
 
@@ -410,8 +410,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			return bookIndex;
 		}
 
-		public View getGroupView(final int bookIndex,
-				final boolean isExpanded, View convertView, ViewGroup parent) {
+		public View getGroupView(final int bookIndex, final boolean isExpanded,
+				View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater vi = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -437,7 +437,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.WHITE);
 			}
-			setTextViewText(convertView, R.id.bookshelfAuthor, book.getSelectedBookAuthor());
+			setTextViewText(convertView, R.id.bookshelfAuthor,
+					book.getSelectedBookAuthor());
 			String timeString = time == 0 ? "N/A" : DateUtils
 					.formatElapsedTime(time);
 			setTextViewText(convertView, R.id.bookshelfBookPosition,
@@ -524,8 +525,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	}
 
 	public void bookLongPress(int index) {
-		// TODO Auto-generated method stub
-		
+		fragmentOwner.bookLongPress(index);
 	}
 
 	public void addBookButtonPressed() {
@@ -545,8 +545,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	}
 
 	public void removeTrack(int trackIndex) {
-		// TODO Auto-generated method stub
-		
+		fragmentOwner.removeTrack(trackIndex);
 	}
 
 	public void setBookTitleAt(int bookIndex, String newTitle) {

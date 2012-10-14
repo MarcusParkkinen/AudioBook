@@ -25,7 +25,7 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 		// Create a book object for testing
 		newBook = new Book(
 				Arrays.asList(new Track[] { new Track("trackPath", 1) }),
-				"BookTitle");
+				"BookTitle", "BookAuthor");
 
 		super.setUp();
 	}

@@ -149,8 +149,10 @@ public class PlayerController implements IPlayerEvents {
 			Log.d(TAG, "Index is -1. Should not continue playing.");
 			stop();
 		} else {
-			// we have started playing a file, so start the thread that updates
-			// the time on the Track instance
+			/*
+			 * we have started playing a file, so start the thread that updates
+			 * the time on the Track instance
+			 */
 
 			// get the path
 			String path = null;
@@ -170,9 +172,10 @@ public class PlayerController implements IPlayerEvents {
 				isStarted = false;
 				stopTimer();
 
-				// Log.i(TAG, "Resetting MediaPlayer");
-				// prepare the media player after resetting it and providing a
-				// file path
+				/*
+				 * prepare the media player after resetting it and providing a
+				 * file path
+				 */
 				mp.reset();
 				try {
 					mp.setDataSource(path);
@@ -299,9 +302,6 @@ public class PlayerController implements IPlayerEvents {
 				// no need to restart the player
 				mp.seekTo((int) (mp.getDuration() * percentage));
 			} else {
-				/*
-				 * start from the percentage
-				 */
 				startAtPercentage(percentage);
 			}
 

@@ -15,11 +15,10 @@ package edu.chalmers.dat255.audiobookplayer.util;
 
 import java.util.Arrays;
 
+import android.test.AndroidTestCase;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;
-import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
-import android.test.AndroidTestCase;
 
 /**
  * Test case for JSONParser utility class.
@@ -33,7 +32,7 @@ public class JsonParserTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		// Set up test environment by creating an object tree for testing
 		Track[] tracks = new Track[] { new Track("trackPath", 1) };
-		Book b = new Book(Arrays.asList(tracks), "BookTitle");
+		Book b = new Book(Arrays.asList(tracks), "BookTitle", "BookAuthor");
 
 		bs = new Bookshelf();
 		bs.addPropertyChangeListener(null);

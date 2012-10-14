@@ -13,12 +13,16 @@
 
 package edu.chalmers.dat255.audiobookplayer.constants;
 
+/**
+ * Holds unique property names ensuring that property names match if intended to
+ * do so and that property name changing is simple.
+ * <p>
+ * Also contains hard-coded fields.
+ * 
+ * @author Aki Käkelä, Marcus Parkkinen
+ */
 public final class Constants {
 	/**
-	 * Holds unique property names ensuring that property names match if
-	 * intended to do so and that property name changing is simple.
-	 * <p>
-	 * Also contains hard-coded fields.
 	 * 
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
@@ -72,7 +76,7 @@ public final class Constants {
 
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
-		
+
 		public static final String NO_TRACK_TIME_TO_DISPLAY = "N/A";
 		public static final String NO_BOOK_TIME_TO_DISPLAY = "N/A";
 

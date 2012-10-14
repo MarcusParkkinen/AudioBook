@@ -35,6 +35,7 @@ public class PlayerControllerTest extends TestCase {
 	private static final int TIME = 1212923;
 	private static final String PATH = "/mnt/sdcard/game.mp3";
 	private static final String BOOKNAME = "Lord of the Rings";
+	private static final String AUTHOR = "Tolkien";
 
 	public PlayerControllerTest(String name) {
 		super(name);
@@ -51,7 +52,7 @@ public class PlayerControllerTest extends TestCase {
 		List<Track> tracks = new LinkedList<Track>();
 		tracks.add(t1);
 		
-		Book b1 = new Book(tracks, BOOKNAME);
+		Book b1 = new Book(tracks, BOOKNAME, AUTHOR);
 		bs.addBook(b1);
 	}
 

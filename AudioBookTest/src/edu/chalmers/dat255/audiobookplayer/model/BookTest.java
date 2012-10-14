@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 public class BookTest extends TestCase {
 	private List<Track> bList;
 	private String bookName = "MyTestBook";
+	private String bookAuthor = "MyTestBookAuthor";
 	private Book b;
 	
 	//Tracks to test the book with
@@ -45,20 +46,20 @@ public class BookTest extends TestCase {
 			bList.add(tracks[i]);
 		}
 		
-		b = new Book(bList, bookName);
+		b = new Book(bList, bookName, bookAuthor);
 	}
 	
 	public void testConstructor() {
 		
 		// assert that four tracks have been added
-		b = new Book(bList, bookName);
+		b = new Book(bList, bookName, bookAuthor);
 		assertEquals(4, b.getNumberOfTracks());
 		
 		// add a null track to the list
 		bList.add(t5);
 		
 		// assert that the null track doesn't get added to the book
-		b = new Book(bList, bookName);
+		b = new Book(bList, bookName, bookAuthor);
 		assertEquals(4, b.getNumberOfTracks());
 		
 		// assert that the duration of the book has been calculated correctly

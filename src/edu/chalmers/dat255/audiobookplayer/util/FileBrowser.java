@@ -60,9 +60,12 @@ public class FileBrowser {
 	public static List<File> getFileTree(File file) {
 		ArrayList<File> list = new ArrayList<File>();
 		if (file.isDirectory()) {
-			for (File f : file.listFiles()) { // search files inside file and
-												// its subdirectories
-				list.addAll(getFileTree(f)); // add all matched files
+			/*
+			 * search files inside file and its subdirectories
+			 */
+			for (File f : file.listFiles()) { // 
+				// add all matched files
+				list.addAll(getFileTree(f)); //
 			}
 			if (list.size() > 0) {
 				list.add(0, file); // add this directory to front of list if any

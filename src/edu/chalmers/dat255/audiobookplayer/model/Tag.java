@@ -19,14 +19,12 @@ package edu.chalmers.dat255.audiobookplayer.model;
  * The time is immutable, so the object must be destroyed and recreated to
  * "move" a tag.
  * 
- * @author Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
  * @version 0.6
  * 
  */
 public class Tag {
 	private int time;
-
-	// private int trackIndex;
 
 	/**
 	 * Creates a tag which contains a track index and a time in milliseconds.
@@ -34,9 +32,8 @@ public class Tag {
 	 * @param time
 	 * @param trackIndex
 	 */
-	public Tag(int time/* , int trackIndex */) {
+	public Tag(int time) {
 		this.time = time;
-		// this.trackIndex = trackIndex;
 	}
 
 	/**
@@ -56,15 +53,19 @@ public class Tag {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Tag other = (Tag) obj;
-		if (time != other.time)
+		if (time != other.time) {
 			return false;
+		}
 		return true;
 	}
 

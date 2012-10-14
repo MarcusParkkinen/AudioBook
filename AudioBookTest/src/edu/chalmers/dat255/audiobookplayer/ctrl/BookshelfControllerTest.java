@@ -50,7 +50,7 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		tracks.add(track3);
 
 		// Create books
-		book0 = new Book(tracks, "title0");
+		book0 = new Book(tracks, "title0", "author0");
 		book1 = new Book("title1");
 		book2 = new Book("title2");
 		book3 = new Book("title3");

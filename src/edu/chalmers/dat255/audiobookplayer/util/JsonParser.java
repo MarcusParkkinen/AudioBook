@@ -20,8 +20,8 @@ import com.google.gson.Gson;
  * 
  */
 public class JsonParser {
-	public static <T> T fromJSON(String JSONString, Class<T> type) {
-		return (new Gson()).fromJson(JSONString, type);
+	public static <T> T fromJSON(String jsonString, Class<T> type) {
+		return (new Gson()).fromJson(jsonString, type);
 	}
 
 	public static String toJSON(Object obj) {

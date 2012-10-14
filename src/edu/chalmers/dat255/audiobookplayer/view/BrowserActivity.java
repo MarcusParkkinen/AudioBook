@@ -55,7 +55,7 @@ public class BrowserActivity extends Activity {
 	protected static final String TAG = "BrowserActivity";
 
 	/**
-	 * The different possible file types when browsing
+	 * The different possible file types when browsing.
 	 * 
 	 * @author Fredrik Åhs
 	 * 
@@ -86,12 +86,12 @@ public class BrowserActivity extends Activity {
 	private Set<File> checkedItems;
 	private File currentDirectory;
 	private TreeMap<TypedFile, List<TypedFile>> childMap;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browser);
-		
+
 		populateChildMap();
 		setUpComponents();
 
@@ -100,13 +100,13 @@ public class BrowserActivity extends Activity {
 
 		fill(f);
 	}
-	
+
 	@Override
-	 protected void onDestroy() {
+	protected void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy()");
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Log.i(TAG, "Back pressed in Browser Activity");
@@ -231,16 +231,19 @@ public class BrowserActivity extends Activity {
 	}
 
 	/**
-	 * Populates a map which holds all files to be displayed, and their parents
+	 * Populates a map which holds all files to be displayed, and their parents.
 	 */
 	private void populateChildMap() {
-		// this will prevent files such as notifications and ringtones to appear
-		// in the list
+		/*
+		 * this will prevent files such as notifications and ringtones to appear
+		 * in the list
+		 */
 		String filtering = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-		String[] projection = { MediaStore.Audio.Media.DATA // path to the
-															// audiofile
-		};
+		/*
+		 * path to the audiofile
+		 */
+		String[] projection = { MediaStore.Audio.Media.DATA };
 
 		// this cursor will point at the paths of all music
 		Cursor cursor = this.managedQuery(
@@ -257,8 +260,10 @@ public class BrowserActivity extends Activity {
 					.equals(Environment.getExternalStorageDirectory()
 							.getAbsolutePath())) {
 				if (parentMap.containsKey(child)) {
-					// if the file is already in the map, so is all its parents
-					// and therefore further looping is redundant
+					/*
+					 * if the file is already in the map, so is all its parents
+					 * and therefore further looping is redundant
+					 */
 					break;
 				}
 				parentMap.put(child, child.getParentFile());
@@ -295,6 +300,12 @@ public class BrowserActivity extends Activity {
 				.show();
 	}
 
+	/**
+	 * Adapter to the browser.
+	 * 
+	 * @author Fredrik Åhs
+	 * 
+	 */
 	private class BrowserArrayAdapter extends ArrayAdapter<TypedFile> {
 		private Context c;
 		private int id;
@@ -303,7 +314,7 @@ public class BrowserActivity extends Activity {
 		private Map<TypedFile, List<TypedFile>> childMap;
 
 		/**
-		 * Constructor
+		 * Constructor.
 		 * 
 		 * @param context
 		 *            The current context.
@@ -347,10 +358,12 @@ public class BrowserActivity extends Activity {
 				TextView tv1 = (TextView) view.findViewById(R.id.TextView01);
 				TextView tv2 = (TextView) view.findViewById(R.id.TextView02);
 
-				if (tv1 != null)
+				if (tv1 != null) {
 					tv1.setText(file.getName());
-				if (tv2 != null)
+				}
+				if (tv2 != null) {
 					tv2.setText(file.getType().toString());
+				}
 
 			}
 

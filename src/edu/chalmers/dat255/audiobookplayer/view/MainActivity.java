@@ -562,7 +562,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		if (playerFragment.getActivity() != null) {
 			playerFragment.getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					// TODO: check if bookshelf selectedBookIndex != -1
+					// TODO(anyone): check if bookshelf selectedBookIndex != -1
 					if (b.getSelectedTrackIndex() != -1) {
 						playerFragment.updateTrackElapsedTimeLabel(b
 								.getSelectedTrackElapsedTime());

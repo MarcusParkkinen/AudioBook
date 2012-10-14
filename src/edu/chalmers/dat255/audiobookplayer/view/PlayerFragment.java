@@ -41,7 +41,6 @@ import edu.chalmers.dat255.audiobookplayer.util.TimeFormatter;
  */
 public class PlayerFragment extends Fragment {
 	private static final String TAG = "PlayerFragment.class";
-	private static final int NUMBER_OF_SEEK_BAR_ZONES = Constants.Value.NUMBER_OF_SEEK_BAR_ZONES;
 	private SeekBar bookBar;
 	private SeekBar trackBar;
 	private TextView bookTitle;
@@ -54,7 +53,7 @@ public class PlayerFragment extends Fragment {
 
 	private ImageButton playPause;
 
-//	private boolean isPlaying = true;
+	// private boolean isPlaying = true;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -141,7 +140,7 @@ public class PlayerFragment extends Fragment {
 		});
 
 		bookBar = (SeekBar) view.findViewById(R.id.bookBar);
-		bookBar.setMax(NUMBER_OF_SEEK_BAR_ZONES);
+		bookBar.setMax(Constants.Value.NUMBER_OF_SEEK_BAR_ZONES);
 		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "bookBar";
 
@@ -170,7 +169,7 @@ public class PlayerFragment extends Fragment {
 		});
 
 		trackBar = (SeekBar) view.findViewById(R.id.trackBar);
-		trackBar.setMax(NUMBER_OF_SEEK_BAR_ZONES);
+		trackBar.setMax(Constants.Value.NUMBER_OF_SEEK_BAR_ZONES);
 		trackBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "trackBar";
 
@@ -189,11 +188,11 @@ public class PlayerFragment extends Fragment {
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-//				Log.d(TAG, "started tracking");
+				// Log.d(TAG, "started tracking");
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-//				Log.d(TAG, "stopped tracking");
+				// Log.d(TAG, "stopped tracking");
 			}
 		});
 
