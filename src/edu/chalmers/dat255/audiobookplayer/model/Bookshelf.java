@@ -235,6 +235,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public String getSelectedBookTitle() throws IllegalArgumentException {
 		return getBookTitleAt(this.selectedBookIndex);
 	}
+	
+	public String getSelectedBookAuthor() {
+		return this.books.get(selectedBookIndex).getSelectedBookAuthor();
+	}
 
 	public void updateBookDuration() {
 		this.books.get(selectedBookIndex).updateBookDuration();
@@ -280,23 +284,53 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 				new Bookshelf(this));
 	}
 
-	public void addTag(int time) {
+	public void addTag(int time) throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).addTag(time);
 	}
 
-	public void removeTag() {
-		this.books.get(selectedBookIndex).removeTag();
-	}
-
-	public void removeTagAt(int tagIndex) {
+	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).removeTagAt(tagIndex);
 	}
 
 	/* End ITrackUpdates */
 
 	/*
-	 * Accessors to Book and Track.
+	 * Accessors to Bookshelf.
 	 */
+	/**
+	 * @return
+	 */
+	public int getNumberOfBooks() {
+		return this.books.size();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int getSelectedBookIndex() {
+		return this.selectedBookIndex;
+	}
+	
+	/**
+	 * @return
+	 */
+	public Book getSelectedBook() {
+		return this.books.get(selectedBookIndex);
+	}
+	
+	/**
+	 * @param index
+	 * @return
+	 */
+	public Book getBookAt(int index) {
+		return this.books.get(index);
+	}
+	
+	/*
+	 * Accessors to Book.
+	 */
+	
 	/**
 	 * @return
 	 */
@@ -307,63 +341,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/**
 	 * @return
 	 */
-	public int getSelectedTrackDuration() {
-		return books.get(selectedBookIndex).getSelectedTrackDuration();
-	}
-
-	/**
-	 * @return
-	 */
-	public String getSelectedTrackPath() throws IllegalArgumentException {
-		return books.get(selectedBookIndex).getSelectedTrackPath();
-	}
-
-	/**
-	 * ** currently unused **
-	 * 
-	 * @return
-	 */
-	public int getSelectedBookIndex() {
-		return this.selectedBookIndex;
-	}
-
-	/**
-	 * @return
-	 */
 	public int getSelectedTrackIndex() {
 		return books.get(selectedBookIndex).getSelectedTrackIndex();
 	}
-
-	/**
-	 * @return
-	 */
-	public Book getSelectedBook() {
-		return this.books.get(selectedBookIndex);
-	}
-
-	/**
-	 * @param index
-	 * @return
-	 */
-	public Book getBookAt(int index) {
-		return this.books.get(index);
-	}
-
-	/**
-	 * @return
-	 */
-	public int getNumberOfBooks() {
-		return this.books.size();
-	}
-
-	/**
-	 * @param track
-	 * @return
-	 */
-	public int getTrackDurationAt(int track) {
-		return books.get(selectedBookIndex).getTrackDurationAt(track);
-	}
-
+	
 	/**
 	 * ** currently unused **
 	 * 
@@ -380,6 +361,32 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 */
 	public int getNumberOfTracks() {
 		return books.get(selectedBookIndex).getNumberOfTracks();
+	}
+
+	/*
+	 * Accessors to Track.
+	 */
+	
+	/**
+	 * @return
+	 */
+	public int getSelectedTrackDuration() {
+		return books.get(selectedBookIndex).getSelectedTrackDuration();
+	}
+	
+	/**
+	 * @return
+	 */
+	public String getSelectedTrackPath() throws IllegalArgumentException {
+		return books.get(selectedBookIndex).getSelectedTrackPath();
+	}
+
+	/**
+	 * @param track
+	 * @return
+	 */
+	public int getTrackDurationAt(int track) {
+		return books.get(selectedBookIndex).getTrackDurationAt(track);
 	}
 
 	/**

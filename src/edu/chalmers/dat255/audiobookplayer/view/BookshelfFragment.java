@@ -436,7 +436,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.WHITE);
 			}
-			setTextViewText(convertView, R.id.bookshelfAuthor, book.getAuthor());
+			setTextViewText(convertView, R.id.bookshelfAuthor, book.getSelectedBookAuthor());
 			String timeString = time == 0 ? "N/A" : DateUtils
 					.formatElapsedTime(time);
 			setTextViewText(convertView, R.id.bookshelfBookPosition,

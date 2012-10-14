@@ -45,11 +45,6 @@ public interface ITrackUpdates {
 	public void addTag(int time) throws IllegalArgumentException;
 
 	/**
-	 * Removes the latest tag in the list. Does nothing if the list is empty.
-	 */
-	public void removeTag() throws IllegalArgumentException;
-
-	/**
 	 * Removes the tag at the specified index. Does nothing if the list is
 	 * empty.
 	 * 

@@ -76,6 +76,8 @@ public final class Constants {
 		public static final String NO_TRACK_TIME_TO_DISPLAY = "N/A";
 		public static final String NO_BOOK_TIME_TO_DISPLAY = "N/A";
 
+		public static final String NO_AUTHOR = "N/A";
+
 	}
 
 	/**

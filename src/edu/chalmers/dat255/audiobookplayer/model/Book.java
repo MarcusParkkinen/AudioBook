@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
@@ -34,6 +35,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private static final String TAG = "Book.java";
 	private static final String TRACK_INDEX_ILLEGAL = " Track index is illegal";
+	private static final String TAG_INDEX_ILLEGAL = " Tag index is illegal";
 
 	private static final int NO_TRACK_SELECTED = -1;
 	private static final long serialVersionUID = 2;
@@ -45,15 +47,13 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	private int duration;
 	private List<Tag> tags;
 
-	/* To be implemented later: Bookmark and Stats */
-
 	/**
 	 * Used when no author is given.
 	 * 
 	 * @param title
 	 */
 	public Book(String title) {
-		this(title, "N/A");
+		this(title, Constants.Value.NO_AUTHOR);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 
 	// TODO: only used by test.
 	public Book(Collection<Track> col, String title) {
-		this(col, title, "N/A");
+		this(col, title, Constants.Value.NO_AUTHOR);
 	}
 
 	//
@@ -105,12 +105,12 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * @param original
 	 */
 	public Book(Book original) {
-		this(original.getSelectedBookTitle(), original.getAuthor());
+		this(original.getSelectedBookTitle(), original.getSelectedBookAuthor());
 
 		// copy primitive member variables
 		this.duration = original.duration;
 		this.selectedTrackIndex = original.selectedTrackIndex;
-		setAuthor(original.getAuthor());
+		setAuthor(original.getSelectedBookAuthor());
 
 		// also create deep copies of the tracks
 		for (Track t : original.tracks) {
@@ -206,7 +206,8 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 		}
 	}
 
-	public void setSelectedBookTitle(String title) throws IllegalArgumentException {
+	public void setSelectedBookTitle(String title)
+			throws IllegalArgumentException {
 		if (title == null) {
 			throw new IllegalArgumentException(TAG
 					+ " setBookTitle to null title is illegal");
@@ -445,7 +446,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 		return true;
 	}
 
-	public String getAuthor() {
+	public String getSelectedBookAuthor() {
 		return author;
 	}
 
@@ -455,54 +456,37 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 
 	public void addTag(int time) throws IllegalArgumentException {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IllegalArgumentException(TAG + " addTagToCurrentBook"
+			throw new IllegalArgumentException(TAG + " addTag"
 					+ TRACK_INDEX_ILLEGAL);
 		}
-	}
 
-	public void removeTag() throws IllegalArgumentException {
-		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IllegalArgumentException(TAG + " addTagToCurrentBook"
-					+ TRACK_INDEX_ILLEGAL);
-		}
+		tags.add(new Tag(time));
 	}
 
 	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IllegalArgumentException(TAG + " addTagToCurrentBook"
+			throw new IllegalArgumentException(TAG + " removeTagAt"
 					+ TRACK_INDEX_ILLEGAL);
 		}
+
+		if (!isLegalTagIndex(tagIndex)) {
+			throw new IllegalArgumentException(TAG + " removeTagAt"
+					+ TAG_INDEX_ILLEGAL);
+		}
+
+		tags.remove(tagIndex);
 	}
 
-	/* 
+	private boolean isLegalTagIndex(int tagIndex) {
+		return tagIndex >= 0 && tagIndex < tags.size();
+	}
+
+	/*
 	 * TODO(!!): FOR TESTING PURPOSES ONLY!
 	 */
 	public Object getSelectedTrack() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-//	public void addTagToCurrentTrack(int time) throws IllegalArgumentException {
-//		addTagTo(this.selectedTrackIndex, time);
-//	}
-//
-//	public void addTagTo(int index, int time) throws IllegalArgumentException {
-//		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-//			throw new IllegalArgumentException(TAG + " addTagToCurrentBook"
-//					+ TRACK_INDEX_ILLEGAL);
-//		}
-//		this.tags.add(new Tag(time));
-//	}
-//
-//	public void removeTag(int index) {
-//		if (isLegalTagIndex(index)) {
-//			this.tags.remove(index);
-//		}
-//	}
-//
-//	private boolean isLegalTagIndex(int index) {
-//		return index >= 0 && index < tags.size();
-//	}
 
 }

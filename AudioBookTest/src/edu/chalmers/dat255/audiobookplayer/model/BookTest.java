@@ -201,4 +201,5 @@ public class BookTest extends TestCase {
 		b.setSelectedBookTitle(anotherTitle);
 		assertEquals(anotherTitle, b.getSelectedBookTitle());
 	}
+	
 }

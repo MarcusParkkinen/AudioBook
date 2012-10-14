@@ -81,7 +81,8 @@ public interface IBookUpdates {
 	 * 
 	 * @param newTitle
 	 */
-	public void setSelectedBookTitle(String newTitle) throws IllegalArgumentException;
+	public void setSelectedBookTitle(String newTitle)
+			throws IllegalArgumentException;
 
 	/**
 	 * Get the title of the book.
@@ -89,6 +90,16 @@ public interface IBookUpdates {
 	 * @return The title of the book.
 	 */
 	public String getSelectedBookTitle() throws IllegalArgumentException;
+
+	// public void setAuthor(String newAuthor) throws IllegalArgumentException;
+
+	/**
+	 * Returns the author of the selected book.
+	 * 
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public String getSelectedBookAuthor() throws IllegalArgumentException;
 
 	/**
 	 * Updates the duration of the book to the sum of the duration of its

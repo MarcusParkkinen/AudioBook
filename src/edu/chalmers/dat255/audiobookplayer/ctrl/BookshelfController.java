@@ -80,4 +80,5 @@ public class BookshelfController implements IBookshelfEvents {
 	public void removeTrack(int trackIndex) {
 		bookshelf.removeTrack(trackIndex);
 	}
+	
 }
