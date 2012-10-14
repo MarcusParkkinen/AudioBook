@@ -25,7 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * Creates Book instances (filling them with metadata).
  * 
- * @author Aki Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
  * @version 0.6
  * 
  */

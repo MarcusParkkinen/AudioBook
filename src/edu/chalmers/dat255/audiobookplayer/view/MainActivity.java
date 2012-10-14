@@ -24,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,10 +33,12 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.ctrl.BookshelfController;
 import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
+import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 
 /**
  * The main activity of the application. TODO: insert license
@@ -47,7 +48,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
  * 
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
-		IBookshelfEvents, PropertyChangeListener {
+		IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 	private static final String TAG = "MainActivity";
 	private static final String USERNAME = "Default";
 	private static final int PLAYER = 0;
@@ -58,14 +59,18 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private ViewPager pager;
 
 	// Fragments
-	PlayerFragment player = new PlayerFragment();
-	BookshelfFragment bookshelf = new BookshelfFragment();
+	PlayerFragment playerFragment = new PlayerFragment();
+	BookshelfFragment bookshelfFragment = new BookshelfFragment();
 
 	// Controllers
-	private BookshelfController bsc;
-	private PlayerController pc;
-	
-	private BookCreator bc;
+	private BookshelfController bookshelfController;
+	private PlayerController playerController;
+
+	// Creator
+	private BookCreator bookCreator;
+
+	// Bookshelf
+	Bookshelf shelf;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,25 +79,16 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 		initPager();
 
-		/*
-		 * TODO(anyone): Note: varje gang vi tabbar upp programmet efter
-		 * multitasking sa kommer allt i denna metod att koeras. Skapar konstiga
-		 * problem, boer fixas. Detta gaeller aeven alla andra viewkomponenter
-		 * ocksa.
-		 */
-
-		// Set up the controller for the bookshelf
-		bsc = new BookshelfController();
-
 		// Load a bookshelf specified by the username
-		Bookshelf bs = bsc.loadBookshelf(this, USERNAME);
+		Bookshelf bs = BookshelfHandler.loadBookshelf(this, USERNAME);
 
 		// Create controllers with the bookshelf reference
-		pc = new PlayerController(bs);
-		
-		bc = BookCreator.getInstance();
+		playerController = new PlayerController(bs);
+		bookshelfController = new BookshelfController(bs);
 
-		bc.setBookshelf(bs);
+		bookCreator = BookCreator.getInstance();
+
+		bookCreator.setBookshelf(bs);
 
 		// Subscribe as a listener to the model
 		bs.addPropertyChangeListener(this);
@@ -100,14 +96,14 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// Provide a reference to the bookshelf as an argument in the bundle
 		Bundle bsReference = new Bundle();
 		bsReference.putSerializable(Constants.Reference.BOOKSHELF, bs);
-		bookshelf.setArguments(bsReference);
+		bookshelfFragment.setArguments(bsReference);
 	}
 
 	private void initPager() {
 		// create a list of our fragments
 		List<Fragment> fragments = new Vector<Fragment>();
-		fragments.add(player);
-		fragments.add(bookshelf);
+		fragments.add(playerFragment);
+		fragments.add(bookshelfFragment);
 
 		// create the adapter
 		this.adapter = new ViewPagerAdapter(super.getSupportFragmentManager(),
@@ -126,7 +122,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Log.d(TAG, "onPause()");
 		super.onPause();
 
-//		stopUpdates();
+		// stopUpdates();
 
 		// stopAudio();
 	}
@@ -136,7 +132,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Log.d(TAG, "onStop()");
 		super.onStop();
 
-//		stopUpdates();
+		// stopUpdates();
 
 		// stopAudio();
 	}
@@ -149,9 +145,15 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 * if the application is stopped, it will go through onStart() and then
 		 * onResume(), so just start the updates again here.
 		 */
-//		startUpdates();
+		// startUpdates();
+
+		/*
+		 * TODO(??): This method is run every time the application is created,
+		 * starts or resumes. The updates should only start when returning from
+		 * a paused or stopped state.
+		 */
 	}
-	
+
 	@Override
 	protected void onStart() {
 		Log.d(TAG, "onStart()");
@@ -172,17 +174,17 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	}
 
 	/**
-	 * Saves a bookmark.
+	 * Saves a bookmark (the bookshelf).
 	 */
 	private void save() {
-		bsc.saveBookshelf(this, USERNAME);
+		BookshelfHandler.saveBookshelf(this, USERNAME, shelf);
 	}
 
 	/**
 	 * Stops updating the player UI and model with elapsed time.
 	 */
 	private void stopUpdates() {
-		pc.stopTimer();
+		playerController.stopTimer();
 	}
 
 	/**
@@ -191,7 +193,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * Only needed when it has been previously stopped.
 	 */
 	private void startUpdates() {
-		pc.startTimer();
+		playerController.startTimer();
 	}
 
 	/**
@@ -199,7 +201,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	private void stopAudio() {
 		// Stop the audio playback
-		pc.stop();
+		playerController.stop();
 	}
 
 	// Initiate the menu XML file
@@ -251,37 +253,37 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 
 	public void previousTrack() {
-		pc.previousTrack();
+		playerController.previousTrack();
 	}
 
 	public void play() {
-		pc.play();
+		playerController.play();
 	}
 
 	public void pause() {
-		pc.pause();
+		playerController.pause();
 	}
 
 	public void nextTrack() {
-		pc.nextTrack();
+		playerController.nextTrack();
 	}
 
 	public void seekLeft() {
-		pc.seekLeft();
+		playerController.seekLeft();
 	}
 
 	public void seekRight() {
-		pc.seekRight();
+		playerController.seekRight();
 	}
 
 	public void seekToPercentageInBook(double percentage) {
-		pc.seekToPercentageInBook(percentage);
+		playerController.seekToPercentageInBook(percentage);
 	}
 
 	public void seekToPercentageInTrack(double percentage) {
-		pc.seekToPercentageInTrack(percentage);
+		playerController.seekToPercentageInTrack(percentage);
 	}
-	
+
 	public boolean isPlaying() {
 		// TODO Auto-generated method stub
 		return false;
@@ -290,9 +292,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	/* End IPlayerEvents */
 
 	/* BookshelfUIListener */
-	public void bookSelected(int index) {
+	public void selectBook(int index) {
 		// set the selected book to the new index
-		bsc.setSelectedBook(index);
+		bookshelfController.setSelectedBook(index);
 	}
 
 	public void bookLongPress(int index) {
@@ -351,7 +353,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// added.
 				Book b = bs.getBookAt(lastBookIndex);
 				// Bookshelf
-				bookshelf.bookAdded(b);
+				bookshelfFragment.bookAdded(b);
 
 				// Player
 				// Do nothing
@@ -363,7 +365,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
 				// start the player
-				pc.start();
+				playerController.start();
 				// show the title of the book
 				updateBookTitleLabel(b);
 				// ... and display its duration
@@ -388,7 +390,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.Event.BOOK_FINISHED)) {
-				pc.stop();
+				playerController.stop();
 			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -463,9 +465,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * @param b
 	 */
 	private void setToPlaying() {
-		player.getActivity().runOnUiThread(new Runnable() {
+		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				player.setToPlaying();
+				playerFragment.setToPlaying();
 			}
 		});
 	}
@@ -481,10 +483,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateBookTitleLabel(final Book b) {
-		player.getActivity().runOnUiThread(new Runnable() {
+		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// TODO: check if bookshelf selectedBookIndex != -1
-				player.updateBookTitleLabel(b.getBookTitle());
+				playerFragment.updateBookTitleLabel(b.getBookTitle());
 			}
 		});
 	}
@@ -496,11 +498,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateTrackTitleLabel(final Book b) {
-		player.getActivity().runOnUiThread(new Runnable() {
+		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				if (b.getSelectedTrackIndex() != -1) {
 					Log.d(TAG, "Setting track title to: " + b.getTrackTitle());
-					player.updateTrackTitleLabel(b.getTrackTitle());
+					playerFragment.updateTrackTitleLabel(b.getTrackTitle());
 				}
 			}
 		});
@@ -517,10 +519,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateBookDurationLabel(final Book b) {
-		player.getActivity().runOnUiThread(new Runnable() {
+		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// TODO: check if bookshelf selectedBookIndex != -1
-				player.updateBookDurationLabel(b.getDuration());
+				playerFragment.updateBookDurationLabel(b.getDuration());
 			}
 		});
 	}
@@ -533,10 +535,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateTrackDurationLabel(final Book b) {
-		player.getActivity().runOnUiThread(new Runnable() {
+		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				if (b.getSelectedTrackIndex() != -1) {
-					player.updateTrackDurationLabel(b
+					playerFragment.updateTrackDurationLabel(b
 							.getSelectedTrackDuration());
 				}
 			}
@@ -554,14 +556,14 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateElapsedTimeLabels(final Book b) {
-		if (player.getActivity() != null) {
-			player.getActivity().runOnUiThread(new Runnable() {
+		if (playerFragment.getActivity() != null) {
+			playerFragment.getActivity().runOnUiThread(new Runnable() {
 				public void run() {
 					// TODO: check if bookshelf selectedBookIndex != -1
 					if (b.getSelectedTrackIndex() != -1) {
-						player.updateTrackElapsedTimeLabel(b
+						playerFragment.updateTrackElapsedTimeLabel(b
 								.getSelectedTrackElapsedTime());
-						player.updateBookElapsedTimeLabel(b
+						playerFragment.updateBookElapsedTimeLabel(b
 								.getBookElapsedTime());
 					}
 				}
@@ -585,7 +587,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			double progress = getProgress(trackElapsedTime, trackDuration);
 
-			player.updateTrackSeekBar(progress);
+			playerFragment.updateTrackSeekBar(progress);
 		}
 	}
 
@@ -605,7 +607,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			double progress = getProgress(bookElapsedTime, bookDuration);
 
-			player.updateBookSeekBar(progress);
+			playerFragment.updateBookSeekBar(progress);
 		}
 	}
 
@@ -620,28 +622,32 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return ((double) elapsedTime) / duration;
 	}
 
-	public void childSelected(int groupPosition, int childPosition) {
+	public void selectTrack(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
 		if (childPosition == -1 || groupPosition == -1) {
 			return;
 		}
-		int selectedBookPosition = bsc.getSelectedBookPosition();
+		int selectedBookPosition = bookshelfController
+				.getSelectedBookPosition();
 		// if the book is not currently selected, select it
 		if (selectedBookPosition != groupPosition) {
-			bookSelected(groupPosition);
+			selectBook(groupPosition);
 		}
 		// as the book is selected, track can be selected.
-		bsc.getSelectedBook().setSelectedTrackIndex(childPosition);
+		bookshelfController.getSelectedBook().setSelectedTrackIndex(
+				childPosition);
 	}
 
-	public void deleteBook(int groupPosition) {
-		// TODO Auto-generated method stub
-
+	public void removeBook(int bookIndex) {
+		bookshelfController.removeBook(bookIndex);
 	}
 
-	public void editBook(int groupPosition, String updatedTitle) {
-		// TODO Auto-generated method stub
+	public void removeTrack(int trackIndex) {
+		bookshelfController.removeTrack(trackIndex);
+	}
 
+	public void setBookTitleAt(int bookIndex, String newTitle) {
+		bookshelfController.setBookTitleAt(bookIndex, newTitle);
 	}
 
 }

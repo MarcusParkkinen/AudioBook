@@ -19,7 +19,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * Used to assert that implementing classes can handle updates on Book
  * instances.
  * 
- * @author Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
  * @version 0.6
  * 
  */
@@ -65,8 +65,6 @@ public interface IBookUpdates {
 	 * @param time
 	 *            The time at which to add the bookmark (in ms).
 	 */
-
-	// public void setBookmark(int trackIndex, int time);
 
 	/**
 	 * Sets the track index of the book. Rolls over if the index is out of

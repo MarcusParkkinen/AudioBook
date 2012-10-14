@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import android.content.Context;
 
+import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.FileParser;
@@ -27,17 +28,18 @@ import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
  * application terminates.
  * 
  * @author Marcus Parkkinen, Aki Käkelä
- * @version 0.6
+ * @version 0.7
  */
 
-public class BookshelfController {
-	private Bookshelf shelf;
+public class BookshelfController implements IBookshelfEvents {
+	private Bookshelf bookshelf;
 
 	/**
 	 * Bookshelf constructor.
+	 * @param bs 
 	 */
-	public BookshelfController() {
-		/* ... */
+	public BookshelfController(Bookshelf bs) {
+		bookshelf = bs;
 	}
 
 	/**
@@ -46,15 +48,15 @@ public class BookshelfController {
 	 * @param index
 	 */
 	public void setSelectedBook(int index) {
-		if (shelf != null) {
-			shelf.setSelectedBookIndex(index);
+		if (bookshelf != null) {
+			bookshelf.setSelectedBookIndex(index);
 		}
 	}
 	public int getSelectedBookPosition() {
-		return shelf.getSelectedBookIndex();
+		return bookshelf.getSelectedBookIndex();
 	}
 	public Book getSelectedBook() {
-		return shelf.getSelectedBook();
+		return bookshelf.getSelectedBook();
 	}
 	
 //	/**
@@ -68,48 +70,24 @@ public class BookshelfController {
 
 	// sort, swap, move, edit book
 
-	/**
-	 * Save a JSON representation of the model object tree to file.
-	 * 
-	 * @param Context
-	 *            context
-	 * @param String
-	 *            username
-	 */
-	public boolean saveBookshelf(Context c, String username) {
-		try {
-			FileParser.writeToInternalStorage(username + ".bookmark", c,
-					JsonParser.toJSON(shelf));
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
+	public void selectBook(int bookIndex) {
+		bookshelf.setSelectedBookIndex(bookIndex);
 	}
 
-	/**
-	 * Attempt to load the model object tree from a file. This method
-	 * instantiates the member variable with either a new Bookshelf or a
-	 * existing one from a file.
-	 * 
-	 * A reference to the bookshelf is also returned to the calling method.
-	 * 
-	 * @param Context
-	 *            context
-	 * @param String
-	 *            username
-	 */
-	public Bookshelf loadBookshelf(Context c, String username) {
-		try {
-			Object obj = JsonParser.fromJSON(FileParser
-					.readFromInternalStorage(username + ".bookmark", c),
-					Bookshelf.class);
-			if (obj instanceof Bookshelf) {
-				return (shelf = (Bookshelf) obj);
-			}
-		} catch (Exception e) {
-			// If anything goes wrong, just continue..
-		}
-		return (shelf = new Bookshelf());
+	public void selectTrack(int bookIndex, int trackIndex) {
+		bookshelf.setSelectedBookIndex(bookIndex);
+		bookshelf.setSelectedTrackIndex(trackIndex);
 	}
-	// + sort, swap, move, edit book
+
+	public void removeBook(int groupPosition) {
+		bookshelf.removeBook(groupPosition);
+	}
+
+	public void setBookTitleAt(int groupPosition, String newTitle) {
+		bookshelf.setBookTitle(newTitle);
+	}
+
+	public void removeTrack(int trackIndex) {
+		bookshelf.removeTrack(trackIndex);
+	}
 }

@@ -41,13 +41,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
-import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
-import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
 
 /**
  * Graphical representation of the bookshelf.
@@ -56,11 +54,11 @@ import edu.chalmers.dat255.audiobookplayer.util.JsonParser;
  * @version 0.6
  */
 
-public class BookshelfFragment extends Fragment {
+public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	private static final String TAG = "BookshelfFragment.class";
 	private List<Entry<Book, List<String>>> listData;
 	private ExpandableBookshelfAdapter adapter;
-	private IBookshelfEvents fragmentOwner;
+	private IBookshelfGUIEvents fragmentOwner;
 
 	private interface IContextMenuItem {
 		public String getText();
@@ -99,10 +97,10 @@ public class BookshelfFragment extends Fragment {
 		super.onAttach(activity);
 
 		try {
-			fragmentOwner = (IBookshelfEvents) activity;
+			fragmentOwner = (IBookshelfGUIEvents) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " does not implement " + IBookshelfEvents.class.getName());
+					+ " does not implement " + IBookshelfGUIEvents.class.getName());
 		}
 	}
 
@@ -139,20 +137,10 @@ public class BookshelfFragment extends Fragment {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
-					fragmentOwner.addBookButtonPressed();
+					addBookButtonPressed();
 				}
 			}
 		});
-
-		// Button prefButton = (Button) view.findViewById(R.id.prefs);
-		//
-		// prefButton.setOnClickListener(new OnClickListener() {
-		// public void onClick(View v) {
-		// if (getActivity() != null) {
-		// fragmentOwner.preferencesButtonPressed();
-		// }
-		// }
-		// });
 
 		/******************************************************************************/
 		/**//**/
@@ -184,10 +172,10 @@ public class BookshelfFragment extends Fragment {
 			ContextMenuInfo menuInfo) {
 		if (menuInfo instanceof ExpandableListContextMenuInfo) {
 			ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
-			int groupPosition = ExpandableListView
+			int bookIndex = ExpandableListView
 					.getPackedPositionGroup(info.packedPosition);
-			// childPosition will be -1 if group is clicked
-			int childPosition = ExpandableListView
+			// trackIndex will be -1 if group is clicked
+			int trackIndex = ExpandableListView
 					.getPackedPositionChild(info.packedPosition);
 			int type = ExpandableListView
 					.getPackedPositionType(info.packedPosition);
@@ -197,11 +185,11 @@ public class BookshelfFragment extends Fragment {
 			// fill the context menu with the correct items
 			if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 				menuItems = ChildContextMenuItem.values();
-				title = listData.get(groupPosition).getValue()
-						.get(childPosition);
+				title = listData.get(bookIndex).getValue()
+						.get(trackIndex);
 			} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 				menuItems = GroupContextMenuItem.values();
-				title = listData.get(groupPosition).getKey().getBookTitle();
+				title = listData.get(bookIndex).getKey().getBookTitle();
 			}
 			// set the title
 			menu.setHeaderTitle(title);
@@ -218,11 +206,12 @@ public class BookshelfFragment extends Fragment {
 	public boolean onContextItemSelected(MenuItem item) {
 		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item
 				.getMenuInfo();
-		int groupPosition = ExpandableListView
+		int bookIndex = ExpandableListView
 				.getPackedPositionGroup(info.packedPosition);
 		// will be -1 if the type is group
-		int childPosition = ExpandableListView
+		int trackIndex = ExpandableListView
 				.getPackedPositionChild(info.packedPosition);
+		
 		int type = ExpandableListView
 				.getPackedPositionType(info.packedPosition);
 
@@ -243,21 +232,22 @@ public class BookshelfFragment extends Fragment {
 
 		// if the type of the context menu is group
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP
-				&& menuItem instanceof GroupContextMenuItem) {
+				&& menuItem instanceof GroupContextMenuItem
+				&& getActivity() != null) {
+
 			// perform the correct task
-
 			switch ((GroupContextMenuItem) menuItem) {
-
 			case Delete:
-				deleteBook(groupPosition);
+				removeBook(bookIndex);
 				break;
 			case Edit:
-				editBook(groupPosition);
+				setBookTitleAt(bookIndex, "NEWNAME");
 				break;
 			default:
 				break;
 
 			}
+
 		}
 		// if the type of the context menu is that of a child
 		else if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD
@@ -273,48 +263,15 @@ public class BookshelfFragment extends Fragment {
 		return true;
 	}
 
-	private void deleteBook(int groupPosition) {
+	private void childClicked(int bookIndex, int trackIndex) {
 		if (getActivity() != null) {
-			fragmentOwner.deleteBook(groupPosition);
-			Toast.makeText(getActivity(), "DELETE " + groupPosition,
-					Toast.LENGTH_SHORT).show();
+			selectTrack(bookIndex, trackIndex);
 		}
 	}
 
-	private void editBook(int groupPosition) {
+	private void groupClicked(int bookIndex) {
 		if (getActivity() != null) {
-			// TODO add some way to change name of book
-			fragmentOwner.editBook(groupPosition, "NEWBOOKNAME");
-			Toast.makeText(getActivity(), "DELETE " + groupPosition,
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	protected void childClicked(int groupPosition, int childPosition) {
-		if (getActivity() != null) {
-			fragmentOwner.childSelected(groupPosition, childPosition);
-		}
-	}
-
-	protected void groupClicked(int groupPosition) {
-		if (getActivity() != null) {
-			fragmentOwner.bookSelected(groupPosition);
-		}
-	}
-
-	/**
-	 * Private method that utilizes utility classes to deserialize a bookshelf
-	 * object.
-	 * 
-	 * @param String
-	 *            json representation of the object
-	 */
-	private Bookshelf getReferenceFromJSON(String json) {
-		try {
-			return JsonParser.fromJSON(json, Bookshelf.class);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
+			selectBook(bookIndex);
 		}
 	}
 
@@ -384,20 +341,20 @@ public class BookshelfFragment extends Fragment {
 			selectedIndex = -1;
 		}
 
-		public String getChild(int groupPosition, int childPosition) {
-			return listData.get(groupPosition).getValue().get(childPosition);
+		public String getChild(int bookIndex, int trackIndex) {
+			return listData.get(bookIndex).getValue().get(trackIndex);
 		}
 
-		public long getChildId(int groupPosition, int childPosition) {
-			return childPosition;
+		public long getChildId(int bookIndex, int trackIndex) {
+			return trackIndex;
 		}
 
-		public int getChildrenCount(int groupPosition) {
-			return listData.get(groupPosition).getValue().size();
+		public int getChildrenCount(int bookIndex) {
+			return listData.get(bookIndex).getValue().size();
 		}
 
-		public View getChildView(final int groupPosition,
-				final int childPosition, boolean isLastChild, View convertView,
+		public View getChildView(final int bookIndex,
+				final int trackIndex, boolean isLastChild, View convertView,
 				ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater vi = (LayoutInflater) context
@@ -408,10 +365,10 @@ public class BookshelfFragment extends Fragment {
 
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
 			setTextViewText(convertView, R.id.bookshelfTrackTitle,
-					getChild(groupPosition, childPosition));
+					getChild(bookIndex, trackIndex));
 
-			int duration = getGroup(groupPosition).getTrackDurationAt(
-					childPosition) / 1000;
+			int duration = getGroup(bookIndex).getTrackDurationAt(
+					trackIndex) / 1000;
 			// set the duration of the track
 			setTextViewText(convertView, R.id.bookshelfTrackTime,
 					DateUtils.formatElapsedTime(duration));
@@ -420,10 +377,10 @@ public class BookshelfFragment extends Fragment {
 			// selected
 			convertView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					selectedIndex = groupPosition;
+					selectedIndex = bookIndex;
 					expandableListView.invalidateViews();
-					BookshelfFragment.this.childClicked(groupPosition,
-							childPosition);
+					BookshelfFragment.this.childClicked(bookIndex,
+							trackIndex);
 				}
 			});
 
@@ -440,19 +397,19 @@ public class BookshelfFragment extends Fragment {
 			return convertView;
 		}
 
-		public Book getGroup(int groupPosition) {
-			return listData.get(groupPosition).getKey();
+		public Book getGroup(int bookIndex) {
+			return listData.get(bookIndex).getKey();
 		}
 
 		public int getGroupCount() {
 			return listData.size();
 		}
 
-		public long getGroupId(int groupPosition) {
-			return groupPosition;
+		public long getGroupId(int bookIndex) {
+			return bookIndex;
 		}
 
-		public View getGroupView(final int groupPosition,
+		public View getGroupView(final int bookIndex,
 				final boolean isExpanded, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater vi = (LayoutInflater) context
@@ -460,7 +417,7 @@ public class BookshelfFragment extends Fragment {
 				convertView = vi.inflate(R.layout.bookshelf_group_row, parent,
 						false);
 			}
-			final Book book = getGroup(groupPosition);
+			final Book book = getGroup(bookIndex);
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
 			int duration = book.getDuration() / 1000;
 			// prevent problems with a duration of 0
@@ -472,7 +429,7 @@ public class BookshelfFragment extends Fragment {
 			// set title, author, time and duration of book
 			setTextViewText(convertView, R.id.bookshelfBookTitle,
 					book.getBookTitle());
-			if (groupPosition == selectedIndex) {
+			if (bookIndex == selectedIndex) {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.RED);
 			} else {
@@ -505,9 +462,9 @@ public class BookshelfFragment extends Fragment {
 			imageView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (isExpanded) {
-						expandableListView.collapseGroup(groupPosition);
+						expandableListView.collapseGroup(bookIndex);
 					} else {
-						expandableListView.expandGroup(groupPosition);
+						expandableListView.expandGroup(bookIndex);
 					}
 				}
 			});
@@ -516,17 +473,17 @@ public class BookshelfFragment extends Fragment {
 				public void onClick(View v) {
 					// expand the selected item
 					if (!isExpanded) {
-						expandableListView.expandGroup(groupPosition);
+						expandableListView.expandGroup(bookIndex);
 					}
 					// scroll to the selected item
-					expandableListView.setSelectionFromTop(groupPosition, 0);
+					expandableListView.setSelectionFromTop(bookIndex, 0);
 					// sets the currently selected index
-					selectedIndex = groupPosition;
+					selectedIndex = bookIndex;
 					// invalidates views to force redraw thus setting the
 					// correct textcolor
 					expandableListView.invalidateViews();
 
-					BookshelfFragment.this.groupClicked(groupPosition);
+					BookshelfFragment.this.groupClicked(bookIndex);
 				}
 			});
 			// set long click to show the group's context menu
@@ -560,8 +517,39 @@ public class BookshelfFragment extends Fragment {
 			return true;
 		}
 
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
+		public boolean isChildSelectable(int bookIndex, int trackIndex) {
 			return true;
 		}
 	}
+
+	public void bookLongPress(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addBookButtonPressed() {
+		fragmentOwner.addBookButtonPressed();
+	}
+
+	public void selectBook(int bookIndex) {
+		fragmentOwner.selectBook(bookIndex);
+	}
+
+	public void selectTrack(int bookIndex, int trackIndex) {
+		fragmentOwner.selectTrack(bookIndex, trackIndex);
+	}
+
+	public void removeBook(int bookIndex) {
+		fragmentOwner.removeBook(bookIndex);
+	}
+
+	public void removeTrack(int trackIndex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setBookTitleAt(int bookIndex, String newTitle) {
+		fragmentOwner.setBookTitleAt(bookIndex, "NEWNAME");
+	}
+
 }

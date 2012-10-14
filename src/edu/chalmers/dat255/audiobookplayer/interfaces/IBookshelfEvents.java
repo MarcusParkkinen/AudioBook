@@ -13,66 +13,57 @@
 
 package edu.chalmers.dat255.audiobookplayer.interfaces;
 
+
 /**
- * @author Aki Kï¿½kelï¿½, Fredrik ï¿½hs
+ * @author Aki Käkelä, Fredrik Åhs
  * @version 0.7
  * 
  */
 public interface IBookshelfEvents {
 	/**
-	 * Informs the listener that the currently selected book should change.
+	 * Selects the given book.
 	 * 
-	 * @param groupPosition
+	 * @param bookIndex
 	 *            The index of the book that now should be selected.
 	 */
-	public void bookSelected(int groupPosition);
+	public void selectBook(int bookIndex);
 
 	/**
-	 * Informs the listener that a book has been long pressed.
+	 * Selects the given track in the given book.
 	 * 
-	 * @param index
-	 *            The index of the book pressed.
-	 */
-	public void bookLongPress(int index);
-
-	/**
-	 * Informs the listener that the add button has been pressed.
-	 */
-	public void addBookButtonPressed();
-
-//	/**
-//	 * Informs the listener that the preferences button has been pressed.
-//	 */
-//	public void preferencesButtonPressed();
-
-	/**
-	 * Informs the listener that the currently selected child should change.
-	 * 
-	 * @param groupPosition
+	 * @param bookIndex
 	 *            Position of the book.
-	 * @param childPosition
+	 * @param trackIndex
 	 *            Position of the track.
 	 */
-	public void childSelected(int groupPosition, int childPosition);
+	public void selectTrack(int bookIndex, int trackIndex);
 
 	/**
-	 * Informs the listener that the book at the given position.
+	 * Removes the book at the given index.
 	 * 
-	 * @param groupPosition
+	 * @param bookIndex
 	 *            Position of the book.
 	 */
-	public void deleteBook(int groupPosition);
-
+	public void removeBook(int bookIndex);
+	
+	/**
+	 * Removes the track at the given index. 
+	 * 
+	 * @param trackIndex
+	 */
+	public void removeTrack(int trackIndex);
+	// swap, sort, move track(s)
+	// swap, sort, move book(s)
+	
 	/**
 	 * Informs the listener that the book at given position should change name
 	 * to the given value.
 	 * 
-	 * @param groupPosition
+	 * @param bookIndex
 	 *            Position of the book.
 	 * @param newTitle
 	 *            The new title of the book.
 	 */
-	public void editBook(int groupPosition, String newTitle);
+	public void setBookTitleAt(int bookIndex, String newTitle);
 
-	// public void refillBookshelf(Bookshelf );
 }
