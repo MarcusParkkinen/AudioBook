@@ -58,11 +58,11 @@ public class BookshelfController implements IBookshelfEvents {
 		bookshelf.setSelectedTrackIndex(trackIndex);
 	}
 
-	public void removeBook(int groupPosition) {
-		bookshelf.removeBookAt(groupPosition);
+	public void removeBook(int bookIndex) {
+		bookshelf.removeBookAt(bookIndex);
 	}
 
-	public void setBookTitleAt(int groupPosition, String newTitle) {
+	public void setBookTitleAt(int bookIndex, String newTitle) {
 		bookshelf.setSelectedBookTitle(newTitle);
 	}
 

@@ -113,15 +113,13 @@ public class PlayerFragment extends Fragment {
 				 * show the play button (toggle pause/play and the isPlaying
 				 * value).
 				 */
-				boolean isPlaying = fragmentOwner.isPlaying();
-				if (isPlaying) {
+				if (fragmentOwner.isPlaying()) {
 					fragmentOwner.pause();
-					playPause.setImageResource(R.drawable.pb_play_default);
+					playPause.setImageResource(R.drawable.pb_pause_default);
 				} else {
 					fragmentOwner.resume();
-					playPause.setImageResource(R.drawable.pb_pause_default);
+					playPause.setImageResource(R.drawable.pb_play_default);
 				}
-				isPlaying = !isPlaying;
 			}
 		});
 

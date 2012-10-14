@@ -285,8 +285,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	}
 
 	public boolean isPlaying() {
-		// TODO Auto-generated method stub
-		return false;
+		return playerController.isPlaying();
 	}
 
 	/* End IPlayerEvents */

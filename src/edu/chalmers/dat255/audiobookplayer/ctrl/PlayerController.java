@@ -145,6 +145,7 @@ public class PlayerController implements IPlayerEvents {
 	 * @return True if setup was run without problems.
 	 */
 	private boolean setup() {
+		// TODO(aki): check if already playing; don't always restart
 		if (bs.getSelectedTrackIndex() == -1) {
 			Log.d(TAG, "Index is -1. Should not continue playing.");
 			stop();
@@ -250,7 +251,7 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void resume() {
-		if (isStarted && !mp.isPlaying()) {
+		if (isStarted) {
 			startTimer();
 			mp.start();
 		}
