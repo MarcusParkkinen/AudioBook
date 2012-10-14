@@ -186,7 +186,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 			throws IllegalArgumentException {
 		if (index < 0 || index > this.tracks.size() + 1) {
 			throw new IllegalArgumentException(TAG
-					+ " setSelectedTrackIndex with index (" + index + ")"
+					+ " setSelectedTrackIndex with illegal index " + index
 					+ TRACK_INDEX_ILLEGAL);
 		}
 
@@ -378,7 +378,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * @return int duration (ms)
 	 */
 	public int getTrackDurationAt(int index) {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
+		if (!isLegalTrackIndex(index)) {
 			throw new IllegalArgumentException(
 					"Tried to get 'track duration at' when index is illegal.");
 		}

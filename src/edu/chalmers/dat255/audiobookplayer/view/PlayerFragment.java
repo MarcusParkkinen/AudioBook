@@ -119,7 +119,7 @@ public class PlayerFragment extends Fragment {
 					fragmentOwner.pause();
 					playPause.setImageResource(R.drawable.pb_play_default);
 				} else {
-					fragmentOwner.play();
+					fragmentOwner.resume();
 					playPause.setImageResource(R.drawable.pb_pause_default);
 				}
 				isPlaying = !isPlaying;
@@ -189,11 +189,11 @@ public class PlayerFragment extends Fragment {
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				Log.d(TAG, "started tracking");
+//				Log.d(TAG, "started tracking");
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				Log.d(TAG, "stopped tracking");
+//				Log.d(TAG, "stopped tracking");
 			}
 		});
 

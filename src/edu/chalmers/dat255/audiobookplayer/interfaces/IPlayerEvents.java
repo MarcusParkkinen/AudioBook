@@ -28,12 +28,12 @@ public interface IPlayerEvents {
 	 * <p>
 	 * Does nothing if the player was already paused.
 	 */
-	public void play();
+	public void resume();
 
 	/**
 	 * Pauses playback if the player is already in a started state.
 	 * <p>
-	 * Does nothing if the player was already paused.
+	 * Does nothing if the player was already playing.
 	 */
 	public void pause();
 

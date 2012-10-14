@@ -48,7 +48,7 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	/**
-	 * Stops the update timer but keeps playing audio.
+	 * Stops the update timer (audio may still keep playing).
 	 */
 	public void stopTimer() {
 		if (trackTimeUpdateThread != null && trackTimeUpdateThread.isAlive()
@@ -86,6 +86,8 @@ public class PlayerController implements IPlayerEvents {
 
 	/**
 	 * Starts the audio player from the beginning. Starts updating the model.
+	 * <p>
+	 * Can be called in any state (stopped, paused, resumed, uninitialized).
 	 * 
 	 * @precondition The Bookshelf must have been initialized and the path at
 	 *               the selected track index can not be null. Otherwise nothing
@@ -100,6 +102,8 @@ public class PlayerController implements IPlayerEvents {
 	/**
 	 * Starts the audio player from the given time in milliseconds. Starts
 	 * updating the model.
+	 * <p>
+	 * Can be called in any state (stopped, paused, resumed, uninitialized).
 	 * 
 	 * @precondition The Bookshelf must have been initialized and the path at
 	 *               the selected track index can not be null. Otherwise nothing
@@ -110,13 +114,33 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	public void startAt(int ms) {
 		if (setup()) {
-			mp.seekTo(ms);
+			seekTo(ms);
 			mp.start();
 		}
 	}
 
 	/**
-	 * Can only be called if the path is valid
+	 * Starts the audio player from the given position in relation (percentage)
+	 * to the duration of the audio file. Starts updating the model.
+	 * <p>
+	 * Can be called in any state (stopped, paused, resumed, uninitialized).
+	 * 
+	 * @precondition The Bookshelf must have been initialized and the path at
+	 *               the selected track index can not be null. Otherwise nothing
+	 *               is done.
+	 * 
+	 * @param percentage
+	 *            0 <= x <= 100
+	 */
+	private void startAtPercentage(double percentage) {
+		if (percentage >= 0 && percentage <= 100 && setup()) {
+			seekTo((int) (mp.getDuration() * percentage));
+			mp.start();
+		}
+	}
+
+	/**
+	 * Can only be called if the path is valid.
 	 * 
 	 * @return True if setup was run without problems.
 	 */
@@ -196,49 +220,44 @@ public class PlayerController implements IPlayerEvents {
 	 * @return
 	 */
 	private int getTrackDuration() {
-		return bs.getSelectedTrackDuration();
+		if (bs.getSelectedTrackIndex() != -1) {
+			return bs.getSelectedTrackDuration();
+		}
+
+		// no track is selected, so the duration is 0ms.
+		return 0;
 	}
 
 	/**
 	 * Convenience method.
 	 */
 	private void updateTrackTime() {
-		this.bs.setSelectedTrackElapsedTime(mp.getCurrentPosition());
+		if (bs.getSelectedTrackIndex() != -1) {
+			this.bs.setSelectedTrackElapsedTime(mp.getCurrentPosition());
+		}
 	}
 
 	/* IPlayerEvents */
 
-	public void playPause() {
-		if (isStarted) {
-			if (mp.isPlaying()) {
-				mp.pause();
-			} else {
-				mp.start();
-			}
-		}
-	}
-
 	public void pause() {
-		if (isStarted) {
-			if (mp.isPlaying()) {
-				mp.pause();
-			}
+		if (isStarted && mp.isPlaying()) {
+			stopTimer();
+			mp.pause();
 		}
 	}
 
-	public void play() {
-		if (isStarted) {
-			if (!mp.isPlaying()) {
-				mp.start();
-			}
+	public void resume() {
+		if (isStarted && !mp.isPlaying()) {
+			startTimer();
+			mp.start();
 		}
 	}
 
 	public void previousTrack() {
 		if (bs.getSelectedTrackIndex() == -1) {
-			// go to the final track (replay it)
+			// go to the final track and replay it
 			bs.setSelectedTrackIndex(bs.getNumberOfTracks() - 1);
-		} else {
+		} else if (bs.getSelectedTrackIndex() > 0) {
 			// decrement track index
 			bs.setSelectedTrackIndex(bs.getSelectedTrackIndex() - 1);
 		}
@@ -268,41 +287,66 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekToPercentageInTrack(double percentage) {
-		if (isAllowedTrackIndex()) {
-			seekTo((int) (mp.getDuration() * percentage));
-		}
-	}
+		if (isAllowedBookIndex()) {
+			Log.d(TAG, "Track index: " + bs.getSelectedTrackIndex());
 
-	private boolean isAllowedTrackIndex() {
-		return bs.getSelectedTrackIndex() != -1;
+			if (bs.getSelectedTrackIndex() == -1) {
+				// set the selected track index to the last one
+				bs.setSelectedTrackIndex(bs.getNumberOfTracks() - 1);
+			}
+
+			if (isStarted) {
+				// no need to restart the player
+				mp.seekTo((int) (mp.getDuration() * percentage));
+			} else {
+				/*
+				 * start from the percentage
+				 */
+				startAtPercentage(percentage);
+			}
+
+			/*
+			 * note that startAt() can not be used as MediaPlayer is not
+			 * prepared, thus it can not get the duration of the file.
+			 */
+		}
 	}
 
 	public void seekToPercentageInBook(double percentage) {
-		// get the duration of the book
-		int bookDuration = bs.getSelectedBookDuration();
+		if (isAllowedBookIndex()) {
+			// get the duration of the book
+			int bookDuration = bs.getSelectedBookDuration();
 
-		// calculate the seekTime (ms)
-		int seekTime = (int) (bookDuration * percentage);
+			// calculate the seekTime (ms)
+			int seekTime = (int) (bookDuration * percentage);
 
-		Log.d(TAG, "seekTime: " + seekTime + ". Book duration: " + bookDuration);
+			Log.d(TAG, "seekTime: " + seekTime + ". Book duration: "
+					+ bookDuration);
 
-		// seek through the tracks
-		int track = 0, trackDuration;
-		while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
-			seekTime -= trackDuration;
-			track++;
-			Log.d(TAG, "Skipped a track (" + trackDuration
-					+ "ms) . New seekTime: " + seekTime + ". Track#: " + track);
+			// seek through the tracks
+			int track = 0, trackDuration;
+			while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
+				seekTime -= trackDuration;
+				track++;
+				Log.d(TAG, "Skipped a track (" + trackDuration
+						+ "ms) . New seekTime: " + seekTime + ". Track#: "
+						+ track);
+			}
+
+			// set the correct track
+			bs.setSelectedTrackIndex(track, false);
+
+			if (isStarted) {
+				// no need to restart the player
+				mp.seekTo(seekTime);
+			} else {
+				/*
+				 * start the track we seeked to, and finishing seeking within
+				 * that track
+				 */
+				startAt(seekTime);
+			}
 		}
-
-		// set the correct track
-		bs.setSelectedTrackIndex(track);
-
-		// start the track we seeked to
-		start();
-
-		// and finishing seeking within that track
-		seekTo(seekTime);
 	}
 
 	/* End IPlayerEvents */
@@ -317,35 +361,22 @@ public class PlayerController implements IPlayerEvents {
 		mp.seekTo(time);
 	}
 
-	private class TrackElapsedTimeUpdater implements Runnable {
-
-		public void run() {
-			while (isStarted && mp.isPlaying()) {
-				// Log.d(TAG, "Updating Track Elapsed Time");
-				// Log.d(TAG, "Updating track time @" + (1000 /
-				// UPDATE_FREQUENCY)
-				// + "x/s");
-				updateTrackTime();
-				try {
-					Thread.sleep(UPDATE_FREQUENCY);
-				} catch (InterruptedException e) {
-					// the thread was interrupted, so simply end run.
-					Log.d(TAG, "Track elapsed time updater stopped.");
-					return;
-				}
-			}
-		}
-
-	}
-
 	/**
-	 * Checks if the player is currently playing audio (not paused, stopped or
-	 * uninitialized).
+	 * Convenience method.
 	 * 
 	 * @return
 	 */
-	public boolean isStarted() {
-		return isStarted;
+	private boolean isAllowedTrackIndex() {
+		return bs.getSelectedTrackIndex() != -1;
+	}
+
+	/**
+	 * Convenience method.
+	 * 
+	 * @return
+	 */
+	private boolean isAllowedBookIndex() {
+		return bs.getSelectedBookIndex() != -1;
 	}
 
 	/*
@@ -363,11 +394,44 @@ public class PlayerController implements IPlayerEvents {
 		return trackTimeUpdateThread;
 	}
 
+	/*
+	 * *** END TESTING PURPOSES ONLY ***
+	 */
+
 	public boolean isPlaying() {
-		return mp.isPlaying() && isStarted;
+		return mp.isPlaying();
 	}
 
-	/*
-	 * *** ---
+	/**
+	 * Checks if the player is currently playing audio (not paused, stopped or
+	 * uninitialized).
+	 * 
+	 * @return True if started.
 	 */
+	public boolean isStarted() {
+		return isStarted;
+	}
+
+	/**
+	 * Thread that updates the elapsed time in a track.
+	 * 
+	 * @author Aki Käkelä
+	 * 
+	 */
+	private class TrackElapsedTimeUpdater implements Runnable {
+
+		public void run() {
+			while (isStarted && mp.isPlaying()) {
+				updateTrackTime();
+				try {
+					Thread.sleep(UPDATE_FREQUENCY);
+				} catch (InterruptedException e) {
+					// the thread was interrupted, so simply end the run method.
+					Log.d(TAG, "Track elapsed time updater stopped.");
+					return;
+				}
+			}
+		}
+
+	}
 }

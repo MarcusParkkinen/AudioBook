@@ -265,6 +265,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 	private void childClicked(int bookIndex, int trackIndex) {
 		if (getActivity() != null) {
+			Log.d(TAG, "Child clicked at + [" + bookIndex + ", " + trackIndex + "]");
 			setSelectedTrack(bookIndex, trackIndex);
 		}
 	}

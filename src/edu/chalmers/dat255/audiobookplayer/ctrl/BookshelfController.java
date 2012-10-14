@@ -49,9 +49,9 @@ public class BookshelfController implements IBookshelfEvents {
 	public int getSelectedBookPosition() {
 		return bookshelf.getSelectedBookIndex();
 	}
-	public Book getSelectedBook() {
-		return bookshelf.getSelectedBook();
-	}
+//	public Book getSelectedBook() {
+//		return bookshelf.getSelectedBook();
+//	}
 	
 //	/**
 //	 * Returns the index of the currently selected book.

@@ -256,8 +256,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		playerController.previousTrack();
 	}
 
-	public void play() {
-		playerController.play();
+	public void resume() {
+		playerController.resume();
 	}
 
 	public void pause() {
@@ -362,6 +362,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Bookshelf
 				// indicate selected book
 				// bookshelf.selectedBookChanged(b);
+				
+				/*
+				 * Player
+				 */
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
 				// start the player
@@ -426,7 +430,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
-				// A new track is playing
 				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// move the "selected track" indicator to the new index
@@ -622,20 +625,24 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return ((double) elapsedTime) / duration;
 	}
 
-	public void setSelectedTrack(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
-		if (childPosition == -1 || groupPosition == -1) {
+	public void setSelectedTrack(int bookIndex, int trackIndex) {
+		if (bookIndex == -1 || trackIndex == -1) {
 			return;
 		}
+		
 		int selectedBookPosition = bookshelfController
 				.getSelectedBookPosition();
+		
 		// if the book is not currently selected, select it
-		if (selectedBookPosition != groupPosition) {
-			setSelectedBook(groupPosition);
+		if (selectedBookPosition != bookIndex) {
+			setSelectedBook(bookIndex);
 		}
+		
 		// as the book is selected, track can be selected.
-		bookshelfController.getSelectedBook().setSelectedTrackIndex(
-				childPosition);
+		bookshelfController.setSelectedTrack(bookIndex, trackIndex);
+		
+		// restart the player
+		playerController.start();
 	}
 
 	public void removeBook(int bookIndex) {

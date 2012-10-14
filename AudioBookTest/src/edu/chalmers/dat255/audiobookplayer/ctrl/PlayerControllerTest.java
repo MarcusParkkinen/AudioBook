@@ -40,12 +40,6 @@ public class PlayerControllerTest extends TestCase {
 		super(name);
 	}
 
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
-	}
-
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -125,6 +119,7 @@ public class PlayerControllerTest extends TestCase {
 
 	public void testSeekTo() {
 		fail("Not yet implemented");
+//		pc.seekTo(15102501);
 	}
 
 }

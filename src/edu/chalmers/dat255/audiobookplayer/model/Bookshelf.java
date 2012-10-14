@@ -35,7 +35,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	private static final String TAG = "Bookshelf.java";
 	private static final String BOOK_INDEX_ILLEGAL = " Book index is illegal";
-	
+
 	private static final int NO_BOOK_SELECTED = -1;
 	private static final long serialVersionUID = 1;
 
@@ -115,7 +115,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 */
 	public void removeBookAt(int index) {
 		if (!isLegalIndex(index)) {
-			throw new IllegalArgumentException(TAG + " removeBook" + BOOK_INDEX_ILLEGAL);
+			throw new IllegalArgumentException(TAG + " removeBook"
+					+ BOOK_INDEX_ILLEGAL);
 		}
 
 		books.remove(index);
@@ -147,7 +148,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 */
 	public void moveBook(int from, int to) throws IllegalArgumentException {
 		if (!isLegalIndex(from) || !isLegalIndex(to)) {
-			throw new IllegalArgumentException(TAG + " moveBook" + BOOK_INDEX_ILLEGAL);
+			throw new IllegalArgumentException(TAG + " moveBook"
+					+ BOOK_INDEX_ILLEGAL);
 		}
 		Book temp = books.remove(to);
 		books.add(from, temp);
@@ -161,7 +163,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	public void removeTrack(int index) throws IllegalArgumentException {
 		if (!isLegalIndex(index)) {
-			throw new IllegalArgumentException(TAG + " removeTrack" + BOOK_INDEX_ILLEGAL);
+			throw new IllegalArgumentException(TAG + " removeTrack"
+					+ BOOK_INDEX_ILLEGAL);
 		}
 
 		this.books.get(selectedBookIndex).removeTrack(index);
@@ -190,7 +193,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 				new Bookshelf(this));
 	}
 
-	public void swapTracks(int firstIndex, int secondIndex) throws IllegalArgumentException {
+	public void swapTracks(int firstIndex, int secondIndex)
+			throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).swapTracks(firstIndex, secondIndex);
 		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
 				new Bookshelf(this));
@@ -202,7 +206,22 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 				new Bookshelf(this));
 	}
 
-	public void setSelectedTrackIndex(int index) throws IllegalArgumentException {
+	public void setSelectedTrackIndex(int index)
+			throws IllegalArgumentException {
+		setSelectedTrackIndex(index, true);
+	}
+
+	/**
+	 * Sets the selected track index to the given index. Won't fire a property
+	 * change event if update is false.
+	 * 
+	 * @param index
+	 * @param update
+	 *            Fires an update event if true.
+	 * @throws IllegalArgumentException
+	 */
+	public void setSelectedTrackIndex(int index, boolean update)
+			throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).setSelectedTrackIndex(index);
 
 		/*
@@ -212,30 +231,28 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		boolean legal = this.books.get(selectedBookIndex).isLegalTrackIndex(
 				index);
 
-		Log.d(TAG, "(Bookshelf.setSelectedTrackindex) new track index: "
-				+ index + "(" + (legal ? "legal" : "illegal") + ")");
-
-		if (legal) {
-			Log.d(TAG, "Firing update event (Bookshelf.setSelectedTrackindex)");
+		if (legal && update) {
 			pcs.firePropertyChange(Constants.Event.TRACK_INDEX_CHANGED, null,
 					new Bookshelf(this));
-		} else {
+		} else if (update) {
 			pcs.firePropertyChange(Constants.Event.BOOK_FINISHED, null,
 					new Bookshelf(this));
-			Log.d(TAG, "No update sent since index " + selectedBookIndex
-					+ " is an illegal index. (books.size(): " + books.size()
-					+ ")");
+			// No update sent since book index is illegal
 		}
+
+		Log.d(TAG, "Book index : " + selectedBookIndex + ", Track index: "
+				+ this.books.get(selectedBookIndex).getSelectedTrackIndex());
 	}
 
-	public void setSelectedBookTitle(String newTitle) throws IllegalArgumentException {
+	public void setSelectedBookTitle(String newTitle)
+			throws IllegalArgumentException {
 		setBookTitleAt(selectedBookIndex, newTitle);
 	}
-	
+
 	public String getSelectedBookTitle() throws IllegalArgumentException {
 		return getBookTitleAt(this.selectedBookIndex);
 	}
-	
+
 	public String getSelectedBookAuthor() {
 		return this.books.get(selectedBookIndex).getSelectedBookAuthor();
 	}
@@ -247,7 +264,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	}
 
 	/* End IBookUpdates */
-	
+
 	/**
 	 * Set the title of the book at the given index.
 	 * 
@@ -258,22 +275,24 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public void setBookTitleAt(int bookIndex, String newTitle)
 			throws IllegalArgumentException {
 		if (bookIndex == NO_BOOK_SELECTED) {
-			throw new IllegalArgumentException(TAG + " setBookTitleAt" + BOOK_INDEX_ILLEGAL);
+			throw new IllegalArgumentException(TAG + " setBookTitleAt"
+					+ BOOK_INDEX_ILLEGAL);
 		}
 
 		this.books.get(bookIndex).setSelectedBookTitle(newTitle);
 		pcs.firePropertyChange(Constants.Event.BOOK_TITLE_CHANGED, null,
 				new Bookshelf(this));
 	}
-	
+
 	public String getBookTitleAt(int bookIndex) throws IllegalArgumentException {
 		if (bookIndex == NO_BOOK_SELECTED) {
-			throw new IllegalArgumentException(TAG + " getBookTitleAt" + BOOK_INDEX_ILLEGAL);
+			throw new IllegalArgumentException(TAG + " getBookTitleAt"
+					+ BOOK_INDEX_ILLEGAL);
 		}
-		
+
 		return this.books.get(bookIndex).getSelectedBookTitle();
 	}
-	
+
 	/* ITrackUpdates */
 
 	public void setSelectedTrackElapsedTime(int elapsedTime) {
@@ -303,7 +322,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public int getNumberOfBooks() {
 		return this.books.size();
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -311,14 +330,14 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public int getSelectedBookIndex() {
 		return this.selectedBookIndex;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public Book getSelectedBook() {
 		return this.books.get(selectedBookIndex);
 	}
-	
+
 	/**
 	 * @param index
 	 * @return
@@ -326,11 +345,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public Book getBookAt(int index) {
 		return this.books.get(index);
 	}
-	
+
 	/*
 	 * Accessors to Book.
 	 */
-	
+
 	/**
 	 * @return
 	 */
@@ -344,7 +363,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public int getSelectedTrackIndex() {
 		return books.get(selectedBookIndex).getSelectedTrackIndex();
 	}
-	
+
 	/**
 	 * ** currently unused **
 	 * 
@@ -366,14 +385,14 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/*
 	 * Accessors to Track.
 	 */
-	
+
 	/**
 	 * @return
 	 */
 	public int getSelectedTrackDuration() {
 		return books.get(selectedBookIndex).getSelectedTrackDuration();
 	}
-	
+
 	/**
 	 * @return
 	 */
