@@ -24,6 +24,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.ctrl.BookshelfController;
@@ -37,13 +42,13 @@ import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 /**
  * The main activity of the application. TODO: insert license
  * 
- * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
+ * @author Aki Käkelä, Marcus Parkkinen
  * @version 0.6
  * 
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		IBookshelfEvents, PropertyChangeListener {
-	private static final String TAG = "MainActivity.class";
+	private static final String TAG = "MainActivity";
 	private static final String USERNAME = "Default";
 	private static final int PLAYER = 0;
 	private static final int BOOKSHELF = 1;
@@ -117,15 +122,128 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	}
 
 	@Override
+	protected void onPause() {
+		Log.d(TAG, "onPause()");
+		super.onPause();
+
+//		stopUpdates();
+
+		// stopAudio();
+	}
+
+	@Override
+	protected void onStop() {
+		Log.d(TAG, "onStop()");
+		super.onStop();
+
+//		stopUpdates();
+
+		// stopAudio();
+	}
+
+	@Override
+	protected void onResume() {
+		Log.d(TAG, "onResume()");
+		super.onResume();
+		/*
+		 * if the application is stopped, it will go through onStart() and then
+		 * onResume(), so just start the updates again here.
+		 */
+//		startUpdates();
+	}
+	
+	@Override
+	protected void onStart() {
+		Log.d(TAG, "onStart()");
+		super.onStart();
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		Log.d(TAG, "onDestroy()");
 
-		// Whenever we're quitting the application, a bookmark
-		// should be saved.
+		stopAudio();
+
+		/*
+		 * Whenever the application is about to quit, save a bookmark.
+		 */
+		save();
+	}
+
+	/**
+	 * Saves a bookmark.
+	 */
+	private void save() {
 		bsc.saveBookshelf(this, USERNAME);
 	}
 
-	/* PlayerUIEventListener */
+	/**
+	 * Stops updating the player UI and model with elapsed time.
+	 */
+	private void stopUpdates() {
+		pc.stopTimer();
+	}
+
+	/**
+	 * Starts updating the player UI and model with elapsed time.
+	 * <p>
+	 * Only needed when it has been previously stopped.
+	 */
+	private void startUpdates() {
+		pc.startTimer();
+	}
+
+	/**
+	 * Stops audio playback, freeing resources.
+	 */
+	private void stopAudio() {
+		// Stop the audio playback
+		pc.stop();
+	}
+
+	// Initiate the menu XML file
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.layout.main_menu, menu);
+		return true;
+	}
+
+	/**
+	 * Handle the menu item selection. Every item has a unique id.
+	 * */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+
+		switch (id) {
+		case R.id.menu_save:
+			Toast.makeText(this, "Save/Bookmark", Toast.LENGTH_SHORT).show();
+			save();
+			return true;
+
+		case R.id.menu_delete:
+			Toast.makeText(this, "Delete (not implemented)", Toast.LENGTH_SHORT)
+					.show();
+			return true;
+
+		case R.id.menu_preferences:
+			Toast.makeText(this, "Preferences (not implemented)",
+					Toast.LENGTH_SHORT).show();
+			// show the preferences activity (WIP)
+			// Intent intent = new Intent(this, PreferencesActivity.class);
+			// startActivity(intent);
+			return true;
+
+		default:
+			Toast.makeText(this, "Unknown", Toast.LENGTH_SHORT).show();
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/* IPlayerEvents */
 
 	/*
 	 * The methods below relay user-initiated events from the fragments to
@@ -163,8 +281,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	public void seekToPercentageInTrack(double percentage) {
 		pc.seekToPercentageInTrack(percentage);
 	}
+	
+	public boolean isPlaying() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-	/* End PlayerUIEventListener */
+	/* End IPlayerEvents */
 
 	/* BookshelfUIListener */
 	public void bookSelected(int index) {
@@ -177,18 +300,23 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	}
 
-	public void addButtonPressed() {
+	public void addBookButtonPressed() {
 		// bc.createTestBook();
-		Intent intent = new Intent(this, BrowserActivity.class);
-		startActivity(intent);
-	}
-
-	public void preferencesButtonPressed() {
-		Intent intent = new Intent(this, PreferencesActivity.class);
+		Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
 		startActivity(intent);
 	}
 
 	/* End BookshelfUIListener */
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		Log.i(TAG, "Back pressed in Main Activity");
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
 
 	public void bookmarkSet() {
 		Log.d(TAG, "Bookmark set");
@@ -242,6 +370,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				updateBookDurationLabel(b);
 				// show the duration of the track
 				updateTrackDurationLabel(b);
+				/*
+				 * make sure that the UI knows we are playing now (we will want
+				 * to show the pause button since we are playing).
+				 */
+				setToPlaying();
 			} else if (eventName.equals(Constants.Event.BOOK_REMOVED)) {
 				// Bookshelf
 				// Do nothing for now
@@ -255,8 +388,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.Event.BOOK_FINISHED)) {
-				// TODO
-				// pc.stop();
+				pc.stop();
 			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -322,6 +454,20 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			}
 		}
 
+	}
+
+	/**
+	 * Ensures that the Player UI changes the play/pause button correctly when a
+	 * book is selected.
+	 * 
+	 * @param b
+	 */
+	private void setToPlaying() {
+		player.getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				player.setToPlaying();
+			}
+		});
 	}
 
 	/*
@@ -497,5 +643,5 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// TODO Auto-generated method stub
 
 	}
-	
+
 }

@@ -12,7 +12,7 @@
         <nine-patch
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:dither="true"
-            android:src="@drawable/seekbar_bg" />
+            android:src="@drawable/sb_book_bar" />
     </item>
     <item android:id="@android:id/secondaryProgress">
         <clip>
@@ -28,6 +28,6 @@
     </item>
     <item
         android:id="@android:id/progress"
-        android:drawable="@drawable/book_bar_progress_background"/>
+        android:drawable="@drawable/sb_book_bar_progress"/>
 
 </layer-list>

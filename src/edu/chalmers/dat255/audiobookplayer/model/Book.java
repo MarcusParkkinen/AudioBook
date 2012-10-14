@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.model;
 
@@ -22,7 +22,6 @@ import java.util.List;
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
-
 
 /**
  * Represents a collection of Track objects. Null tracks are not allowed (and
@@ -48,7 +47,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	// private Bookmark bookmark;
 
 	// private Stats stats;
-	
+
 	// TODO: only used by test.
 
 	/**
@@ -59,6 +58,7 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	public Book(String title) {
 		this(title, "N/A");
 	}
+
 	// --
 
 	/**
@@ -96,11 +96,12 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 		// adjust the track index now that we have tracks
 		selectedTrackIndex = 0;
 	}
-	
+
 	// TODO: only used by test.
 	public Book(Collection<Track> col, String title) {
 		this(col, title, "N/A");
 	}
+
 	//
 
 	/**
@@ -248,8 +249,9 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * @return True if the given index is within bounds of the track list.
 	 */
 	public boolean isLegalTrackIndex(int index) {
-//		Log.d(TAG, (index >= 0 && index < tracks.size()) ? "legal" : "illegal"
-//				+ " index: 0 <= " + index + " < " + tracks.size());
+		// Log.d(TAG, (index >= 0 && index < tracks.size()) ? "legal" :
+		// "illegal"
+		// + " index: 0 <= " + index + " < " + tracks.size());
 		return index >= 0 && index < tracks.size();
 	}
 
@@ -301,6 +303,9 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * Gets the track path of the currently selected track.
 	 * 
 	 * @return
+	 * @throws IllegalArgumentException
+	 *             If the track index is illegal (negative or larger than the
+	 *             elements in the track list).
 	 */
 	public String getSelectedTrackPath() throws IllegalArgumentException {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
@@ -333,19 +338,18 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 		return title;
 	}
 
-	/* Get a list of all the tracktitles of the book.
+	/*
+	 * Get a list of all the tracktitles of the book.
 	 * 
 	 * @return Title
 	 */
 	public List<String> getTrackTitles() {
 		List<String> trackTitles = new LinkedList<String>();
-		for(Track t : tracks) {
+		for (Track t : tracks) {
 			trackTitles.add(t.getTrackTitle());
 		}
 		return trackTitles;
 	}
-
-
 
 	/**
 	 * Gets the duration of the book.
@@ -417,7 +421,9 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 	 * Sets the selected track index to '-1', which means unselected.
 	 */
 	private void deselectTrack() {
-		selectedTrackIndex = NO_TRACK_SELECTED;	}
+		selectedTrackIndex = NO_TRACK_SELECTED;
+	}
+
 	public void addTagToCurrentBook(int time) {
 		addTagTo(this.selectedTrackIndex, time);
 	}
@@ -471,9 +477,11 @@ public final class Book implements ITrackUpdates, IBookUpdates, Serializable {
 			return false;
 		return true;
 	}
+
 	public String getAuthor() {
 		return author;
 	}
+
 	public void setAuthor(String author) {
 		this.author = author;
 	}

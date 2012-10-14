@@ -14,12 +14,10 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
-import android.view.View;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
@@ -27,7 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Wraps the android.media.MediaPlayer class.
  * 
- * @author Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
  * @version 0.6
  */
 public class PlayerController implements IPlayerEvents {
@@ -50,10 +48,11 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	/**
-	 * Stops the model update thread.
+	 * Stops the update timer but keeps playing audio.
 	 */
-	private void stopTimer() {
-		if (this.trackTimeUpdateThread != null) {
+	public void stopTimer() {
+		if (trackTimeUpdateThread != null && trackTimeUpdateThread.isAlive()
+				&& !trackTimeUpdateThread.isInterrupted()) {
 			this.trackTimeUpdateThread.interrupt();
 		}
 	}
@@ -61,82 +60,134 @@ public class PlayerController implements IPlayerEvents {
 	/**
 	 * Starts a new model update thread.
 	 */
-	private void startTimer() {
+	public void startTimer() {
 		// stop the old timer
 		stopTimer();
 
 		// start a new timer
 		this.trackTimeUpdateThread = new Thread(new TrackElapsedTimeUpdater());
 		this.trackTimeUpdateThread.start();
-
-		Log.d(TAG, "interrupted=" + trackTimeUpdateThread.isInterrupted()
-				+ " \t alive=" + trackTimeUpdateThread.isAlive());
-
-		Log.d(TAG,
-				"isStarted=" + isStarted + " \t mp.isPlaying=" + mp.isPlaying());
-
 	}
 
 	/**
 	 * Stops the audio player. Stops updating the model.
+	 * <p>
+	 * Call when activities are paused or stopped to free resources.
 	 */
 	public void stop() {
-		stopTimer();
-		mp.stop();
+		if (isStarted) {
+			// revert what setup() and start() do.
+			isStarted = false;
+			stopTimer();
+			mp.stop();
+			mp.reset();
+		}
 	}
 
 	/**
-	 * Starts the audio player. Starts updating the model.
+	 * Starts the audio player from the beginning. Starts updating the model.
 	 * 
 	 * @precondition The Bookshelf must have been initialized and the path at
-	 *               the selected track index can not be null.
+	 *               the selected track index can not be null. Otherwise nothing
+	 *               is done.
 	 */
 	public void start() {
-		// we have started playing a file, so start the thread that updates the
-		// time on the Track instance
-		if (bs.getSelectedTrackIndex() != -1
-				&& bs.getSelectedTrackPath() != null) {
-			// we haven't started the audio yet
-			isStarted = false;
-			// Log.i(TAG, "Resetting MediaPlayer");
-			// prepare the media player by resetting and setting the source
-			mp.reset();
-			try {
-				mp.setDataSource(bs.getSelectedTrackPath());
-				mp.prepare();
-			} catch (IllegalArgumentException e) {
-				Log.e(TAG, "Illegal argument");
-			} catch (SecurityException e) {
-				Log.e(TAG, "Security exception");
-			} catch (IllegalStateException e) {
-				Log.e(TAG, "Illegal state");
-			} catch (IOException e) {
-				Log.e(TAG, "IO Exception");
-			}
-			mp.setOnCompletionListener(new OnCompletionListener() {
-				public void onCompletion(MediaPlayer mp) {
-					Log.i(TAG,
-							"onComplete: Track finished. Starting next track.");
-					nextTrack();
-				}
-			});
-			// set the 'isStarted' status to true
-			isStarted = true;
-			// and start the timer
-			startTimer();
-			// then start the media player
+		if (setup()) {
 			mp.start();
-			Log.i(TAG, "Playing: " + (bs.getSelectedTrackIndex() + 1) + ". "
-					+ bs.getSelectedTrackPath() + " @" + mp.getDuration()
-					+ "ms");
-		} else {
-			if (bs.getSelectedTrackIndex() == -1) {
-				Log.d(TAG, "Index is -1. Should not be playing.");
-				// stop the timer
-				stopTimer();
-			} else
-				Log.e(TAG, "Start: tried to start with track path == null");
 		}
+	}
+
+	/**
+	 * Starts the audio player from the given time in milliseconds. Starts
+	 * updating the model.
+	 * 
+	 * @precondition The Bookshelf must have been initialized and the path at
+	 *               the selected track index can not be null. Otherwise nothing
+	 *               is done.
+	 * 
+	 * @param ms
+	 *            Time in milliseconds to seek to before starting.
+	 */
+	public void startAt(int ms) {
+		if (setup()) {
+			mp.seekTo(ms);
+			mp.start();
+		}
+	}
+
+	/**
+	 * Can only be called if the path is valid
+	 * 
+	 * @return True if setup was run without problems.
+	 */
+	private boolean setup() {
+		if (bs.getSelectedTrackIndex() == -1) {
+			Log.d(TAG, "Index is -1. Should not continue playing.");
+			stop();
+		} else {
+			// we have started playing a file, so start the thread that updates
+			// the time on the Track instance
+
+			// get the path
+			String path = null;
+			try {
+				path = bs.getSelectedTrackPath();
+			} catch (IllegalArgumentException e) {
+				// the track index was '-1'
+				Log.e(TAG,
+						"Attempted to get track path when track index was -1."
+								+ "Path set to null; skipping start in Player.");
+			}
+			if (path != null) {
+				/*
+				 * now we are ready to set the source and start the audio, but
+				 * it is not started yet
+				 */
+				isStarted = false;
+				stopTimer();
+
+				// Log.i(TAG, "Resetting MediaPlayer");
+				// prepare the media player after resetting it and providing a
+				// file path
+				mp.reset();
+				try {
+					mp.setDataSource(path);
+					mp.prepare();
+				} catch (IllegalArgumentException e) {
+					Log.e(TAG, "Illegal argument");
+				} catch (SecurityException e) {
+					Log.e(TAG, "Security exception");
+				} catch (IllegalStateException e) {
+					Log.e(TAG, "Illegal state");
+				} catch (IOException e) {
+					Log.e(TAG, "IO Exception");
+				}
+				/*
+				 * listen to track completion and change to next track if a
+				 * track is completed
+				 */
+				mp.setOnCompletionListener(new OnCompletionListener() {
+					public void onCompletion(MediaPlayer mp) {
+						Log.i(TAG,
+								"onComplete: Track finished. Starting next track.");
+						nextTrack();
+					}
+				});
+
+				// set the status to isStarted
+				isStarted = true;
+
+				// start the timer
+				startTimer();
+
+				// mark that the setup went without problems
+				return true;
+			} else {
+				Log.e(TAG, "Start: tried to start with track path == null");
+			}
+		}
+		return false;
+
 	}
 
 	/**
@@ -166,7 +217,7 @@ public class PlayerController implements IPlayerEvents {
 			}
 		}
 	}
-	
+
 	public void pause() {
 		if (isStarted) {
 			if (mp.isPlaying()) {
@@ -174,7 +225,7 @@ public class PlayerController implements IPlayerEvents {
 			}
 		}
 	}
-	
+
 	public void play() {
 		if (isStarted) {
 			if (!mp.isPlaying()) {
@@ -203,25 +254,38 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekRight() {
-		seekToPercentageInTrack(mp.getCurrentPosition() + getTrackDuration()
-				/ 10);
+		if (isAllowedTrackIndex()) {
+			seekToPercentageInTrack(mp.getCurrentPosition()
+					+ getTrackDuration() / 10);
+		}
 	}
 
 	public void seekLeft() {
-		seekToPercentageInTrack(mp.getCurrentPosition() - getTrackDuration()
-				/ 10);
+		if (isAllowedTrackIndex()) {
+			seekToPercentageInTrack(mp.getCurrentPosition()
+					- getTrackDuration() / 10);
+		}
 	}
 
 	public void seekToPercentageInTrack(double percentage) {
-		seekTo((int) (mp.getDuration() * percentage));
+		if (isAllowedTrackIndex()) {
+			seekTo((int) (mp.getDuration() * percentage));
+		}
+	}
+
+	private boolean isAllowedTrackIndex() {
+		return bs.getSelectedTrackIndex() != -1;
 	}
 
 	public void seekToPercentageInBook(double percentage) {
-		DecimalFormat df = new DecimalFormat("#.##");
-		Log.d(TAG, "percentage: " + df.format(percentage));
+		// get the duration of the book
 		int bookDuration = bs.getSelectedBookDuration();
+
+		// calculate the seekTime (ms)
 		int seekTime = (int) (bookDuration * percentage);
+
 		Log.d(TAG, "seekTime: " + seekTime + ". Book duration: " + bookDuration);
+
 		// seek through the tracks
 		int track = 0, trackDuration;
 		while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
@@ -230,9 +294,15 @@ public class PlayerController implements IPlayerEvents {
 			Log.d(TAG, "Skipped a track (" + trackDuration
 					+ "ms) . New seekTime: " + seekTime + ". Track#: " + track);
 		}
+
+		// set the correct track
 		bs.setSelectedTrackIndex(track);
-		start(); // start the track we seeked to
-		mp.seekTo(seekTime); // seek to the time within that track
+
+		// start the track we seeked to
+		start();
+
+		// and finishing seeking within that track
+		seekTo(seekTime);
 	}
 
 	/* End IPlayerEvents */
@@ -268,7 +338,36 @@ public class PlayerController implements IPlayerEvents {
 
 	}
 
-	public void showTimePickerDialog(View v) {
-		Log.d(TAG, "PC dialog");
+	/**
+	 * Checks if the player is currently playing audio (not paused, stopped or
+	 * uninitialized).
+	 * 
+	 * @return
+	 */
+	public boolean isStarted() {
+		return isStarted;
 	}
+
+	/*
+	 * *** FOR TESTING PURPOSES ONLY ***
+	 */
+	public MediaPlayer getMp() {
+		return mp;
+	}
+
+	public Bookshelf getBs() {
+		return bs;
+	}
+
+	public Thread getTrackTimeUpdateThread() {
+		return trackTimeUpdateThread;
+	}
+
+	public boolean isPlaying() {
+		return mp.isPlaying() && isStarted;
+	}
+
+	/*
+	 * *** ---
+	 */
 }

@@ -57,11 +57,17 @@ public interface IPlayerEvents {
 
 	/**
 	 * Seeks to the left (rewinds).
+	 * <p>
+	 * Sets the track progress to (current progress - 0.1 * total track
+	 * duration).
 	 */
 	public void seekLeft();
 
 	/**
 	 * Seeks to the right (fast-forwards).
+	 * <p>
+	 * Sets the track progress to (current progress + 0.1 * total track
+	 * duration).
 	 */
 	public void seekRight();
 
@@ -80,5 +86,12 @@ public interface IPlayerEvents {
 	 *            0 <= x <= 1
 	 */
 	public void seekToPercentageInBook(double percentage);
+
+	/**
+	 * Checks whether audio is playing (to determine the play/pause image).
+	 * 
+	 * @return True if playing (non-paused).
+	 */
+	public boolean isPlaying();
 
 }

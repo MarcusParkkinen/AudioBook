@@ -25,7 +25,7 @@
                 android:dither="false"
                 android:filter="false"
                 android:gravity="left"
-                android:src="@drawable/ic_book_bar_progress"
+                android:src="@drawable/sb_book_bar_progress"
                 android:tileMode="repeat" />
         </clip>
     </item>

@@ -8,7 +8,7 @@
     <string name="title_activity_player">PlayerActivity</string>
     <string name="prevTrack">&lt;|</string>
     <string name="seekLeft">&lt;&lt;</string>
-    <string name="playPause">||</string>
+    <string name="playPause">|&gt;/||</string>
     <string name="seekRight">&gt;&gt;</string>
     <string name="nextTrack">|&gt;</string>
     
@@ -24,5 +24,12 @@
     
 	<string name="cover_image_text_replacement">&lt; Cover art &gt;</string>
 	<string name="jump_image_text_replacement">&lt; Jump to time &gt;</string>
+	
+	<string name="create_book">Create book</string>
+	<string name="back">Back</string>
+	
+	<string name="menu_save_title">Save/Bookmark</string>
+	<string name="menu_delete_title">Delete</string>
+	<string name="menu_preferences_title">Preferences</string>
 
 </resources>

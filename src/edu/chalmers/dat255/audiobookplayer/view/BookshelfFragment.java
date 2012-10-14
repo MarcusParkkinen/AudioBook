@@ -1,15 +1,15 @@
 /**
-*  This work is licensed under the Creative Commons Attribution-NonCommercial-
-*  NoDerivs 3.0 Unported License. To view a copy of this license, visit
-*  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
-*  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
-*  94041, USA.
-* 
-*  Use of this work is permitted only in accordance with license rights granted.
-*  Materials provided "AS IS"; no representations or warranties provided.
-* 
-*  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-**/
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
 
 package edu.chalmers.dat255.audiobookplayer.view;
 
@@ -35,9 +35,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -130,7 +130,7 @@ public class BookshelfFragment extends Fragment {
 		/**//**/
 		/**************************************************************/
 
-		Button addButton = (Button) view.findViewById(R.id.addBook);
+		ImageButton addButton = (ImageButton) view.findViewById(R.id.addBook);
 
 		addButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -139,20 +139,20 @@ public class BookshelfFragment extends Fragment {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
-					fragmentOwner.addButtonPressed();
+					fragmentOwner.addBookButtonPressed();
 				}
 			}
 		});
 
-		Button prefButton = (Button) view.findViewById(R.id.prefs);
-
-		prefButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (getActivity() != null) {
-					fragmentOwner.preferencesButtonPressed();
-				}
-			}
-		});
+		// Button prefButton = (Button) view.findViewById(R.id.prefs);
+		//
+		// prefButton.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// if (getActivity() != null) {
+		// fragmentOwner.preferencesButtonPressed();
+		// }
+		// }
+		// });
 
 		/******************************************************************************/
 		/**//**/
@@ -499,7 +499,7 @@ public class BookshelfFragment extends Fragment {
 			ImageView imageView = (ImageView) convertView
 					.findViewById(R.id.bookshelfBookCover);
 			// TODO acquire correct cover art
-			imageView.setImageResource(R.drawable.no_cover);
+			imageView.setImageResource(R.drawable.img_no_cover);
 			// click the cover art to 'open or close the book' and show tracks
 			// (expands/collapses book)
 			imageView.setOnClickListener(new OnClickListener() {
