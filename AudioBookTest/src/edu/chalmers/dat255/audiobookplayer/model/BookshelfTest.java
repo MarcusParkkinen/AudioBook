@@ -27,14 +27,23 @@ public class BookshelfTest extends TestCase {
 
 	private Bookshelf bookshelf;
 
+	// Tracks
+	private final Track t0 = new Track("path1", 111);
+	private final Track t1 = new Track("path2", 222);
+	private final Track t2 = new Track("path2", 333);
+
+	// List of tracks
+	private final List<Track> tracks = new LinkedList<Track>();
+
+	// Books
+	private final Book b0 = new Book("testBook0");
+	private final Book b1 = new Book("testBook1");
+	private final Book b2 = new Book("testBook2");
+	private final Book b3 = new Book("testBook3");
+	private final Book b4 = new Book("testBook4");
+
 	public BookshelfTest(String name) {
 		super(name);
-	}
-
-	protected static void setUpBeforeClass() throws Exception {
-	}
-
-	protected static void tearDownAfterClass() throws Exception {
 	}
 
 	protected void setUp() throws Exception {
@@ -57,46 +66,52 @@ public class BookshelfTest extends TestCase {
 	}
 
 	public void testBookshelfBookshelf() {
-		// Testing empty bookshelves
+		/*
+		 * Testing empty bookshelves
+		 */
 		Bookshelf testBookshelf = new Bookshelf(bookshelf);
-		// Test that created bookshelves are not null
+
+		// Assert that created bookshelves are not null
 		assertTrue(bookshelf != null);
 		assertTrue(testBookshelf != null);
-		// Test that bookshelves created through the copy constructor don't have
+
+		// Assert that bookshelves created through the copy constructor don't
+		// have
 		// the same reference
 		assertFalse(testBookshelf == bookshelf);
-		// Test that bookshelves created through the copy constructor are equal
+
+		// Assert that bookshelves created through the copy constructor are
+		// equal
 		assertTrue(bookshelf.equals(testBookshelf));
 
-		// Testing non-empty bookshelves
-		// Create some books
-		Book book1 = new Book("1");
-		Book book2 = new Book("2");
+		/*
+		 * Testing non-empty bookshelves
+		 */
 		// Create one with tracks
-		List<Track> tracks = new LinkedList<Track>();
-		tracks.add(new Track("path1", 111));
-		tracks.add(new Track("path2", 222));
-		tracks.add(new Track("path3", 333));
+		tracks.add(t0);
+		tracks.add(t1);
+		tracks.add(t2);
 		Book book3 = new Book(tracks, "3", "author");
-		// Add them into the same bookshelf
-		bookshelf.addBook(book1);
-		bookshelf.addBook(book2);
+
+		// Add it into the same bookshelf as two other books without tracks
+		bookshelf.addBook(b0);
+		bookshelf.addBook(b1);
 		bookshelf.addBook(book3);
 
-		// Make a copy and check that they are equal (but not with the same
-		// reference)
+		// Make a copy
 		testBookshelf = new Bookshelf(bookshelf);
+
+		// Check that they are equal (but not with the same reference)
+		assertEquals(bookshelf, testBookshelf);
 		assertFalse(testBookshelf == bookshelf);
-		assertTrue(bookshelf.equals(testBookshelf));
 	}
 
 	public void testSetSelectedBook() {
 		// Add elements to the bookshelf (to add to the allowed indices)
-		Book b = new Book("Test");
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
+		bookshelf.addBook(b0);
+		bookshelf.addBook(b1);
+		bookshelf.addBook(b2);
+		bookshelf.addBook(b3);
 
 		// Test the accessor
 		bookshelf.setSelectedBookIndex(2);
@@ -117,17 +132,17 @@ public class BookshelfTest extends TestCase {
 		// Test index when adding a book
 		bookshelf = new Bookshelf();
 		bookshelf.addPropertyChangeListener(null);
-		bookshelf.addBook(b); // index 0
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b); // index 3
+		bookshelf.addBook(b0); // index 0
+		bookshelf.addBook(b1);
+		bookshelf.addBook(b2);
+		bookshelf.addBook(b3); // index 3
 		bookshelf.setSelectedBookIndex(2);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b); // index 6
+		bookshelf.addBook(b4);
+		bookshelf.addBook(b1);
+		bookshelf.addBook(b3); // index 6
 		assertTrue(bookshelf.getSelectedBookIndex() == 2);
 
-		// Test that the number of books is the same if the index is illegal
+		// Assert that the number of books is the same if the index is illegal
 		int nbrOfBooks = bookshelf.getNumberOfBooks();
 		assertTrue(nbrOfBooks == 7);
 		bookshelf.removeBook(7);
@@ -148,50 +163,39 @@ public class BookshelfTest extends TestCase {
 	}
 
 	public void testAddBook() {
-		// Test that the book is added
-		Book b = new Book("testBook");
-		bookshelf.addBook(b);
+		// Assert that the book is added
+		bookshelf.addBook(b0);
+
 		// Since this is the first book, it should be the 'current' book
-		assertTrue(bookshelf.getSelectedBook() == b);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
-		bookshelf.addBook(b);
+		assertTrue(bookshelf.getSelectedBook() == b0);
+		bookshelf.addBook(b1);
+		bookshelf.addBook(b2);
+		bookshelf.addBook(b3);
 
 		// Check that we have the correct number of books
 		assertTrue(bookshelf.getNumberOfBooks() == 4);
 	}
 
 	public void testRemoveBook() {
-		// Test that a book is removed
-		Book b1 = new Book("testBook1");
-		Book b2 = new Book("testBook2");
-		Book b3 = new Book("testBook3");
-		bookshelf.addBook(b1);
-		bookshelf.addBook(b2);
-		bookshelf.addBook(b3);
-		bookshelf.removeBook(0);
-		assertTrue(bookshelf.getBookAt(0).equals(b2));
-		assertTrue(bookshelf.getBookAt(1).equals(b3));
-
-		// Test that the number of books is correct
-		assertTrue(bookshelf.getNumberOfBooks() == 2);
-
-		// Test that removing a book does nothing to an empty bookshelf
-		bookshelf = new Bookshelf();
+		// Assert that removing a book does nothing to an empty bookshelf
 		bookshelf.removeBook(0);
 		Bookshelf testBookshelf = new Bookshelf(bookshelf);
 		assertTrue(testBookshelf.equals(bookshelf));
+		
+		// Assert that a book is removed and that it is the correct one
+		bookshelf.addBook(b0);
+		bookshelf.addBook(b1);
+		bookshelf.addBook(b2);
+		bookshelf.removeBook(0);
+		assertTrue(bookshelf.getBookAt(0).equals(b1));
+		assertTrue(bookshelf.getBookAt(1).equals(b2));
+
+		// Assert that the number of books is correct
+		assertTrue(bookshelf.getNumberOfBooks() == 2);
 	}
 
 	public void testMoveBook() {
-		// Create some books
-		Book b0 = new Book("testBook0");
-		Book b1 = new Book("testBook1");
-		Book b2 = new Book("testBook2");
-		Book b3 = new Book("testBook3");
-		Book b4 = new Book("testBook4");
-
-		// Add them to the bookshelf
+		// Add books to the bookshelf
 		bookshelf.addBook(b0);
 		bookshelf.addBook(b1);
 		bookshelf.addBook(b2);
@@ -215,32 +219,38 @@ public class BookshelfTest extends TestCase {
 		// Try to move from a legal index to a legal index
 		bookshelf.moveBook(1, 3);
 		assertFalse(copy.equals(bookshelf));
-		// Check that it was moved correctly
+		
+		// Assert that it was moved correctly
 		assertTrue(bookshelf.getBookAt(3).equals(copy.getBookAt(1)));
 		assertTrue(bookshelf.getBookAt(2).equals(copy.getBookAt(2)));
 		assertTrue(bookshelf.getBookAt(1).equals(copy.getBookAt(3)));
 	}
 
-	public void testGetCurrentBook() {
-		// fail("Not yet implemented");
-	}
-
 	public void testGetNumberOfBooks() {
-		// fail("Not yet implemented");
+		// An empty bookshelf should have zero books
+		assertTrue(bookshelf.getNumberOfBooks() == 0);
+		
+		// Add 3 books
+		bookshelf.addBook(b0);
+		bookshelf.addBook(b1);
+		bookshelf.addBook(b2);
+		
+		// Assert that the number of books is now 3
+		assertTrue(bookshelf.getNumberOfBooks() == 3);
 	}
 
 	public void testEqualsObject() {
-		// Test that they are equivalent (reflexive, symmetric and transitive)
+		// Assert that they are equivalent (reflexive, symmetric and transitive)
 
-		// Test that it is reflexive
+		// Assert that it is reflexive
 		assertTrue(bookshelf.equals(bookshelf));
 
-		// Test that it is symmetric
+		// Assert that it is symmetric
 		Bookshelf testBookshelf = new Bookshelf(bookshelf);
 		assertTrue(testBookshelf.equals(bookshelf));
 		assertTrue(bookshelf.equals(testBookshelf));
 
-		// Test that it is transitive
+		// Assert that it is transitive
 		Bookshelf testBookshelf2 = new Bookshelf(testBookshelf);
 		assertTrue(testBookshelf2.equals(bookshelf));
 		assertTrue(bookshelf.equals(testBookshelf2));

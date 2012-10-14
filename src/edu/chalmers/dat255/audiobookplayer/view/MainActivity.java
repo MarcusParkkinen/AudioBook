@@ -64,6 +64,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	// Controllers
 	private BookshelfController bsc;
 	private PlayerController pc;
+	
 	private BookCreator bc;
 
 	@Override
@@ -87,9 +88,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Bookshelf bs = bsc.loadBookshelf(this, USERNAME);
 
 		// Create controllers with the bookshelf reference
-		// TODO(anyone): see issues #15; overlapping players
 		pc = new PlayerController(bs);
-		// --
+		
 		bc = BookCreator.getInstance();
 
 		bc.setBookshelf(bs);
