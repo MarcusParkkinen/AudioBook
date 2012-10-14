@@ -2,10 +2,14 @@ TODO
 #####################
 http://129.16.157.207/dat255/wp-content/uploads/2012/09/Betygv%C3%A4rdering-dat255-ht12-Betygs-information-20121011.pdf
 
-Refl. :
-Team
-Doc
-SE
+	Refl. :
+1) Team
+2) Doc
+3) SE
+
+	Test report
+
+
 
 
 Drive

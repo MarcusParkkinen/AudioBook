@@ -123,6 +123,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// Whenever we're quitting the application, a bookmark
 		// should be saved.
 		bsc.saveBookshelf(this, USERNAME);
+		
+		Log.d(TAG, "onDestroy()");
+		pc.stop();
 	}
 
 	/* PlayerUIEventListener */

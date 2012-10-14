@@ -80,9 +80,11 @@ public class PlayerController implements IPlayerEvents {
 	 * Stops the audio player. Stops updating the model.
 	 */
 	public void stop() {
-		isStarted = false;
-		stopTimer();
-		mp.stop();
+		if (isStarted) {
+			isStarted = false;
+			stopTimer();
+			mp.stop();
+		}
 	}
 
 	/**
@@ -145,7 +147,8 @@ public class PlayerController implements IPlayerEvents {
 				 * it is not started yet
 				 */
 				isStarted = false;
-				if (this.trackTimeUpdateThread != null && this.trackTimeUpdateThread.isAlive()) {
+				if (this.trackTimeUpdateThread != null
+						&& this.trackTimeUpdateThread.isAlive()) {
 					stopTimer();
 				}
 				// Log.i(TAG, "Resetting MediaPlayer");
