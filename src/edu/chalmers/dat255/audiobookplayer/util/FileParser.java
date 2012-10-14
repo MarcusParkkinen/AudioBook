@@ -28,6 +28,14 @@ import android.content.Context;
 public class FileParser {
 	private static final String TAG = "FileParser.java";
 
+	/**
+	 * Writes to internal storage given a file name.
+	 * 
+	 * @param file
+	 * @param c
+	 * @param content
+	 * @throws IOException
+	 */
 	public static void writeToInternalStorage(String file, Context c,
 			String content) throws IOException {
 
@@ -39,6 +47,15 @@ public class FileParser {
 		dataOutputStream.close();
 	}
 
+	/**
+	 * Reads from internal storage given a file name.
+	 * 
+	 * @param file
+	 * @param c
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public static String readFromInternalStorage(String file, Context c)
 			throws FileNotFoundException, IOException {
 		FileInputStream inputStream = c.openFileInput(file);

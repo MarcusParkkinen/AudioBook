@@ -14,7 +14,6 @@
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -49,18 +48,19 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	/**
-	 * Stops the model update thread.
+	 * Stops the update timer but keeps playing audio.
 	 */
-	private void stopTimer() {
-		if (this.trackTimeUpdateThread != null) {
+	public void stopTimer() {
+		if (trackTimeUpdateThread != null && trackTimeUpdateThread.isAlive()
+				&& !trackTimeUpdateThread.isInterrupted()) {
 			this.trackTimeUpdateThread.interrupt();
 		}
 	}
-
+	
 	/**
 	 * Starts a new model update thread.
 	 */
-	private void startTimer() {
+	public void startTimer() {
 		// stop the old timer
 		stopTimer();
 
@@ -79,7 +79,7 @@ public class PlayerController implements IPlayerEvents {
 			isStarted = false;
 			stopTimer();
 			mp.stop();
-			mp.release();
+			mp.reset();
 		}
 	}
 
@@ -143,10 +143,8 @@ public class PlayerController implements IPlayerEvents {
 				 * it is not started yet
 				 */
 				isStarted = false;
-				if (this.trackTimeUpdateThread != null
-						&& this.trackTimeUpdateThread.isAlive()) {
-					stopTimer();
-				}
+				stopTimer();
+
 				// Log.i(TAG, "Resetting MediaPlayer");
 				// prepare the media player after resetting it and providing a
 				// file path
@@ -295,15 +293,15 @@ public class PlayerController implements IPlayerEvents {
 			Log.d(TAG, "Skipped a track (" + trackDuration
 					+ "ms) . New seekTime: " + seekTime + ". Track#: " + track);
 		}
-		
+
 		// set the correct track
 		bs.setSelectedTrackIndex(track);
-		
+
 		// start the track we seeked to
 		start();
-		
+
 		// and finishing seeking within that track
-		seekTo(seekTime); 
+		seekTo(seekTime);
 	}
 
 	/* End IPlayerEvents */

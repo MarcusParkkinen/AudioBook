@@ -126,7 +126,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Log.d(TAG, "onPause()");
 		super.onPause();
 
-		stopAudio();
+//		stopUpdates();
+
+		// stopAudio();
 	}
 
 	@Override
@@ -134,7 +136,26 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Log.d(TAG, "onStop()");
 		super.onStop();
 
-		stopAudio();
+//		stopUpdates();
+
+		// stopAudio();
+	}
+
+	@Override
+	protected void onResume() {
+		Log.d(TAG, "onResume()");
+		super.onResume();
+		/*
+		 * if the application is stopped, it will go through onStart() and then
+		 * onResume(), so just start the updates again here.
+		 */
+//		startUpdates();
+	}
+	
+	@Override
+	protected void onStart() {
+		Log.d(TAG, "onStart()");
+		super.onStart();
 	}
 
 	@Override
@@ -155,6 +176,22 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	private void save() {
 		bsc.saveBookshelf(this, USERNAME);
+	}
+
+	/**
+	 * Stops updating the player UI and model with elapsed time.
+	 */
+	private void stopUpdates() {
+		pc.stopTimer();
+	}
+
+	/**
+	 * Starts updating the player UI and model with elapsed time.
+	 * <p>
+	 * Only needed when it has been previously stopped.
+	 */
+	private void startUpdates() {
+		pc.startTimer();
 	}
 
 	/**
@@ -187,14 +224,17 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			save();
 			return true;
 
-		case R.id.menu_quit:
-			Toast.makeText(this, "Quit (not implemented)", Toast.LENGTH_SHORT)
+		case R.id.menu_delete:
+			Toast.makeText(this, "Delete (not implemented)", Toast.LENGTH_SHORT)
 					.show();
 			return true;
 
 		case R.id.menu_preferences:
 			Toast.makeText(this, "Preferences (not implemented)",
 					Toast.LENGTH_SHORT).show();
+			// show the preferences activity (WIP)
+			// Intent intent = new Intent(this, PreferencesActivity.class);
+			// startActivity(intent);
 			return true;
 
 		default:
@@ -258,7 +298,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	public void addBookButtonPressed() {
 		// bc.createTestBook();
 		Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 
