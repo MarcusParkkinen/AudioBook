@@ -56,7 +56,7 @@ public class PlayerController implements IPlayerEvents {
 			this.trackTimeUpdateThread.interrupt();
 		}
 	}
-	
+
 	/**
 	 * Starts a new model update thread.
 	 */
@@ -76,6 +76,7 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	public void stop() {
 		if (isStarted) {
+			// revert what setup() and start() do.
 			isStarted = false;
 			stopTimer();
 			mp.stop();
@@ -253,26 +254,26 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekRight() {
-		if (isAllowed()) {
+		if (isAllowedTrackIndex()) {
 			seekToPercentageInTrack(mp.getCurrentPosition()
 					+ getTrackDuration() / 10);
 		}
 	}
 
 	public void seekLeft() {
-		if (isAllowed()) {
+		if (isAllowedTrackIndex()) {
 			seekToPercentageInTrack(mp.getCurrentPosition()
 					- getTrackDuration() / 10);
 		}
 	}
 
 	public void seekToPercentageInTrack(double percentage) {
-		if (isAllowed()) {
+		if (isAllowedTrackIndex()) {
 			seekTo((int) (mp.getDuration() * percentage));
 		}
 	}
 
-	private boolean isAllowed() {
+	private boolean isAllowedTrackIndex() {
 		return bs.getSelectedTrackIndex() != -1;
 	}
 
@@ -360,6 +361,10 @@ public class PlayerController implements IPlayerEvents {
 
 	public Thread getTrackTimeUpdateThread() {
 		return trackTimeUpdateThread;
+	}
+
+	public boolean isPlaying() {
+		return mp.isPlaying() && isStarted;
 	}
 
 	/*

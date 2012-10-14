@@ -243,7 +243,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		}
 	}
 
-	/* PlayerUIEventListener */
+	/* IPlayerEvents */
 
 	/*
 	 * The methods below relay user-initiated events from the fragments to
@@ -281,8 +281,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	public void seekToPercentageInTrack(double percentage) {
 		pc.seekToPercentageInTrack(percentage);
 	}
+	
+	public boolean isPlaying() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-	/* End PlayerUIEventListener */
+	/* End IPlayerEvents */
 
 	/* BookshelfUIListener */
 	public void bookSelected(int index) {

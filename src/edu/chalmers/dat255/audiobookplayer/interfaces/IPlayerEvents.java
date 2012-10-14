@@ -87,4 +87,11 @@ public interface IPlayerEvents {
 	 */
 	public void seekToPercentageInBook(double percentage);
 
+	/**
+	 * Checks whether audio is playing (to determine the play/pause image).
+	 * 
+	 * @return True if playing (non-paused).
+	 */
+	public boolean isPlaying();
+
 }

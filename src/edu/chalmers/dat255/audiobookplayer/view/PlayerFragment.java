@@ -54,7 +54,7 @@ public class PlayerFragment extends Fragment {
 
 	private ImageButton playPause;
 
-	private boolean isPlaying = true;
+//	private boolean isPlaying = true;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -114,6 +114,7 @@ public class PlayerFragment extends Fragment {
 				 * show the play button (toggle pause/play and the isPlaying
 				 * value).
 				 */
+				boolean isPlaying = fragmentOwner.isPlaying();
 				if (isPlaying) {
 					fragmentOwner.pause();
 					playPause.setImageResource(R.drawable.pb_play_default);
