@@ -162,7 +162,7 @@ public class PlayerController implements IPlayerEvents {
 			try {
 				path = bs.getSelectedTrackPath();
 			} catch (IllegalArgumentException e) {
-				// the track index was '-1'
+				// the track index was '-1', so do nothing
 				Log.e(TAG,
 						"Attempted to get track path when track index was -1."
 								+ "Path set to null; skipping start in Player.");
@@ -212,8 +212,6 @@ public class PlayerController implements IPlayerEvents {
 
 				// mark that the setup went without problems
 				return true;
-			} else {
-				Log.e(TAG, "Start: tried to start with track path == null");
 			}
 		}
 		return false;
