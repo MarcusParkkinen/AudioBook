@@ -13,6 +13,8 @@
 
 package edu.chalmers.dat255.audiobookplayer.model;
 
+import java.io.Serializable;
+
 /**
  * A time stamp to be put in a track. Used to keep track of certain times.
  * <p>
@@ -23,7 +25,8 @@ package edu.chalmers.dat255.audiobookplayer.model;
  * @version 0.6
  * 
  */
-public class Tag {
+public class Tag implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int time;
 
 	/**
