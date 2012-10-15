@@ -27,7 +27,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 /**
  * The bookshelf class contains a collection of books.
  * 
- * @author Marcus Parkkinen, Aki Käkelä
+ * @author Marcus Parkkinen, Aki Kï¿½kelï¿½
  * @version 0.6
  * 
  */
@@ -35,20 +35,22 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	private static final String TAG = "Bookshelf.java";
 	private static final String BOOK_INDEX_ILLEGAL = " Book index is illegal";
-
+	
 	private static final int NO_BOOK_SELECTED = -1;
 	private static final long serialVersionUID = 1;
 
 	private List<Book> books;
 	private int selectedBookIndex;
 	private transient PropertyChangeSupport pcs;
-
+	
 	/**
 	 * Creates an empty bookshelf.
 	 */
 	public Bookshelf() {
 		books = new LinkedList<Book>();
 		selectedBookIndex = NO_BOOK_SELECTED;
+		
+		pcs = new PropertyChangeSupport(this);
 	}
 
 	/**
@@ -83,11 +85,12 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		}
 
 		selectedBookIndex = index;
-
-		// notify the view module that we have selected a book
-		pcs.firePropertyChange(Constants.Event.BOOK_SELECTED, null,
-				new Bookshelf(this));
-
+		
+		if(hasListeners()) {
+			// notify the view module that we have selected a book
+			pcs.firePropertyChange(Constants.Event.BOOK_SELECTED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	/**
@@ -103,10 +106,12 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
 			selectedBookIndex = 0;
 		}
-
-		// Log.d(TAG, "list size (original): " + books.size());
-		pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null, new Bookshelf(
-				this));
+		
+		if(hasListeners()) {
+			// Log.d(TAG, "list size (original): " + books.size());
+			pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null, new Bookshelf(
+					this));
+		}
 	}
 
 	/**
@@ -134,10 +139,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 				selectedBookIndex = 0;
 			}
 		}
-
-		// notify the listeners about this change
-		pcs.firePropertyChange(Constants.Event.BOOK_REMOVED, null,
-				new Bookshelf(this));
+		if(hasListeners()) {
+			// notify the listeners about this change
+			pcs.firePropertyChange(Constants.Event.BOOK_REMOVED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	/**
@@ -154,8 +160,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		}
 		Book temp = books.remove(to);
 		books.add(from, temp);
-		pcs.firePropertyChange(Constants.Event.BOOK_MOVED, null, new Bookshelf(
-				this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.BOOK_MOVED, null, new Bookshelf(
+					this));
+		}
 	}
 
 	/* End Bookshelf methods */
@@ -175,10 +184,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		 * book
 		 */
 		updateBookDuration();
-
-		pcs.firePropertyChange(Constants.Event.TRACK_REMOVED, null,
-				new Bookshelf(this));
-
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.TRACK_REMOVED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public void addTrack(Track t) {
@@ -189,22 +199,30 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		 * book
 		 */
 		updateBookDuration();
-
-		pcs.firePropertyChange(Constants.Event.TRACK_ADDED, null,
-				new Bookshelf(this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.TRACK_ADDED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public void swapTracks(int firstIndex, int secondIndex)
 			throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).swapTracks(firstIndex, secondIndex);
-		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
-				new Bookshelf(this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public void moveTrack(int from, int to) throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).moveTrack(from, to);
-		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
-				new Bookshelf(this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public void setSelectedTrackIndex(int index)
@@ -260,8 +278,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	public void updateBookDuration() {
 		this.books.get(selectedBookIndex).updateBookDuration();
-		pcs.firePropertyChange(Constants.Event.BOOK_DURATION_CHANGED, null,
-				new Bookshelf(this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.BOOK_DURATION_CHANGED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	/* End IBookUpdates */
@@ -281,8 +302,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 		}
 
 		this.books.get(bookIndex).setSelectedBookTitle(newTitle);
-		pcs.firePropertyChange(Constants.Event.BOOK_TITLE_CHANGED, null,
-				new Bookshelf(this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.BOOK_TITLE_CHANGED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public String getBookTitleAt(int bookIndex) throws IllegalArgumentException {
@@ -299,9 +323,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	public void setSelectedTrackElapsedTime(int elapsedTime) {
 		// set elapsed time in the currently playing book
 		books.get(selectedBookIndex).setSelectedTrackElapsedTime(elapsedTime);
-
-		pcs.firePropertyChange(Constants.Event.ELAPSED_TIME_CHANGED, null,
-				new Bookshelf(this));
+		
+		if(hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.ELAPSED_TIME_CHANGED, null,
+					new Bookshelf(this));
+		}
 	}
 
 	public void addTag(int time) throws IllegalArgumentException {
@@ -420,16 +446,32 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	private boolean isLegalIndex(int index) {
 		return index >= 0 && index < books.size();
 	}
-
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs = new PropertyChangeSupport(this);
-		pcs.addPropertyChangeListener(listener);
-		pcs.firePropertyChange(Constants.Event.BOOKSHELF_UPDATED, null,
-				new Bookshelf(this));
+	
+	private boolean hasListeners() {
+		return pcs.getPropertyChangeListeners().length > 0;
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		pcs.removePropertyChangeListener(listener);
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if(listener != null) {
+			pcs.addPropertyChangeListener(listener);
+			
+			// Synchronize the new listener with the current state of the
+			// bookshelf
+			pcs.firePropertyChange(Constants.Event.BOOKSHELF_UPDATED, null,
+					new Bookshelf(this));
+			
+		} else{
+			Log.e(TAG, " trying to add null as property change listener. Skipping operation.");
+		}
+	}
+	
+	/**
+	 * Removes all listeners from the pcs member.
+	 */
+	public void removeListeners() {
+		for(PropertyChangeListener pcl : pcs.getPropertyChangeListeners()) {
+			pcs.removePropertyChangeListener(pcl);
+		}
 	}
 
 	// NOTE: Autogenerated method
