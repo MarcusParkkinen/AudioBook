@@ -215,7 +215,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				//get all menu items from the group context menu
 				menuItems = GroupContextMenuItem.values();
 				//set the context menu's title to that of the value of the book
-				title = listData.get(bookIndex).getKey().getBookTitle();
+				title = listData.get(bookIndex).getKey().getSelectedBookTitle();
 			}
 			// set the title
 			menu.setHeaderTitle(title);
@@ -528,7 +528,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 			// set title, author, time and duration of book
 			setTextViewText(convertView, R.id.bookshelfBookTitle,
-					book.getBookTitle());
+					book.getSelectedBookTitle());
 			//set the color of the books title to red if selected,
 			if (bookIndex == selectedIndex) {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
@@ -540,7 +540,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 						Color.WHITE);
 			}
 			setTextViewText(convertView, R.id.bookshelfAuthor,
-					book.getAuthor());
+					book.getSelectedBookAuthor());
 			//format the string of the elapsed time of the book
 			String timeString = time == 0 ? "N/A" : DateUtils
 					.formatElapsedTime(time);
