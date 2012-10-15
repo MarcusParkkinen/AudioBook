@@ -50,7 +50,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Graphical representation of the bookshelf.
  * 
- * @author Marcus Parkkinen, Fredrik ï¿½hs
+ * @author Marcus Parkkinen, Fredrik Åhs
  * @version 0.6
  */
 
@@ -60,11 +60,22 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	private ExpandableBookshelfAdapter adapter;
 	private IBookshelfGUIEvents fragmentOwner;
 
+	/**
+	 * Simple interface forcing the enum classes to provide a method to get text. 
+	 *
+	 */
 	private interface IContextMenuItem {
+		/**
+		 * This method should be used to provide the text to be shown by the menu items.
+		 * @return The text to be displayed.
+		 */
 		public String getText();
 	}
 
-	// enum providing name and id for contextmenuitems
+	/**
+	 * Enum providing name and ID for context menu items
+	 *
+	 */
 	private enum GroupContextMenuItem implements IContextMenuItem {
 		Delete {
 			public String getText() {
@@ -77,8 +88,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			}
 		};
 	}
-
-	// enum providing name and id for contextmenuitems
+	/**
+	 * Enum providing name and ID for context menu items
+	 *
+	 */
 	private enum ChildContextMenuItem implements IContextMenuItem {
 		Delete {
 			public String getText() {
@@ -130,7 +143,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		/**************************************************************/
 
 		ImageButton addButton = (ImageButton) view.findViewById(R.id.addBook);
-
+		//adds a listener to the button
 		addButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// Get the parent activity
@@ -138,6 +151,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				// Make sure that the activity is not at the end of its
 				// lifecycle
 				if (getActivity() != null) {
+					//inform mainactivity this button has been pressed
 					addBookButtonPressed();
 				}
 			}
@@ -152,11 +166,13 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				.findViewById(R.id.bookshelfList);
 
 		/*
-		 * hides the by default visible arrow indicating a whether a group is
-		 * expanded or not
+		* hides the by default visible arrow which indicates whether a group is
+		* expanded or not
 		 */
 		bookshelfList.setGroupIndicator(null);
+		//set the bookshelf list as a context menu
 		registerForContextMenu(bookshelfList);
+		//sets the bookshelf lists adapter
 		bookshelfList.setAdapter(adapter);
 		// Access the bookshelf reference
 		if (getArguments().getSerializable(Constants.Reference.BOOKSHELF) instanceof Bookshelf) {
@@ -166,38 +182,48 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				bookAdded(b.getBookAt(i));
 			}
 		}
-
+		//return the view when it has been processed.
 		return view;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
+		//check that the menuInfo is of the correct type
 		if (menuInfo instanceof ExpandableListContextMenuInfo) {
 			ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
+			//get the provided book position
 			int bookIndex = ExpandableListView
 					.getPackedPositionGroup(info.packedPosition);
 			// trackIndex will be -1 if group is clicked
 			int trackIndex = ExpandableListView
 					.getPackedPositionChild(info.packedPosition);
+			//get the type of the context menu
 			int type = ExpandableListView
 					.getPackedPositionType(info.packedPosition);
-
+			//create an empty array to prevent trying to loop over an uninitialized variable
 			IContextMenuItem[] menuItems = new IContextMenuItem[0];
 			String title = null;
 			// fill the context menu with the correct items
 			if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+				//get all menu items from the child context menu
 				menuItems = ChildContextMenuItem.values();
+				//set the context menu's title to that of the value of the child
 				title = listData.get(bookIndex).getValue().get(trackIndex);
 			} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+				//get all menu items from the group context menu
 				menuItems = GroupContextMenuItem.values();
-				title = listData.get(bookIndex).getKey().getSelectedBookTitle();
+				//set the context menu's title to that of the value of the book
+				title = listData.get(bookIndex).getKey().getBookTitle();
 			}
 			// set the title
 			menu.setHeaderTitle(title);
 			// populate the context menu with items in the order they were
 			// declared in the enum declaration.
 			for (IContextMenuItem item : menuItems) {
+				//as this only loops when menuItems is of either of type 
+				//GroupContextMenuItem[] or ChildContextMenuItem[], Enum can be used as a raw type
 				menu.add(Menu.NONE, ((Enum) item).ordinal(),
 						((Enum) item).ordinal(), item.getText());
 			}
@@ -208,16 +234,19 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	public boolean onContextItemSelected(MenuItem item) {
 		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item
 				.getMenuInfo();
+		//get the provided book position
 		int bookIndex = ExpandableListView
 				.getPackedPositionGroup(info.packedPosition);
 		// will be -1 if the type is group
 		int trackIndex = ExpandableListView
 				.getPackedPositionChild(info.packedPosition);
-
+		//get the type of the context menu
 		int type = ExpandableListView
 				.getPackedPositionType(info.packedPosition);
 
+		//create an empty array to prevent trying to loop over an uninitialized variable
 		IContextMenuItem[] menuItems = new IContextMenuItem[0];
+		//fill the array with the correct items
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 			menuItems = ChildContextMenuItem.values();
 		} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
@@ -226,10 +255,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 		// check that item has correct id (should not be needed)
 		int itemId = item.getItemId();
-		if (itemId >= menuItems.length) {
+		if (itemId >= menuItems.length || itemId < 0) {
 			return false;
 		}
-
+		//get an item and store it with its dynamic type 
 		IContextMenuItem menuItem = menuItems[itemId];
 
 		// if the type of the context menu is group
@@ -247,7 +276,6 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				break;
 			default:
 				break;
-
 			}
 
 		}
@@ -256,7 +284,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				&& menuItem instanceof ChildContextMenuItem) {
 			// perform the correct task
 			switch ((ChildContextMenuItem) menuItem) {
-			// TODO implement functionality of a context menu for children
+			// TODO(Children Context Menu Implementation) : Add cases and methods to add menu options to the child
 			default:
 				break;
 
@@ -282,7 +310,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	/**
 	 * Private help class that holds an entry with a key and a value.
 	 * 
-	 * @author Fredrik ï¿½hs
+	 * @author Fredrik Åhs
 	 * @version 0.1
 	 */
 	private class BookshelfEntry<K, V> implements Map.Entry<K, V> {
@@ -290,22 +318,37 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		private K key;
 		private V value;
 
+		/**
+		 * Constructor of entry.
+		 * @param key The key.
+		 * @param value The value.
+		 */
 		public BookshelfEntry(K key, V value) {
 			this.key = key;
 			this.value = value;
 		}
 
+		/**
+		 * @return returns the key of the entry.
+		 */
 		public K getKey() {
 			return key;
 		}
 
+		/**
+		 * @return returns the value of the entry.
+		 */
 		public V getValue() {
 			return value;
 		}
 
+		/**
+		 * @param object sets the entry of the value;
+		 * @return returns the value of the entry
+		 */
 		public V setValue(V object) {
 			this.value = object;
-			return value;
+			return getValue();
 		}
 	}
 
@@ -329,7 +372,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	 * Private class used to populate the ExpandableListView used in
 	 * BookshelfFragment.
 	 * 
-	 * @author Fredrik ï¿½hs
+	 * @author Fredrik Åhs
 	 * 
 	 */
 	private class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
@@ -338,49 +381,81 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		private List<Entry<Book, List<String>>> listData;
 		private int selectedIndex;
 
+		/**
+		 * Constructs an ExpandableListAdapter with context and listData.
+		 * @param context The context of the application.
+		 * @param listData The data to be used to fill the list.
+		 */
 		public ExpandableBookshelfAdapter(Context context,
 				List<Entry<Book, List<String>>> listData) {
 			this.context = context;
 			this.listData = listData;
 			selectedIndex = -1;
 		}
-
+		/**
+		 * @param bookIndex The position of the book.
+		 * @param trackIndex The position of the track.
+		 * @return The title of the track at given position.
+		 */
 		public String getChild(int bookIndex, int trackIndex) {
 			return listData.get(bookIndex).getValue().get(trackIndex);
 		}
 
+		/**
+		 * @param bookIndex The position of the book.
+		 * @param trackIndex The position of the track.
+		 * @return The id of the track at given position.
+		 */
 		public long getChildId(int bookIndex, int trackIndex) {
 			return trackIndex;
 		}
 
+
+		/**
+		 * @param bookIndex The position of the book.
+		 * @return The amount of tracks in the book at given position.
+		 */
 		public int getChildrenCount(int bookIndex) {
 			return listData.get(bookIndex).getValue().size();
 		}
 
+		/**
+		 * Converts the view of a track to display properly.
+		 * @param bookIndex The position of the book.
+		 * @param trackIndex The position of the track.
+		 * @param isLastChild Whether the track is the last child in the expandable list view group.
+		 * @param convertView The view to be converted.
+		 * @param parent The view of the ExpandableListView.
+		 * @return The converted view.
+		 */
 		public View getChildView(final int bookIndex, final int trackIndex,
 				boolean isLastChild, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater vi = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				//inflate it into parent.
 				convertView = vi.inflate(R.layout.bookshelf_child_row, parent,
 						false);
 			}
 
+			//the expandable list view is stored as final to use it in listeners
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
+			//set the text of the child 
 			setTextViewText(convertView, R.id.bookshelfTrackTitle,
 					getChild(bookIndex, trackIndex));
-
+			//get the position of the track from the book
 			int duration = getGroup(bookIndex).getTrackDurationAt(trackIndex) / 1000;
-			// set the duration of the track
+			// convert and set the duration of the track
 			setTextViewText(convertView, R.id.bookshelfTrackTime,
 					DateUtils.formatElapsedTime(duration));
 
-			// inform the bookshelfFragment's listener that a child has been
-			// selected
 			convertView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					//store the index of the book of the track clicked for correct redrawal
 					selectedIndex = bookIndex;
+					//force the expandable list view to redraw
 					expandableListView.invalidateViews();
+					//inform the bookshelfFragment's listener that a child has been selected
 					BookshelfFragment.this.childClicked(bookIndex, trackIndex);
 				}
 			});
@@ -398,47 +473,75 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			return convertView;
 		}
 
+		/**
+		 * @param bookIndex The position of the book.
+		 * @return Book at given position
+		 */
 		public Book getGroup(int bookIndex) {
 			return listData.get(bookIndex).getKey();
 		}
 
+		/**
+		 * @return The number of books.
+		 */
 		public int getGroupCount() {
 			return listData.size();
 		}
 
+		/**
+		 * @param bookIndex The position of the book.
+		 * @return The id of the book.
+		 */
 		public long getGroupId(int bookIndex) {
 			return bookIndex;
 		}
 
+/**
+		 * Converts the view of a book to display it properly.
+		 * @param bookIndex The position of the book.
+		 * @param isExpanded Whether the book is expanded or not.
+		 * @param convertView The book's view.
+		 * @param parent The expandable list view
+		 * @return The converted view. 
+		 */
 		public View getGroupView(final int bookIndex, final boolean isExpanded,
 				View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				LayoutInflater vi = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				//inflate it into its parent
 				convertView = vi.inflate(R.layout.bookshelf_group_row, parent,
 						false);
 			}
+			//set book as final to use in listeners
 			final Book book = getGroup(bookIndex);
+			//set the expandableListView as final to use in listeners
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
+			//get duration from book
 			int duration = book.getDuration() / 1000;
 			// prevent problems with a duration of 0
 			if (duration == 0) {
 				return null;
 			}
+			//get the elapsed time of the book
 			int time = book.getBookElapsedTime() / 1000;
 
 			// set title, author, time and duration of book
 			setTextViewText(convertView, R.id.bookshelfBookTitle,
-					book.getSelectedBookTitle());
+					book.getBookTitle());
+			//set the color of the books title to red if selected,
 			if (bookIndex == selectedIndex) {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.RED);
-			} else {
+			} 
+			//and white otherwise.
+			else {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.WHITE);
 			}
 			setTextViewText(convertView, R.id.bookshelfAuthor,
-					book.getSelectedBookAuthor());
+					book.getAuthor());
+			//format the string of the elapsed time of the book
 			String timeString = time == 0 ? "N/A" : DateUtils
 					.formatElapsedTime(time);
 			setTextViewText(convertView, R.id.bookshelfBookPosition,
@@ -451,16 +554,16 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			// set the progress of the progress bar
 			ProgressBar progressBar = (ProgressBar) convertView
 					.findViewById(R.id.bookshelfProgressBar);
+			//make sure progress is within its boundaries before setting it
 			if (progress >= 0 && progress <= 100) {
 				progressBar.setProgress(progress);
 			}
 			// set cover art
 			ImageView imageView = (ImageView) convertView
 					.findViewById(R.id.bookshelfBookCover);
-			// TODO acquire correct cover art
+			// TODO(bookshelf cover art) : acquire correct cover art
 			imageView.setImageResource(R.drawable.img_no_cover);
-			// click the cover art to 'open or close the book' and show tracks
-			// (expands/collapses book)
+			// click the cover art to toggle the books tracks visibility
 			imageView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (isExpanded) {
@@ -470,6 +573,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					}
 				}
 			});
+			//sets the on click listener for the rest of the view
 			convertView.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
@@ -484,7 +588,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					// invalidates views to force redraw thus setting the
 					// correct textcolor
 					expandableListView.invalidateViews();
-
+					//inform the BookshelfFragment that this button has been pressed.
 					BookshelfFragment.this.groupClicked(bookIndex);
 				}
 			});
@@ -501,24 +605,46 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			return convertView;
 		}
 
+		/**
+		 * Private help class used to prevent code duplication
+		 * @param view The TextView to where the text will be displayed.
+		 * @param id The id of the TextView.
+		 * @param text The text to be displayed.
+		 */
 		private void setTextViewText(View view, int id, String text) {
-			TextView textView = (TextView) view.findViewById(id);
-			if (textView != null) {
-				textView.setText(text);
+			if(view != null && view instanceof TextView) {
+				TextView textView = (TextView) view.findViewById(id);
+				if (textView != null) {
+					textView.setText(text);
+				}	
 			}
 		}
 
+		/**
+		 * Private help class used to prevent code duplication.
+		 * @param view The TextView to where the text color will be set.
+		 * @param id The id of the TextView.
+		 * @param color The color to be set.
+		 */
 		private void setTextViewTextColor(View view, int id, int color) {
-			TextView textView = (TextView) view.findViewById(id);
-			if (textView != null) {
-				textView.setTextColor(color);
+			if(view != null && view instanceof TextView) {
+				TextView textView = (TextView) view.findViewById(id);
+				if (textView != null) {
+					textView.setTextColor(color);
+				}
 			}
 		}
 
+		
 		public boolean hasStableIds() {
 			return true;
 		}
 
+		/**
+		 * @param bookIndex The position of the book.
+		 * @param trackIndex The position of the track.
+		 * @return Whether the track at given position is selectable.
+		 */
 		public boolean isChildSelectable(int bookIndex, int trackIndex) {
 			return true;
 		}
