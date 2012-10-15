@@ -43,7 +43,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 /**
  * The main activity of the application. TODO: insert license
  * 
- * @author Aki Käkelä, Marcus Parkkinen
+ * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
  * @version 0.6
  * 
  */
@@ -68,9 +68,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	// Creator
 	private BookCreator bookCreator;
-
-	// Bookshelf
-	Bookshelf shelf;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -131,8 +128,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	protected void onStop() {
 		Log.d(TAG, "onStop()");
 		super.onStop();
-
-		// stopUpdates();
+		
+		// Disable updates
+		bookshelfController.removeListeners();
 
 		// stopAudio();
 	}
@@ -145,7 +143,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 * if the application is stopped, it will go through onStart() and then
 		 * onResume(), so just start the updates again here.
 		 */
-		// startUpdates();
+		bookshelfController.addPropertyChangeListener(this);
 
 		/*
 		 * TODO(??): This method is run every time the application is created,
@@ -177,7 +175,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * Saves a bookmark (the bookshelf).
 	 */
 	private void save() {
-		BookshelfHandler.saveBookshelf(this, USERNAME, shelf);
+		bookshelfController.saveBookshelf(this, USERNAME);
 	}
 
 	/**
@@ -336,9 +334,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
+		
+		/*
 		if (eventName != Constants.Event.ELAPSED_TIME_CHANGED) {
 			Log.d(TAG, "Received update: " + eventName);
 		}
+		*/
+		Log.d(TAG, "Received update: " + eventName);
 
 		if (event.getNewValue() instanceof Bookshelf) {
 			// Get the model from the update
