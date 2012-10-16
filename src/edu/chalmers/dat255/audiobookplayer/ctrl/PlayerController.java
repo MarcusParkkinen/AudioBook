@@ -81,6 +81,11 @@ public class PlayerController implements IPlayerEvents {
 			stopTimer();
 			mp.stop();
 			mp.reset();
+
+			if (isStarted) {
+				Log.e(TAG,
+						"Debug: PlayerController was stopped but is still 'started'");
+			}
 		}
 	}
 
@@ -145,11 +150,8 @@ public class PlayerController implements IPlayerEvents {
 	 * @return True if setup was run without problems.
 	 */
 	private boolean setup() {
-		// TODO(aki): check if already playing; don't always restart
-		Log.d(TAG, "Setting up player."
-				+ " Should not happen when using track seek bar");
-		if (bs.getSelectedTrackIndex() == -1) {
-			Log.d(TAG, "Index is -1. Should not continue playing.");
+		if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
+			Log.d(TAG, "Index is -1. Should not continue playing. Stopping.");
 			stop();
 		} else {
 			/*
@@ -258,22 +260,64 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void previousTrack() {
-		if (bs.getSelectedTrackIndex() == -1) {
-			// go to the final track and replay it
-			bs.setSelectedTrackIndex(bs.getNumberOfTracks() - 1);
-		} else if (bs.getSelectedTrackIndex() > 0) {
-			// decrement track index
-			bs.setSelectedTrackIndex(bs.getSelectedTrackIndex() - 1);
+		if (isAllowedBookIndex()) {
+			int trackIndex = bs.getSelectedTrackIndex();
+
+			/*
+			 * previousTrack will always modify the selected track index of the
+			 * model. If no track is selected, the first track will be selected.
+			 * If the last track is selected, no track will be selected (it will
+			 * be stopped).
+			 */
+
+			if (trackIndex == -1) {
+				// no track is selected, so start the last one
+				if (bs.isLegalTrackIndex(0)) {
+					bs.setSelectedTrackIndex(0);
+				}
+			} else if (trackIndex == 0) {
+				// first track is selected, so deselect
+				bs.setSelectedTrackIndex(Constants.Value.NO_TRACK_SELECTED);
+			} else {
+				/*
+				 * a track between the second first (index 1) and the last is selected, so
+				 * just select the previous track since it will be legal.
+				 */
+				
+				bs.setSelectedTrackIndex(trackIndex - 1);
+			}
 		}
-		start(); // restart the player
 	}
 
 	public void nextTrack() {
-		if (bs.getSelectedTrackIndex() != -1) {
-			// increment track index unless we are done
-			bs.setSelectedTrackIndex(bs.getSelectedTrackIndex() + 1);
-			start(); // restart the player
+		if (isAllowedBookIndex()) {
+			int trackIndex = bs.getSelectedTrackIndex();
+
+			/*
+			 * nextTrack will always modify the selected track index of the
+			 * model. If no track is selected, the first track will be selected.
+			 * If the last track is selected, no track will be selected (it will
+			 * be stopped).
+			 */
+
+			if (trackIndex == -1) {
+				// no track is selected, so start the first one
+				if (bs.isLegalTrackIndex(0)) {
+					bs.setSelectedTrackIndex(0);
+				}
+			} else if (trackIndex == bs.getNumberOfTracks() - 1) {
+				// last track is selected
+				bs.setSelectedTrackIndex(Constants.Value.NO_TRACK_SELECTED);
+			} else {
+				/*
+				 * a track between the first and the second last is selected, so
+				 * just select the next track since it will be legal.
+				 */
+				bs.setSelectedTrackIndex(trackIndex + 1);
+			}
+
 		}
+
 	}
 
 	public void seekRight() {
@@ -291,6 +335,11 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekToPercentageInTrack(double percentage) {
+		if (!isLegalPercentage(percentage)) {
+			throw new IllegalArgumentException("Attempted to seek "
+					+ "to an illegal state (negative or above 100% seek) "
+					+ "at seekToPercentageInTrack.");
+		}
 		if (isAllowedBookIndex()) {
 			Log.d(TAG, "Track index: " + bs.getSelectedTrackIndex());
 
@@ -314,6 +363,11 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekToPercentageInBook(double percentage) {
+		if (!isLegalPercentage(percentage)) {
+			throw new IllegalArgumentException("Attempted to seek "
+					+ "to an illegal state (negative or above 100% seek) "
+					+ "at seekToPercentageInBook.");
+		}
 		if (isAllowedBookIndex()) {
 			// get the duration of the book
 			int bookDuration = bs.getSelectedBookDuration();
@@ -329,18 +383,18 @@ public class PlayerController implements IPlayerEvents {
 			while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
 				seekTime -= trackDuration;
 				track++;
-				Log.d(TAG, "Skipped a track (" + trackDuration
-						+ "ms) . New seekTime: " + seekTime + ". Track#: "
-						+ track);
+				Log.d(TAG, "Skipped track (" + trackDuration
+						+ "ms).\t seekTime: " + seekTime
+						+ "\t at track index: " + track);
 			}
 
-			// set the correct track
-			bs.setSelectedTrackIndex(track, false);
-
-			if (isStarted) {
-				// no need to restart the player
+			if (isStarted && bs.getSelectedTrackIndex() == track) {
+				// no need to restart the player since it is the same track
 				mp.seekTo(seekTime);
 			} else {
+				// set the correct track
+				bs.setSelectedTrackIndex(track);
+
 				/*
 				 * start the track we seeked to, and finishing seeking within
 				 * that track
@@ -351,6 +405,16 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	/* End IPlayerEvents */
+
+	/**
+	 * Checks whether the given percentage is legal (0-100).
+	 * 
+	 * @param percentage
+	 * @return True if legal.
+	 */
+	private boolean isLegalPercentage(double percentage) {
+		return percentage >= 0 && percentage <= 100;
+	}
 
 	/**
 	 * Seeks to the given time.
@@ -368,7 +432,15 @@ public class PlayerController implements IPlayerEvents {
 	 * @return
 	 */
 	private boolean isAllowedTrackIndex() {
-		return bs.getSelectedTrackIndex() != -1;
+		int index = -1; // not allowed unless changed below
+		try {
+			index = bs.getSelectedTrackIndex();
+		} catch (IllegalArgumentException e) {
+			// no book was selected
+			return false;
+		}
+		// if 'index' was changed and there is a selected track, return true
+		return index != -1;
 	}
 
 	/**
@@ -378,6 +450,36 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	private boolean isAllowedBookIndex() {
 		return bs.getSelectedBookIndex() != -1;
+	}
+
+	public boolean isStarted() {
+		return isStarted;
+	}
+
+	public boolean isPlaying() {
+		return mp.isPlaying();
+	}
+
+	/**
+	 * Thread that updates the elapsed time in a track.
+	 * 
+	 * @author Aki Käkelä
+	 * 
+	 */
+	private class TrackElapsedTimeUpdater implements Runnable {
+
+		public void run() {
+			while (isStarted && mp.isPlaying()) {
+				updateTrackTime();
+				try {
+					Thread.sleep(UPDATE_FREQUENCY);
+				} catch (InterruptedException e) {
+					// the thread was interrupted, so simply end the run method.
+					return;
+				}
+			}
+		}
+
 	}
 
 	/*
@@ -399,40 +501,4 @@ public class PlayerController implements IPlayerEvents {
 	 * *** END TESTING PURPOSES ONLY ***
 	 */
 
-	public boolean isPlaying() {
-		return mp.isPlaying();
-	}
-
-	/**
-	 * Checks if the player is currently playing audio (not paused, stopped or
-	 * uninitialized).
-	 * 
-	 * @return True if started.
-	 */
-	public boolean isStarted() {
-		return isStarted;
-	}
-
-	/**
-	 * Thread that updates the elapsed time in a track.
-	 * 
-	 * @author Aki Käkelä
-	 * 
-	 */
-	private class TrackElapsedTimeUpdater implements Runnable {
-
-		public void run() {
-			while (isStarted && mp.isPlaying()) {
-				updateTrackTime();
-				try {
-					Thread.sleep(UPDATE_FREQUENCY);
-				} catch (InterruptedException e) {
-					// the thread was interrupted, so simply end the run method.
-					Log.d(TAG, "Track elapsed time updater stopped.");
-					return;
-				}
-			}
-		}
-
-	}
 }

@@ -30,10 +30,10 @@ public final class Constants {
 	public static final class Event {
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
 
-		public static final String BOOK_ADDED = "!bookAdded";
-		public static final String BOOK_MOVED = "!bookMoved";
-		public static final String BOOK_REMOVED = "!bookRemoved";
 		public static final String BOOK_SELECTED = "!bookSelected";
+		public static final String BOOK_ADDED = "!bookAdded";
+		public static final String BOOK_REMOVED = "!bookRemoved";
+		public static final String BOOK_MOVED = "!bookMoved";
 
 		public static final String BOOK_TITLE_CHANGED = "!bookTitleChanged";
 		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
@@ -51,7 +51,9 @@ public final class Constants {
 		// player (when the track ends) changes the track index.
 		// TODO(anyone): change this variable name "_BY_USER_OR_PLAYER" suffix.
 
-		public static final String BOOK_FINISHED = "!bookFinished";
+		public static final String TAG_ADDED = "!tagAdded";
+
+		public static final String TAG_REMOVED = "!tagRemoved";
 	}
 
 	/**
@@ -76,11 +78,9 @@ public final class Constants {
 
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
-
-		public static final String NO_TRACK_TIME_TO_DISPLAY = "N/A";
-		public static final String NO_BOOK_TIME_TO_DISPLAY = "N/A";
-
-		public static final String NO_AUTHOR = "N/A";
+		
+		public static final int NO_BOOK_SELECTED = -1;
+		public static final int NO_TRACK_SELECTED = -1;
 
 	}
 
@@ -92,6 +92,17 @@ public final class Constants {
 	 */
 	public static final class Message {
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
+		
+		public static final CharSequence NO_BOOK_TITLE = "N/A";
+		public static final CharSequence NO_TRACK_TITLE = "N/A";
+		
+		public static final CharSequence NO_TRACK_ELAPSED_TIME = "N/A";
+		public static final CharSequence NO_BOOK_ELAPSED_TIME = "N/A";
+		
+		public static final String NO_TRACK_DURATION = "N/A";
+		public static final String NO_BOOK_DURATION = "N/A";
+
+		public static final String NO_AUTHOR = "N/A";
 	}
 
 }

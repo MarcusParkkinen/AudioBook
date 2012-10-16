@@ -49,6 +49,7 @@ public class PlayerFragment extends Fragment {
 	// private TextView trackDuration;
 	// private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
+	private TextView trackCounter;
 	private IPlayerEvents fragmentOwner;
 
 	private ImageButton playPause;
@@ -115,10 +116,12 @@ public class PlayerFragment extends Fragment {
 				 */
 				if (fragmentOwner.isPlaying()) {
 					fragmentOwner.pause();
+					playPause.setImageResource(R.drawable.pb_play_default);
+				} else if (fragmentOwner.isStarted()) {
+					fragmentOwner.resume();
 					playPause.setImageResource(R.drawable.pb_pause_default);
 				} else {
-					fragmentOwner.resume();
-					playPause.setImageResource(R.drawable.pb_play_default);
+					Log.d(TAG, "else in playPause");
 				}
 			}
 		});
@@ -166,7 +169,7 @@ public class PlayerFragment extends Fragment {
 
 		});
 
-		trackBar = (SeekBar) view.findViewById(R.id.trackBar);
+		trackBar = (SeekBar) view.findViewById(R.id.track_bar);
 		trackBar.setMax(Constants.Value.NUMBER_OF_SEEK_BAR_ZONES);
 		trackBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "trackBar";
@@ -195,22 +198,24 @@ public class PlayerFragment extends Fragment {
 		});
 
 		trackTitle = (TextView) view.findViewById(R.id.trackTitle);
-		trackTitle.setText("track title");
+		trackTitle.setText(Constants.Message.NO_TRACK_TITLE);
 
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
-		bookTitle.setText("book title");
+		bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
 
 		// bookDuration = (TextView) view.findViewById(R.id.bookDuration);
-		// bookDuration.setText("BD");
+		// bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
 		//
 		// trackDuration = (TextView) view.findViewById(R.id.trackDuration);
-		// trackDuration.setText("TD");
+		// trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
 		//
 		// bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
-		// bookElapsedTime.setText(Constants.Value.NO_BOOK_TIME_TO_DISPLAY);
+		// bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
 
 		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
-		trackElapsedTime.setText(Constants.Value.NO_TRACK_TIME_TO_DISPLAY);
+		trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
+
+		trackCounter = (TextView) view.findViewById(R.id.track_counter);
 
 		return view;
 	}
@@ -252,11 +257,13 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateBookTitleLabel(String title) {
-		if (isBadTitle(title)) {
-			bookTitle.setText("N/A");
-		} else {
-			bookTitle.setText(title);
-		}
+		bookTitle.setText(title);
+		
+//		if (isBadTitle(title)) {
+//			bookTitle.setText("N/A");
+//		} else {
+//			bookTitle.setText(title);
+//		}
 	}
 
 	/**
@@ -265,11 +272,18 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateTrackTitleLabel(String title) {
+		trackTitle.setText(title);
 		if (isBadTitle(title)) {
-			trackTitle.setText("N/A");
-		} else {
-			trackTitle.setText(title);
+			Log.d(TAG, "Title (" + title + ") is a bad title!");
 		}
+		
+//		Log.d(TAG, "track title setting to " + title);
+//		if (isBadTitle(title)) {
+//			trackTitle.setText("N/A");
+//			Log.d(TAG, "Title (" + title + ") is a bad title!");
+//		} else {
+//			trackTitle.setText(title);
+//		}
 	}
 
 	/*
@@ -282,6 +296,7 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateBookElapsedTimeLabel(int ms) {
+		// Note: not implemented in the newer versions of the Player GUI
 		// bookElapsedTime.setText(TimeFormatter.formatTimeFromMillis(ms));
 	}
 
@@ -301,25 +316,41 @@ public class PlayerFragment extends Fragment {
 	/**
 	 * Sets the duration label of the book to the given time in milliseconds.
 	 * <p>
-	 * Formates the time. (see {@link TimeFormatter#formatTimeFromMillis(int)
+	 * Formats the time. (see {@link TimeFormatter#formatTimeFromMillis(int)
 	 * formatTimeFromMillis})
 	 * 
 	 * @param ms
 	 */
 	public void updateBookDurationLabel(int ms) {
+		// Note: not implemented in the newer versions of the Player GUI
 		// bookDuration.setText(formatTime(ms));
 	}
 
 	/**
 	 * Sets the duration label of the track to the given time in milliseconds.
 	 * <p>
-	 * Formates the time. (see {@link TimeFormatter#formatTimeFromMillis(int)
-	 * formatTimeFromMillis})
+	 * Formats the time (see {@link TimeFormatter#formatTimeFromMillis(int)
+	 * formatTimeFromMillis}).
 	 * 
 	 * @param ms
 	 */
 	public void updateTrackDurationLabel(int ms) {
+		// Note: not implemented in the newer versions of the Player GUI
 		// trackDuration.setText(formatTime(ms));
+	}
+
+	/**
+	 * Sets the track counter label to the given track position and limit.
+	 * <p>
+	 * Formats the given input (see
+	 * {@link PlayerFragment#formatTrackCounter(int, int)}).
+	 * 
+	 * @param currentTrack
+	 * @param numberOfTracks
+	 */
+	public void updateTrackCounterLabel(int currentTrack, int numberOfTracks) {
+		this.trackCounter.setText(formatTrackCounter(currentTrack,
+				numberOfTracks));
 	}
 
 	/**
@@ -333,12 +364,57 @@ public class PlayerFragment extends Fragment {
 	}
 
 	/**
-	 * Sets the play/pause button to show as pause, since audio is playing. Used
-	 * when books are selected. Otherwise this class will handle toggling the
-	 * state by itself.
+	 * Resets the seek bars, titles, elapsed times and durations displayed to
+	 * their default text.
 	 */
-	public void setToPlaying() {
-		// playPause.setImageResource(R.drawable.pb_pause_default);
+	public void resetComponents() {
+		// reset progress of seek bars
+		this.bookBar.setProgress(0);
+		this.trackBar.setProgress(0);
+
+		// reset title texts
+		this.bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
+		this.trackTitle.setText(Constants.Message.NO_TRACK_TITLE);
+
+		// reset elapsed time texts
+		this.trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
+
+		// reset duration texts
+
+	}
+
+	/**
+	 * Enables or disables the play/pause button.
+	 */
+	public void setPlayPauseEnabled(boolean enabled) {
+		playPause.setEnabled(enabled);
+		if (enabled) {
+			playPause.setImageResource(R.drawable.pb_play_default);
+		}
+	}
+
+	/**
+	 * Formats a given position and limit.
+	 * 
+	 * @param currentTrack
+	 *            Current position.
+	 * @param numberOfTracks
+	 *            Limit.
+	 * @return Formatted text. If a position is between 0 and the limit the
+	 *         current position will be displayed.
+	 */
+	private String formatTrackCounter(int currentTrack, int numberOfTracks) {
+		String result = "(";
+		if (currentTrack != Constants.Value.NO_TRACK_SELECTED) {
+			// only show the current track if one is selected
+			result = result + (currentTrack + 1) + "/";
+		}
+		// always show the number of tracks
+		result = result + numberOfTracks + ")";
+		
+		Log.d(TAG, "formatter: " + result);
+
+		return result;
 	}
 
 }

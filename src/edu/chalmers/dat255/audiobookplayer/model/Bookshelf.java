@@ -22,7 +22,6 @@ import java.util.List;
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
-import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
 /**
  * The bookshelf class contains a collection of books.
@@ -32,11 +31,11 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
  * 
  */
 
-public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
-	private static final String TAG = "Bookshelf.java";
+public class Bookshelf implements IBookUpdates, Serializable {
+	private static final String TAG = "Bookshelf";
 	private static final String BOOK_INDEX_ILLEGAL = " Book index is illegal";
 
-	private static final int NO_BOOK_SELECTED = -1;
+	private static final int NO_BOOK_SELECTED = Constants.Value.NO_BOOK_SELECTED;
 	private static final long serialVersionUID = 1;
 
 	private List<Book> books;
@@ -77,7 +76,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * @throws IllegalArgumentException
 	 */
 	public void setSelectedBookIndex(int index) throws IllegalArgumentException {
-		if (!isLegalIndex(index)) {
+		if (!isLegalBookIndex(index)) {
 			throw new IllegalArgumentException(TAG + " setSelectedBookIndex"
 					+ BOOK_INDEX_ILLEGAL);
 		}
@@ -115,7 +114,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * @param int index
 	 */
 	public void removeBookAt(int index) {
-		if (!isLegalIndex(index)) {
+		if (!isLegalBookIndex(index)) {
 			throw new IllegalArgumentException(TAG + " removeBook"
 					+ BOOK_INDEX_ILLEGAL);
 		}
@@ -148,7 +147,7 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * @param to
 	 */
 	public void moveBook(int from, int to) throws IllegalArgumentException {
-		if (!isLegalIndex(from) || !isLegalIndex(to)) {
+		if (!isLegalBookIndex(from) || !isLegalBookIndex(to)) {
 			throw new IllegalArgumentException(TAG + " moveBook"
 					+ BOOK_INDEX_ILLEGAL);
 		}
@@ -163,9 +162,8 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/* IBookUpdates */
 
 	public void removeTrack(int index) throws IllegalArgumentException {
-		if (!isLegalIndex(index)) {
-			throw new IllegalArgumentException(TAG + " removeTrack"
-					+ BOOK_INDEX_ILLEGAL);
+		if (!isLegalBookIndex(selectedBookIndex)) {
+			throw new IllegalArgumentException();
 		}
 
 		this.books.get(selectedBookIndex).removeTrack(index);
@@ -181,7 +179,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	}
 
-	public void addTrack(Track t) {
+	public void addTrack(Track t) throws IllegalArgumentException {
+		if (!isLegalBookIndex(selectedBookIndex)) {
+			throw new IllegalArgumentException();
+		}
+
 		this.books.get(selectedBookIndex).addTrack(t);
 
 		/*
@@ -196,12 +198,20 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	public void swapTracks(int firstIndex, int secondIndex)
 			throws IllegalArgumentException {
+		if (!isLegalBookIndex(selectedBookIndex)) {
+			throw new IllegalArgumentException();
+		}
+
 		this.books.get(selectedBookIndex).swapTracks(firstIndex, secondIndex);
 		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
 				new Bookshelf(this));
 	}
 
 	public void moveTrack(int from, int to) throws IllegalArgumentException {
+		if (!isLegalBookIndex(selectedBookIndex)) {
+			throw new IllegalArgumentException();
+		}
+
 		this.books.get(selectedBookIndex).moveTrack(from, to);
 		pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
 				new Bookshelf(this));
@@ -209,37 +219,14 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	public void setSelectedTrackIndex(int index)
 			throws IllegalArgumentException {
-		setSelectedTrackIndex(index, true);
-	}
+		if (!isLegalBookIndex(selectedBookIndex)) {
+			throw new IllegalArgumentException();
+		}
 
-	/**
-	 * Sets the selected track index to the given index. Won't fire a property
-	 * change event if update is false.
-	 * 
-	 * @param index
-	 * @param update
-	 *            Fires an update event if true.
-	 * @throws IllegalArgumentException
-	 */
-	public void setSelectedTrackIndex(int index, boolean update)
-			throws IllegalArgumentException {
 		this.books.get(selectedBookIndex).setSelectedTrackIndex(index);
 
-		/*
-		 * only send an update if the new index is legal (i.e. something changed
-		 * in the model so therefore the GUI should update).
-		 */
-		boolean legal = this.books.get(selectedBookIndex).isLegalTrackIndex(
-				index);
-
-		if (legal && update) {
-			pcs.firePropertyChange(Constants.Event.TRACK_INDEX_CHANGED, null,
-					new Bookshelf(this));
-		} else if (update) {
-			pcs.firePropertyChange(Constants.Event.BOOK_FINISHED, null,
-					new Bookshelf(this));
-			// No update sent since book index is illegal
-		}
+		pcs.firePropertyChange(Constants.Event.TRACK_INDEX_CHANGED, null,
+				new Bookshelf(this));
 
 		Log.d(TAG, "Book index : " + selectedBookIndex + ", Track index: "
 				+ this.books.get(selectedBookIndex).getSelectedTrackIndex());
@@ -296,7 +283,13 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 
 	/* ITrackUpdates */
 
-	public void setSelectedTrackElapsedTime(int elapsedTime) {
+	public void setSelectedTrackElapsedTime(int elapsedTime)
+			throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG
+					+ " setSelectedTrackElapsedTime " + NO_BOOK_SELECTED);
+		}
+
 		// set elapsed time in the currently playing book
 		books.get(selectedBookIndex).setSelectedTrackElapsedTime(elapsedTime);
 
@@ -305,11 +298,25 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	}
 
 	public void addTag(int time) throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " addTag "
+					+ NO_BOOK_SELECTED);
+		}
+
 		this.books.get(selectedBookIndex).addTag(time);
+		pcs.firePropertyChange(Constants.Event.TAG_ADDED, null, new Bookshelf(
+				this));
 	}
 
 	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " removeTagAt "
+					+ NO_BOOK_SELECTED);
+		}
+
 		this.books.get(selectedBookIndex).removeTagAt(tagIndex);
+		pcs.firePropertyChange(Constants.Event.TAG_REMOVED, null,
+				new Bookshelf(this));
 	}
 
 	/* End ITrackUpdates */
@@ -335,7 +342,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/**
 	 * @return
 	 */
-	public Book getSelectedBook() {
+	public Book getSelectedBook() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return this.books.get(selectedBookIndex);
 	}
 
@@ -354,14 +365,22 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/**
 	 * @return
 	 */
-	public int getSelectedBookDuration() {
+	public int getSelectedBookDuration() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getDuration();
 	}
 
 	/**
 	 * @return
 	 */
-	public int getSelectedTrackIndex() {
+	public int getSelectedTrackIndex() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getSelectedTrackIndex();
 	}
 
@@ -370,7 +389,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * 
 	 * @return
 	 */
-	public int getBookElapsedTime() {
+	public int getBookElapsedTime() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getBookElapsedTime();
 	}
 
@@ -379,7 +402,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * 
 	 * @return
 	 */
-	public int getNumberOfTracks() {
+	public int getNumberOfTracks() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getNumberOfTracks();
 	}
 
@@ -390,7 +417,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	/**
 	 * @return
 	 */
-	public int getSelectedTrackDuration() {
+	public int getSelectedTrackDuration() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getSelectedTrackDuration();
 	}
 
@@ -398,6 +429,10 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * @return
 	 */
 	public String getSelectedTrackPath() throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getSelectedTrackPath();
 	}
 
@@ -405,7 +440,11 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 * @param track
 	 * @return
 	 */
-	public int getTrackDurationAt(int track) {
+	public int getTrackDurationAt(int track) throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
 		return books.get(selectedBookIndex).getTrackDurationAt(track);
 	}
 
@@ -417,8 +456,16 @@ public class Bookshelf implements IBookUpdates, ITrackUpdates, Serializable {
 	 *            Index to check.
 	 * @return True if within bounds.
 	 */
-	private boolean isLegalIndex(int index) {
+	private boolean isLegalBookIndex(int index) {
 		return index >= 0 && index < books.size();
+	}
+
+	public boolean isLegalTrackIndex(int index) throws IllegalArgumentException {
+		if (selectedBookIndex == NO_BOOK_SELECTED) {
+			throw new IllegalArgumentException(TAG + " . " + NO_BOOK_SELECTED);
+		}
+
+		return this.books.get(selectedBookIndex).isLegalTrackIndex(index);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

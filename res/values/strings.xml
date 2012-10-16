@@ -31,5 +31,7 @@
 	<string name="menu_save_title">Save/Bookmark</string>
 	<string name="menu_delete_title">Delete</string>
 	<string name="menu_preferences_title">Preferences</string>
+	<string name="menu_add_tag">Add tag</string>
+	<string name="menu_remove_tag">Remove tag</string>
 
 </resources>

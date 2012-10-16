@@ -23,7 +23,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * @version 0.6
  * 
  */
-public interface IBookUpdates {
+public interface IBookUpdates extends ITrackUpdates {
 
 	/**
 	 * Add a track to the list.
@@ -37,6 +37,8 @@ public interface IBookUpdates {
 	 * Removes a track from the collection on the specified index.
 	 * 
 	 * @param index
+	 * @throws IllegalArgumentException
+	 *             If no book is selected.
 	 */
 	public void removeTrack(int index) throws IllegalArgumentException;
 
@@ -45,6 +47,8 @@ public interface IBookUpdates {
 	 * 
 	 * @param firstIndex
 	 * @param secondIndex
+	 * @throws IllegalArgumentException
+	 *             If no book is selected.
 	 */
 	public void swapTracks(int firstIndex, int secondIndex)
 			throws IllegalArgumentException;
@@ -55,39 +59,40 @@ public interface IBookUpdates {
 	 * 
 	 * @param from
 	 * @param to
+	 * @throws IllegalArgumentException
+	 *             If no book is selected.
 	 */
 	public void moveTrack(int from, int to) throws IllegalArgumentException;
 
 	/**
-	 * Set the bookmark to point at a track and a specific time in that track.
-	 * 
-	 * @param trackIndex
-	 *            Index of the track in the book
-	 * @param time
-	 *            The time at which to add the bookmark (in ms).
-	 */
-
-	/**
-	 * Sets the track index of the book. Rolls over if the index is out of
-	 * bounds.
+	 * Sets the track index of the book. Can be set to "-1", which means
+	 * 'deselected.'
+	 * <p>
+	 * Must be set to integers greater than or equal to -1.
 	 * 
 	 * @param index
+	 * @throws IllegalArgumentException
+	 *             If no book is selected.
 	 */
 	public void setSelectedTrackIndex(int index)
 			throws IllegalArgumentException;
 
 	/**
-	 * Set the title of the book.
+	 * Sets the title of the book.
 	 * 
 	 * @param newTitle
+	 * @throws IllegalArgumentException
+	 *             If no book is selected.
 	 */
 	public void setSelectedBookTitle(String newTitle)
 			throws IllegalArgumentException;
 
 	/**
-	 * Get the title of the book.
+	 * Gets the title of the book.
 	 * 
 	 * @return The title of the book.
+	 * @throws IllegalArgumentException
+	 *             If no book is selected.
 	 */
 	public String getSelectedBookTitle() throws IllegalArgumentException;
 

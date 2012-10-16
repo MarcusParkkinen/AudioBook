@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_save"
+        android:title="@string/menu_save_title"/>
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/menu_preferences_title"/>
+    <item
+        android:id="@+id/menu_add_tag"
+        android:title="@string/menu_add_tag"/>
+    <item
+        android:id="@+id/menu_remove_tag"
+        android:icon="@drawable/img_delete"
+        android:title="@string/menu_remove_tag"/>
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/img_delete"
+        android:title="@string/menu_delete_title"/>
+
+    <!-- Save interval / Save conditions, GUI update frequency, File extensions to mark as 'audio' files, themes -->
+
+</menu>

@@ -176,8 +176,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	/**
 	 * Saves a bookmark (the bookshelf).
 	 */
-	private void save() {
-		BookshelfHandler.saveBookshelf(this, USERNAME, shelf);
+	private boolean save() {
+		return BookshelfHandler.saveBookshelf(this, USERNAME, shelf);
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
-		menuInflater.inflate(R.layout.main_menu, menu);
+		menuInflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
 
@@ -222,13 +222,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 		switch (id) {
 		case R.id.menu_save:
-			Toast.makeText(this, "Save/Bookmark", Toast.LENGTH_SHORT).show();
-			save();
+			if (save()) {
+				Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+			}
 			return true;
 
 		case R.id.menu_delete:
-			Toast.makeText(this, "Delete (not implemented)", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Placeholder", Toast.LENGTH_SHORT).show();
 			return true;
 
 		case R.id.menu_preferences:
@@ -288,6 +288,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return playerController.isPlaying();
 	}
 
+	public boolean isStarted() {
+		return playerController.isStarted();
+	}
+
 	/* End IPlayerEvents */
 
 	/* BookshelfUIListener */
@@ -312,9 +316,14 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+
 		Log.i(TAG, "Back pressed in Main Activity");
 		Intent intent = new Intent(Intent.ACTION_MAIN);
+
+		// move to the home screen when pressing back
 		intent.addCategory(Intent.CATEGORY_HOME);
+
+		// start a new task
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
@@ -357,29 +366,39 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// Do nothing
 			} else if (eventName.equals(Constants.Event.BOOK_SELECTED)) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// indicate selected book
-				// bookshelf.selectedBookChanged(b);
+				if (bs.getSelectedBookIndex() == -1) {
+					Log.e(TAG, "Book -1 selected!");
+				} else {
+					Book b = bs.getSelectedBook();
+					// Bookshelf
+					// indicate selected book
+					// bookshelf.selectedBookChanged(b);
 
-				/*
-				 * Player
-				 */
-				// show the player UI
-				pager.setCurrentItem(PLAYER);
-				// start the player
-				playerController.start();
-				// show the title of the book
-				updateBookTitleLabel(b);
-				// ... and display its duration
-				updateBookDurationLabel(b);
-				// show the duration of the track
-				updateTrackDurationLabel(b);
-				/*
-				 * make sure that the UI knows we are playing now (we will want
-				 * to show the pause button since we are playing).
-				 */
-				setToPlaying();
+					// Player
+					// reset the player controls to standard values
+					playerFragment.resetComponents();
+
+					// show the player UI
+					pager.setCurrentItem(PLAYER);
+
+					// start the player
+					playerController.start();
+
+					// show the title of the book
+					updateBookTitleLabel(b);
+
+					// display its duration
+					updateBookDurationLabel(b);
+
+					// show the title of the track
+					updateTrackTitleLabel(b);
+
+					// and display its duration
+					updateTrackDurationLabel(b);
+
+					// update the track counter
+					updateTrackCounterLabel(b);
+				}
 			} else if (eventName.equals(Constants.Event.BOOK_REMOVED)) {
 				// Bookshelf
 				// Do nothing for now
@@ -392,8 +411,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 				// Player
 				// Do nothing
-			} else if (eventName.equals(Constants.Event.BOOK_FINISHED)) {
-				playerController.stop();
 			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -414,6 +431,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// update book duration label
 				updateBookDurationLabel(b);
+
+				// show the correct number of tracks
+				updateTrackCounterLabel(b);
 			} else if (eventName.equals(Constants.Event.TRACK_ADDED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -422,24 +442,47 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// update book duration label
 				updateBookDurationLabel(b);
+
+				// show the correct number of tracks
+				updateTrackCounterLabel(b);
 			} else if (eventName.equals(Constants.Event.TRACK_ORDER_CHANGED)) {
+				Book b = bs.getSelectedBook();
 				// Bookshelf
 				// redraw list
 
 				// Player
-				// Do nothing
+				// show the correct number of tracks
+				updateTrackCounterLabel(b);
 			} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
 				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// move the "selected track" indicator to the new index
+				if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
+					// reset the controls to 'stopped'
+					playerFragment.resetComponents();
 
-				// Player
-				// update track title label
-				updateTrackTitleLabel(b);
-				// // update track book duration label
-				// updateTrackDurationLabel(b);
-				// set times to zero
-				// TODO
+					// stop the audio player
+					playerController.stop();
+				} else {
+					// Bookshelf
+					// move the "selected track" indicator to the new index
+
+					// Player
+					// update track title label
+					updateTrackTitleLabel(b);
+
+					// update track book duration label
+					// updateTrackDurationLabel(b);
+
+					// restart the player
+					playerController.start();
+
+					/*
+					 * enable only the controls that should be enabled when
+					 * playing
+					 */
+					playerFragment.setPlayPauseEnabled(true);
+				}
+				// show the correct number of tracks, illegal track index or not
+				updateTrackCounterLabel(b);
 			} else if (eventName.equals(Constants.Event.BOOK_TITLE_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -455,21 +498,22 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// Update book duration label
 				updateBookDurationLabel(b);
+			} else if (eventName.equals(Constants.Event.TAG_ADDED)) {
+
+			} else if (eventName.equals(Constants.Event.TAG_REMOVED)) {
+
 			}
 		}
 
 	}
 
-	/**
-	 * Ensures that the Player UI changes the play/pause button correctly when a
-	 * book is selected.
-	 * 
-	 * @param b
-	 */
-	private void setToPlaying() {
+	private void updateTrackCounterLabel(final Book b) {
 		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				playerFragment.setToPlaying();
+				int currentTrack = b.getSelectedTrackIndex();
+				int numberOfTracks = b.getNumberOfTracks();
+				playerFragment.updateTrackCounterLabel(currentTrack,
+						numberOfTracks);
 			}
 		});
 	}
@@ -487,7 +531,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateBookTitleLabel(final Book b) {
 		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				// TODO: check if bookshelf selectedBookIndex != -1
 				playerFragment.updateBookTitleLabel(b.getSelectedBookTitle());
 			}
 		});
@@ -503,7 +546,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				if (b.getSelectedTrackIndex() != -1) {
-					Log.d(TAG, "Setting track title to: " + b.getTrackTitle());
 					playerFragment.updateTrackTitleLabel(b.getTrackTitle());
 				}
 			}
@@ -523,7 +565,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private void updateBookDurationLabel(final Book b) {
 		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				// TODO: check if bookshelf selectedBookIndex != -1
 				playerFragment.updateBookDurationLabel(b.getDuration());
 			}
 		});
@@ -568,7 +609,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		if (playerFragment.getActivity() != null) {
 			playerFragment.getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					// TODO(anyone): check if bookshelf selectedBookIndex != -1
 					if (b.getSelectedTrackIndex() != -1) {
 						playerFragment.updateTrackElapsedTimeLabel(b
 								.getSelectedTrackElapsedTime());
