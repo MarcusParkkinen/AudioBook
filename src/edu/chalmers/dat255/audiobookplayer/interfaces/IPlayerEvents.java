@@ -28,14 +28,14 @@ public interface IPlayerEvents {
 	 * <p>
 	 * Does nothing if the player was already paused.
 	 */
-	public void resume();
+	void resume();
 
 	/**
 	 * Pauses playback if the player is already in a started state.
 	 * <p>
 	 * Does nothing if the player was already playing.
 	 */
-	public void pause();
+	void pause();
 
 	/**
 	 * Sets the selected track to the previous track.
@@ -44,7 +44,7 @@ public interface IPlayerEvents {
 	 * <p>
 	 * If there was no selected track, it will do nothing.
 	 */
-	public void previousTrack();
+	void previousTrack();
 
 	/**
 	 * Sets the selected track to the next track.
@@ -53,7 +53,7 @@ public interface IPlayerEvents {
 	 * <p>
 	 * If there was no selected track, it will select the first track.
 	 */
-	public void nextTrack();
+	void nextTrack();
 
 	/**
 	 * Seeks to the left (rewinds).
@@ -61,7 +61,7 @@ public interface IPlayerEvents {
 	 * Sets the track progress to (current progress - 0.1 * total track
 	 * duration).
 	 */
-	public void seekLeft();
+	void seekLeft();
 
 	/**
 	 * Seeks to the right (fast-forwards).
@@ -69,7 +69,7 @@ public interface IPlayerEvents {
 	 * Sets the track progress to (current progress + 0.1 * total track
 	 * duration).
 	 */
-	public void seekRight();
+	void seekRight();
 
 	/**
 	 * Seeks to the given percentage in a track.
@@ -77,7 +77,7 @@ public interface IPlayerEvents {
 	 * @param percentage
 	 *            0 <= x <= 1
 	 */
-	public void seekToPercentageInTrack(double percentage);
+	void seekToPercentageInTrack(double percentage);
 
 	/**
 	 * Seeks to the given percentage in a book.
@@ -85,20 +85,20 @@ public interface IPlayerEvents {
 	 * @param percentage
 	 *            0 <= x <= 1
 	 */
-	public void seekToPercentageInBook(double percentage);
+	void seekToPercentageInBook(double percentage);
 
 	/**
 	 * Checks whether audio is playing.
 	 * 
 	 * @return True if playing audio.
 	 */
-	public boolean isPlaying();
+	boolean isPlaying();
 
 	/**
 	 * Checks whether audio has been started.
 	 * 
 	 * @return True if started (playing or paused).
 	 */
-	public boolean isStarted();
+	boolean isStarted();
 
 }

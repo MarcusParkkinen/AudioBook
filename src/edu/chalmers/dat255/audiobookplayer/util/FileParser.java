@@ -29,6 +29,9 @@ import android.content.Context;
 public class FileParser {
 	private static final String TAG = "FileParser.java";
 
+	private FileParser() {
+	} // to defeat instantiation
+
 	/**
 	 * Writes to internal storage given a file name.
 	 * 
@@ -58,7 +61,7 @@ public class FileParser {
 	 * @throws IOException
 	 */
 	public static String readFromInternalStorage(String file, Context c)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		FileInputStream inputStream = c.openFileInput(file);
 		DataInputStream dataInputStream = new DataInputStream(inputStream);
 

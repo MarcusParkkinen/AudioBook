@@ -21,6 +21,9 @@ import com.google.gson.Gson;
  * 
  */
 public class JsonParser {
+	private JsonParser() {
+	} // to defeat instantiation
+	
 	public static <T> T fromJSON(String jsonString, Class<T> type) {
 		return (new Gson()).fromJson(jsonString, type);
 	}

@@ -32,7 +32,7 @@ public interface ITrackUpdates {
 	 * @throws InvalidParameterException
 	 *             If the given time is negative.
 	 */
-	public void setSelectedTrackElapsedTime(int elapsedTime)
+	void setSelectedTrackElapsedTime(int elapsedTime)
 			throws InvalidParameterException;
 
 	/*
@@ -45,7 +45,7 @@ public interface ITrackUpdates {
 	 * @throws InvalidParameterException
 	 *             If the given time is negative.
 	 */
-	public void addTag(int time) throws InvalidParameterException;
+	void addTag(int time) throws InvalidParameterException;
 
 	/**
 	 * Removes the tag at the specified index. Does nothing if the list is
@@ -55,6 +55,6 @@ public interface ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             if the given tag index is out of bounds (illegal).
 	 */
-	public void removeTagAt(int tagIndex) throws IndexOutOfBoundsException;
+	void removeTagAt(int tagIndex) throws IndexOutOfBoundsException;
 
 }

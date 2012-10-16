@@ -15,10 +15,10 @@ public interface IBookshelfGUIEvents extends IBookshelfEvents {
 	 * @param index
 	 *            The index of the book pressed.
 	 */
-	public void bookLongPress(int index);
+	void bookLongPress(int index);
 
 	/**
 	 * Informs the listener that the add button has been pressed.
 	 */
-	public void addBookButtonPressed();
+	void addBookButtonPressed();
 }

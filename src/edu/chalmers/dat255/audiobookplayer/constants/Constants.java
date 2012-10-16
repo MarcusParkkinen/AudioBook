@@ -20,6 +20,7 @@ package edu.chalmers.dat255.audiobookplayer.constants;
  * Also contains hard-coded fields.
  * 
  * @author Aki Käkelä, Marcus Parkkinen
+ * @version 0.1
  */
 public final class Constants {
 	/**
@@ -42,8 +43,6 @@ public final class Constants {
 		public static final String TRACK_ADDED = "!trackAdded";
 		public static final String TRACK_ORDER_CHANGED = "!trackOrderChanged";
 		public static final String ELAPSED_TIME_CHANGED = "!elapsedTimeChanged";
-		// public static final String BOOKMARK_SET = "!bookmarkSet";
-		// public static final String TAG_SET = "!tagSet";
 		public static final String TRACK_INDEX_CHANGED = "!trackIndexChanged";
 		// note that this should not be called when the track index changes
 		// due to modifying the track order in the book. It should only trigger
@@ -57,7 +56,7 @@ public final class Constants {
 	}
 
 	/**
-	 * 
+	 * Contains String-type references for serialization.
 	 * 
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
@@ -78,7 +77,7 @@ public final class Constants {
 
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
-		
+
 		public static final int NO_BOOK_SELECTED = -1;
 		public static final int NO_TRACK_SELECTED = -1;
 
@@ -94,13 +93,13 @@ public final class Constants {
 	 */
 	public static final class Message {
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
-		
+
 		public static final CharSequence NO_BOOK_TITLE = "N/A";
 		public static final CharSequence NO_TRACK_TITLE = "N/A";
-		
+
 		public static final CharSequence NO_TRACK_ELAPSED_TIME = "N/A";
 		public static final CharSequence NO_BOOK_ELAPSED_TIME = "N/A";
-		
+
 		public static final String NO_TRACK_DURATION = "N/A";
 		public static final String NO_BOOK_DURATION = "N/A";
 

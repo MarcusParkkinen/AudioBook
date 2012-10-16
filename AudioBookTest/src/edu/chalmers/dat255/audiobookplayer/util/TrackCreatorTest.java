@@ -13,9 +13,9 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  */
 public class TrackCreatorTest extends TestCase {
 	// MUST BE SPECIFIED IN ORDER FOR TEST TO PASS
-	private final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
-	private final String VALID_PATH = Environment.getExternalStorageDirectory()
-			.getPath() + FILE_NAME;
+	private static final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
+	private static final String VALID_PATH = Environment
+			.getExternalStorageDirectory().getPath() + FILE_NAME;
 	private String invalidPath;
 
 	protected void setUp() throws Exception {

@@ -25,23 +25,24 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * @version 0.6
  */
 public class TrackCreator {
+	private TrackCreator() {
+	} // to defeat instantiation
 
-	public static Track createTrack(String path) throws NumberFormatException,
-			IllegalArgumentException {
+	public static Track createTrack(String path) {
 		// Instantiate a metadata retriever object and set its
 		// data source path to the provided path
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		mmr.setDataSource(path);
-		
+
 		// Get the duration of the track
 		String durationText = mmr
 				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 		int duration = Integer.parseInt(durationText);
-		
+
 		// Get the title of the track
 		String title = mmr
 				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-		
+
 		// If the track name is invalid, use the name
 		// of the track file
 		if (title == null || title.length() == 0) {

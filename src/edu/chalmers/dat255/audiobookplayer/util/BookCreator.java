@@ -29,7 +29,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * @version 0.6
  * 
  */
-public class BookCreator {
+public final class BookCreator {
 	private static final String TAG = "BookCreator.class";
 	private static BookCreator instance = null;
 	private Bookshelf bsh;

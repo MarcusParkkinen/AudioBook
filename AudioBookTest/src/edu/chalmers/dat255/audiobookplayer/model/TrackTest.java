@@ -21,9 +21,9 @@ import junit.framework.TestCase;
  */
 
 public class TrackTest extends TestCase {
-	private final String trackPath = "MyTrack.mp3";
-	private final int trackLength = 1238921;
-	private final int elapsedTime = 238238;
+	private static final String trackPath = "MyTrack.mp3";
+	private static final int trackLength = 1238921;
+	private static final int elapsedTime = 238238;
 	private Track t;
 	
 	protected void setUp() throws Exception {
@@ -31,14 +31,6 @@ public class TrackTest extends TestCase {
 		
 		t = new Track(trackPath, trackLength);
 		t.setSelectedTrackElapsedTime(elapsedTime);
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
-	public TrackTest() {
-		super();
 	}
 	
 	public void testCopy() {

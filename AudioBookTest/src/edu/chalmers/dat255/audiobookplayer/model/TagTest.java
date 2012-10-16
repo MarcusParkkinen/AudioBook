@@ -18,12 +18,13 @@ import junit.framework.TestCase;
 /**
  * Test case for Tag.
  * 
- * @author Aki Kï¿½kelï¿½
+ * @author Aki Käkelä
+ * @version 0.1
  * 
  */
 public class TagTest extends TestCase {
 	private Tag tag;
-	private int time;
+	private static final int TIME = 21600000; // 6 hours
 
 	public TagTest(String name) {
 		super(name);
@@ -32,20 +33,11 @@ public class TagTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		time = 21600000; // 6 hours
-		tag = new Tag(time);
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
-	public void testTag() {
-		fail("Not yet implemented");
+		tag = new Tag(TIME);
 	}
 
 	public void testGetTime() {
-		assertTrue(tag.getTime() == time);
+		assertTrue(tag.getTime() == TIME);
 	}
 
 	public void testEqualsObject() {

@@ -31,7 +31,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @param t
 	 *            Track to add.
 	 */
-	public void addTrack(Track t);
+	void addTrack(Track t);
 
 	/**
 	 * Removes a track from the collection on the specified index.
@@ -40,7 +40,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void removeTrack(int index) throws IndexOutOfBoundsException;
+	void removeTrack(int index) throws IndexOutOfBoundsException;
 
 	/**
 	 * Swaps the position of two tracks in the list.
@@ -50,7 +50,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void swapTracks(int firstIndex, int secondIndex)
+	void swapTracks(int firstIndex, int secondIndex)
 			throws IndexOutOfBoundsException;
 
 	/**
@@ -62,7 +62,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void moveTrack(int from, int to) throws IndexOutOfBoundsException;
+	void moveTrack(int from, int to) throws IndexOutOfBoundsException;
 
 	/**
 	 * Sets the track index of the book. Can be set to "-1", which means
@@ -74,7 +74,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void setSelectedTrackIndex(int index)
+	void setSelectedTrackIndex(int index)
 			throws IndexOutOfBoundsException;
 
 	/**
@@ -84,7 +84,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void setSelectedBookTitle(String newTitle)
+	void setSelectedBookTitle(String newTitle)
 			throws IndexOutOfBoundsException;
 
 	/**
@@ -94,9 +94,9 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public String getSelectedBookTitle() throws IndexOutOfBoundsException;
+	String getSelectedBookTitle() throws IndexOutOfBoundsException;
 
-	// public void setAuthor(String newAuthor) throws IndexOutOfBoundsException;
+	// void setAuthor(String newAuthor) throws IndexOutOfBoundsException;
 
 	/**
 	 * Returns the author of the selected book.
@@ -104,12 +104,12 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @return
 	 * @throws IndexOutOfBoundsException
 	 */
-	public String getSelectedBookAuthor() throws IndexOutOfBoundsException;
+	String getSelectedBookAuthor() throws IndexOutOfBoundsException;
 
 	/**
 	 * Updates the duration of the book to the sum of the duration of its
 	 * tracks.
 	 */
-	public void updateBookDuration();
+	void updateBookDuration();
 
 }
