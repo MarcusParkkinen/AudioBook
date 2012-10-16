@@ -206,12 +206,16 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				//get all menu items from the child context menu
 				menuItems = ChildContextMenuItem.values();
 				//set the context menu's title to that of the value of the child
-				title = bookshelf.getTrackTitleAt(bookIndex, trackIndex);
+				if(bookshelf != null) {
+					title = bookshelf.getTrackTitleAt(bookIndex, trackIndex);
+				}
 			} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 				//get all menu items from the group context menu
 				menuItems = GroupContextMenuItem.values();
 				//set the context menu's title to that of the value of the book
-				title = bookshelf.getBookTitleAt(bookIndex);
+				if(bookshelf != null) {
+					title = bookshelf.getBookTitleAt(bookIndex);
+				}
 			}
 			// set the title
 			menu.setHeaderTitle(title);
@@ -228,6 +232,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if(getActivity() == null) {
+			return false;
+		}
 		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item
 				.getMenuInfo();
 		//get the provided book position
@@ -514,12 +521,12 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 						false);
 			}
 			//set book as final to use in listeners
-			
+
 			//set the expandableListView as final to use in listeners
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
 			//get duration from book
 			int duration = bookshelf.getBookDurationAt(bookIndex) / 1000;
-			
+
 			// prevent problems with a duration of 0
 			if (duration == 0) {
 				return null;

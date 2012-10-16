@@ -355,10 +355,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// Check which event was fired, and do relevant updates in the
 			// fragments
 			if (eventName.equals(Constants.Event.BOOKS_CHANGED)) {
-				int lastBookIndex = bs.getNumberOfBooks() - 1;
-				// assumes this event is never fired unless atleast one book is
-				// added.
-				Book b = bs.getBookAt(lastBookIndex);
 				// Bookshelf
 				bookshelfFragment.bookshelfUpdated(bs);
 
