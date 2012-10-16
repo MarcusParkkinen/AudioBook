@@ -141,7 +141,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 		if (hasListeners()) {
 			// notify the listeners about this change
-//			pcs.firePropertyChange(Constants.Event.BOOK_REMOVED, null,
+			// fixes remove errors
 			pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
 					new Bookshelf(this));
 		}
