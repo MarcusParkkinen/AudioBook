@@ -108,7 +108,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 		if (hasListeners()) {
 			// Log.d(TAG, "list size (original): " + books.size());
-//			pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null,
+			//			pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null,
 			pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
 					new Bookshelf(this));
 		}
@@ -570,6 +570,12 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return true;
 	}
 
+	/**
+	 * Gets the track title at given position
+	 * @param bookIndex Position of the book
+	 * @param trackIndex Position of the track
+	 * @return Track title of given track
+	 */
 	public String getTrackTitleAt(int bookIndex, int trackIndex) {
 		if(isLegalBookIndex(bookIndex)) {
 			return getBookAt(bookIndex).getTrackTitleAt(trackIndex);
@@ -577,6 +583,11 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return null;
 	}
 
+	/**
+	 * Gets the number of tracks the book at given position has
+	 * @param bookIndex Position of the book
+	 * @return Number of tracks of given book
+	 */
 	public int getNumberOfTracksAt(int bookIndex) {
 		if(isLegalBookIndex(bookIndex)) {
 			return getBookAt(bookIndex).getNumberOfTracks();
@@ -584,6 +595,11 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return 0;
 	}
 
+	/**
+	 * Gets the duration of the given book
+	 * @param bookIndex Position of the book
+	 * @return
+	 */
 	public int getBookDurationAt(int bookIndex) {
 		if(isLegalBookIndex(bookIndex)) {
 			return getBookAt(bookIndex).getDuration();
@@ -591,6 +607,11 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return 0;
 	}
 
+	/**
+	 * Gets the given books elapsed time
+	 * @param bookIndex Position of the book
+	 * @return The given books elapsed time
+	 */
 	public int getBookElapsedTimeAt(int bookIndex) {
 		if(isLegalBookIndex(bookIndex)) {
 			return getBookAt(bookIndex).getBookElapsedTime();
@@ -598,6 +619,11 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return 0;
 	}
 
+	/**
+	 * Gets the author at given position
+	 * @param bookIndex Position of the book
+	 * @return The given books author
+	 */
 	public String getBookAuthorAt(int bookIndex) {
 		if(isLegalBookIndex(bookIndex)) {
 			return getBookAt(bookIndex).getSelectedBookAuthor();
@@ -605,11 +631,80 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return null;
 	}
 
+	/**
+	 * Gets duration of a track at given position
+	 * @param bookIndex Position of the book
+	 * @param trackIndex Position of the track
+	 * @return
+	 */
 	public int getTrackDurationAt(int bookIndex, int trackIndex) {
 		if(isLegalBookIndex(bookIndex)) {
 			return getBookAt(bookIndex).getTrackDurationAt(trackIndex);
 		}
 		return 0;
+	}
+
+	/**
+	 * If two or more tracks exist, remove the given track, otherwise remove the book
+	 * @param bookIndex Index of the book
+	 * @param trackIndex Index of the track
+	 */
+	public void removeTrack(int bookIndex, int trackIndex) {
+		//check bookindex
+		if(isLegalBookIndex(bookIndex)) {
+			Book b = getBookAt(bookIndex);
+			//check trackindex in given book
+			if(b.isLegalTrackIndex(trackIndex)) {
+				//if more than 1 track, remove it
+				if(b.getNumberOfTracks() > 1) {
+					b.removeTrack(trackIndex);
+					updateBookDuration(bookIndex);
+				} 
+				//otherwise remove the entire book
+				else {
+					removeBookAt(bookIndex);
+				}
+				if (hasListeners()) {
+					pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
+							new Bookshelf(this));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Private method to update the duration of the book at given index
+	 * @param bookIndex Index of the book
+	 */
+	private void updateBookDuration(int bookIndex) {
+		this.books.get(bookIndex).updateBookDuration();
+		//fire away to listeners
+		if (hasListeners()) {
+			pcs.firePropertyChange(Constants.Event.BOOK_DURATION_CHANGED, null,
+					new Bookshelf(this));
+		}
+	}
+
+	/**
+	 * Moves a track given amount of steps.
+	 * @param bookIndex Index of the book
+	 * @param trackIndex Index of the track
+	 * @param offset The amount of steps to move the track, negative value moves upward visually
+	 */
+	public void moveTrack(int bookIndex, int trackIndex, int offset) {
+		//check bookindex
+		if(isLegalBookIndex(bookIndex)) {
+			Book b = getBookAt(bookIndex);
+			//check trackindex in given book
+			if(b.isLegalTrackIndex(trackIndex) && b.isLegalTrackIndex(trackIndex + offset)) {
+				b.moveTrack(trackIndex, trackIndex + offset);
+
+				if (hasListeners()) {
+					pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
+							new Bookshelf(this));
+				}
+			}
+		}
 	}
 
 }

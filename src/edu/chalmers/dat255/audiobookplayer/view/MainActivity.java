@@ -713,12 +713,20 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 		bookshelfController.removeBook(bookIndex);
 	}
 
-	public void removeTrack(int trackIndex) {
-		bookshelfController.removeTrack(trackIndex);
+	public void removeTrack(int bookIndex, int trackIndex) {
+		bookshelfController.removeTrack(bookIndex, trackIndex);
 	}
 
 	public void setBookTitleAt(int bookIndex, String newTitle) {
 		bookshelfController.setBookTitleAt(bookIndex, newTitle);
+	}
+
+	public void removeTrack(int trackIndex) {
+		bookshelfController.removeTrack(trackIndex);
+	}
+
+	public void moveTrack(int bookIndex, int trackIndex, int offset) {
+		bookshelfController.moveTrack(bookIndex, trackIndex, offset);
 	}
 
 }

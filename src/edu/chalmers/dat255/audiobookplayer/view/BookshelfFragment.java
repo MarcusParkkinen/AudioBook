@@ -13,11 +13,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.view;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -44,7 +39,6 @@ import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
-import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
@@ -99,9 +93,14 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				return "Delete";
 			}
 		},
-		Edit {
+		MoveUp {
 			public String getText() {
-				return "Edit";
+				return "Move Up";
+			}
+		},
+		MoveDown {
+			public String getText() {
+				return "Move Down";
 			}
 		};
 	}
@@ -288,12 +287,29 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			// perform the correct task
 			switch ((ChildContextMenuItem) menuItem) {
 			// TODO(Children Context Menu Implementation) : Add cases and methods to add menu options to the child
+			case Delete:
+				removeTrack(bookIndex, trackIndex);
+				break;
+			case MoveUp:
+				moveTrack(bookIndex, trackIndex, -1);
+				break;
+			case MoveDown:
+				moveTrack(bookIndex, trackIndex, 1);
+				break;
 			default:
 				break;
 
 			}
 		}
 		return true;
+	}
+
+	public void moveTrack(int bookIndex, int trackIndex, int offset) {
+		fragmentOwner.moveTrack(bookIndex, trackIndex, offset);
+	}
+
+	public void removeTrack(int bookIndex, int trackIndex) {
+		fragmentOwner.removeTrack(bookIndex, trackIndex);
 	}
 
 	private void childClicked(int bookIndex, int trackIndex) {
@@ -370,13 +386,13 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		private Context context;
 		//		private List<Entry<Book, List<String>>> listData;
 		private Bookshelf bookshelf;
-		
+
 		//used to get synchronized time label and progress bar 
 		private int bookElapsedTime;
 		private int bookProgress;
 		private View selectedBookView;
 		private int selectedBookIndex;
-		
+
 
 		/**
 		 * Constructs an ExpandableListAdapter with context and listData.
@@ -389,7 +405,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			this.context = context;
 			//			this.listData = listData;
 			setBookshelf(bookshelf);
-			
+
 		}
 
 		/**
@@ -398,25 +414,34 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * @return 
 		 */
 		public void selectedBookElapsedTimeUpdated(int newTime) {
+			//newTime will be in millis, convert to seconds
 			int newTimeSeconds = newTime/1000;
+			//if a second has passed
 			if(newTimeSeconds > bookElapsedTime)  {
+				//store this new value
 				bookElapsedTime = newTimeSeconds;
+				//update the label
 				setTextViewText(selectedBookView, R.id.bookshelfBookPosition, "Position: " + DateUtils.formatElapsedTime(bookElapsedTime));
-				int bookDuration = bookshelf.getSelectedBookDuration()/1000;
 				
-				
+				//get duration of book in seconds
+				int bookDuration = bookshelf.getSelectedBookDuration() / 1000;
+				//calculate the progress
 				int calculatedProgress = calculateProgress(newTimeSeconds, bookDuration);
+				//if there is no errors and the progress has progressed since the last saved progress
 				if((calculatedProgress >= 0) && (calculatedProgress <= 100) && (calculatedProgress > bookProgress)) {
+					//save this new progress
 					bookProgress = calculatedProgress;
+					//get the progressbar
 					ProgressBar pb = (ProgressBar)selectedBookView.findViewById(R.id.bookshelfProgressBar);
+					//check that the progressbar is not null and set it to the new progress
 					if(pb != null) {
 						pb.setProgress(bookProgress);
 					}
 				}
 			}
-			
+
 		}
-		
+
 		/**
 		 * Method that calculates a roofed progress, i.e.
 		 * time = 51, duration = 1000 would return a progress of 6
@@ -435,7 +460,11 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			}
 			return floored + 1;
 		}
-		
+
+		/**
+		 * Set the bookshelf for when the data should update
+		 * @param bookshelf The new bookshelf copy.
+		 */
 		public void setBookshelf(Bookshelf bookshelf) {
 			this.bookshelf = bookshelf;
 		}
@@ -652,8 +681,6 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					if (!isExpanded) {
 						expandableListView.expandGroup(bookIndex);
 					}
-					//store the view so that text can update
-					selectedBookView = finalConvertView;
 					// scroll to the selected item
 					expandableListView.setSelectionFromTop(bookIndex, 0);
 					// invalidates views to force redraw thus setting the
@@ -662,9 +689,11 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					//inform the BookshelfFragment that this button has been pressed.
 					BookshelfFragment.this.groupClicked(bookIndex);
 
+					//store the view so that text can update
+					selectedBookView = finalConvertView;
 					bookElapsedTime = bookshelf.getBookElapsedTime()/1000;
 					bookProgress = calculateProgress(bookElapsedTime, bookshelf.getSelectedBookDuration()/1000);
-					
+
 				}
 			});
 			// set long click to show the group's context menu
