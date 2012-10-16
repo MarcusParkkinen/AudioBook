@@ -2,20 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#131212" >
+    android:background="#121212" >
 
     <!-- Book seek bar: Seek bar for browsing through the book -->
-
+
     <LinearLayout
-        android:id="@+id/seek_bar_1"
+        android:id="@+id/book_seek_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#131212" >
+        android:layout_alignParentTop="true"
+        android:background="#121212" >
 
         <SeekBar
-            android:id="@+id/bookBar"
+            android:id="@+id/book_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxHeight="26dp"
@@ -24,135 +23,44 @@
             android:thumb="@drawable/sb_book_thumb" />
     </LinearLayout>
 
-    <!-- Cover Art Layer -->
+    <!-- Track times: track elapsed time (current progress) and duration (total running time) are displayed. -->
 
     <LinearLayout
-        android:id="@+id/cover_art_layout"
+        android:id="@+id/book_times_layout"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_below="@id/seek_bar_1"
-        android:background="#131212"
-        android:layout_marginTop="2dp" >
+        android:layout_height="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/book_seek_bar_layout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal" >
 
-        <ImageView
-            android:id="@+id/cover_art"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/cover_image_text_replacement"
-            android:gravity="center"
-            android:src="@drawable/img_the_sun" />
+        <TextView
+            android:id="@+id/book_elapsed_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="5:12:41"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:typeface="normal" />
+
+        <TextView
+            android:id="@+id/book_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="5:12:41"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:typeface="normal" />
     </LinearLayout>
 
-    <!-- Playback details: author, title, duration and elapsed time are displayed for both book and track. -->
-
-    <RelativeLayout
-        android:id="@+id/playback_details"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_below="@id/cover_art_layout"
-        android:layout_marginTop="2dp"
-        android:background="#232222" >
+    <!-- Playback Controls: seek, play/pause, next/previous track contols are displayed. -->
 
-        <RelativeLayout
-            android:id="@+id/timer_layout"
-            android:layout_width="70dp"
-            android:layout_height="65dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp" >
-
-            <!-- Sublayer for displaying elapsed time of current track -->
-
-            <LinearLayout
-                android:id="@+id/elapsed_time_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/time_jump" >
-
-                <TextView
-                    android:id="@+id/trackElapsedTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="5:12:41"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14dp"
-                    android:typeface="normal" />
-            </LinearLayout>
-
-            <!-- Sublayer for TimeJump: allows the user to go to a specific time point in a book -->
-
-            <LinearLayout
-                android:id="@+id/time_jump"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignBottom="@+id/trackElapsedTime"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="10dp"  >
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:contentDescription="@string/jump_image_text_replacement"
-                    android:src="@drawable/img_clock" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/track_row_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/timer_layout"
-            android:layout_below="@+id/book_title_layout"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/track_counter"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="(523/5629)"
-                android:textColor="#777777"
-                android:textSize="14dp"
-                android:typeface="normal" />
-
-            <TextView
-                android:id="@+id/trackTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:text="TRACKTITLE!!!!!!!!"
-                android:textColor="#FFFFFF"
-                android:textSize="14dp"
-                android:typeface="normal" />
-        </LinearLayout>
-
-        <!-- Sublayer for displaying the book title -->
-
-        <LinearLayout
-            android:id="@+id/book_title_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/timer_layout" 
-            android:layout_alignTop="@+id/time_jump">
-
-            <TextView
-                android:id="@+id/bookTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:text="BOOKTITLE!!!!!!!!!!"
-                android:textColor="#FFFFFF"
-                android:textSize="16dp"
-                android:typeface="normal" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!-- Player Playback Controls UI Layer -->
-
     <RelativeLayout
         android:id="@+id/player_controls"
         android:layout_width="match_parent"
@@ -251,16 +159,127 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- Track seek bar: shows the progress of the current track and allows the user to seek through it. -->
-
+    <!-- ################################## PLAYBACK DETAILS ###################################### -->
+
+    <RelativeLayout
+        android:id="@+id/playback_details_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_above="@+id/track_times_layout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" >
+
+        <!-- book title is displayed -->
+
+        <LinearLayout
+            android:id="@+id/book_title_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_above="@+id/track_details" >
+
+            <TextView
+                android:id="@+id/bookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="BOOKTITLE!!!!!!!!!!"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp"
+                android:typeface="normal" />
+        </LinearLayout>
+
+        <!-- Track details: track count and title are displayed. -->
+
+        <RelativeLayout
+            android:id="@+id/track_details"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/track_counter_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/track_counter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:text="(523/567729)"
+                    android:textColor="#777777"
+                    android:textSize="14dp"
+                    android:typeface="normal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/track_title_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/track_counter_layout" >
+
+                <TextView
+                    android:id="@+id/track_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:text="TRACKTITLE!!!!!!!!"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14dp"
+                    android:typeface="normal" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!-- Track times: track elapsed time (current progress) and duration (total running time) are displayed. -->
+
     <LinearLayout
-        android:id="@+id/track_bar_layout"
+        android:id="@+id/track_times_layout"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_above="@+id/track_seek_bar_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/track_elapsed_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="5:12:41"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:typeface="normal" />
+
+        <TextView
+            android:id="@+id/track_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="5:12:41"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:typeface="normal" />
+    </LinearLayout>
+
+    <!-- Track seek bar: shows the progress of the current track and allows the user to seek through it. -->
+
+    <LinearLayout
+        android:id="@+id/track_seek_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_above="@+id/player_controls"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:background="#131212" >
+        android:background="#121212" >
 
         <SeekBar
             android:id="@+id/track_bar"
@@ -268,9 +287,30 @@
             android:layout_height="match_parent"
             android:maxHeight="20dp"
             android:minHeight="20dp"
-            android:progress="80"
+            android:progress="100"
             android:progressDrawable="@drawable/track_bar_progress_background"
             android:thumb="@drawable/sb_track_thumb" />
+    </LinearLayout>
+
+    <!-- Cover Art is displayed. -->
+
+    <LinearLayout
+        android:id="@+id/cover_art_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_above="@+id/book_title_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/book_times_layout"
+        android:background="#121212" >
+
+        <ImageView
+            android:id="@+id/cover_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/cover_image_text_replacement"
+            android:gravity="center"
+            android:src="@drawable/img_no_cover" />
     </LinearLayout>
 
 </RelativeLayout>

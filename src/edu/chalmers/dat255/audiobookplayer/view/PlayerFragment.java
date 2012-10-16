@@ -142,7 +142,7 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 
-		bookBar = (SeekBar) view.findViewById(R.id.bookBar);
+		bookBar = (SeekBar) view.findViewById(R.id.book_seek_bar);
 		bookBar.setMax(Constants.Value.NUMBER_OF_SEEK_BAR_ZONES);
 		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			static final String TAG = "bookBar";
@@ -156,9 +156,8 @@ public class PlayerFragment extends Fragment {
 							* (1.0 / seekBar.getMax());
 
 					fragmentOwner.seekToPercentageInBook(seekMultiplier);
-				} else {
-					// Log.d(TAG, "Code used bookBar");
 				}
+				// else do nothing since this was done by code
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
@@ -185,9 +184,8 @@ public class PlayerFragment extends Fragment {
 							* (1.0 / (double) seekBar.getMax());
 
 					fragmentOwner.seekToPercentageInTrack(seekPercentage);
-				} else {
-					// Log.d(TAG, "Code used trackBar");
 				}
+				// else do nothing since this was done by code
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
@@ -199,22 +197,22 @@ public class PlayerFragment extends Fragment {
 			}
 		});
 
-		trackTitle = (TextView) view.findViewById(R.id.trackTitle);
+		trackTitle = (TextView) view.findViewById(R.id.track_title);
 		trackTitle.setText(Constants.Message.NO_TRACK_TITLE);
 
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
 		bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
 
-//		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
+		bookDuration = (TextView) view.findViewById(R.id.book_duration);
 		bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
 
-//		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
+		trackDuration = (TextView) view.findViewById(R.id.track_duration);
 		trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
 
-//		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
+		bookElapsedTime = (TextView) view.findViewById(R.id.book_elapsed_time);
 		bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
 
-		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
+		trackElapsedTime = (TextView) view.findViewById(R.id.track_elapsed_time);
 		trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
 
 		trackCounter = (TextView) view.findViewById(R.id.track_counter);
