@@ -150,6 +150,7 @@ public class PlayerController implements IPlayerEvents {
 	 * @return True if setup was run without problems.
 	 */
 	private boolean setup() {
+		Log.d(TAG, "PlayerController setting up.");
 		if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 			Log.d(TAG, "Index is -1. Should not continue playing. Stopping.");
 			stop();

@@ -4,9 +4,10 @@ package edu.chalmers.dat255.audiobookplayer.util;
  * Utility class that formats given millisecond times.
  * 
  * @author Aki Käkelä
+ * @version 0.1
  * 
  */
-public class TimeFormatter {
+public class TextFormatter {
 	/**
 	 * Formats a given time in milliseconds to MM:SS.
 	 * <p>

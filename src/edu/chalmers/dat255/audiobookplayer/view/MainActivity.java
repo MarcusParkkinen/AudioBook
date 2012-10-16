@@ -43,7 +43,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 /**
  * The main activity of the application. TODO: insert license
  * 
- * @author Aki K�kel�, Marcus Parkkinen
+ * @author Aki K&auml;kel&auml;, Marcus Parkkinen
  * @version 0.6
  * 
  */

@@ -26,7 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 /**
  * The bookshelf class contains a collection of books.
  * 
- * @author Marcus Parkkinen, Aki K�kel�
+ * @author Marcus Parkkinen, Aki K&auml;kel&auml;
  * @version 0.6
  * 
  */

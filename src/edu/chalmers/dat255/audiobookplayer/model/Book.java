@@ -26,7 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
  * Represents a collection of Track objects. Null tracks are not allowed (and
  * will be ignored when added).
  * 
- * @author Marcus Parkkinen, Aki K�kel�
+ * @author Marcus Parkkinen, Aki K&auml;kel&auml;
  * @version 0.6
  */
 

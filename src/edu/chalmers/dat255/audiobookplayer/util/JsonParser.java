@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 
 /**
  * @author Marcus Parkkinen
+ * @version 0.1
  * 
  */
 public class JsonParser {

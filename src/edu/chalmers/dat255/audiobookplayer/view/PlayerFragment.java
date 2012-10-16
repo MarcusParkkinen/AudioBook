@@ -30,7 +30,7 @@ import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
-import edu.chalmers.dat255.audiobookplayer.util.TimeFormatter;
+import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
 
 /**
  * A graphical UI representing the audio player.
@@ -45,24 +45,26 @@ public class PlayerFragment extends Fragment {
 	private SeekBar trackBar;
 	private TextView bookTitle;
 	private TextView trackTitle;
-	// private TextView bookDuration;
-	// private TextView trackDuration;
-	// private TextView bookElapsedTime;
+	private TextView bookDuration;
+	private TextView trackDuration;
+	private TextView bookElapsedTime;
 	private TextView trackElapsedTime;
 	private TextView trackCounter;
 	private IPlayerEvents fragmentOwner;
 
 	private ImageButton playPause;
 
-	// private boolean isPlaying = true;
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		boolean ownerImplementsEvents = true;
 
 		try {
 			fragmentOwner = (IPlayerEvents) activity;
 		} catch (ClassCastException e) {
+			ownerImplementsEvents = false;
+		}
+		if (!ownerImplementsEvents) {
 			throw new ClassCastException(activity.toString()
 					+ " does not implement " + IPlayerEvents.class.getName());
 		}
@@ -203,14 +205,14 @@ public class PlayerFragment extends Fragment {
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
 		bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
 
-		// bookDuration = (TextView) view.findViewById(R.id.bookDuration);
-		// bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
-		//
-		// trackDuration = (TextView) view.findViewById(R.id.trackDuration);
-		// trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
-		//
-		// bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
-		// bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
+//		bookDuration = (TextView) view.findViewById(R.id.bookDuration);
+		bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
+
+//		trackDuration = (TextView) view.findViewById(R.id.trackDuration);
+		trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
+
+//		bookElapsedTime = (TextView) view.findViewById(R.id.bookElapsedTime);
+		bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
 
 		trackElapsedTime = (TextView) view.findViewById(R.id.trackElapsedTime);
 		trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
@@ -230,7 +232,6 @@ public class PlayerFragment extends Fragment {
 	 */
 	public void updateBookSeekBar(double percentage) {
 		int progress = (int) ((double) bookBar.getMax() * percentage);
-		// Log.d(TAG, "Seeking book bar to " + progress + "%");
 		// calls 'onProgressChanged' from code:
 		bookBar.setProgress(progress);
 	}
@@ -242,8 +243,6 @@ public class PlayerFragment extends Fragment {
 	 */
 	public void updateTrackSeekBar(double percentage) {
 		int progress = (int) (trackBar.getMax() * percentage);
-		// Log.d(TAG, "Seeking track bar to " + progress + "%" + " (" +
-		// percentage + "%)");
 		// calls 'onProgressChanged' from code:
 		trackBar.setProgress(progress);
 	}
@@ -257,13 +256,13 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateBookTitleLabel(String title) {
-		bookTitle.setText(title);
-		
-//		if (isBadTitle(title)) {
-//			bookTitle.setText("N/A");
-//		} else {
-//			bookTitle.setText(title);
-//		}
+		// bookTitle.setText(title);
+
+		if (isBadTitle(title)) {
+			bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
+		} else {
+			bookTitle.setText(title);
+		}
 	}
 
 	/**
@@ -272,18 +271,13 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateTrackTitleLabel(String title) {
-		trackTitle.setText(title);
+		// trackTitle.setText(title);
+
 		if (isBadTitle(title)) {
-			Log.d(TAG, "Title (" + title + ") is a bad title!");
+			trackTitle.setText(Constants.Message.NO_TRACK_TITLE);
+		} else {
+			trackTitle.setText(title);
 		}
-		
-//		Log.d(TAG, "track title setting to " + title);
-//		if (isBadTitle(title)) {
-//			trackTitle.setText("N/A");
-//			Log.d(TAG, "Title (" + title + ") is a bad title!");
-//		} else {
-//			trackTitle.setText(title);
-//		}
 	}
 
 	/*
@@ -297,7 +291,7 @@ public class PlayerFragment extends Fragment {
 	 */
 	public void updateBookElapsedTimeLabel(int ms) {
 		// Note: not implemented in the newer versions of the Player GUI
-		// bookElapsedTime.setText(TimeFormatter.formatTimeFromMillis(ms));
+		bookElapsedTime.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
 	/**
@@ -307,7 +301,7 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateTrackElapsedTimeLabel(int ms) {
-		trackElapsedTime.setText(TimeFormatter.formatTimeFromMillis(ms));
+		trackElapsedTime.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
 	/*
@@ -316,27 +310,27 @@ public class PlayerFragment extends Fragment {
 	/**
 	 * Sets the duration label of the book to the given time in milliseconds.
 	 * <p>
-	 * Formats the time. (see {@link TimeFormatter#formatTimeFromMillis(int)
+	 * Formats the time. (see {@link TextFormatter#formatTimeFromMillis(int)
 	 * formatTimeFromMillis})
 	 * 
 	 * @param ms
 	 */
 	public void updateBookDurationLabel(int ms) {
 		// Note: not implemented in the newer versions of the Player GUI
-		// bookDuration.setText(formatTime(ms));
+		bookDuration.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
 	/**
 	 * Sets the duration label of the track to the given time in milliseconds.
 	 * <p>
-	 * Formats the time (see {@link TimeFormatter#formatTimeFromMillis(int)
+	 * Formats the time (see {@link TextFormatter#formatTimeFromMillis(int)
 	 * formatTimeFromMillis}).
 	 * 
 	 * @param ms
 	 */
 	public void updateTrackDurationLabel(int ms) {
 		// Note: not implemented in the newer versions of the Player GUI
-		// trackDuration.setText(formatTime(ms));
+		trackDuration.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
 	/**
@@ -409,10 +403,9 @@ public class PlayerFragment extends Fragment {
 			// only show the current track if one is selected
 			result = result + (currentTrack + 1) + "/";
 		}
+		
 		// always show the number of tracks
 		result = result + numberOfTracks + ")";
-		
-		Log.d(TAG, "formatter: " + result);
 
 		return result;
 	}

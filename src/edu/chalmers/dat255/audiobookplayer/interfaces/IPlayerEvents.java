@@ -17,7 +17,7 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
  * Specifies the possible events coming from the Player, including user
  * interface controls and playback functionality.
  * 
- * @author Aki K�kel�
+ * @author Aki K&auml;kel&auml;
  * @version 0.6
  * 
  */

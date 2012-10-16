@@ -26,7 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
  * Manages setting the current book and bookshelf, as well as saving it when the
  * application terminates.
  * 
- * @author Marcus Parkkinen, Aki Käkelä
+ * @author Marcus Parkkinen, Aki K&auml;kel&auml;
  * @version 0.7
  */
 

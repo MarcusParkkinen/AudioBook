@@ -21,7 +21,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * Creates Track instances (filling them with metadata).
  * 
- * @author Aki K�kel�
+ * @author Aki K&auml;kel&auml;
  * @version 0.6
  */
 public class TrackCreator {

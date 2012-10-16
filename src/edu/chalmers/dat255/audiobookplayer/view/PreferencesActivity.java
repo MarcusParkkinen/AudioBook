@@ -27,6 +27,7 @@ import edu.chalmers.dat255.audiobookplayer.R;
  * 
  * @author Aki Käkelä
  * @version 0.1
+ * @deprecated unused
  * 
  */
 @TargetApi(11)

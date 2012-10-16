@@ -12,6 +12,7 @@ import android.widget.TimePicker;
 
 /**
  * @author Aki Käkelä
+ * @deprecated unused
  * 
  */
 public class TimePickerFragment extends DialogFragment implements

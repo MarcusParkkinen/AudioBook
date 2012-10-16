@@ -21,7 +21,8 @@ import java.util.regex.*;
 /**
  * Class containing static methods to help create a file browser.
  * 
- * @author Fredrik �hs
+ * @author Fredrik &aring;hs
+ * @version 0.1
  * 
  */
 public class FileBrowser {

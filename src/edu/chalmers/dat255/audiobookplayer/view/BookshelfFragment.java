@@ -44,6 +44,7 @@ import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
+import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
@@ -108,13 +109,16 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		boolean ownerImplementsEvents = true;
 
 		try {
 			fragmentOwner = (IBookshelfGUIEvents) activity;
 		} catch (ClassCastException e) {
+			ownerImplementsEvents = false;
+		}
+		if (!ownerImplementsEvents) {
 			throw new ClassCastException(activity.toString()
-					+ " does not implement "
-					+ IBookshelfGUIEvents.class.getName());
+					+ " does not implement " + IBookshelfGUIEvents.class.getName());
 		}
 	}
 

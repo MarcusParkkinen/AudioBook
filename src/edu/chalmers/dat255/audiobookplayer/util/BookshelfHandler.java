@@ -9,6 +9,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * Loads and saves bookshelf data.
  * 
  * @author Aki Käkelä, Marcus Parkkinen
+ * @version 0.1
  * 
  */
 public class BookshelfHandler {
