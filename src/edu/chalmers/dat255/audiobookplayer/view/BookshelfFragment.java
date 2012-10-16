@@ -324,6 +324,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		adapter.notifyDataSetChanged();
 	}
 
+	public void selectedBookElapsedTimeUpdated(int newTime) {
+		adapter.selectedBookElapsedTimeUpdated(newTime);		
+	}
+
 
 	public void bookLongPress(int index) {
 		fragmentOwner.bookLongPress(index);
@@ -365,8 +369,14 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 		private Context context;
 		//		private List<Entry<Book, List<String>>> listData;
-		private int selectedIndex;
 		private Bookshelf bookshelf;
+		
+		//used to get synchronized time label and progress bar 
+		private int bookElapsedTime;
+		private int bookProgress;
+		private View selectedBookView;
+		private int selectedBookIndex;
+		
 
 		/**
 		 * Constructs an ExpandableListAdapter with context and listData.
@@ -379,9 +389,53 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			this.context = context;
 			//			this.listData = listData;
 			setBookshelf(bookshelf);
-			selectedIndex = -1;
+			
 		}
 
+		/**
+		 * Updates the adapters class variables.
+		 * @param newTime
+		 * @return 
+		 */
+		public void selectedBookElapsedTimeUpdated(int newTime) {
+			int newTimeSeconds = newTime/1000;
+			if(newTimeSeconds > bookElapsedTime)  {
+				bookElapsedTime = newTimeSeconds;
+				setTextViewText(selectedBookView, R.id.bookshelfBookPosition, "Position: " + DateUtils.formatElapsedTime(bookElapsedTime));
+				int bookDuration = bookshelf.getSelectedBookDuration()/1000;
+				
+				
+				int calculatedProgress = calculateProgress(newTimeSeconds, bookDuration);
+				if((calculatedProgress >= 0) && (calculatedProgress <= 100) && (calculatedProgress > bookProgress)) {
+					bookProgress = calculatedProgress;
+					ProgressBar pb = (ProgressBar)selectedBookView.findViewById(R.id.bookshelfProgressBar);
+					if(pb != null) {
+						pb.setProgress(bookProgress);
+					}
+				}
+			}
+			
+		}
+		
+		/**
+		 * Method that calculates a roofed progress, i.e.
+		 * time = 51, duration = 1000 would return a progress of 6
+		 * @param elapsedTime The time elapsed.
+		 * @param duration The total duration.
+		 * @return A roofed progress.
+		 */
+		private int calculateProgress(int elapsedTime, int duration) {
+			if(elapsedTime < 0 || duration <= 0) {
+				return 0;
+			}
+			int floored = 100 * elapsedTime / duration;
+			int rest = 100 * elapsedTime % duration;
+			if(rest == 0) {
+				return floored;
+			}
+			return floored + 1;
+		}
+		
 		public void setBookshelf(Bookshelf bookshelf) {
 			this.bookshelf = bookshelf;
 		}
@@ -453,11 +507,14 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			convertView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					//store the index of the book of the track clicked for correct redrawal
-					selectedIndex = bookIndex;
 					//force the expandable list view to redraw
 					expandableListView.invalidateViews();
 					//inform the bookshelfFragment's listener that a child has been selected
 					BookshelfFragment.this.childClicked(bookIndex, trackIndex);
+					//store for synchronization
+					selectedBookView = expandableListView.getChildAt(bookIndex);
+					bookElapsedTime = bookshelf.getBookElapsedTime()/1000;
+					bookProgress = calculateProgress(bookElapsedTime, bookshelf.getSelectedBookDuration()/1000);
 				}
 			});
 
@@ -532,20 +589,25 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				return null;
 			}
 			//get the elapsed time of the book
-			int time = bookshelf.getBookElapsedTimeAt(bookIndex) / 1000;
+			int time = 0;
+			int progress = 0;
 
 			// set title, author, time and duration of book
 			setTextViewText(convertView, R.id.bookshelfBookTitle,
 					bookshelf.getBookTitleAt(bookIndex));
 			//set the color of the books title to red if selected,
-			if (bookIndex == selectedIndex) {
+			if (bookIndex == bookshelf.getSelectedBookIndex()) {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.RED);
+				time = bookElapsedTime;
+				progress = bookProgress;
 			} 
 			//and white otherwise.
 			else {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
 						Color.WHITE);
+				time = bookshelf.getBookElapsedTimeAt(bookIndex) / 1000;
+				progress = calculateProgress(time, duration);
 			}
 			setTextViewText(convertView, R.id.bookshelfAuthor,
 					bookshelf.getBookAuthorAt(bookIndex));
@@ -557,8 +619,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			setTextViewText(convertView, R.id.bookshelfBookDuration,
 					"Duration: " + DateUtils.formatElapsedTime(duration));
 
-			// prevent a higher value than 100
-			int progress = time > duration ? 100 : 100 * time / duration;
+
 			// set the progress of the progress bar
 			ProgressBar progressBar = (ProgressBar) convertView
 					.findViewById(R.id.bookshelfProgressBar);
@@ -582,6 +643,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				}
 			});
 			//sets the on click listener for the rest of the view
+			//store convertview as final to reach it inside this method
+			final View finalConvertView = convertView;
 			convertView.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
@@ -589,15 +652,19 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					if (!isExpanded) {
 						expandableListView.expandGroup(bookIndex);
 					}
+					//store the view so that text can update
+					selectedBookView = finalConvertView;
 					// scroll to the selected item
 					expandableListView.setSelectionFromTop(bookIndex, 0);
-					// sets the currently selected index
-					selectedIndex = bookIndex;
 					// invalidates views to force redraw thus setting the
 					// correct textcolor
 					expandableListView.invalidateViews();
 					//inform the BookshelfFragment that this button has been pressed.
 					BookshelfFragment.this.groupClicked(bookIndex);
+
+					bookElapsedTime = bookshelf.getBookElapsedTime()/1000;
+					bookProgress = calculateProgress(bookElapsedTime, bookshelf.getSelectedBookDuration()/1000);
+					
 				}
 			});
 			// set long click to show the group's context menu

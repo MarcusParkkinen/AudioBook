@@ -48,7 +48,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
  * 
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
-		IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
+IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 	private static final String TAG = "MainActivity";
 	private static final String USERNAME = "Default";
 	private static final int PLAYER = 0;
@@ -125,7 +125,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	protected void onStop() {
 		Log.d(TAG, "onStop()");
 		super.onStop();
-		
+
 		// Disable updates
 		bookshelfController.removeListeners();
 
@@ -409,14 +409,19 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
-
+				if(pager.getCurrentItem() == BOOKSHELF) {
+					updateSelectedBookElapsedTime(b);
+				}
 				// Player
-				// recalculate the track seekbar
-				updateTrackSeekbar(b);
-				// recalculate the book seekbar
-				updateBookSeekbar(b);
-				// update time labels
-				updateElapsedTimeLabels(b);
+				else {
+					// recalculate the track seekbar
+					updateTrackSeekbar(b);
+					// recalculate the book seekbar
+					updateBookSeekbar(b);
+					// update time labels
+					updateElapsedTimeLabels(b);
+				}
+
 			} else if (eventName.equals(Constants.Event.TRACK_REMOVED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -608,6 +613,24 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 						playerFragment.updateTrackElapsedTimeLabel(b
 								.getSelectedTrackElapsedTime());
 						playerFragment.updateBookElapsedTimeLabel(b
+								.getBookElapsedTime());
+					}
+				}
+			});
+		}
+	}
+	
+	/**
+	 * UI mutator method that updates the book position 
+	 * of the selected book in bookshelf fragment
+	 * @param b The selected book.
+	 */
+	private void updateSelectedBookElapsedTime(final Book b) {
+		if (bookshelfFragment.getActivity() != null) {
+			bookshelfFragment.getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					if (b.getSelectedTrackIndex() != -1) {
+						bookshelfFragment.selectedBookElapsedTimeUpdated(b
 								.getBookElapsedTime());
 					}
 				}
