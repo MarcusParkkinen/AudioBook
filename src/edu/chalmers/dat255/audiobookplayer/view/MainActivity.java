@@ -43,7 +43,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 /**
  * The main activity of the application. TODO: insert license
  * 
- * @author Aki Käkelä, Marcus Parkkinen
+ * @author Aki Kï¿½kelï¿½, Marcus Parkkinen
  * @version 0.6
  * 
  */
@@ -69,9 +69,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	// Creator
 	private BookCreator bookCreator;
 
-	// Bookshelf
-	Bookshelf shelf;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,9 +86,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		bookCreator = BookCreator.getInstance();
 
 		bookCreator.setBookshelf(bs);
-
-		// Subscribe as a listener to the model
-		bs.addPropertyChangeListener(this);
 
 		// Provide a reference to the bookshelf as an argument in the bundle
 		Bundle bsReference = new Bundle();
@@ -131,8 +125,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	protected void onStop() {
 		Log.d(TAG, "onStop()");
 		super.onStop();
-
-		// stopUpdates();
+		
+		// Disable updates
+		bookshelfController.removeListeners();
 
 		// stopAudio();
 	}
@@ -145,7 +140,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 * if the application is stopped, it will go through onStart() and then
 		 * onResume(), so just start the updates again here.
 		 */
-		// startUpdates();
+		bookshelfController.addPropertyChangeListener(this);
 
 		/*
 		 * TODO(??): This method is run every time the application is created,
@@ -177,7 +172,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * Saves a bookmark (the bookshelf).
 	 */
 	private boolean save() {
-		return BookshelfHandler.saveBookshelf(this, USERNAME, shelf);
+		return bookshelfController.saveBookshelf(this, USERNAME);
 	}
 
 	/**
@@ -224,6 +219,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		case R.id.menu_save:
 			if (save()) {
 				Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, "Saving failed", Toast.LENGTH_SHORT);
 			}
 			return true;
 
@@ -345,6 +342,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
+		
 		if (eventName != Constants.Event.ELAPSED_TIME_CHANGED) {
 			Log.d(TAG, "Received update: " + eventName);
 		}

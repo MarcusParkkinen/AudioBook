@@ -270,20 +270,26 @@ public class PlayerController implements IPlayerEvents {
 			 * be stopped).
 			 */
 
-			if (trackIndex == -1) {
+			if (trackIndex == Constants.Value.NO_TRACK_SELECTED) {
 				// no track is selected, so start the last one
-				if (bs.isLegalTrackIndex(0)) {
-					bs.setSelectedTrackIndex(0);
+				// verify that it is legal (there are tracks)
+				int lastIndex = bs.getNumberOfTracks() - 1;
+				if (bs.isLegalTrackIndex(lastIndex)) {
+					bs.setSelectedTrackIndex(lastIndex);
 				}
 			} else if (trackIndex == 0) {
-				// first track is selected, so deselect
-				bs.setSelectedTrackIndex(Constants.Value.NO_TRACK_SELECTED);
+				// first track is selected, so start the first one
+				// verify that there are tracks first
+				if (bs.getNumberOfTracks() > 0) {
+					bs.setSelectedTrackIndex(0);
+				}
 			} else {
 				/*
-				 * a track between the second first (index 1) and the last is selected, so
-				 * just select the previous track since it will be legal.
+				 * a track between the second first (index 1) and the last is
+				 * selected, so just select the previous track since it will be
+				 * legal.
 				 */
-				
+
 				bs.setSelectedTrackIndex(trackIndex - 1);
 			}
 		}
@@ -300,7 +306,7 @@ public class PlayerController implements IPlayerEvents {
 			 * be stopped).
 			 */
 
-			if (trackIndex == -1) {
+			if (trackIndex == Constants.Value.NO_TRACK_SELECTED) {
 				// no track is selected, so start the first one
 				if (bs.isLegalTrackIndex(0)) {
 					bs.setSelectedTrackIndex(0);

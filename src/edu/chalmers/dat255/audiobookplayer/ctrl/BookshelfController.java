@@ -13,8 +13,14 @@
 
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
+import java.beans.PropertyChangeListener;
+
+import android.content.Context;
+import android.util.Log;
+
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
+import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 
 /**
  * Manages setting the current book and bookshelf, as well as saving it when the
@@ -25,6 +31,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  */
 
 public class BookshelfController implements IBookshelfEvents {
+	private static final String TAG = "BookshelfController";
 	private Bookshelf bookshelf;
 
 	/**
@@ -69,5 +76,21 @@ public class BookshelfController implements IBookshelfEvents {
 	public void removeTrack(int trackIndex) {
 		bookshelf.removeTrack(trackIndex);
 	}
-
+	
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		Log.d(TAG, "Adding listener to bookshelf.");
+		bookshelf.addPropertyChangeListener(pcl);
+	}
+	
+	public void removeListeners() {
+		Log.d(TAG, "Removing ALL listeners of bookshelf.");
+		bookshelf.removeListeners();
+	}
+	
+	public boolean saveBookshelf(Context c, String username) {
+		// Remove listeners before saving the bookshelf
+//		bookshelf.removeListeners();
+		
+		return BookshelfHandler.saveBookshelf(c, username, bookshelf);
+	}
 }

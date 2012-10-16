@@ -2,17 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#232421" >
+    android:background="#131212" >
 
     <!-- Book seek bar: Seek bar for browsing through the book -->
-
+
     <LinearLayout
         android:id="@+id/seek_bar_1"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="#232421" >
+        android:background="#131212" >
 
         <SeekBar
             android:id="@+id/bookBar"
@@ -31,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="210dp"
         android:layout_below="@id/seek_bar_1"
-        android:background="#131212" >
+        android:background="#131212"
+        android:layout_marginTop="2dp" >
 
         <ImageView
             android:id="@+id/cover_art"
@@ -43,92 +44,76 @@
     </LinearLayout>
 
     <!-- Playback details: author, title, duration and elapsed time are displayed for both book and track. -->
-
+
     <RelativeLayout
         android:id="@+id/playback_details"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_below="@id/cover_art_layout"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="2dp" >
+        android:layout_marginTop="2dp"
+        android:background="#232222" >
 
-        <!-- Sublayer for displaying elapsed time of current track -->
-
-        <LinearLayout
-            android:id="@+id/elapsed_time_text"
-            android:layout_width="47dp"
-            android:layout_height="15dp"
-            android:layout_alignRight="@+id/time_jump"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="55dp" 
-            android:background="#131212" >
-
-            <TextView
-                android:id="@+id/trackElapsedTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="6dp"
-                android:text="5:12:41"
-                android:textColor="#FFFFFF"
-                android:textSize="14dp"
-                android:typeface="normal" />
-        </LinearLayout>
-
-        <!-- Sublayer for TimeJump: allows the user to go to a specific time point in a book -->
-
-        <LinearLayout
-            android:id="@+id/time_jump"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignBottom="@+id/trackElapsedTime"
+        <RelativeLayout
+            android:id="@+id/timer_layout"
+            android:layout_width="70dp"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp" 
-            android:background="#232421" >
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:contentDescription="@string/jump_image_text_replacement"
-                android:src="@drawable/img_clock" />
-        </LinearLayout>
-        
-        <!-- Sublayer for displaying the book title -->
-
-        <LinearLayout
-            android:id="@+id/book_title_layout"
-            android:layout_width="200dp"
-            android:layout_height="15dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/time_jump"
-            android:background="#131212" >
+            android:layout_marginLeft="10dp" >
 
-            <TextView
-                android:id="@+id/bookTitle"
-                android:layout_width="220dp"
+            <!-- Sublayer for displaying elapsed time of current track -->
+
+            <LinearLayout
+                android:id="@+id/elapsed_time_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BOOKTITLE!!!!!!!!!!"
-                android:textColor="#FFFFFF"
-                android:textSize="11dp"
-                android:typeface="normal" />
-        </LinearLayout>
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/time_jump" >
+
+                <TextView
+                    android:id="@+id/trackElapsedTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="5:12:41"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14dp"
+                    android:typeface="normal" />
+            </LinearLayout>
+
+            <!-- Sublayer for TimeJump: allows the user to go to a specific time point in a book -->
+
+            <LinearLayout
+                android:id="@+id/time_jump"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignBottom="@+id/trackElapsedTime"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="10dp"  >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:contentDescription="@string/jump_image_text_replacement"
+                    android:src="@drawable/img_clock" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/track_row_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/timer_layout"
             android:layout_below="@+id/book_title_layout"
-            android:layout_toRightOf="@+id/time_jump"
-            android:background="#131212"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/track_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:text="(523/563629)"
+                android:text="(523/5629)"
                 android:textColor="#777777"
                 android:textSize="14dp"
                 android:typeface="normal" />
@@ -137,22 +122,43 @@
                 android:id="@+id/trackTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:text="TRACKTITLE!!!!!!!!"
                 android:textColor="#FFFFFF"
                 android:textSize="14dp"
                 android:typeface="normal" />
         </LinearLayout>
+
+        <!-- Sublayer for displaying the book title -->
+
+        <LinearLayout
+            android:id="@+id/book_title_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/timer_layout" 
+            android:layout_alignTop="@+id/time_jump">
+
+            <TextView
+                android:id="@+id/bookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:text="BOOKTITLE!!!!!!!!!!"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp"
+                android:typeface="normal" />
+        </LinearLayout>
     </RelativeLayout>
 
     <!-- Player Playback Controls UI Layer -->
-
+
     <RelativeLayout
         android:id="@+id/player_controls"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="#131212" >
+        android:layout_alignParentLeft="true" >
 
         <LinearLayout
             android:id="@+id/play_pause"
@@ -246,7 +252,7 @@
     </RelativeLayout>
 
     <!-- Track seek bar: shows the progress of the current track and allows the user to seek through it. -->
-
+
     <LinearLayout
         android:id="@+id/track_bar_layout"
         android:layout_width="match_parent"
@@ -254,7 +260,7 @@
         android:layout_above="@+id/player_controls"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:background="#232421" >
+        android:background="#131212" >
 
         <SeekBar
             android:id="@+id/track_bar"
