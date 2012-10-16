@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
@@ -68,6 +69,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// remove the action bar
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		setContentView(R.layout.activity_main);
 
 		initPager();
@@ -85,6 +90,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		Bundle bsReference = new Bundle();
 		bsReference.putSerializable(Constants.Reference.BOOKSHELF, bs);
 		bookshelfFragment.setArguments(bsReference);
+		
 	}
 
 	private void initPager() {

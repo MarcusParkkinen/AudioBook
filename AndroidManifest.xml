@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".view.MainActivity"
-            android:label="@string/title_activity_audiobook" >
+            android:label="@string/title_activity_audiobook" 
+            android:theme="@style/ThemeWithoutActionbar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

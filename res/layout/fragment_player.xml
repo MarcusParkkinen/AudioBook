@@ -298,7 +298,7 @@
         android:id="@+id/cover_art_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_above="@+id/book_title_layout"
+        android:layout_above="@+id/playback_details_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/book_times_layout"

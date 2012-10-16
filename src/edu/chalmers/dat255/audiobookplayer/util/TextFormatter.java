@@ -10,7 +10,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * 
  */
 public class TextFormatter {
-	
+
 	private TextFormatter() {
 		// to defeat instantiation
 	}
@@ -60,17 +60,17 @@ public class TextFormatter {
 	 * 
 	 * @param currentTrack
 	 * @param numberOfTracks
-	 * @return
+	 * @return Formatted text.
 	 */
 	public static String formatCounter(int currentTrack, int numberOfTracks) {
-		String result = "(";
+		String result = "";
 		if (currentTrack != Constants.Value.NO_TRACK_SELECTED) {
 			// only show the current track if one is selected
 			result = result + (currentTrack + 1) + "/";
 		}
 
 		// always show the number of tracks
-		result = result + numberOfTracks + ")";
+		result = result + numberOfTracks;
 
 		return result;
 	}
