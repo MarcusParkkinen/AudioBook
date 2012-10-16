@@ -102,7 +102,7 @@ ActivityInstrumentationTestCase2<MainActivity> {
 	}
 
 	/**
-	 * Test method for {@link edu.chalmers.dat255.audiobookplayer.view.BookshelfFragment#bookAdded(edu.chalmers.dat255.audiobookplayer.model.Book)}.
+	 * Test method for {@link edu.chalmers.dat255.audiobookplayer.view.BookshelfFragment#bookshelfUpdated(edu.chalmers.dat255.audiobookplayer.model.Book)}.
 	 */
 	public void testBookAdded() {
 		fail("Not yet implemented");

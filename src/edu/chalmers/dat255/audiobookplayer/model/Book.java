@@ -210,7 +210,7 @@ public final class Book implements IBookUpdates, Serializable {
 					+ " setSelectedTrackElapsedTime" + TRACK_INDEX_ILLEGAL);
 		}
 		this.tracks.get(selectedTrackIndex)
-				.setSelectedTrackElapsedTime(newTime);
+		.setSelectedTrackElapsedTime(newTime);
 	}
 
 	/* End ITrackUpdates */
@@ -374,7 +374,7 @@ public final class Book implements IBookUpdates, Serializable {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
 			throw new IllegalArgumentException(
 					"getTrackTitle (illegal track index " + selectedTrackIndex
-							+ ")");
+					+ ")");
 		}
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
@@ -458,6 +458,13 @@ public final class Book implements IBookUpdates, Serializable {
 	 */
 	public Object getSelectedTrack() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getTrackTitleAt(int trackIndex) {
+		if(trackIndex >= 0 && trackIndex < tracks.size())  {
+			return tracks.get(trackIndex).getTrackTitle();
+		}
 		return null;
 	}
 

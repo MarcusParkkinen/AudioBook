@@ -342,8 +342,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-		
-		if (eventName != Constants.Event.ELAPSED_TIME_CHANGED) {
+		//log all events but the ELAPSED_TIME_CHANGED event, which 
+		//is left out to not overflow the log
+		if ( ! eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Log.d(TAG, "Received update: " + eventName);
 		}
 
@@ -353,13 +354,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// Check which event was fired, and do relevant updates in the
 			// fragments
-			if (eventName.equals(Constants.Event.BOOK_ADDED)) {
+			if (eventName.equals(Constants.Event.BOOKS_CHANGED)) {
 				int lastBookIndex = bs.getNumberOfBooks() - 1;
 				// assumes this event is never fired unless atleast one book is
 				// added.
 				Book b = bs.getBookAt(lastBookIndex);
 				// Bookshelf
-				bookshelfFragment.bookAdded(b);
+				bookshelfFragment.bookshelfUpdated(bs);
 
 				// Player
 				// Do nothing

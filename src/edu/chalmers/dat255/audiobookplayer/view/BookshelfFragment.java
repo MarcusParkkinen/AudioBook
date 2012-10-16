@@ -56,9 +56,10 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	private static final String TAG = "BookshelfFragment.class";
-	private List<Entry<Book, List<String>>> listData;
+	private Bookshelf bookshelf;
 	private ExpandableBookshelfAdapter adapter;
 	private IBookshelfGUIEvents fragmentOwner;
+	private ExpandableListView bookshelfList;
 
 	/**
 	 * Simple interface forcing the enum classes to provide a method to get text. 
@@ -130,10 +131,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		/* Instantiate member variables */
 		/**//**/
 		/**************************************************************/
-		if (listData == null && adapter == null) {
-			listData = new ArrayList<Entry<Book, List<String>>>();
-			adapter = new ExpandableBookshelfAdapter(view.getContext(),
-					listData);
+		if(bookshelf == null && adapter == null) {
+			adapter = new ExpandableBookshelfAdapter(view.getContext(), null);
 		}
 
 		/**************************************************************/
@@ -162,12 +161,12 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		/* Get the list layout, and add listener methods and an adapter to it */
 		/**//**/
 		/******************************************************************************/
-		ExpandableListView bookshelfList = (ExpandableListView) view
+		bookshelfList = (ExpandableListView) view
 				.findViewById(R.id.bookshelfList);
 
 		/*
-		* hides the by default visible arrow which indicates whether a group is
-		* expanded or not
+		 * hides the by default visible arrow which indicates whether a group is
+		 * expanded or not
 		 */
 		bookshelfList.setGroupIndicator(null);
 		//set the bookshelf list as a context menu
@@ -176,11 +175,8 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		bookshelfList.setAdapter(adapter);
 		// Access the bookshelf reference
 		if (getArguments().getSerializable(Constants.Reference.BOOKSHELF) instanceof Bookshelf) {
-			Bookshelf b = (Bookshelf) getArguments().getSerializable(
-					Constants.Reference.BOOKSHELF);
-			for (int i = 0; i < b.getNumberOfBooks(); i++) {
-				bookAdded(b.getBookAt(i));
-			}
+			bookshelfUpdated((Bookshelf) getArguments().getSerializable(
+					Constants.Reference.BOOKSHELF));
 		}
 		//return the view when it has been processed.
 		return view;
@@ -210,12 +206,12 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 				//get all menu items from the child context menu
 				menuItems = ChildContextMenuItem.values();
 				//set the context menu's title to that of the value of the child
-				title = listData.get(bookIndex).getValue().get(trackIndex);
+				title = bookshelf.getTrackTitleAt(bookIndex, trackIndex);
 			} else if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
 				//get all menu items from the group context menu
 				menuItems = GroupContextMenuItem.values();
 				//set the context menu's title to that of the value of the book
-				title = listData.get(bookIndex).getKey().getSelectedBookTitle();
+				title = bookshelf.getBookTitleAt(bookIndex);
 			}
 			// set the title
 			menu.setHeaderTitle(title);
@@ -308,65 +304,48 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	}
 
 	/**
-	 * Private help class that holds an entry with a key and a value.
-	 * 
-	 * @author Fredrik Åhs
-	 * @version 0.1
-	 */
-	private class BookshelfEntry<K, V> implements Map.Entry<K, V> {
-
-		private K key;
-		private V value;
-
-		/**
-		 * Constructor of entry.
-		 * @param key The key.
-		 * @param value The value.
-		 */
-		public BookshelfEntry(K key, V value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		/**
-		 * @return returns the key of the entry.
-		 */
-		public K getKey() {
-			return key;
-		}
-
-		/**
-		 * @return returns the value of the entry.
-		 */
-		public V getValue() {
-			return value;
-		}
-
-		/**
-		 * @param object sets the entry of the value;
-		 * @return returns the value of the entry
-		 */
-		public V setValue(V object) {
-			this.value = object;
-			return getValue();
-		}
-	}
-
-	/**
-	 * Updates the class with a newly added book and informs its adapter that
+	 * Updates the adapter with the updated bookshelf and informs it that its
 	 * data has been added.
 	 * 
-	 * @param b
-	 *            The newly added book.
+	 * @param bs
+	 *            The updated bookshelf
 	 */
-	public void bookAdded(Book b) {
+
+	public void bookshelfUpdated(Bookshelf bs) {
 		Log.d(TAG, "Book added");
-		// Add a new entry to 'values'
-		listData.add(new BookshelfEntry<Book, List<String>>(b, b
-				.getTrackTitles()));
-		// Notify the adapter that the list has changed
+		adapter.setBookshelf(bs);
 		adapter.notifyDataSetChanged();
 	}
+
+
+	public void bookLongPress(int index) {
+		fragmentOwner.bookLongPress(index);
+	}
+
+	public void addBookButtonPressed() {
+		fragmentOwner.addBookButtonPressed();
+	}
+
+	public void setSelectedBook(int bookIndex) {
+		fragmentOwner.setSelectedBook(bookIndex);
+	}
+
+	public void setSelectedTrack(int bookIndex, int trackIndex) {
+		fragmentOwner.setSelectedTrack(bookIndex, trackIndex);
+	}
+
+	public void removeBook(int bookIndex) {
+		fragmentOwner.removeBook(bookIndex);
+	}
+
+	public void removeTrack(int trackIndex) {
+		fragmentOwner.removeTrack(trackIndex);
+	}
+
+	public void setBookTitleAt(int bookIndex, String newTitle) {
+		fragmentOwner.setBookTitleAt(bookIndex, "NEWNAME");
+	}
+
 
 	/**
 	 * Private class used to populate the ExpandableListView used in
@@ -378,8 +357,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	private class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
 
 		private Context context;
-		private List<Entry<Book, List<String>>> listData;
+		//		private List<Entry<Book, List<String>>> listData;
 		private int selectedIndex;
+		private Bookshelf bookshelf;
 
 		/**
 		 * Constructs an ExpandableListAdapter with context and listData.
@@ -387,18 +367,28 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * @param listData The data to be used to fill the list.
 		 */
 		public ExpandableBookshelfAdapter(Context context,
-				List<Entry<Book, List<String>>> listData) {
+				//				List<Entry<Book, List<String>>> listData) {
+				Bookshelf bookshelf) {
 			this.context = context;
-			this.listData = listData;
+			//			this.listData = listData;
+			setBookshelf(bookshelf);
 			selectedIndex = -1;
 		}
+
+		public void setBookshelf(Bookshelf bookshelf) {
+			this.bookshelf = bookshelf;
+		}
+
 		/**
 		 * @param bookIndex The position of the book.
 		 * @param trackIndex The position of the track.
 		 * @return The title of the track at given position.
 		 */
-		public String getChild(int bookIndex, int trackIndex) {
-			return listData.get(bookIndex).getValue().get(trackIndex);
+		public Integer getChild(int bookIndex, int trackIndex) {
+			if(bookshelf != null) {
+				return trackIndex;
+			} 
+			return 0;
 		}
 
 		/**
@@ -416,7 +406,11 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * @return The amount of tracks in the book at given position.
 		 */
 		public int getChildrenCount(int bookIndex) {
-			return listData.get(bookIndex).getValue().size();
+			//			return listData.get(bookIndex).getValue().size();
+			if(bookshelf != null) {
+				return bookshelf.getNumberOfTracksAt(bookIndex);
+			}
+			return 0;
 		}
 
 		/**
@@ -442,9 +436,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
 			//set the text of the child 
 			setTextViewText(convertView, R.id.bookshelfTrackTitle,
-					getChild(bookIndex, trackIndex));
+					bookshelf.getTrackTitleAt(bookIndex, trackIndex));
 			//get the position of the track from the book
-			int duration = getGroup(bookIndex).getTrackDurationAt(trackIndex) / 1000;
+			int duration = bookshelf.getTrackDurationAt(bookIndex, trackIndex) / 1000;
 			// convert and set the duration of the track
 			setTextViewText(convertView, R.id.bookshelfTrackTime,
 					DateUtils.formatElapsedTime(duration));
@@ -475,17 +469,23 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 		/**
 		 * @param bookIndex The position of the book.
-		 * @return Book at given position
+		 * @return given position or 0 if bookshelf is null
 		 */
-		public Book getGroup(int bookIndex) {
-			return listData.get(bookIndex).getKey();
+		public Integer getGroup(int bookIndex) {
+			if(bookshelf != null) {
+				return bookIndex;
+			}
+			return 0;
 		}
 
 		/**
 		 * @return The number of books.
 		 */
 		public int getGroupCount() {
-			return listData.size();
+			if (bookshelf != null) {
+				return bookshelf.getNumberOfBooks();
+			}
+			return 0;
 		}
 
 		/**
@@ -496,7 +496,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			return bookIndex;
 		}
 
-/**
+		/**
 		 * Converts the view of a book to display it properly.
 		 * @param bookIndex The position of the book.
 		 * @param isExpanded Whether the book is expanded or not.
@@ -514,21 +514,22 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 						false);
 			}
 			//set book as final to use in listeners
-			final Book book = getGroup(bookIndex);
+			
 			//set the expandableListView as final to use in listeners
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
 			//get duration from book
-			int duration = book.getDuration() / 1000;
+			int duration = bookshelf.getBookDurationAt(bookIndex) / 1000;
+			
 			// prevent problems with a duration of 0
 			if (duration == 0) {
 				return null;
 			}
 			//get the elapsed time of the book
-			int time = book.getBookElapsedTime() / 1000;
+			int time = bookshelf.getBookElapsedTimeAt(bookIndex) / 1000;
 
 			// set title, author, time and duration of book
 			setTextViewText(convertView, R.id.bookshelfBookTitle,
-					book.getSelectedBookTitle());
+					bookshelf.getBookTitleAt(bookIndex));
 			//set the color of the books title to red if selected,
 			if (bookIndex == selectedIndex) {
 				setTextViewTextColor(convertView, R.id.bookshelfBookTitle,
@@ -540,7 +541,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 						Color.WHITE);
 			}
 			setTextViewText(convertView, R.id.bookshelfAuthor,
-					book.getSelectedBookAuthor());
+					bookshelf.getBookAuthorAt(bookIndex));
 			//format the string of the elapsed time of the book
 			String timeString = time == 0 ? "N/A" : DateUtils
 					.formatElapsedTime(time);
@@ -612,7 +613,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * @param text The text to be displayed.
 		 */
 		private void setTextViewText(View view, int id, String text) {
-			if(view != null && view instanceof TextView) {
+			if(view != null) {
 				TextView textView = (TextView) view.findViewById(id);
 				if (textView != null) {
 					textView.setText(text);
@@ -627,7 +628,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * @param color The color to be set.
 		 */
 		private void setTextViewTextColor(View view, int id, int color) {
-			if(view != null && view instanceof TextView) {
+			if(view != null) {
 				TextView textView = (TextView) view.findViewById(id);
 				if (textView != null) {
 					textView.setTextColor(color);
@@ -635,7 +636,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			}
 		}
 
-		
+
 		public boolean hasStableIds() {
 			return true;
 		}
@@ -649,33 +650,4 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			return true;
 		}
 	}
-
-	public void bookLongPress(int index) {
-		fragmentOwner.bookLongPress(index);
-	}
-
-	public void addBookButtonPressed() {
-		fragmentOwner.addBookButtonPressed();
-	}
-
-	public void setSelectedBook(int bookIndex) {
-		fragmentOwner.setSelectedBook(bookIndex);
-	}
-
-	public void setSelectedTrack(int bookIndex, int trackIndex) {
-		fragmentOwner.setSelectedTrack(bookIndex, trackIndex);
-	}
-
-	public void removeBook(int bookIndex) {
-		fragmentOwner.removeBook(bookIndex);
-	}
-
-	public void removeTrack(int trackIndex) {
-		fragmentOwner.removeTrack(trackIndex);
-	}
-
-	public void setBookTitleAt(int bookIndex, String newTitle) {
-		fragmentOwner.setBookTitleAt(bookIndex, "NEWNAME");
-	}
-
 }

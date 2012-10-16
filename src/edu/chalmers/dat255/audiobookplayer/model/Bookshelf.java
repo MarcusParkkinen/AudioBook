@@ -108,7 +108,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 		if (hasListeners()) {
 			// Log.d(TAG, "list size (original): " + books.size());
-			pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null,
+//			pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null,
+			pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -140,7 +141,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 		if (hasListeners()) {
 			// notify the listeners about this change
-			pcs.firePropertyChange(Constants.Event.BOOK_REMOVED, null,
+//			pcs.firePropertyChange(Constants.Event.BOOK_REMOVED, null,
+			pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -566,6 +568,48 @@ public class Bookshelf implements IBookUpdates, Serializable {
 			return false;
 		}
 		return true;
+	}
+
+	public String getTrackTitleAt(int bookIndex, int trackIndex) {
+		if(isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getTrackTitleAt(trackIndex);
+		}
+		return null;
+	}
+
+	public int getNumberOfTracksAt(int bookIndex) {
+		if(isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getNumberOfTracks();
+		}
+		return 0;
+	}
+
+	public int getBookDurationAt(int bookIndex) {
+		if(isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getDuration();
+		}
+		return 0;
+	}
+
+	public int getBookElapsedTimeAt(int bookIndex) {
+		if(isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getBookElapsedTime();
+		}
+		return 0;
+	}
+
+	public String getBookAuthorAt(int bookIndex) {
+		if(isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getSelectedBookAuthor();
+		}
+		return null;
+	}
+
+	public int getTrackDurationAt(int bookIndex, int trackIndex) {
+		if(isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getTrackDurationAt(trackIndex);
+		}
+		return 0;
 	}
 
 }
