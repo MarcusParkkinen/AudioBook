@@ -82,6 +82,8 @@ public final class Constants {
 		public static final int NO_BOOK_SELECTED = -1;
 		public static final int NO_TRACK_SELECTED = -1;
 
+		public static final int MAX_TITLE_CHARACTER_LENGTH = 100;
+
 	}
 
 	/**

@@ -51,7 +51,7 @@ public final class Track implements ITrackUpdates, Serializable {
 	 * @param duration
 	 *            Playing time of the track in ms.
 	 */
-	public Track(String path, int duration) throws InvalidParameterException {
+	public Track(String path, int duration) {
 		if (path != null && path.length() > 0 && duration > 0) {
 			this.path = path;
 			this.duration = duration;
@@ -71,8 +71,7 @@ public final class Track implements ITrackUpdates, Serializable {
 	 * @param duration
 	 * @throws InvalidParameterException
 	 */
-	public Track(String path, String title, int duration)
-			throws InvalidParameterException {
+	public Track(String path, String title, int duration) {
 		this(path, duration);
 		this.setTitle(title);
 	}
@@ -109,8 +108,7 @@ public final class Track implements ITrackUpdates, Serializable {
 		return elapsedTime;
 	}
 
-	public void setSelectedTrackElapsedTime(int elapsedTime)
-			throws InvalidParameterException {
+	public void setSelectedTrackElapsedTime(int elapsedTime) {
 		if (elapsedTime >= duration) {
 			Log.e(TAG, "elapsedTime (" + elapsedTime + ") set to duration ("
 					+ duration + ")");
@@ -141,6 +139,9 @@ public final class Track implements ITrackUpdates, Serializable {
 		this.title = title;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -148,9 +149,14 @@ public final class Track implements ITrackUpdates, Serializable {
 		result = prime * result + duration;
 		result = prime * result + elapsedTime;
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -159,7 +165,7 @@ public final class Track implements ITrackUpdates, Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof Track)) {
 			return false;
 		}
 		Track other = (Track) obj;
@@ -176,20 +182,48 @@ public final class Track implements ITrackUpdates, Serializable {
 		} else if (!path.equals(other.path)) {
 			return false;
 		}
+		if (tags == null) {
+			if (other.tags != null) {
+				return false;
+			}
+		} else if (!tags.equals(other.tags)) {
+			return false;
+		}
+		if (title == null) {
+			if (other.title != null) {
+				return false;
+			}
+		} else if (!title.equals(other.title)) {
+			return false;
+		}
 		return true;
 	}
-	
+
 	public void addTag(int time) throws IllegalArgumentException {
 		this.tags.add(new Tag(time));
 	}
 
-	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
+	public void removeTagAt(int tagIndex) throws IndexOutOfBoundsException {
 		if (!isLegalTagIndex(tagIndex)) {
-			throw new IllegalArgumentException(TAG + " removeTagAt"
+			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
 					+ TAG_INDEX_ILLEGAL);
 		}
 
 		this.tags.remove(tagIndex);
+	}
+
+	/**
+	 * Returns an array of times for the tags. May return an empty array (check
+	 * length == 0).
+	 * 
+	 * @return
+	 */
+	public int[] getTagTimes() {
+		int[] result = new int[this.tags.size()];
+		for (int i = 0; i < this.tags.size(); i++) {
+			result[i] = this.tags.get(i).getTime();
+		}
+		return result;
 	}
 
 	private boolean isLegalTagIndex(int tagIndex) {

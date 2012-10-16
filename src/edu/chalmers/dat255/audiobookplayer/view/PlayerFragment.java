@@ -82,11 +82,11 @@ public class PlayerFragment extends Fragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				int ev = event.getAction();
 				if (ev == MotionEvent.ACTION_DOWN) {
-					Log.i("Seek", "Seeking LEFT (ACTION_DOWN)");
+					Log.i(TAG, "Seeking LEFT (ACTION_DOWN)");
 				} else if (ev == MotionEvent.ACTION_UP) {
-					Log.i("Seek", "Stopped seeking LEFT (ACTION_UP)");
+					Log.i(TAG, "Stopped seeking LEFT (ACTION_UP)");
 				} else if (ev == MotionEvent.ACTION_CANCEL) {
-					Log.i("Seek", "Cancelled seeking LEFT (ACTION_CANCEL)");
+					Log.i(TAG, "Cancelled seeking LEFT (ACTION_CANCEL)");
 				}
 				return false;
 			}
@@ -97,11 +97,11 @@ public class PlayerFragment extends Fragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				int ev = event.getAction();
 				if (ev == MotionEvent.ACTION_DOWN) {
-					Log.i("Seek", "Seeking RIGHT (ACTION_DOWN)");
+					Log.i(TAG, "Seeking RIGHT (ACTION_DOWN)");
 				} else if (ev == MotionEvent.ACTION_UP) {
-					Log.i("Seek", "Stopped seeking RIGHT (ACTION_UP)");
+					Log.i(TAG, "Stopped seeking RIGHT (ACTION_UP)");
 				} else if (ev == MotionEvent.ACTION_CANCEL) {
-					Log.i("Seek", "Cancelled seeking RIGHT (ACTION_CANCEL)");
+					Log.i(TAG, "Cancelled seeking RIGHT (ACTION_CANCEL)");
 				}
 				return false;
 			}
@@ -145,27 +145,25 @@ public class PlayerFragment extends Fragment {
 		bookBar = (SeekBar) view.findViewById(R.id.book_seek_bar);
 		bookBar.setMax(Constants.Value.NUMBER_OF_SEEK_BAR_ZONES);
 		bookBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			static final String TAG = "bookBar";
-
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (fromUser) {
-					Log.d(TAG, "User used SeekBar");
-
-					double seekMultiplier = (double) progress
+					// calculate the seek progress by the max value of the bar
+					double seekPercentage = (double) progress
 							* (1.0 / seekBar.getMax());
+					Log.d(TAG, "seek: " + seekPercentage + ", " + (1.0 / 100));
 
-					fragmentOwner.seekToPercentageInBook(seekMultiplier);
+					fragmentOwner.seekToPercentageInBook(seekPercentage);
 				}
 				// else do nothing since this was done by code
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// Log.d(TAG, "started tracking");
+				// do nothing
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// Log.d(TAG, "stopped tracking");
+				// do nothing
 			}
 
 		});
@@ -173,15 +171,13 @@ public class PlayerFragment extends Fragment {
 		trackBar = (SeekBar) view.findViewById(R.id.track_bar);
 		trackBar.setMax(Constants.Value.NUMBER_OF_SEEK_BAR_ZONES);
 		trackBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			static final String TAG = "trackBar";
-
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (fromUser) {
-					Log.d(TAG, "User used SeekBar");
-
+					// calculate the seek progress by the max value of the bar
 					double seekPercentage = (double) progress
-							* (1.0 / (double) seekBar.getMax());
+							* (1.0 / seekBar.getMax());
+					Log.d(TAG, "seek: " + seekPercentage + ", " + (1.0 / 100));
 
 					fragmentOwner.seekToPercentageInTrack(seekPercentage);
 				}
@@ -189,12 +185,13 @@ public class PlayerFragment extends Fragment {
 			}
 
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// Log.d(TAG, "started tracking");
+				// do nothing
 			}
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// Log.d(TAG, "stopped tracking");
+				// do nothing
 			}
+
 		});
 
 		trackTitle = (TextView) view.findViewById(R.id.track_title);
@@ -212,7 +209,8 @@ public class PlayerFragment extends Fragment {
 		bookElapsedTime = (TextView) view.findViewById(R.id.book_elapsed_time);
 		bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
 
-		trackElapsedTime = (TextView) view.findViewById(R.id.track_elapsed_time);
+		trackElapsedTime = (TextView) view
+				.findViewById(R.id.track_elapsed_time);
 		trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
 
 		trackCounter = (TextView) view.findViewById(R.id.track_counter);
@@ -254,8 +252,6 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateBookTitleLabel(String title) {
-		// bookTitle.setText(title);
-
 		if (isBadTitle(title)) {
 			bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
 		} else {
@@ -269,8 +265,6 @@ public class PlayerFragment extends Fragment {
 	 * @param title
 	 */
 	public void updateTrackTitleLabel(String title) {
-		// trackTitle.setText(title);
-
 		if (isBadTitle(title)) {
 			trackTitle.setText(Constants.Message.NO_TRACK_TITLE);
 		} else {
@@ -288,7 +282,6 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateBookElapsedTimeLabel(int ms) {
-		// Note: not implemented in the newer versions of the Player GUI
 		bookElapsedTime.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
@@ -314,7 +307,6 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateBookDurationLabel(int ms) {
-		// Note: not implemented in the newer versions of the Player GUI
 		bookDuration.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
@@ -327,7 +319,6 @@ public class PlayerFragment extends Fragment {
 	 * @param ms
 	 */
 	public void updateTrackDurationLabel(int ms) {
-		// Note: not implemented in the newer versions of the Player GUI
 		trackDuration.setText(TextFormatter.formatTimeFromMillis(ms));
 	}
 
@@ -352,7 +343,8 @@ public class PlayerFragment extends Fragment {
 	 * @return
 	 */
 	private boolean isBadTitle(String title) {
-		return title == null || title.equals("");
+		return title == null || title.equals("")
+				|| title.length() > Constants.Value.MAX_TITLE_CHARACTER_LENGTH;
 	}
 
 	/**
@@ -396,16 +388,11 @@ public class PlayerFragment extends Fragment {
 	 *         current position will be displayed.
 	 */
 	private String formatTrackCounter(int currentTrack, int numberOfTracks) {
-		String result = "(";
-		if (currentTrack != Constants.Value.NO_TRACK_SELECTED) {
-			// only show the current track if one is selected
-			result = result + (currentTrack + 1) + "/";
-		}
-		
-		// always show the number of tracks
-		result = result + numberOfTracks + ")";
+		return TextFormatter.formatCounter(currentTrack, numberOfTracks);
+	}
 
-		return result;
+	public void updateTagTimes(int[] tagTimes) {
+		// TODO(?): Tags not implemented in GUI.
 	}
 
 }

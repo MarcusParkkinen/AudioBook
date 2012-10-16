@@ -37,21 +37,21 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * Removes a track from the collection on the specified index.
 	 * 
 	 * @param index
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void removeTrack(int index) throws IllegalArgumentException;
+	public void removeTrack(int index) throws IndexOutOfBoundsException;
 
 	/**
 	 * Swaps the position of two tracks in the list.
 	 * 
 	 * @param firstIndex
 	 * @param secondIndex
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
 	public void swapTracks(int firstIndex, int secondIndex)
-			throws IllegalArgumentException;
+			throws IndexOutOfBoundsException;
 
 	/**
 	 * Move a track from a given index to a given index. Indices inbetween will
@@ -59,10 +59,10 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * 
 	 * @param from
 	 * @param to
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public void moveTrack(int from, int to) throws IllegalArgumentException;
+	public void moveTrack(int from, int to) throws IndexOutOfBoundsException;
 
 	/**
 	 * Sets the track index of the book. Can be set to "-1", which means
@@ -71,40 +71,40 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * Must be set to integers greater than or equal to -1.
 	 * 
 	 * @param index
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
 	public void setSelectedTrackIndex(int index)
-			throws IllegalArgumentException;
+			throws IndexOutOfBoundsException;
 
 	/**
 	 * Sets the title of the book.
 	 * 
 	 * @param newTitle
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
 	public void setSelectedBookTitle(String newTitle)
-			throws IllegalArgumentException;
+			throws IndexOutOfBoundsException;
 
 	/**
 	 * Gets the title of the book.
 	 * 
 	 * @return The title of the book.
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	public String getSelectedBookTitle() throws IllegalArgumentException;
+	public String getSelectedBookTitle() throws IndexOutOfBoundsException;
 
-	// public void setAuthor(String newAuthor) throws IllegalArgumentException;
+	// public void setAuthor(String newAuthor) throws IndexOutOfBoundsException;
 
 	/**
 	 * Returns the author of the selected book.
 	 * 
 	 * @return
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 */
-	public String getSelectedBookAuthor() throws IllegalArgumentException;
+	public String getSelectedBookAuthor() throws IndexOutOfBoundsException;
 
 	/**
 	 * Updates the duration of the book to the sum of the duration of its

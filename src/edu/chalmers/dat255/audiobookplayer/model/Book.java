@@ -113,9 +113,9 @@ public final class Book implements IBookUpdates, Serializable {
 	 * 
 	 * @param int index >= 0
 	 */
-	public void removeTrack(int index) throws IllegalArgumentException {
+	public void removeTrack(int index) throws IndexOutOfBoundsException {
 		if (!isLegalTrackIndex(index)) {
-			throw new IllegalArgumentException(TAG + " removeTrack"
+			throw new IndexOutOfBoundsException(TAG + " removeTrack"
 					+ TRACK_INDEX_ILLEGAL);
 		}
 
@@ -152,17 +152,17 @@ public final class Book implements IBookUpdates, Serializable {
 	}
 
 	public void swapTracks(int firstIndex, int secondIndex)
-			throws IllegalArgumentException {
+			throws IndexOutOfBoundsException {
 		if (!isLegalTrackIndex(firstIndex) || !isLegalTrackIndex(secondIndex)) {
-			throw new IllegalArgumentException(TAG + " swapTracks"
+			throw new IndexOutOfBoundsException(TAG + " swapTracks"
 					+ TRACK_INDEX_ILLEGAL);
 		}
 		Collections.swap(tracks, firstIndex, secondIndex);
 	}
 
-	public void moveTrack(int from, int to) throws IllegalArgumentException {
+	public void moveTrack(int from, int to) throws IndexOutOfBoundsException {
 		if (!isLegalTrackIndex(from) || !isLegalTrackIndex(to)) {
-			throw new IllegalArgumentException(TAG + " moveTrack"
+			throw new IndexOutOfBoundsException(TAG + " moveTrack"
 					+ TRACK_INDEX_ILLEGAL);
 		}
 		if (from != to) {
@@ -172,9 +172,9 @@ public final class Book implements IBookUpdates, Serializable {
 	}
 
 	public void setSelectedTrackIndex(int index)
-			throws IllegalArgumentException {
+			throws IndexOutOfBoundsException {
 		if (index < -1 || index > this.tracks.size() + 1) {
-			throw new IllegalArgumentException(TAG
+			throw new IndexOutOfBoundsException(TAG
 					+ " setSelectedTrackIndex with index out of bounds: "
 					+ index + ", list size: " + this.tracks.size());
 		}
@@ -182,10 +182,9 @@ public final class Book implements IBookUpdates, Serializable {
 		selectedTrackIndex = index;
 	}
 
-	public void setSelectedBookTitle(String title)
-			throws IllegalArgumentException {
+	public void setSelectedBookTitle(String title) {
 		if (title == null) {
-			throw new IllegalArgumentException(TAG
+			throw new IndexOutOfBoundsException(TAG
 					+ " setBookTitle to null title is illegal");
 		}
 		this.title = title;
@@ -204,9 +203,9 @@ public final class Book implements IBookUpdates, Serializable {
 	/* ITrackUpdates */
 
 	public void setSelectedTrackElapsedTime(int newTime)
-			throws IllegalArgumentException {
+			throws IndexOutOfBoundsException {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IllegalArgumentException(TAG
+			throw new IndexOutOfBoundsException(TAG
 					+ " setSelectedTrackElapsedTime" + TRACK_INDEX_ILLEGAL);
 		}
 		this.tracks.get(selectedTrackIndex)
@@ -250,9 +249,9 @@ public final class Book implements IBookUpdates, Serializable {
 	 * 
 	 * @return
 	 */
-	public int getSelectedTrackDuration() throws IllegalArgumentException {
+	public int getSelectedTrackDuration() {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IllegalArgumentException(
+			throw new IndexOutOfBoundsException(
 					"getSelectedTrackDuration (illegal track index "
 							+ selectedTrackIndex + ")");
 		}
@@ -264,9 +263,9 @@ public final class Book implements IBookUpdates, Serializable {
 	 * 
 	 * @return elapsed time
 	 */
-	public int getSelectedTrackElapsedTime() throws IllegalArgumentException {
+	public int getSelectedTrackElapsedTime() {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IllegalArgumentException(
+			throw new IndexOutOfBoundsException(
 					"getSelectedTrackElapsedTime (illegal track index "
 							+ selectedTrackIndex + ")");
 		}
@@ -277,13 +276,13 @@ public final class Book implements IBookUpdates, Serializable {
 	 * Gets the track path of the currently selected track.
 	 * 
 	 * @return
-	 * @throws IllegalArgumentException
+	 * @throws IndexOutOfBoundsException
 	 *             If the track index is illegal (negative or larger than the
 	 *             elements in the track list).
 	 */
-	public String getSelectedTrackPath() throws IllegalArgumentException {
+	public String getSelectedTrackPath() {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IllegalArgumentException(
+			throw new IndexOutOfBoundsException(
 					"getSelectedTrackPath (illegal track index "
 							+ selectedTrackIndex + ")");
 		}
@@ -358,7 +357,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 */
 	public int getTrackDurationAt(int index) {
 		if (!isLegalTrackIndex(index)) {
-			throw new IllegalArgumentException(
+			throw new IndexOutOfBoundsException(
 					"getTrackDurationAt (illegal track index "
 							+ selectedTrackIndex + ")");
 		}
@@ -372,26 +371,31 @@ public final class Book implements IBookUpdates, Serializable {
 	 */
 	public String getTrackTitle() {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IllegalArgumentException(
+			throw new IndexOutOfBoundsException(
 					"getTrackTitle (illegal track index " + selectedTrackIndex
 							+ ")");
 		}
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
 
-	// NOTE: Autogenerated method
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result + duration;
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + selectedTrackIndex;
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((tracks == null) ? 0 : tracks.hashCode());
 		return result;
 	}
-
-	// NOTE: Autogenerated method
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -400,11 +404,21 @@ public final class Book implements IBookUpdates, Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof Book)) {
 			return false;
 		}
 		Book other = (Book) obj;
+		if (author == null) {
+			if (other.author != null) {
+				return false;
+			}
+		} else if (!author.equals(other.author)) {
+			return false;
+		}
 		if (duration != other.duration) {
+			return false;
+		}
+		if (selectedTrackIndex != other.selectedTrackIndex) {
 			return false;
 		}
 		if (title == null) {
@@ -412,9 +426,6 @@ public final class Book implements IBookUpdates, Serializable {
 				return false;
 			}
 		} else if (!title.equals(other.title)) {
-			return false;
-		}
-		if (selectedTrackIndex != other.selectedTrackIndex) {
 			return false;
 		}
 		if (tracks == null) {
@@ -435,22 +446,31 @@ public final class Book implements IBookUpdates, Serializable {
 		this.author = author;
 	}
 
-	public void addTag(int time) throws IllegalArgumentException {
+	public void addTag(int time) throws IndexOutOfBoundsException {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IllegalArgumentException(TAG + " addTag"
+			throw new IndexOutOfBoundsException(TAG + " addTag"
 					+ TRACK_INDEX_ILLEGAL);
 		}
 
 		this.tracks.get(selectedTrackIndex).addTag(time);
 	}
 
-	public void removeTagAt(int tagIndex) throws IllegalArgumentException {
+	public void removeTagAt(int tagIndex) throws IndexOutOfBoundsException {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IllegalArgumentException(TAG + " removeTagAt"
+			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
 					+ TRACK_INDEX_ILLEGAL);
 		}
 
 		this.tracks.get(selectedTrackIndex).removeTagAt(tagIndex);
+	}
+
+	public int[] getTagTimes() throws IndexOutOfBoundsException {
+		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
+			throw new IndexOutOfBoundsException(TAG + " getTagTimes"
+					+ TRACK_INDEX_ILLEGAL);
+		}
+
+		return this.tracks.get(selectedTrackIndex).getTagTimes();
 	}
 
 	/*

@@ -30,9 +30,10 @@ public interface ITrackUpdates {
 	 * 
 	 * @param elapsedTime
 	 * @throws InvalidParameterException
-	 *             If the elapsedTime is negative.
+	 *             If the given time is negative.
 	 */
-	public void setSelectedTrackElapsedTime(int elapsedTime) throws IllegalArgumentException;
+	public void setSelectedTrackElapsedTime(int elapsedTime)
+			throws InvalidParameterException;
 
 	/*
 	 * Tags
@@ -41,15 +42,19 @@ public interface ITrackUpdates {
 	 * Adds a tag with the given time.
 	 * 
 	 * @param time
+	 * @throws InvalidParameterException
+	 *             If the given time is negative.
 	 */
-	public void addTag(int time) throws IllegalArgumentException;
+	public void addTag(int time) throws InvalidParameterException;
 
 	/**
 	 * Removes the tag at the specified index. Does nothing if the list is
 	 * empty.
 	 * 
 	 * @param tagIndex
+	 * @throws IndexOutOfBoundsException
+	 *             if the given tag index is out of bounds (illegal).
 	 */
-	public void removeTagAt(int tagIndex) throws IllegalArgumentException;
+	public void removeTagAt(int tagIndex) throws IndexOutOfBoundsException;
 
 }
