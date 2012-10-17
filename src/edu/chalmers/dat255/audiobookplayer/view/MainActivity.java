@@ -48,7 +48,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
  * 
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
-		IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
+IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 	private static final String TAG = "MainActivity";
 	private static final String USERNAME = "Default";
 	private static final int PLAYER = 0;
@@ -303,8 +303,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
-
-		if (eventName != Constants.Event.ELAPSED_TIME_CHANGED) {
+		
+		//log all events but the ELAPSED_TIME_CHANGED event, which 
+		//is left out to not overflow the log
+		if ( ! eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Log.d(TAG, "Received update: " + eventName);
 		}
 
@@ -314,13 +316,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// Check which event was fired, and do relevant updates in the
 			// fragments
-			if (eventName.equals(Constants.Event.BOOK_ADDED)) {
-				int lastBookIndex = bs.getNumberOfBooks() - 1;
-				// assumes this event is never fired unless atleast one book is
-				// added.
-				Book b = bs.getBookAt(lastBookIndex);
+			if (eventName.equals(Constants.Event.BOOKS_CHANGED)) {
 				// Bookshelf
-				bookshelfFragment.bookAdded(b);
+				bookshelfFragment.bookshelfUpdated(bs);
 
 				// Player
 				// Do nothing
@@ -371,14 +369,19 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
-
+				if(pager.getCurrentItem() == BOOKSHELF) {
+					updateSelectedBookElapsedTime(b);
+				}
 				// Player
-				// recalculate the track seekbar
-				updateTrackSeekbar(b);
-				// recalculate the book seekbar
-				updateBookSeekbar(b);
-				// update time labels
-				updateElapsedTimeLabels(b);
+				else {
+					// recalculate the track seekbar
+					updateTrackSeekbar(b);
+					// recalculate the book seekbar
+					updateBookSeekbar(b);
+					// update time labels
+					updateElapsedTimeLabels(b);
+				}
+
 			} else if (eventName.equals(Constants.Event.TRACK_REMOVED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
@@ -595,6 +598,24 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			});
 		}
 	}
+	
+	/**
+	 * UI mutator method that updates the book position 
+	 * of the selected book in bookshelf fragment
+	 * @param b The selected book.
+	 */
+	private void updateSelectedBookElapsedTime(final Book b) {
+		if (bookshelfFragment.getActivity() != null) {
+			bookshelfFragment.getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					if (b.getSelectedTrackIndex() != -1) {
+						bookshelfFragment.selectedBookElapsedTimeUpdated(b
+								.getBookElapsedTime());
+					}
+				}
+			});
+		}
+	}
 
 	/**
 	 * UI mutator method that updates the track seekbar in the player fragment.
@@ -671,12 +692,20 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		bookshelfController.removeBook(bookIndex);
 	}
 
-	public void removeTrack(int trackIndex) {
-		bookshelfController.removeTrack(trackIndex);
+	public void removeTrack(int bookIndex, int trackIndex) {
+		bookshelfController.removeTrack(bookIndex, trackIndex);
 	}
 
 	public void setBookTitleAt(int bookIndex, String newTitle) {
 		bookshelfController.setBookTitleAt(bookIndex, newTitle);
+	}
+
+	public void removeTrack(int trackIndex) {
+		bookshelfController.removeTrack(trackIndex);
+	}
+
+	public void moveTrack(int bookIndex, int trackIndex, int offset) {
+		bookshelfController.moveTrack(bookIndex, trackIndex, offset);
 	}
 
 }

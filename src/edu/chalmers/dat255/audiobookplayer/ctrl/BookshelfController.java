@@ -93,4 +93,12 @@ public class BookshelfController implements IBookshelfEvents {
 		
 		return BookshelfHandler.saveBookshelf(c, username, bookshelf);
 	}
+
+	public void removeTrack(int bookIndex, int trackIndex) {
+		bookshelf.removeTrack(bookIndex, trackIndex);
+	}
+
+	public void moveTrack(int bookIndex, int trackIndex, int offset) {
+		bookshelf.moveTrack(bookIndex, trackIndex, offset);
+	}
 }

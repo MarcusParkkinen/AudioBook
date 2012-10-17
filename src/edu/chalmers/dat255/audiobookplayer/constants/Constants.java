@@ -53,6 +53,8 @@ public final class Constants {
 		public static final String TAG_ADDED = "!tagAdded";
 
 		public static final String TAG_REMOVED = "!tagRemoved";
+
+		public static final String BOOKS_CHANGED = "!booksChanged";
 	}
 
 	/**
