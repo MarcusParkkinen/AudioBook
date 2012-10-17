@@ -43,7 +43,13 @@ See the [issues tracker](https://github.com/MarcusParkkinen/AudioBook/issues) on
 
 ## Changelog
 
-### 05/10 20120 - Version 0.1 ###
+### 17/10 2012 - Version 0.2 ###
+Fixed issues (seek bars, model, play/pause).
+Context menu - track, book.
+Player UI redesign.
+More...
+
+### 05/10 2012 - Version 0.1 ###
 Application core completed:
 * Added basic playback controls.
 * Implemented viewing created books and playing them.
@@ -60,7 +66,6 @@ Additional features:
 * Aki Kakela
 * Fredrik Ahs
 * Marcus Parkkinen
-* Matej Kadric
 
 ## Licensing/Legal
 
