@@ -26,6 +26,9 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * 
  */
 public class BookshelfHandler {
+	
+	private BookshelfHandler() {
+	} // to defeat instantiation
 
 	/**
 	 * Attempt to load the model object tree from a file. This method

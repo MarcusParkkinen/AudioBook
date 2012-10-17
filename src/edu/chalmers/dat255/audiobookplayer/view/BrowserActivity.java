@@ -48,8 +48,9 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 
 /**
- * This class is used to display and add new books to the bookshelf.
- * It lists all audio files and their file trees up to the ExternalStorageDirectory.
+ * This class is used to display and add new books to the bookshelf. It lists
+ * all audio files and their file trees up to the ExternalStorageDirectory.
+ * 
  * @author Fredrik Åhs
  * 
  */
@@ -87,23 +88,23 @@ public class BrowserActivity extends Activity {
 	// through the file tree.
 	private Set<File> checkedItems;
 	private File currentDirectory;
-	private TreeMap<TypedFile, List<TypedFile>> childMap;
+	private Map<TypedFile, List<TypedFile>> childMap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browser);
 
-		//generate the childMap
+		// generate the childMap
 		childMap = populateChildMap();
-		//set up the components
+		// set up the components
 		setUpComponents();
 
-		//get the file to the root of the file system
+		// get the file to the root of the file system
 		File f = new File(Environment.getExternalStorageDirectory()
 				.getAbsolutePath());
 
-		//fill the list view from the root
+		// fill the list view from the root
 		fill(f);
 	}
 
@@ -134,8 +135,8 @@ public class BrowserActivity extends Activity {
 				if (file.getType().equals(FILETYPE.FOLDER)
 						|| file.getType().equals(FILETYPE.PARENT)) {
 					fill(file);
-				} 
-				//otherwise, call onclick method
+				}
+				// otherwise, call onclick method
 				else {
 					onFileClick(file);
 				}
@@ -147,28 +148,30 @@ public class BrowserActivity extends Activity {
 		createBookButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				//check that some items are checked
+				// check that some items are checked
 				if (!checkedItems.isEmpty()) {
-					//create a list of tracks to add
+					// create a list of tracks to add
 					List<String> tracks = new ArrayList<String>();
 					String name = null;
 					for (File f : checkedItems) {
 						// only add tracks, not folders
 						if (f.isFile()) {
 							if (tracks.size() == 0) {
-								//this name is but a backup in the case that there is no album id3
+								// this name is but a backup in the case that
+								// there is no album id3
 								name = f.getParentFile().getName();
 							}
 							tracks.add(f.getAbsolutePath());
 						}
 					}
 					BookCreator.getInstance().createBook(tracks, name, null);
-					//create a toast to notify the user that a book has been added.
+					// create a toast to notify the user that a book has been
+					// added.
 					Toast.makeText(BrowserActivity.this, "Book added: " + name,
 							Toast.LENGTH_SHORT).show();
 					// empty checkedItems and fill the list with unchecked items
 					checkedItems = new TreeSet<File>();
-					//refill the ListView from currentDirectory
+					// refill the ListView from currentDirectory
 					fill(currentDirectory);
 				}
 			}
@@ -205,9 +208,9 @@ public class BrowserActivity extends Activity {
 		List<TypedFile> directories = new ArrayList<TypedFile>();
 		// store files separately for correct sorting
 		List<TypedFile> files = new ArrayList<TypedFile>();
-		//check that the file exists in the previously populated childMap
+		// check that the file exists in the previously populated childMap
 		if (childMap.get(root) != null) {
-			//add all files under root in childMap
+			// add all files under root in childMap
 			for (TypedFile f : childMap.get(root)) {
 				if (f.isDirectory()) {
 					directories.add(f);
@@ -236,7 +239,7 @@ public class BrowserActivity extends Activity {
 					directories, checkedItems, childMap);
 			listView.setAdapter(adapter);
 		} else {
-			//notify the user that no files were found on the system
+			// notify the user that no files were found on the system
 			Toast t = Toast.makeText(getApplicationContext(),
 					Constants.Message.NO_AUDIO_FILES_FOUND, Toast.LENGTH_SHORT);
 			t.show();
@@ -245,10 +248,12 @@ public class BrowserActivity extends Activity {
 	}
 
 	/**
-	 * Finds all the tracks on the device and adds them and their parents to a map 
+	 * Finds all the tracks on the device and adds them and their parents to a
+	 * map
+	 * 
 	 * @return The map containing the files and their parents.
 	 */
-	private TreeMap<TypedFile,List<TypedFile>> populateChildMap() {
+	private Map<TypedFile, List<TypedFile>> populateChildMap() {
 		/*
 		 * this will prevent files such as notifications and ringtones to appear
 		 * in the list
@@ -265,7 +270,7 @@ public class BrowserActivity extends Activity {
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
 				filtering, null, null);
 
-		TreeMap<File, File> parentMap = new TreeMap<File, File>();
+		Map<File, File> parentMap = new TreeMap<File, File>();
 		// cursor.moveToNext will iterate through all music on the device
 		while (cursor.moveToNext()) {
 			File child = new File(cursor.getString(cursor
@@ -287,7 +292,7 @@ public class BrowserActivity extends Activity {
 		}
 
 		// reverse the list for easier iterating
-		TreeMap<TypedFile, List<TypedFile>> fileMap = new TreeMap<TypedFile, List<TypedFile>>();
+		Map<TypedFile, List<TypedFile>> fileMap = new TreeMap<TypedFile, List<TypedFile>>();
 
 		for (Entry<File, File> entry : parentMap.entrySet()) {
 			// if the map does not contain the parent, add the parent with a new
@@ -313,11 +318,13 @@ public class BrowserActivity extends Activity {
 
 	/**
 	 * Method to be called when a file of type file is clicked.
-	 * @param file The file that was clicked.
+	 * 
+	 * @param file
+	 *            The file that was clicked.
 	 */
 	private void onFileClick(TypedFile file) {
-		Toast.makeText(this, "File Clicked: " + file.getName(), Toast.LENGTH_SHORT)
-				.show();
+		Toast.makeText(this, "File Clicked: " + file.getName(),
+				Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -365,11 +372,11 @@ public class BrowserActivity extends Activity {
 		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
-			//if the view is null,
+			// if the view is null,
 			if (view == null) {
 				LayoutInflater vi = (LayoutInflater) c
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				//inflate the view into itself 
+				// inflate the view into itself
 				view = vi.inflate(id, null);
 			}
 			// get file as final since it wont change and it's needed in an
@@ -393,7 +400,7 @@ public class BrowserActivity extends Activity {
 			CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox);
 			boolean checkState = checkedItems.contains(file);
 			cb.setChecked(checkState);
-			//set the on click listener of the checkbox
+			// set the on click listener of the checkbox
 			cb.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					CheckBox c = (CheckBox) v;
@@ -406,9 +413,13 @@ public class BrowserActivity extends Activity {
 		}
 
 		/**
-		 * (Un)check all the files within file recursively (in case it's a folder).
-		 * @param file The file (folder) to check.
-		 * @param checkState Whether to check or to uncheck the files.
+		 * (Un)check all the files within file recursively (in case it's a
+		 * folder).
+		 * 
+		 * @param file
+		 *            The file (folder) to check.
+		 * @param checkState
+		 *            Whether to check or to uncheck the files.
 		 */
 		private void checkAllChildren(File file, boolean checkState) {
 			// if file is a regular file
@@ -417,16 +428,17 @@ public class BrowserActivity extends Activity {
 				checkItem(file, checkState);
 				return;
 			}
-			//if the file is a folder
-			//declare the list outside the if clause to only get file once from map and to only use one if clause.
+			// if the file is a folder
+			// declare the list outside the if clause to only get file once from
+			// map and to only use one if clause.
 			List<TypedFile> list;
-			//if childMap contains the file, instantiate the list
+			// if childMap contains the file, instantiate the list
 			if (childMap.containsKey(file)
 					&& (list = childMap.get(file)) != null) {
 				for (File f : list) {
-					//check the item
+					// check the item
 					checkItem(f, checkState);
-					//recurse
+					// recurse
 					checkAllChildren(f, checkState);
 				}
 			}
@@ -434,8 +446,11 @@ public class BrowserActivity extends Activity {
 
 		/**
 		 * Adds or removes the file from the checkedItems list
-		 * @param file The file to add or remove.
-		 * @param checkState Whether to add or remove the file.
+		 * 
+		 * @param file
+		 *            The file to add or remove.
+		 * @param checkState
+		 *            Whether to add or remove the file.
 		 */
 		private void checkItem(File file, boolean checkState) {
 			if (checkState) {
@@ -460,8 +475,11 @@ public class BrowserActivity extends Activity {
 
 		/**
 		 * Constructor
-		 * @param type The filetype of the file.
- 		 * @param path The path to the file.
+		 * 
+		 * @param type
+		 *            The filetype of the file.
+		 * @param path
+		 *            The path to the file.
 		 */
 		public TypedFile(FILETYPE type, String path) {
 			super(path);
@@ -478,7 +496,7 @@ public class BrowserActivity extends Activity {
 
 		@Override
 		public String getName() {
-			//the name of a parent folder should be ..
+			// the name of a parent folder should be ..
 			if (type.equals(FILETYPE.PARENT)) {
 				return "..";
 			}

@@ -157,20 +157,15 @@ public class PlayerFragment extends Fragment {
 					// calculate the seek progress by the max value of the bar
 					double seekPercentage = (double) progress
 							* (1.0 / seekBar.getMax());
-					Log.d(TAG, "seek: " + seekPercentage + ", " + (1.0 / 100));
 
 					fragmentOwner.seekToPercentageInBook(seekPercentage);
 				}
 				// else do nothing since this was done by code
 			}
-
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// do nothing
-			}
-
+			}// do nothing
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// do nothing
-			}
+			}// do nothing
 
 		});
 
@@ -183,20 +178,15 @@ public class PlayerFragment extends Fragment {
 					// calculate the seek progress by the max value of the bar
 					double seekPercentage = (double) progress
 							* (1.0 / seekBar.getMax());
-					Log.d(TAG, "seek: " + seekPercentage + ", " + (1.0 / 100));
 
 					fragmentOwner.seekToPercentageInTrack(seekPercentage);
 				}
 				// else do nothing since this was done by code
 			}
-
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// do nothing
-			}
-
+			} // do nothing
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// do nothing
-			}
+			} // do nothing
 
 		});
 

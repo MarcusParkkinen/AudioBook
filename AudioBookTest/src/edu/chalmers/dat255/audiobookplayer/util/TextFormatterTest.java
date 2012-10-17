@@ -23,11 +23,15 @@ import junit.framework.TestCase;
  */
 public class TextFormatterTest extends TestCase {
 
-	// The 'magic numbers'
+	// Conversions
 	private static final int MSECS_IN_SECOND = 1000;
 	private static final int SECS_IN_MINUTE = 60;
 	private static final int MINS_IN_HOUR = 60;
 	private static final int HOURS_IN_DAY = 24;
+
+	// The 'magic numbers'
+	private static final int ONE_DIGIT = 3;
+	private static final int TWO_DIGITS = 59;
 
 	// Converting from milliseconds (ms)
 	private static final int SECONDS = MSECS_IN_SECOND;
@@ -62,58 +66,55 @@ public class TextFormatterTest extends TestCase {
 		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(0)));
 
 		// test single-digit seconds
-		dummy = "00:09";
-		assertTrue(dummy
-				.equals(TextFormatter.formatTimeFromMillis(9 * SECONDS)));
+		dummy = "00:0" + ONE_DIGIT;
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
+				* SECONDS)));
 
 		// test double-digit seconds
-		dummy = "00:12";
-		assertTrue(dummy.equals(TextFormatter
-				.formatTimeFromMillis(12 * SECONDS)));
+		dummy = "00:" + TWO_DIGITS;
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
+				* SECONDS)));
 
 		// test single-digit minutes
-		dummy = "05:00";
-		assertTrue(dummy
-				.equals(TextFormatter.formatTimeFromMillis(5 * MINUTES)));
+		dummy = "0" + ONE_DIGIT + ":00";
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
+				* MINUTES)));
 
 		// test double-digit minutes
-		dummy = "55:00";
-		assertTrue(dummy.equals(TextFormatter
-				.formatTimeFromMillis(55 * MINUTES)));
+		dummy = TWO_DIGITS + ":00";
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
+				* MINUTES)));
 
 		// test single-digit hour
-		dummy = "5:01:01";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(5 * HOURS
-				+ 1 * MINUTES + 1 * SECONDS)));
+		dummy = ONE_DIGIT + ":00:00";
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
+				* HOURS)));
 
 		// test double-digit hour
-		dummy = "15:05:03";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(15 * HOURS
-				+ 5 * MINUTES + 3 * SECONDS)));
+		dummy = TWO_DIGITS + ":00:00";
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
+				* HOURS)));
 
 		// test only hours and seconds
-		dummy = "23:00:59";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(23 * HOURS
-				+ 0 * MINUTES + 59 * SECONDS)));
+		dummy = TWO_DIGITS + ":00:" + TWO_DIGITS;
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
+				* HOURS + TWO_DIGITS * SECONDS)));
 
 		// test seconds >= 60
-		dummy = "05:00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(5
+		dummy = TWO_DIGITS + ":00";
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
 				* SECS_IN_MINUTE * SECONDS)));
 
 		// test minutes >= 60
-		dummy = "5:00:59";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(5
+		dummy = ONE_DIGIT + ":00:00";
+		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
 				* MINS_IN_HOUR * MINUTES)));
 
 		// test hours >= 24
-		dummy = "3:15:59";
+		dummy = TWO_DIGITS + ":" + TWO_DIGITS + ":" + TWO_DIGITS;
 		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(523 * DAYS
-				+ 3 * HOURS + 15 * MINUTES + 59 * SECONDS)));
-
-		dummy = "13:15:59";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(523 * DAYS
-				+ 13 * HOURS + 15 * MINUTES + 59 * SECONDS)));
+				+ TWO_DIGITS * HOURS + TWO_DIGITS * MINUTES + TWO_DIGITS
+				* SECONDS)));
 
 	}
 
@@ -126,7 +127,7 @@ public class TextFormatterTest extends TestCase {
 		String dummy;
 
 		// The following two tests should work as intended
-		
+
 		// test 0
 		dummy = "0/" + NO_OF_TRACKS;
 		assertTrue(dummy.equals(TextFormatter.formatCounter(0, NO_OF_TRACKS)));
@@ -137,7 +138,7 @@ public class TextFormatterTest extends TestCase {
 				NO_OF_TRACKS)));
 
 		// The following three should return special case messages
-		
+
 		// test with "-1"; no selection
 		dummy = Constants.Message.NO_TRACK_SELECTED;
 		assertTrue(dummy.equals(TextFormatter.formatCounter(NO_SELECTION,

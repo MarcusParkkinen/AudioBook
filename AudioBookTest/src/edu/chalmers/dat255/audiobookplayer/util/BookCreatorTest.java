@@ -30,8 +30,8 @@ import junit.framework.TestCase;
  */
 public class BookCreatorTest extends TestCase {
 	// MUST BE SPECIFIED IN ORDER FOR TESTS TO PASS
-	private final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
-	private final String VALID_PATH = Environment.getExternalStorageDirectory()
+	private static final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
+	private static final String VALID_PATH = Environment.getExternalStorageDirectory()
 			.getPath() + FILE_NAME;
 	private static final int NUMBER_OF_TRACKS = 125;
 	private BookCreator bc;

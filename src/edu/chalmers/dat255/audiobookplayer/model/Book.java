@@ -115,7 +115,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * 
 	 * @param int index >= 0
 	 */
-	public void removeTrack(int index) throws IndexOutOfBoundsException {
+	public void removeTrack(int index) {
 		if (!isLegalTrackIndex(index)) {
 			throw new IndexOutOfBoundsException(TAG + " removeTrack"
 					+ TRACK_INDEX_ILLEGAL);
@@ -162,7 +162,7 @@ public final class Book implements IBookUpdates, Serializable {
 		Collections.swap(tracks, firstIndex, secondIndex);
 	}
 
-	public void moveTrack(int from, int to) throws IndexOutOfBoundsException {
+	public void moveTrack(int from, int to) {
 		if (!isLegalTrackIndex(from) || !isLegalTrackIndex(to)) {
 			throw new IndexOutOfBoundsException(TAG + " moveTrack"
 					+ TRACK_INDEX_ILLEGAL);
@@ -199,7 +199,7 @@ public final class Book implements IBookUpdates, Serializable {
 			this.duration += t.getDuration();
 		}
 	}
-	
+
 	public String getSelectedBookAuthor() {
 		return author;
 	}
@@ -391,40 +391,36 @@ public final class Book implements IBookUpdates, Serializable {
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode(){
-	    return new HashCodeBuilder()
-	        .append(tracks)
-	        .append(selectedTrackIndex)
-	        .append(author)
-	        .append(title)
-	        .append(duration)
-	        .toHashCode();
+	public int hashCode() {
+		return new HashCodeBuilder().append(tracks).append(selectedTrackIndex)
+				.append(author).append(title).append(duration).toHashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(final Object obj){
-	    if(obj instanceof Book){
-	        final Book other = (Book) obj;
-	        return new EqualsBuilder()
-	            .append(tracks, other.tracks)
-	            .append(selectedTrackIndex, other.selectedTrackIndex)
-	            .append(author, other.author)
-	            .append(title, other.title)
-	            .append(duration, other.duration)
-	            .isEquals();
-	    } else{
-	        return false;
-	    }
+	public boolean equals(final Object obj) {
+		if (obj instanceof Book) {
+			final Book other = (Book) obj;
+			return new EqualsBuilder().append(tracks, other.tracks)
+					.append(selectedTrackIndex, other.selectedTrackIndex)
+					.append(author, other.author).append(title, other.title)
+					.append(duration, other.duration).isEquals();
+		} else {
+			return false;
+		}
 	}
 
-	public void addTag(int time) throws IndexOutOfBoundsException {
+	public void addTag(int time) {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " addTag"
 					+ TRACK_INDEX_ILLEGAL);
@@ -433,7 +429,7 @@ public final class Book implements IBookUpdates, Serializable {
 		this.tracks.get(selectedTrackIndex).addTag(time);
 	}
 
-	public void removeTagAt(int tagIndex) throws IndexOutOfBoundsException {
+	public void removeTagAt(int tagIndex) {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
 					+ TRACK_INDEX_ILLEGAL);
@@ -442,7 +438,7 @@ public final class Book implements IBookUpdates, Serializable {
 		this.tracks.get(selectedTrackIndex).removeTagAt(tagIndex);
 	}
 
-	public int[] getTagTimes() throws IndexOutOfBoundsException {
+	public int[] getTagTimes() {
 		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " getTagTimes"
 					+ TRACK_INDEX_ILLEGAL);
@@ -458,6 +454,7 @@ public final class Book implements IBookUpdates, Serializable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	/*
 	 * END TESTING PURPOSES ONLY
 	 */

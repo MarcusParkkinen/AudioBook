@@ -71,7 +71,6 @@ public final class Track implements ITrackUpdates, Serializable {
 	 * @param path
 	 * @param title
 	 * @param duration
-	 * @throws InvalidParameterException
 	 */
 	public Track(String path, String title, int duration) {
 		this(path, duration);
@@ -174,11 +173,11 @@ public final class Track implements ITrackUpdates, Serializable {
 	    }
 	}
 
-	public void addTag(int time) throws IllegalArgumentException {
+	public void addTag(int time) {
 		this.tags.add(new Tag(time));
 	}
 
-	public void removeTagAt(int tagIndex) throws IndexOutOfBoundsException {
+	public void removeTagAt(int tagIndex)  {
 		if (!isLegalTagIndex(tagIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
 					+ TAG_INDEX_ILLEGAL);

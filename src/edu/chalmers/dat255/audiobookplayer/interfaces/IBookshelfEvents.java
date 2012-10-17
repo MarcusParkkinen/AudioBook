@@ -50,7 +50,7 @@ public interface IBookshelfEvents {
 	 * 
 	 * @param trackIndex
 	 */
-	public void removeTrack(int trackIndex);
+	void removeTrack(int trackIndex);
 
 	/**
 	 * Moves the track at given position the given offset from its current position
@@ -58,14 +58,14 @@ public interface IBookshelfEvents {
 	 * @param trackIndex
 	 * @param difference
 	 */
-	public void moveTrack(int bookIndex, int trackIndex, int offset);
+	void moveTrack(int bookIndex, int trackIndex, int offset);
 
 	/**
 	 * Removes the track at the given index. 
 	 * @param bookIndex
 	 * @param trackIndex
 	 */
-	public void removeTrack(int bookIndex, int trackIndex);
+	void removeTrack(int bookIndex, int trackIndex);
 	/**
 	 * Informs the listener that the book at given position should change name
 	 * to the given value.

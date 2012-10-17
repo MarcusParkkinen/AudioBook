@@ -26,6 +26,10 @@ import java.util.regex.*;
  * 
  */
 public class FileBrowser {
+	
+	private FileBrowser() {
+	} // to defeat instantiation
+	
 	/*
 	 * Regexp Explanation (.*\\.)(mp3|wav)$ Searchpattern used to identify
 	 * filename extensions, in this case mp3 or wav.

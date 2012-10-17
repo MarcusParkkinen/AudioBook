@@ -26,6 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * Test case for BookshelfController
  * 
  * @author Aki Käkelä
+ * @version 0.1
  * 
  */
 public class BookshelfControllerTest extends AndroidTestCase {
@@ -44,6 +45,8 @@ public class BookshelfControllerTest extends AndroidTestCase {
 
 	// Bookshelf
 	private Bookshelf bs;
+	
+	private static final String TEST_STRING = "TEST";
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -190,7 +193,6 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	}
 
 	public void testSetBookTitleAt() {
-		final String TEST_STRING = "TEST";
 		bs.setSelectedBookTitle(TEST_STRING);
 		assertTrue(bs.getSelectedBookTitle().equals(TEST_STRING));
 	}

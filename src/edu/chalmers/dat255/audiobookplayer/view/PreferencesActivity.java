@@ -33,8 +33,6 @@ import edu.chalmers.dat255.audiobookplayer.R;
 @TargetApi(11)
 public class PreferencesActivity extends PreferenceActivity {
 
-	private static final String TAG = "PreferencesActivity";
-
 	@TargetApi(11)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

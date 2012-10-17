@@ -40,7 +40,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	void removeTrack(int index) throws IndexOutOfBoundsException;
+	void removeTrack(int index);
 
 	/**
 	 * Swaps the position of two tracks in the list.
@@ -62,7 +62,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	void moveTrack(int from, int to) throws IndexOutOfBoundsException;
+	void moveTrack(int from, int to);
 
 	/**
 	 * Sets the track index of the book. Can be set to "-1", which means
@@ -74,8 +74,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	void setSelectedTrackIndex(int index)
-			throws IndexOutOfBoundsException;
+	void setSelectedTrackIndex(int index) throws IndexOutOfBoundsException;
 
 	/**
 	 * Sets the title of the book.
@@ -84,8 +83,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	void setSelectedBookTitle(String newTitle)
-			throws IndexOutOfBoundsException;
+	void setSelectedBookTitle(String newTitle) throws IndexOutOfBoundsException;
 
 	/**
 	 * Gets the title of the book.
@@ -94,9 +92,9 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @throws IndexOutOfBoundsException
 	 *             If no book is selected.
 	 */
-	String getSelectedBookTitle() throws IndexOutOfBoundsException;
+	String getSelectedBookTitle();
 
-	// void setAuthor(String newAuthor) throws IndexOutOfBoundsException;
+	// void setAuthor(String newAuthor);
 
 	/**
 	 * Returns the author of the selected book.
@@ -104,7 +102,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * @return
 	 * @throws IndexOutOfBoundsException
 	 */
-	String getSelectedBookAuthor() throws IndexOutOfBoundsException;
+	String getSelectedBookAuthor();
 
 	/**
 	 * Updates the duration of the book to the sum of the duration of its
