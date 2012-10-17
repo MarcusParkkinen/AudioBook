@@ -1,3 +1,16 @@
+/**
+ *  This work is licensed under the Creative Commons Attribution-NonCommercial-
+ *  NoDerivs 3.0 Unported License. To view a copy of this license, visit
+ *  http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to 
+ *  Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 
+ *  94041, USA.
+ * 
+ *  Use of this work is permitted only in accordance with license rights granted.
+ *  Materials provided "AS IS"; no representations or warranties provided.
+ * 
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ **/
+
 package edu.chalmers.dat255.audiobookplayer.util;
 
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
@@ -47,8 +60,9 @@ public class TextFormatter {
 		 * it needs one for 2 symbols.
 		 */
 
-		return (hours > 0 ? hours + ":" : "")
-				+ (minutes <= LARGEST_SINGLE_DIGIT_INTEGER ? "0" : "")
+		return (hours % HOURS_IN_DAY > 0 ? hours % HOURS_IN_DAY + ":" : "")
+				+ ((minutes <= LARGEST_SINGLE_DIGIT_INTEGER && hours
+						% HOURS_IN_DAY > 0) ? "0" : "")
 				+ minutes
 				+ ":"
 				+ ((seconds <= LARGEST_SINGLE_DIGIT_INTEGER && minutes == 0) ? "0"
@@ -58,20 +72,28 @@ public class TextFormatter {
 	/**
 	 * Formats a given position and limit to a text.
 	 * 
-	 * @param currentTrack
+	 * @param trackNumber
 	 * @param numberOfTracks
 	 * @return Formatted text.
 	 */
-	public static String formatCounter(int currentTrack, int numberOfTracks) {
-		String result = "";
-		if (currentTrack != Constants.Value.NO_TRACK_SELECTED) {
-			// only show the current track if one is selected
-			result = result + (currentTrack + 1) + "/";
+	public static String formatCounter(int trackNumber, int numberOfTracks) {
+		// no tracks
+		if (numberOfTracks == 0) {
+			return Constants.Message.NO_TRACKS_FOUND;
 		}
 
-		// always show the number of tracks
-		result = result + numberOfTracks;
+		// illegal track index
+		if (trackNumber != Constants.Value.NO_TRACK_SELECTED
+				&& (trackNumber < 0 || trackNumber > numberOfTracks)) {
+			return Constants.Message.TRACK_INDEX_ERROR;
+		}
 
-		return result;
+		// none selected
+		if (trackNumber == Constants.Value.NO_TRACK_SELECTED) {
+			return numberOfTracks + "";
+		}
+
+		// a valid track is selected
+		return trackNumber + "/" + numberOfTracks;
 	}
 }

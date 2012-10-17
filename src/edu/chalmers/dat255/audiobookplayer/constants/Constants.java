@@ -8,7 +8,7 @@
  *  Use of this work is permitted only in accordance with license rights granted.
  *  Materials provided "AS IS"; no representations or warranties provided.
  * 
- *  Copyright Â© 2012 Marcus Parkkinen, Aki KÃ¤kelÃ¤, Fredrik Ã…hs.
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
  **/
 
 package edu.chalmers.dat255.audiobookplayer.constants;
@@ -106,6 +106,12 @@ public final class Constants {
 		public static final String NO_BOOK_DURATION = "N/A";
 
 		public static final String NO_AUTHOR = "N/A";
+		
+		public static final String NO_TRACK_SELECTED = "--";
+
+		public static final String NO_TRACKS_FOUND = "None";
+
+		public static final String TRACK_INDEX_ERROR = "ERROR";
 	}
 
 }

@@ -8,7 +8,7 @@
  *  Use of this work is permitted only in accordance with license rights granted.
  *  Materials provided "AS IS"; no representations or warranties provided.
  * 
- *  Copyright Â© 2012 Marcus Parkkinen, Aki KÃ¤kelÃ¤, Fredrik Ã…hs.
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
  **/
 
 package edu.chalmers.dat255.audiobookplayer.interfaces;
