@@ -17,10 +17,13 @@
             android:id="@+id/book_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxHeight="26dp"
-            android:minHeight="26dp"
+            android:focusable="true"
+            android:maxHeight="10dip"
+            android:minHeight="10dip"
+            android:progress="100"
             android:progressDrawable="@drawable/book_bar_progress_background"
-            android:thumb="@drawable/sb_book_thumb" />
+            android:thumb="@drawable/sb_book_thumb"
+            android:thumbOffset="10dp" />
     </LinearLayout>
 
     <!-- Track times: track elapsed time (current progress) and duration (total running time) are displayed. -->
@@ -42,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="5:12:41"
+            android:text="@string/test_time_text"
             android:textColor="#FFFFFF"
             android:textSize="14dp"
             android:typeface="normal" />
@@ -53,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="5:12:41"
+            android:text="@string/test_time_text"
             android:textColor="#FFFFFF"
             android:textSize="14dp"
             android:typeface="normal" />
@@ -66,7 +69,8 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
 
         <LinearLayout
             android:id="@+id/play_pause"
@@ -181,7 +185,7 @@
                 android:id="@+id/bookTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="BOOKTITLE!!!!!!!!!!"
+                android:text="@string/test_book_title_text"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp"
                 android:typeface="normal" />
@@ -205,10 +209,10 @@
 
                 <TextView
                     android:id="@+id/track_counter"
-                    android:layout_width="match_parent"
+                    android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:singleLine="true"
-                    android:text="(523/567729)"
+                    android:text="777/999"
                     android:textColor="#777777"
                     android:textSize="14dp"
                     android:typeface="normal" />
@@ -216,8 +220,9 @@
 
             <LinearLayout
                 android:id="@+id/track_title_layout"
-                android:layout_width="wrap_content"
+                android:layout_width="210dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/track_counter_layout" >
 
@@ -226,7 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:singleLine="true"
-                    android:text="TRACKTITLE!!!!!!!!"
+                    android:text="@string/test_track_title_text"
                     android:textColor="#FFFFFF"
                     android:textSize="14dp"
                     android:typeface="normal" />
@@ -253,7 +258,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="5:12:41"
+            android:text="@string/test_time_text"
             android:textColor="#FFFFFF"
             android:textSize="14dp"
             android:typeface="normal" />
@@ -264,7 +269,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="5:12:41"
+            android:text="@string/test_time_text"
             android:textColor="#FFFFFF"
             android:textSize="14dp"
             android:typeface="normal" />
@@ -277,14 +282,13 @@
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_above="@+id/player_controls"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:background="#121212" >
+        android:orientation="vertical" >
 
         <SeekBar
             android:id="@+id/track_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             android:maxHeight="20dp"
             android:minHeight="20dp"
             android:progress="100"
@@ -297,7 +301,7 @@
     <LinearLayout
         android:id="@+id/cover_art_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/playback_details_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"

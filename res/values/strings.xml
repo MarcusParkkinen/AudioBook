@@ -33,5 +33,9 @@
 	<string name="menu_preferences_title">Preferences</string>
 	<string name="menu_add_tag">Add tag</string>
 	<string name="menu_remove_tag">Remove tag</string>
+	
+	<string name="test_time_text">28:34:65</string>
+	<string name="test_book_title_text">The Lord of the Rings, Book 0.5</string>
+	<string name="test_track_title_text">lord_of_the_rings_track_15_out_of_29.mp3</string>
 
 </resources>
