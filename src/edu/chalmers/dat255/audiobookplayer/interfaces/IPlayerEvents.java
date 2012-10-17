@@ -89,6 +89,10 @@ public interface IPlayerEvents {
 
 	/**
 	 * Checks whether audio is playing.
+	 * <p>
+	 * The difference between isPlaying() and isStarted() is that isPlaying() is
+	 * true only if audio is playing, while isStarted() is true if audio is
+	 * playing AND/OR audio HAS been started (i.e. is paused).
 	 * 
 	 * @return True if playing audio.
 	 */
@@ -96,6 +100,10 @@ public interface IPlayerEvents {
 
 	/**
 	 * Checks whether audio has been started.
+	 * <p>
+	 * The difference between isPlaying() and isStarted() is that isPlaying() is
+	 * true only if audio is playing, while isStarted() is true if audio is
+	 * playing AND/OR audio HAS been started (i.e. is paused).
 	 * 
 	 * @return True if started (playing or paused).
 	 */

@@ -53,7 +53,7 @@ public class PlayerController implements IPlayerEvents {
 
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
-	 * Queue.
+	 * Bookshelf.
 	 */
 	public PlayerController(Bookshelf bs) {
 		this.mp = new MediaPlayer();
