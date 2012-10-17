@@ -17,6 +17,9 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
 
@@ -39,7 +42,6 @@ public final class Track implements ITrackUpdates, Serializable {
 	private final int duration;
 	private int elapsedTime;
 	private List<Tag> tags;
-
 	private String title;
 
 	/**
@@ -138,65 +140,38 @@ public final class Track implements ITrackUpdates, Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + duration;
-		result = prime * result + elapsedTime;
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
+	public int hashCode(){
+	    return new HashCodeBuilder()
+	        .append(duration)
+	        .append(elapsedTime)
+	        .append(path)
+	        .append(tags)
+	        .append(title)
+	        .toHashCode();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Track)) {
-			return false;
-		}
-		Track other = (Track) obj;
-		if (duration != other.duration) {
-			return false;
-		}
-		if (elapsedTime != other.elapsedTime) {
-			return false;
-		}
-		if (path == null) {
-			if (other.path != null) {
-				return false;
-			}
-		} else if (!path.equals(other.path)) {
-			return false;
-		}
-		if (tags == null) {
-			if (other.tags != null) {
-				return false;
-			}
-		} else if (!tags.equals(other.tags)) {
-			return false;
-		}
-		if (title == null) {
-			if (other.title != null) {
-				return false;
-			}
-		} else if (!title.equals(other.title)) {
-			return false;
-		}
-		return true;
+	public boolean equals(final Object obj){
+	    if(obj instanceof Track){
+	        final Track other = (Track) obj;
+	        return new EqualsBuilder()
+	            .append(duration, other.duration)
+	            .append(elapsedTime, other.elapsedTime)
+	            .append(tags, other.tags)
+	            .append(title, other.title)
+	            .append(path, other.path)
+	            .isEquals();
+	    } else{
+	        return false;
+	    }
 	}
 
 	public void addTag(int time) throws IllegalArgumentException {

@@ -72,7 +72,7 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 		assertEquals(bs, loadedBookshelf);
 
 		// .. but assert that they are not the same object
-		assertFalse(loadedBookshelf == bs);
+		assertNotSame(loadedBookshelf, bs);
 
 		// Finally also assert that the loaded bookshelf contains 'newBook'
 		assertEquals(newBook, loadedBookshelf.getBookAt(0));

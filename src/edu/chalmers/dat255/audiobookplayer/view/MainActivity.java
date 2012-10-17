@@ -354,18 +354,6 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 					// update the track counter
 					updateTrackCounterLabel(b);
 				}
-			} else if (eventName.equals(Constants.Event.BOOK_REMOVED)) {
-				// Bookshelf
-				// Do nothing for now
-
-				// Player
-				// Do nothing
-			} else if (eventName.equals(Constants.Event.BOOK_MOVED)) {
-				// Bookshelf
-				// Do nothing for now
-
-				// Player
-				// Do nothing
 			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf

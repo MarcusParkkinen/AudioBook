@@ -22,7 +22,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * @version 0.2
  * 
  */
-public class TextFormatter {
+public final class TextFormatter {
 
 	private TextFormatter() {
 		// to defeat instantiation

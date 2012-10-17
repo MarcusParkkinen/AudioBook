@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 
@@ -195,6 +198,17 @@ public final class Book implements IBookUpdates, Serializable {
 		for (Track t : tracks) {
 			this.duration += t.getDuration();
 		}
+	}
+	
+	public String getSelectedBookAuthor() {
+		return author;
+	}
+
+	/**
+	 * @param author
+	 */
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 	/* End IBookUpdates */
@@ -377,76 +391,37 @@ public final class Book implements IBookUpdates, Serializable {
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((author == null) ? 0 : author.hashCode());
-		result = prime * result + duration;
-		result = prime * result + selectedTrackIndex;
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((tracks == null) ? 0 : tracks.hashCode());
-		return result;
+	public int hashCode(){
+	    return new HashCodeBuilder()
+	        .append(tracks)
+	        .append(selectedTrackIndex)
+	        .append(author)
+	        .append(title)
+	        .append(duration)
+	        .toHashCode();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Book)) {
-			return false;
-		}
-		Book other = (Book) obj;
-		if (author == null) {
-			if (other.author != null) {
-				return false;
-			}
-		} else if (!author.equals(other.author)) {
-			return false;
-		}
-		if (duration != other.duration) {
-			return false;
-		}
-		if (selectedTrackIndex != other.selectedTrackIndex) {
-			return false;
-		}
-		if (title == null) {
-			if (other.title != null) {
-				return false;
-			}
-		} else if (!title.equals(other.title)) {
-			return false;
-		}
-		if (tracks == null) {
-			if (other.tracks != null) {
-				return false;
-			}
-		} else if (!tracks.equals(other.tracks)) {
-			return false;
-		}
-		return true;
-	}
-
-	public String getSelectedBookAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
+	public boolean equals(final Object obj){
+	    if(obj instanceof Book){
+	        final Book other = (Book) obj;
+	        return new EqualsBuilder()
+	            .append(tracks, other.tracks)
+	            .append(selectedTrackIndex, other.selectedTrackIndex)
+	            .append(author, other.author)
+	            .append(title, other.title)
+	            .append(duration, other.duration)
+	            .isEquals();
+	    } else{
+	        return false;
+	    }
 	}
 
 	public void addTag(int time) throws IndexOutOfBoundsException {
@@ -483,6 +458,9 @@ public final class Book implements IBookUpdates, Serializable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	/*
+	 * END TESTING PURPOSES ONLY
+	 */
 
 	public String getTrackTitleAt(int trackIndex) {
 		if (trackIndex >= 0 && trackIndex < tracks.size()) {

@@ -20,7 +20,7 @@ import com.google.gson.Gson;
  * @version 0.1
  * 
  */
-public class JsonParser {
+public final class JsonParser {
 	private JsonParser() {
 	} // to defeat instantiation
 	

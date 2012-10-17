@@ -19,6 +19,9 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
@@ -526,48 +529,31 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((books == null) ? 0 : books.hashCode());
-		result = prime * result + selectedBookIndex;
-		return result;
+	public int hashCode(){
+	    return new HashCodeBuilder()
+	        .append(books)
+	        .append(selectedBookIndex)
+	        .toHashCode();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Bookshelf)) {
-			return false;
-		}
-		Bookshelf other = (Bookshelf) obj;
-		if (books == null) {
-			if (other.books != null) {
-				return false;
-			}
-		} else if (!books.equals(other.books)) {
-			return false;
-		}
-		if (selectedBookIndex != other.selectedBookIndex) {
-			return false;
-		}
-		return true;
+	public boolean equals(final Object obj){
+	    if(obj instanceof Bookshelf){
+	        final Bookshelf other = (Bookshelf) obj;
+	        return new EqualsBuilder()
+	            .append(books, other.books)
+	            .append(selectedBookIndex, other.selectedBookIndex)
+	            .isEquals();
+	    } else{
+	        return false;
+	    }
 	}
 
 	/**

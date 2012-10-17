@@ -26,7 +26,7 @@ import android.content.Context;
  * @version 0.1
  * 
  */
-public class FileParser {
+public final class FileParser {
 	private static final String TAG = "FileParser.java";
 
 	private FileParser() {

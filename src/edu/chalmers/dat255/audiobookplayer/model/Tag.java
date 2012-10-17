@@ -15,6 +15,9 @@ package edu.chalmers.dat255.audiobookplayer.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * A time stamp to be put in a track. Used to keep track of certain times.
  * <p>
@@ -50,32 +53,25 @@ public class Tag implements Serializable {
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + time;
-		return result;
+	public int hashCode(){
+	    return new HashCodeBuilder()
+	        .append(time)
+	        .toHashCode();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Tag)) {
-			return false;
-		}
-		Tag other = (Tag) obj;
-		if (time != other.time) {
-			return false;
-		}
-		return true;
+	public boolean equals(final Object obj){
+	    if(obj instanceof Tag){
+	        final Tag other = (Tag) obj;
+	        return new EqualsBuilder()
+	            .append(time, other.time)
+	            .isEquals();
+	    } else{
+	        return false;
+	    }
 	}
 
 }
