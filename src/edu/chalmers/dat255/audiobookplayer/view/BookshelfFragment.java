@@ -347,7 +347,6 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		adapter.selectedBookElapsedTimeUpdated(newTime);		
 	}
 
-
 	public void bookLongPress(int index) {
 		fragmentOwner.bookLongPress(index);
 	}
