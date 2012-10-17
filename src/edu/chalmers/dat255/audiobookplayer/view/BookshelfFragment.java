@@ -8,7 +8,7 @@
  *  Use of this work is permitted only in accordance with license rights granted.
  *  Materials provided "AS IS"; no representations or warranties provided.
  * 
- *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
+ *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik �hs.
  **/
 
 package edu.chalmers.dat255.audiobookplayer.view;
@@ -44,7 +44,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Graphical representation of the bookshelf.
  * 
- * @author Marcus Parkkinen, Fredrik �hs
+ * @author Marcus Parkkinen, Fredrik �hs
  * @version 0.6
  */
 
@@ -384,7 +384,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	 * Private class used to populate the ExpandableListView used in
 	 * BookshelfFragment.
 	 * 
-	 * @author Fredrik �hs
+	 * @author Fredrik �hs
 	 * 
 	 */
 	private class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
