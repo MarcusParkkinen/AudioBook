@@ -13,15 +13,13 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="16" />
 
-    <application
-        android:icon="@drawable/img_clock"
-        android:theme="@style/AppTheme" >
+    <application>
         <uses-library android:name="android.test.runner" />
 
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_audiobook"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            android:theme="@style/ThemeWithoutActionbar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +29,9 @@
         <activity
             android:name=".view.BrowserActivity"
             android:label="@string/title_activity_browser"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeWithoutActionbar" >
+        </activity>
         <activity
             android:name=".view.PreferencesActivity"
             android:label="@string/title_activity_preferences" >
