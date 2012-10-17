@@ -21,7 +21,7 @@ import java.util.regex.*;
 /**
  * Class containing static methods to help create a file browser.
  * 
- * @author Fredrik &aring;hs
+ * @author Fredrik Åhs
  * @version 0.1
  * 
  */
@@ -64,13 +64,13 @@ public class FileBrowser {
 			/*
 			 * search files inside file and its subdirectories
 			 */
-			for (File f : file.listFiles()) { // 
+			for (File f : file.listFiles()) { //
 				// add all matched files
 				list.addAll(getFileTree(f)); //
 			}
 			if (list.size() > 0) {
-				list.add(0, file); // add this directory to front of list if any
-									// files were matched
+				list.add(0, file);
+				// add this directory to front of list if any files were matched
 			}
 		} else {
 			Matcher m = PATTERN.matcher(file.getName());

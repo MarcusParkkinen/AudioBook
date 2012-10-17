@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
+	// stores the fragments
 	private List<Fragment> fragments;
 
 	public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
@@ -37,11 +38,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public int getCount() {
+		// returns the number of fragments
 		return this.fragments.size();
 	}
 
 	@Override
 	public Fragment getItem(int index) {
+		// returns the fragment at the given index
 		return fragments.get(index);
 	}
 

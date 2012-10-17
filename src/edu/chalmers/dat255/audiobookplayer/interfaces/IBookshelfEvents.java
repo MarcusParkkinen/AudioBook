@@ -13,7 +13,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.interfaces;
 
-
 /**
  * @author Aki Käkelä, Fredrik Åhs
  * @version 0.7

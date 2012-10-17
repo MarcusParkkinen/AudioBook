@@ -41,15 +41,18 @@ public class BookshelfHandler {
 	 */
 	public static Bookshelf loadBookshelf(Context c, String username) {
 		try {
+			// read
 			Object obj = JsonParser.fromJSON(FileParser
 					.readFromInternalStorage(username + ".bookmark", c),
 					Bookshelf.class);
 			if (obj instanceof Bookshelf) {
+				// if we found a bookshelf type object, return it
 				return ((Bookshelf) obj);
 			}
 		} catch (Exception e) {
 			// If anything goes wrong, just continue..
 		}
+		// return a new bookshelf instance if nothing was found
 		return (new Bookshelf());
 	}
 
@@ -65,11 +68,14 @@ public class BookshelfHandler {
 	 */
 	public static boolean saveBookshelf(Context c, String username, Bookshelf bs) {
 		try {
+			// write
 			FileParser.writeToInternalStorage(username + ".bookmark", c,
 					JsonParser.toJSON(bs));
 		} catch (IOException e) {
+			// the saving failed; show it by returning false
 			return false;
 		}
+		// saving was successful
 		return true;
 	}
 

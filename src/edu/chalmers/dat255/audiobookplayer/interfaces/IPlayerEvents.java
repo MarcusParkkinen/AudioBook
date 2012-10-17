@@ -17,7 +17,7 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
  * Specifies the possible events coming from the Player, including user
  * interface controls and playback functionality.
  * 
- * @author Aki K&auml;kel&auml;
+ * @author Aki Käkelä
  * @version 0.6
  * 
  */
@@ -57,19 +57,19 @@ public interface IPlayerEvents {
 
 	/**
 	 * Seeks to the left (rewinds).
-	 * <p>
-	 * Sets the track progress to (current progress - 0.1 * total track
-	 * duration).
+	 * 
+	 * @param seek
+	 *            Starts or keeps seeking if true. Stops if false.
 	 */
-	void seekLeft();
+	void seekLeft(boolean seek);
 
 	/**
 	 * Seeks to the right (fast-forwards).
-	 * <p>
-	 * Sets the track progress to (current progress + 0.1 * total track
-	 * duration).
+	 * 
+	 * @param seek
+	 *            Starts or keeps seeking if true. Stops if false.
 	 */
-	void seekRight();
+	void seekRight(boolean seek);
 
 	/**
 	 * Seeks to the given percentage in a track.

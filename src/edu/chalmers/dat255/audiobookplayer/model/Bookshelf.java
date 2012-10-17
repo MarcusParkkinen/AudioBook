@@ -26,11 +26,10 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
 /**
  * The bookshelf class contains a collection of books.
  * 
- * @author Marcus Parkkinen, Aki K&auml;kel&auml;
+ * @author Marcus Parkkinen, Aki Käkelä
  * @version 0.6
  * 
  */
-
 public class Bookshelf implements IBookUpdates, Serializable {
 	private static final String TAG = "Bookshelf";
 	private static final String BOOK_INDEX_ILLEGAL = " Book index is illegal";

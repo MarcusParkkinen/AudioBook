@@ -26,10 +26,9 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
  * Manages setting the current book and bookshelf, as well as saving it when the
  * application terminates.
  * 
- * @author Marcus Parkkinen, Aki K&auml;kel&auml;
+ * @author Marcus Parkkinen, Aki Käkelä
  * @version 0.7
  */
-
 public class BookshelfController implements IBookshelfEvents {
 	private static final String TAG = "BookshelfController";
 	private Bookshelf bookshelf;
@@ -54,11 +53,18 @@ public class BookshelfController implements IBookshelfEvents {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public int getSelectedBookPosition() {
 		return bookshelf.getSelectedBookIndex();
 	}
 
 	// sort, swap, move, edit book
+
+	/*
+	 * IBookshelfEvents
+	 */
 
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
 		bookshelf.setSelectedBookIndex(bookIndex);
@@ -77,23 +83,6 @@ public class BookshelfController implements IBookshelfEvents {
 		bookshelf.removeTrack(trackIndex);
 	}
 	
-	public void addPropertyChangeListener(PropertyChangeListener pcl) {
-		Log.d(TAG, "Adding listener to bookshelf.");
-		bookshelf.addPropertyChangeListener(pcl);
-	}
-	
-	public void removeListeners() {
-		Log.d(TAG, "Removing ALL listeners of bookshelf.");
-		bookshelf.removeListeners();
-	}
-	
-	public boolean saveBookshelf(Context c, String username) {
-		// Remove listeners before saving the bookshelf
-//		bookshelf.removeListeners();
-		
-		return BookshelfHandler.saveBookshelf(c, username, bookshelf);
-	}
-
 	public void removeTrack(int bookIndex, int trackIndex) {
 		bookshelf.removeTrack(bookIndex, trackIndex);
 	}
@@ -101,4 +90,35 @@ public class BookshelfController implements IBookshelfEvents {
 	public void moveTrack(int bookIndex, int trackIndex, int offset) {
 		bookshelf.moveTrack(bookIndex, trackIndex, offset);
 	}
+
+	/*
+	 * End IBookshelfEvents
+	 */
+
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		Log.d(TAG, "Adding listener to bookshelf.");
+		bookshelf.addPropertyChangeListener(pcl);
+	}
+
+	/**
+	 * Removes all listeners from the model.
+	 */
+	public void removeListeners() {
+		Log.d(TAG, "Removing ALL listeners of bookshelf.");
+		bookshelf.removeListeners();
+	}
+
+	/**
+	 * Saves the model (a "Bookmark").
+	 * 
+	 * @param c
+	 *            Context
+	 * @param username
+	 *            Name of file.
+	 * @return True if saved successfully.
+	 */
+	public boolean saveBookshelf(Context c, String username) {
+		return BookshelfHandler.saveBookshelf(c, username, bookshelf);
+	}
+	
 }

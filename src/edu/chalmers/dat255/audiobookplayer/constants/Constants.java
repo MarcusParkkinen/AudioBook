@@ -20,17 +20,21 @@ package edu.chalmers.dat255.audiobookplayer.constants;
  * Also contains hard-coded fields.
  * 
  * @author Aki Käkelä, Marcus Parkkinen
- * @version 0.1
+ * @version 0.2
  */
 public final class Constants {
 	/**
+	 * Event values.
 	 * 
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
 	 */
 	public static final class Event {
+
+		// Bookshelf update events
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
 
+		// Book update events
 		public static final String BOOK_SELECTED = "!bookSelected";
 		public static final String BOOK_ADDED = "!bookAdded";
 		public static final String BOOK_REMOVED = "!bookRemoved";
@@ -44,11 +48,6 @@ public final class Constants {
 		public static final String TRACK_ORDER_CHANGED = "!trackOrderChanged";
 		public static final String ELAPSED_TIME_CHANGED = "!elapsedTimeChanged";
 		public static final String TRACK_INDEX_CHANGED = "!trackIndexChanged";
-		// note that this should not be called when the track index changes
-		// due to modifying the track order in the book. It should only trigger
-		// when the user (through the GUI "next/previous" track) or the audio
-		// player (when the track ends) changes the track index.
-		// TODO(anyone): change this variable name "_BY_USER_OR_PLAYER" suffix.
 
 		public static final String TAG_ADDED = "!tagAdded";
 
@@ -80,6 +79,7 @@ public final class Constants {
 		// Increases the number of visual jumps when the bars are updated.
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
 
+		// Indices that the system should interpret as "none selected"
 		public static final int NO_BOOK_SELECTED = -1;
 		public static final int NO_TRACK_SELECTED = -1;
 
@@ -106,7 +106,7 @@ public final class Constants {
 		public static final String NO_BOOK_DURATION = "N/A";
 
 		public static final String NO_AUTHOR = "N/A";
-		
+
 		public static final String NO_TRACK_SELECTED = "--";
 
 		public static final String NO_TRACKS_FOUND = "None";

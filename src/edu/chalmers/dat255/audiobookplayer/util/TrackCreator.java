@@ -21,7 +21,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * Creates Track instances (filling them with metadata).
  * 
- * @author Aki K&auml;kel&auml;
+ * @author Aki Käkelä
  * @version 0.6
  */
 public class TrackCreator {
@@ -43,8 +43,7 @@ public class TrackCreator {
 		String title = mmr
 				.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 
-		// If the track name is invalid, use the name
-		// of the track file
+		// If the track name is invalid, use the name of the track file
 		if (title == null || title.length() == 0) {
 			title = (new File(path)).getName();
 			int periodPosition = title.lastIndexOf('.');

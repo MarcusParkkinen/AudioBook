@@ -23,19 +23,32 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
+ * Manages playing audio files. When its functions are called it will mutate the
+ * bookshelf.
+ * <p>
+ * Handles timed updates of the model.
+ * <p>
  * Wraps the android.media.MediaPlayer class.
  * 
  * @author Aki Käkelä
  * @version 0.6
  */
 public class PlayerController implements IPlayerEvents {
-
 	private static final String TAG = "PlayerController.class";
+
+	// The audio player
 	private MediaPlayer mp;
+
+	// The model to mutate
 	private Bookshelf bs;
+
+	// An update thread which writes the elapsed time to the model
 	private Thread trackTimeUpdateThread;
 
+	// If the audio is playing, this is true
 	private boolean isStarted = false;
+
+	// The frequency of the updates
 	private static final int UPDATE_FREQUENCY = Constants.Value.UPDATE_FREQUENCY;
 
 	/**
@@ -82,9 +95,10 @@ public class PlayerController implements IPlayerEvents {
 			mp.stop();
 			mp.reset();
 
+			// ensure that nothing went wrong
 			if (isStarted) {
-				Log.e(TAG,
-						"Debug: PlayerController was stopped but is still 'started'");
+				throw new IllegalStateException(
+						"Player is started after stopping.");
 			}
 		}
 	}
@@ -154,69 +168,72 @@ public class PlayerController implements IPlayerEvents {
 		if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 			Log.d(TAG, "Index is -1. Should not continue playing. Stopping.");
 			stop();
-		} else {
-			/*
-			 * we have started playing a file, so start the thread that updates
-			 * the time on the Track instance
-			 */
 
-			// get the path
-			String path = null;
-			try {
-				path = bs.getSelectedTrackPath();
-			} catch (IllegalArgumentException e) {
-				// the track index was '-1', so do nothing
-				Log.e(TAG,
-						"Attempted to get track path when track index was -1."
-								+ "Path set to null; skipping start in Player.");
-			}
-			if (path != null) {
-				/*
-				 * now we are ready to set the source and start the audio, but
-				 * it is not started yet
-				 */
-				isStarted = false;
-				stopTimer();
-
-				/*
-				 * prepare the media player after resetting it and providing a
-				 * file path
-				 */
-				mp.reset();
-				try {
-					mp.setDataSource(path);
-					mp.prepare();
-				} catch (IllegalArgumentException e) {
-					Log.e(TAG, "Illegal argument");
-				} catch (SecurityException e) {
-					Log.e(TAG, "Security exception");
-				} catch (IllegalStateException e) {
-					Log.e(TAG, "Illegal state");
-				} catch (IOException e) {
-					Log.e(TAG, "IO Exception");
-				}
-				/*
-				 * listen to track completion and change to next track if a
-				 * track is completed
-				 */
-				mp.setOnCompletionListener(new OnCompletionListener() {
-					public void onCompletion(MediaPlayer mp) {
-						Log.i(TAG,
-								"onComplete: Track finished. Starting next track.");
-						nextTrack();
-					}
-				});
-
-				// set the status to isStarted
-				isStarted = true;
-
-				// start the timer
-				startTimer();
-
-				// mark that the setup went without problems
-				return true;
-			}
+			// no setup was done since no track was selected
+			return false;
 		}
+		/*
+		 * we have started playing a file, so start the thread that updates the
+		 * time on the Track instance
+		 */
+
+		// get the path
+		String path = null;
+		try {
+			path = bs.getSelectedTrackPath();
+		} catch (IllegalArgumentException e) {
+			// the track index was '-1', so do nothing
+		}
+		if (path != null) {
+			/*
+			 * Now we are ready to set the source and start the audio. The audio
+			 * is not started yet
+			 */
+			isStarted = false;
+
+			// stop any currently running timer
+			stopTimer();
+
+			/*
+			 * prepare the media player after resetting it and providing a file
+			 * path
+			 */
+			mp.reset();
+			try {
+				mp.setDataSource(path);
+				mp.prepare();
+			} catch (IllegalArgumentException e) {
+				Log.e(TAG, "Illegal argument");
+			} catch (SecurityException e) {
+				Log.e(TAG, "Security exception");
+			} catch (IllegalStateException e) {
+				Log.e(TAG, "Illegal state");
+			} catch (IOException e) {
+				Log.e(TAG, "IO Exception");
+			}
+			/*
+			 * listen to track completion and change to next track if a track is
+			 * completed
+			 */
+			mp.setOnCompletionListener(new OnCompletionListener() {
+				public void onCompletion(MediaPlayer mp) {
+					Log.i(TAG,
+							"onComplete: Track finished. Starting next track.");
+					nextTrack();
+				}
+			});
+
+			// set the status to isStarted
+			isStarted = true;
+
+			// start a new timer
+			startTimer();
+
+			// mark that the setup went without problems
+			return true;
+		}
+
+		// path was null, so no setup was done
 		return false;
 
 	}
@@ -227,7 +244,8 @@ public class PlayerController implements IPlayerEvents {
 	 * @return
 	 */
 	private int getTrackDuration() {
-		if (bs.getSelectedTrackIndex() != -1) {
+		// check that there is a selected track
+		if (bs.getSelectedTrackIndex() != Constants.Value.NO_TRACK_SELECTED) {
 			return bs.getSelectedTrackDuration();
 		}
 
@@ -239,7 +257,8 @@ public class PlayerController implements IPlayerEvents {
 	 * Convenience method.
 	 */
 	private void updateTrackTime() {
-		if (bs.getSelectedTrackIndex() != -1) {
+		// check that there is a selected track
+		if (bs.getSelectedTrackIndex() != Constants.Value.NO_TRACK_SELECTED) {
 			this.bs.setSelectedTrackElapsedTime(mp.getCurrentPosition());
 		}
 	}
@@ -327,14 +346,14 @@ public class PlayerController implements IPlayerEvents {
 
 	}
 
-	public void seekRight() {
+	public void seekRight(boolean seek) {
 		if (isAllowedTrackIndex()) {
 			seekToPercentageInTrack(mp.getCurrentPosition()
 					+ getTrackDuration() / 10);
 		}
 	}
 
-	public void seekLeft() {
+	public void seekLeft(boolean seek) {
 		if (isAllowedTrackIndex()) {
 			seekToPercentageInTrack(mp.getCurrentPosition()
 					- getTrackDuration() / 10);
@@ -350,7 +369,7 @@ public class PlayerController implements IPlayerEvents {
 		if (isAllowedBookIndex()) {
 			Log.d(TAG, "Track index: " + bs.getSelectedTrackIndex());
 
-			if (bs.getSelectedTrackIndex() == -1) {
+			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 				// set the selected track index to the last one
 				bs.setSelectedTrackIndex(bs.getNumberOfTracks() - 1);
 			}
@@ -359,13 +378,12 @@ public class PlayerController implements IPlayerEvents {
 				// no need to restart the player
 				mp.seekTo((int) (mp.getDuration() * percentage));
 			} else {
+				/*
+				 * note that startAt() can not be used as MediaPlayer is not
+				 * prepared, thus it can not get the duration of the file.
+				 */
 				startAtPercentage(percentage);
 			}
-
-			/*
-			 * note that startAt() can not be used as MediaPlayer is not
-			 * prepared, thus it can not get the duration of the file.
-			 */
 		}
 	}
 
@@ -439,15 +457,16 @@ public class PlayerController implements IPlayerEvents {
 	 * @return
 	 */
 	private boolean isAllowedTrackIndex() {
-		int index = -1; // not allowed unless changed below
+		// not allowed unless changed below
 		try {
-			index = bs.getSelectedTrackIndex();
+			// try to get the track index
+			bs.getSelectedTrackIndex();
 		} catch (IllegalArgumentException e) {
 			// no book was selected
 			return false;
 		}
 		// if 'index' was changed and there is a selected track, return true
-		return index != -1;
+		return true;
 	}
 
 	/**
@@ -456,7 +475,7 @@ public class PlayerController implements IPlayerEvents {
 	 * @return
 	 */
 	private boolean isAllowedBookIndex() {
-		return bs.getSelectedBookIndex() != -1;
+		return bs.getSelectedBookIndex() != Constants.Value.NO_BOOK_SELECTED;
 	}
 
 	public boolean isStarted() {

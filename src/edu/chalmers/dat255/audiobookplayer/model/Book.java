@@ -26,10 +26,9 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
  * Represents a collection of Track objects. Null tracks are not allowed (and
  * will be ignored when added).
  * 
- * @author Marcus Parkkinen, Aki K&auml;kel&auml;
+ * @author Marcus Parkkinen, Aki Käkelä
  * @version 0.6
  */
-
 public final class Book implements IBookUpdates, Serializable {
 	private static final String TAG = "Book.java";
 	private static final String TRACK_INDEX_ILLEGAL = " Track index is illegal";
@@ -209,7 +208,7 @@ public final class Book implements IBookUpdates, Serializable {
 					+ " setSelectedTrackElapsedTime" + TRACK_INDEX_ILLEGAL);
 		}
 		this.tracks.get(selectedTrackIndex)
-		.setSelectedTrackElapsedTime(newTime);
+				.setSelectedTrackElapsedTime(newTime);
 	}
 
 	/* End ITrackUpdates */
@@ -373,12 +372,14 @@ public final class Book implements IBookUpdates, Serializable {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
 			throw new IndexOutOfBoundsException(
 					"getTrackTitle (illegal track index " + selectedTrackIndex
-					+ ")");
+							+ ")");
 		}
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -392,8 +393,10 @@ public final class Book implements IBookUpdates, Serializable {
 		result = prime * result + ((tracks == null) ? 0 : tracks.hashCode());
 		return result;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -482,7 +485,7 @@ public final class Book implements IBookUpdates, Serializable {
 	}
 
 	public String getTrackTitleAt(int trackIndex) {
-		if(trackIndex >= 0 && trackIndex < tracks.size())  {
+		if (trackIndex >= 0 && trackIndex < tracks.size()) {
 			return tracks.get(trackIndex).getTrackTitle();
 		}
 		return null;

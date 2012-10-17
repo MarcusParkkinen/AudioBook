@@ -83,10 +83,13 @@ public class PlayerFragment extends Fragment {
 				int ev = event.getAction();
 				if (ev == MotionEvent.ACTION_DOWN) {
 					Log.i(TAG, "Seeking LEFT (ACTION_DOWN)");
+					seekLeft(false);
 				} else if (ev == MotionEvent.ACTION_UP) {
 					Log.i(TAG, "Stopped seeking LEFT (ACTION_UP)");
+					seekLeft(false);
 				} else if (ev == MotionEvent.ACTION_CANCEL) {
 					Log.i(TAG, "Cancelled seeking LEFT (ACTION_CANCEL)");
+					seekLeft(false);
 				}
 				return false;
 			}
@@ -98,10 +101,13 @@ public class PlayerFragment extends Fragment {
 				int ev = event.getAction();
 				if (ev == MotionEvent.ACTION_DOWN) {
 					Log.i(TAG, "Seeking RIGHT (ACTION_DOWN)");
+					seekRight(true);
 				} else if (ev == MotionEvent.ACTION_UP) {
 					Log.i(TAG, "Stopped seeking RIGHT (ACTION_UP)");
+					seekRight(false);
 				} else if (ev == MotionEvent.ACTION_CANCEL) {
 					Log.i(TAG, "Cancelled seeking RIGHT (ACTION_CANCEL)");
+					seekRight(false);
 				}
 				return false;
 			}
@@ -216,6 +222,14 @@ public class PlayerFragment extends Fragment {
 		trackCounter = (TextView) view.findViewById(R.id.track_counter);
 
 		return view;
+	}
+
+	protected void seekRight(boolean seek) {
+		fragmentOwner.seekRight(seek);
+	}
+
+	protected void seekLeft(boolean seek) {
+		fragmentOwner.seekLeft(seek);
 	}
 
 	/*

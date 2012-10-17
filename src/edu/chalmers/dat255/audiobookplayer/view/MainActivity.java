@@ -227,12 +227,12 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 		playerController.nextTrack();
 	}
 
-	public void seekLeft() {
-		playerController.seekLeft();
+	public void seekLeft(boolean seek) {
+		playerController.seekLeft(seek);
 	}
 
-	public void seekRight() {
-		playerController.seekRight();
+	public void seekRight(boolean seek) {
+		playerController.seekRight(seek);
 	}
 
 	public void seekToPercentageInBook(double percentage) {

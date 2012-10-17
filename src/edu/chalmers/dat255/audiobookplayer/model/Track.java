@@ -26,7 +26,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates;
  * <p>
  * Duration and track path are immutable.
  * 
- * @author Marcus Parkkinen Aki K&auml;kel&auml;
+ * @author Aki Käkelä, Marcus Parkkinen
  * @version 0.6
  * 
  */
