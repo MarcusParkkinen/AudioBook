@@ -463,6 +463,8 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 			} else if (eventName.equals(Constants.Event.TAG_REMOVED)) {
 				Book b = bs.getSelectedBook();
 				updateTags(b);
+			} else if (eventName.equals(Constants.Event.BOOKSHELF_UPDATED)) {
+				bookshelfFragment.bookshelfUpdated(bs);
 			}
 		}
 

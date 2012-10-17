@@ -44,7 +44,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 /**
  * Graphical representation of the bookshelf.
  * 
- * @author Marcus Parkkinen, Fredrik Åhs
+ * @author Marcus Parkkinen, Fredrik ï¿½hs
  * @version 0.6
  */
 
@@ -133,7 +133,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		/* Instantiate member variables */
 		/**//**/
 		/**************************************************************/
-		if(bookshelf == null && adapter == null) {
+		if(adapter == null) {
 			adapter = new ExpandableBookshelfAdapter(view.getContext(), null);
 		}
 
@@ -175,6 +175,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		registerForContextMenu(bookshelfList);
 		//sets the bookshelf lists adapter
 		bookshelfList.setAdapter(adapter);
+		
 		// Access the bookshelf reference
 		if (getArguments().getSerializable(Constants.Reference.BOOKSHELF) instanceof Bookshelf) {
 			bookshelfUpdated((Bookshelf) getArguments().getSerializable(
@@ -339,8 +340,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 	public void bookshelfUpdated(Bookshelf bs) {
 		Log.d(TAG, "Book added");
-		adapter.setBookshelf(bs);
-		adapter.notifyDataSetChanged();
+		if(adapter != null) {
+			adapter.setBookshelf(bs);
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	public void selectedBookElapsedTimeUpdated(int newTime) {
@@ -381,7 +384,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	 * Private class used to populate the ExpandableListView used in
 	 * BookshelfFragment.
 	 * 
-	 * @author Fredrik Åhs
+	 * @author Fredrik ï¿½hs
 	 * 
 	 */
 	private class ExpandableBookshelfAdapter extends BaseExpandableListAdapter {
