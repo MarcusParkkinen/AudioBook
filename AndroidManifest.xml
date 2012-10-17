@@ -30,7 +30,6 @@
              android:screenOrientation="portrait"
             android:name=".view.BrowserActivity"
             android:label="@string/title_activity_browser"
-            android:screenOrientation="portrait"
             android:theme="@style/ThemeWithoutActionbar" >
         </activity>
         <activity
