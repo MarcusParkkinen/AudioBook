@@ -18,12 +18,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusable="true"
-            android:maxHeight="10dip"
-            android:minHeight="10dip"
+            android:maxHeight="26dp"
+            android:minHeight="26dp"
             android:progress="100"
             android:progressDrawable="@drawable/book_bar_progress_background"
-            android:thumb="@drawable/sb_book_thumb"
-            android:thumbOffset="10dp" />
+            android:thumb="@drawable/sb_book_thumb" />
     </LinearLayout>
 
     <!-- Track times: track elapsed time (current progress) and duration (total running time) are displayed. -->
@@ -212,7 +211,7 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:singleLine="true"
-                    android:text="777/999"
+                    android:text="@string/test_track_counter"
                     android:textColor="#777777"
                     android:textSize="14dp"
                     android:typeface="normal" />
