@@ -12,7 +12,7 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="16" />
 
-    <application android:theme="@android:style/Theme.Black.NoTitleBar">
+    <application android:theme="@style/ThemeWithoutActionbar" >
         <uses-library android:name="android.test.runner" 
         android:icon="@drawable/img_clock"
         android:label="@string/app_name"
