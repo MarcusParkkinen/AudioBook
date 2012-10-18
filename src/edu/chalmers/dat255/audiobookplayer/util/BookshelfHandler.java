@@ -25,7 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * @version 0.1
  * 
  */
-public class BookshelfHandler {
+public final class BookshelfHandler {
 	
 	private BookshelfHandler() {
 	} // to defeat instantiation

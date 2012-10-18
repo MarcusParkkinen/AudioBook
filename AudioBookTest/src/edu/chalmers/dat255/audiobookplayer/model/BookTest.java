@@ -69,7 +69,7 @@ public class BookTest extends TestCase {
 		Book newBook = new Book(b);
 				
 		// assert that we have two separate objects
-		assertFalse(newBook == b);
+		assertNotSame(newBook, b);
 		
 		// assert that the track objects are deep copies as well
 		assertFalse(newBook.getSelectedTrack() == b.getSelectedTrack());
@@ -82,7 +82,7 @@ public class BookTest extends TestCase {
 		newBook = new Book(b);
 		
 		// assert that we have two separate objects
-		assertFalse(newBook == b);
+		assertNotSame(newBook, b);
 							
 		// assert that both books are equal
 		assertTrue(newBook.equals(b));

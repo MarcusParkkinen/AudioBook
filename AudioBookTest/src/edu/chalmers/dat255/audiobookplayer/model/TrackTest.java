@@ -38,7 +38,7 @@ public class TrackTest extends TestCase {
 		Track newTrack = new Track(t);
 		
 		//assert that we have two separate objects
-		assertFalse(newTrack == t);
+		assertNotSame(newTrack, t);
 		
 		//but assert that they are equal
 		assertTrue(newTrack.equals(t));

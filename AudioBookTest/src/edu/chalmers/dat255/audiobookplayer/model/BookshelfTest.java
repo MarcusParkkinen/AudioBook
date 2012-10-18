@@ -13,12 +13,9 @@
 
 package edu.chalmers.dat255.audiobookplayer.model;
 
-import java.util.LinkedList;
-import java.util.List;
+import junit.framework.TestCase;
 
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 /**
  * Test for Bookshelf.
@@ -30,21 +27,35 @@ import junit.framework.TestCase;
 public class BookshelfTest extends TestCase {
 
 	private Bookshelf bookshelf;
-
+	
 	// Tracks
-	private Track t0 = new Track("path1", 111);
-	private Track t1 = new Track("path2", 222);
-	private Track t2 = new Track("path3", 333);
-
-	// List of tracks
-	private List<Track> tracks;
+	private static final String PATH0 = "path000";
+	private static final String PATH1 = "path111";
+	private static final String PATH2 = "path222";
+	
+	private static final int DURATION0 = 1234;
+	private static final int DURATION1 = 2345;
+	private static final int DURATION2 = 3456;
+	
+	private static final Track TRACK0 = new Track(PATH0, DURATION0);
+	private static final Track TRACK1 = new Track(PATH1, DURATION1);
+	private static final Track TRACK2 = new Track(PATH2, DURATION2);
 
 	// Books
-	private Book b0;
-	private Book b1;
-	private Book b2;
-	private Book b3;
-	private Book b4;
+	private static final String TITLE0 = "title0";
+	private static final String TITLE1 = "title1";
+	private static final String TITLE2 = "title2";
+	private static final String TITLE3 = "title3";
+	private static final String TITLE4 = "title4";
+	
+	private static final String AUTHOR0 = "author0";
+	private static final String AUTHOR1 = "author1";
+	
+	private static final Book BOOK0 = new Book(TITLE0, AUTHOR0);
+	private static final Book BOOK1 = new Book(TITLE1, AUTHOR1);
+	private static final Book BOOK2 = new Book(TITLE2);
+	private static final Book BOOK3 = new Book(TITLE3);
+	private static final Book BOOK4 = new Book(TITLE4);
 
 	// Constant values; 'magic numbers'
 	private static final int LEGAL_POSITIVE_INDEX = 1;
@@ -57,6 +68,9 @@ public class BookshelfTest extends TestCase {
 
 	private static final int STARTING_NUMBER_OF_BOOKS = 5;
 
+	private static final String OUT_OF_BOUNDS_MESSAGE = "Index was out of bounds,"
+			+ " but the operation was still completed.";
+
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -65,30 +79,17 @@ public class BookshelfTest extends TestCase {
 		bookshelf = new Bookshelf();
 		bookshelf.addPropertyChangeListener(null);
 
-		// Tracks
-		t0 = new Track("path1", 111);
-		t1 = new Track("path2", 222);
-		t2 = new Track("path3", 333);
-
-		// List of tracks
-		tracks = new LinkedList<Track>();
-		tracks.add(t0);
-		tracks.add(t1);
-		tracks.add(t2);
-
-		// Books
-		b0 = new Book(tracks, "testBook0", "author0");
-		b1 = new Book("testBook1");
-		b2 = new Book("testBook2");
-		b3 = new Book("testBook3", "author3");
-		b4 = new Book("testBook4");
+		// Add tracks to one of the books
+		BOOK0.addTrack(TRACK0);
+		BOOK0.addTrack(TRACK1);
+		BOOK0.addTrack(TRACK2);
 
 		// Add elements to the bookshelf (to add to the allowed indices)
-		bookshelf.addBook(b0);
-		bookshelf.addBook(b1);
-		bookshelf.addBook(b2);
-		bookshelf.addBook(b3);
-		bookshelf.addBook(b4);
+		bookshelf.addBook(BOOK0);
+		bookshelf.addBook(BOOK1);
+		bookshelf.addBook(BOOK2);
+		bookshelf.addBook(BOOK3);
+		bookshelf.addBook(BOOK4);
 	}
 
 	/**
@@ -162,16 +163,16 @@ public class BookshelfTest extends TestCase {
 		bookshelf = new Bookshelf();
 
 		// Add a book
-		bookshelf.addBook(b0);
+		bookshelf.addBook(BOOK0);
 
 		// Assert that the book is added, and at the correct index
-		assertEquals(bookshelf.getBookAt(0), b0);
+		assertEquals(bookshelf.getBookAt(0), BOOK0);
 
 		// Also check that the number of books is correct
 		assertTrue(bookshelf.getNumberOfBooks() == 1);
 
 		// Since this is the first book, it should be the 'current' book
-		assertTrue(bookshelf.getSelectedBook().equals(b0));
+		assertTrue(bookshelf.getSelectedBook().equals(BOOK0));
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
@@ -182,12 +183,12 @@ public class BookshelfTest extends TestCase {
 
 		// Assert that a book is removed and that it is the correct one
 		bookshelf.removeBookAt(2);
-		assertTrue(bookshelf.getBookAt(0).equals(b0));
-		assertTrue(bookshelf.getBookAt(1).equals(b1));
+		assertTrue(bookshelf.getBookAt(0).equals(BOOK0));
+		assertTrue(bookshelf.getBookAt(1).equals(BOOK1));
 
 		// the other books should now have new indices
-		assertTrue(bookshelf.getBookAt(2).equals(b3));
-		assertTrue(bookshelf.getBookAt(3).equals(b4));
+		assertTrue(bookshelf.getBookAt(2).equals(BOOK3));
+		assertTrue(bookshelf.getBookAt(3).equals(BOOK4));
 
 		// Assert that the number of books is correct
 		assertTrue(bookshelf.getNumberOfBooks() == STARTING_NUMBER_OF_BOOKS - 1);
@@ -209,7 +210,7 @@ public class BookshelfTest extends TestCase {
 			bookshelf.moveBook(ILLEGAL_POSITIVE_INDEX,
 					OTHER_ILLEGAL_POSITIVE_INDEX);
 			assertTrue(copy.equals(bookshelf));
-			fail("Index was out of bounds, but the operation was still completed.");
+			fail(OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
@@ -219,7 +220,7 @@ public class BookshelfTest extends TestCase {
 			bookshelf.moveBook(ILLEGAL_POSITIVE_INDEX,
 					OTHER_LEGAL_POSITIVE_INDEX);
 			assertTrue(copy.equals(bookshelf));
-			fail("Index was out of bounds, but the operation was still completed.");
+			fail(OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
@@ -229,7 +230,7 @@ public class BookshelfTest extends TestCase {
 			bookshelf.moveBook(LEGAL_POSITIVE_INDEX,
 					OTHER_ILLEGAL_POSITIVE_INDEX);
 			assertTrue(copy.equals(bookshelf));
-			fail("Index was out of bounds, but the operation was still completed.");
+			fail(OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
@@ -239,7 +240,7 @@ public class BookshelfTest extends TestCase {
 			bookshelf
 					.moveBook(LEGAL_POSITIVE_INDEX, OTHER_LEGAL_POSITIVE_INDEX);
 			assertFalse(copy.equals(bookshelf));
-			fail("Index was out of bounds, but the operation was still completed.");
+			fail(OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}

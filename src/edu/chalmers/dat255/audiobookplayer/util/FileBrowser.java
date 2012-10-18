@@ -25,7 +25,7 @@ import java.util.regex.*;
  * @version 0.1
  * 
  */
-public class FileBrowser {
+public final class FileBrowser {
 	
 	private FileBrowser() {
 	} // to defeat instantiation

@@ -16,18 +16,17 @@ package edu.chalmers.dat255.audiobookplayer.util;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import android.content.Context;
 
 /**
- * @author Marcus Parkkinen
+ * @author Marcus Parkkinen, Aki Käkelä
  * @version 0.1
  * 
  */
 public final class FileParser {
-	private static final String TAG = "FileParser.java";
 
 	private FileParser() {
 	} // to defeat instantiation
@@ -36,9 +35,11 @@ public final class FileParser {
 	 * Writes to internal storage given a file name.
 	 * 
 	 * @param file
+	 *            The file name to read from.
 	 * @param c
+	 *            Context.
 	 * @param content
-	 * @throws IOException
+	 *            JSON String to be written.
 	 */
 	public static void writeToInternalStorage(String file, Context c,
 			String content) throws IOException {
@@ -55,10 +56,10 @@ public final class FileParser {
 	 * Reads from internal storage given a file name.
 	 * 
 	 * @param file
+	 *            The file name to read from.
 	 * @param c
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 *            Context.
+	 * @return JSON String to be read.
 	 */
 	public static String readFromInternalStorage(String file, Context c)
 			throws IOException {
@@ -67,6 +68,8 @@ public final class FileParser {
 
 		String result = dataInputStream.readUTF();
 		dataInputStream.close();
+
+		// return the JSON String representation of the object.
 		return result;
 	}
 }

@@ -474,7 +474,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * Set the bookshelf for when the data should update
 		 * @param bookshelf The new bookshelf copy.
 		 */
-		public void setBookshelf(Bookshelf bookshelf) {
+		public final void setBookshelf(Bookshelf bookshelf) {
 			this.bookshelf = bookshelf;
 		}
 

@@ -48,7 +48,7 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
  * 
  */
 public class MainActivity extends FragmentActivity implements IPlayerEvents,
-IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
+		IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 	private static final String TAG = "MainActivity";
 	private static final String USERNAME = "Default";
 	private static final int PLAYER = 0;
@@ -68,7 +68,7 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_main);
 
 		initPager();
@@ -86,7 +86,7 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 		Bundle bsReference = new Bundle();
 		bsReference.putSerializable(Constants.Reference.BOOKSHELF, bs);
 		bookshelfFragment.setArguments(bsReference);
-		
+
 	}
 
 	private void initPager() {
@@ -106,11 +106,6 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 
 		// default selected screen
 		pager.setCurrentItem(BOOKSHELF);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
 	}
 
 	@Override
@@ -183,19 +178,12 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 
 		switch (id) {
 		case R.id.menu_save:
+			// save a bookmark and show whether it was successful
 			if (save()) {
 				Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
 			} else {
 				Toast.makeText(this, "Saving failed", Toast.LENGTH_SHORT);
 			}
-			return true;
-
-		case R.id.menu_delete:
-			Toast.makeText(this, "Placeholder", Toast.LENGTH_SHORT).show();
-			return true;
-
-		case R.id.menu_preferences:
-			Toast.makeText(this, "Placeholder", Toast.LENGTH_SHORT).show();
 			return true;
 
 		default:
@@ -302,158 +290,165 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 	 *            Event object that contains information about the change.
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
-		String eventName = event.getPropertyName();
-		
-		//log all events but the ELAPSED_TIME_CHANGED event, which 
-		//is left out to not overflow the log
-		if ( ! eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
-			Log.d(TAG, "Received update: " + eventName);
-		}
-
 		if (event.getNewValue() instanceof Bookshelf) {
 			// Get the model copy from the update
 			Bookshelf bs = (Bookshelf) event.getNewValue();
 
-			// Check which event was fired, and do relevant updates in the
-			// fragments
-			if (eventName.equals(Constants.Event.BOOKS_CHANGED)) {
-				// Bookshelf
-				bookshelfFragment.bookshelfUpdated(bs);
+			// Update the fragments
+			updateFragments(event.getPropertyName(), bs);
+		}
+	}
 
-				// Player
-				// Do nothing
-			} else if (eventName.equals(Constants.Event.BOOK_SELECTED)) {
-				if (bs.getSelectedBookIndex() != -1) {
-					Book b = bs.getSelectedBook();
-					// Bookshelf
+	/**
+	 * Handles the updates of the fragments given a model to represent
+	 * graphically.
+	 * 
+	 * @param eventName
+	 *            The property name of the fired event.
+	 * @param bs
+	 *            Model copy.
+	 */
+	private void updateFragments(String eventName, Bookshelf bs) {
+		/*
+		 * Check which event was fired, and do relevant updates in the
+		 * fragments.
+		 */
+		if (eventName.equals(Constants.Event.BOOKS_CHANGED)) {
+			// Bookshelf
+			bookshelfFragment.bookshelfUpdated(bs);
 
-					// Player
-					// reset the player controls to standard values
-					playerFragment.resetComponents();
-
-					// show the player UI
-					pager.setCurrentItem(PLAYER);
-
-					// start the player
-					playerController.start();
-
-					// show the title of the book
-					updateBookTitleLabel(b);
-
-					// display its duration
-					updateBookDurationLabel(b);
-
-					// show the title of the track
-					updateTrackTitleLabel(b);
-
-					// and display its duration
-					updateTrackDurationLabel(b);
-
-					// update the track counter
-					updateTrackCounterLabel(b);
-				}
-			} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
+			// Player
+			// Do nothing
+		} else if (eventName.equals(Constants.Event.BOOK_SELECTED)) {
+			if (bs.getSelectedBookIndex() != -1) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
-				if(pager.getCurrentItem() == BOOKSHELF) {
-					updateSelectedBookElapsedTime(b);
-				}
-				// Player
-				else {
-					// recalculate the track seekbar
-					updateTrackSeekbar(b);
-					// recalculate the book seekbar
-					updateBookSeekbar(b);
-					// update time labels
-					updateElapsedTimeLabels(b);
-				}
-
-			} else if (eventName.equals(Constants.Event.TRACK_REMOVED)) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// remove the track from the list (the child on the given index
-				// in the given parent)
 
 				// Player
-				// update book duration label
+				// reset the player controls to standard values
+				playerFragment.resetComponents();
+
+				// show the player UI
+				pager.setCurrentItem(PLAYER);
+
+				// start the player
+				playerController.start();
+
+				// show the title of the book
+				updateBookTitleLabel(b);
+
+				// display its duration
 				updateBookDurationLabel(b);
 
-				// show the correct number of tracks
-				updateTrackCounterLabel(b);
-			} else if (eventName.equals(Constants.Event.TRACK_ADDED)) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// add ... -"-
-
-				// Player
-				// update book duration label
-				updateBookDurationLabel(b);
-
-				// show the correct number of tracks
-				updateTrackCounterLabel(b);
-			} else if (eventName.equals(Constants.Event.TRACK_ORDER_CHANGED)) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// redraw list
-
-				// Player
-				// show the correct number of tracks
-				updateTrackCounterLabel(b);
-			} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
-				Book b = bs.getSelectedBook();
-				if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
-					// reset the controls to 'stopped'
-					playerFragment.resetComponents();
-
-					// stop the audio player
-					playerController.stop();
-				} else {
-					// Bookshelf
-					// move the "selected track" indicator to the new index
-
-					// Player
-					// restart the player
-					playerController.start();
-
-					// enable play/pause
-					playerFragment.setPlayPauseEnabled(true);
-				}
-
-				// Player
-				// update track title label
+				// show the title of the track
 				updateTrackTitleLabel(b);
 
-				// update track book duration label
+				// and display its duration
 				updateTrackDurationLabel(b);
 
-				// show the correct number of tracks, illegal track index or not
+				// update the track counter
 				updateTrackCounterLabel(b);
-			} else if (eventName.equals(Constants.Event.BOOK_TITLE_CHANGED)) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// update the name of the book
-
-				// Player
-				// update the book title label
-				updateBookTitleLabel(b);
-			} else if (eventName.equals(Constants.Event.BOOK_DURATION_CHANGED)) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-
-				// Player
-				// Update book duration label
-				updateBookDurationLabel(b);
-			} else if (eventName.equals(Constants.Event.TAG_ADDED)) {
-				Book b = bs.getSelectedBook();
-				updateTags(b);
-			} else if (eventName.equals(Constants.Event.TAG_REMOVED)) {
-				Book b = bs.getSelectedBook();
-				updateTags(b);
-			} else if (eventName.equals(Constants.Event.BOOKSHELF_UPDATED)) {
-				bookshelfFragment.bookshelfUpdated(bs);
 			}
-		}
+		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
+			Book b = bs.getSelectedBook();
+			// Bookshelf
+			if (pager.getCurrentItem() == BOOKSHELF) {
+				updateSelectedBookElapsedTime(b);
+			}
+			// Player
+			else {
+				// recalculate the track seekbar
+				updateTrackSeekbar(b);
+				// recalculate the book seekbar
+				updateBookSeekbar(b);
+				// update time labels
+				updateElapsedTimeLabels(b);
+			}
 
+		} else if (eventName.equals(Constants.Event.TRACK_REMOVED)) {
+			Book b = bs.getSelectedBook();
+			// Bookshelf
+			// remove the track from the list (the child on the given index
+			// in the given parent)
+
+			// Player
+			// update book duration label
+			updateBookDurationLabel(b);
+
+			// show the correct number of tracks
+			updateTrackCounterLabel(b);
+		} else if (eventName.equals(Constants.Event.TRACK_ADDED)) {
+			Book b = bs.getSelectedBook();
+			// Bookshelf
+			// add ... -"-
+
+			// Player
+			// update book duration label
+			updateBookDurationLabel(b);
+
+			// show the correct number of tracks
+			updateTrackCounterLabel(b);
+		} else if (eventName.equals(Constants.Event.TRACK_ORDER_CHANGED)) {
+			Book b = bs.getSelectedBook();
+			// Bookshelf
+			// redraw list
+
+			// Player
+			// show the correct number of tracks
+			updateTrackCounterLabel(b);
+		} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
+			Book b = bs.getSelectedBook();
+			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
+				// reset the controls to 'stopped'
+				playerFragment.resetComponents();
+
+				// stop the audio player
+				playerController.stop();
+			} else {
+				// Bookshelf
+				// move the "selected track" indicator to the new index
+
+				// Player
+				// restart the player
+				playerController.start();
+
+				// enable play/pause
+				playerFragment.setPlayPauseEnabled(true);
+			}
+
+			// Player
+			// update track title label
+			updateTrackTitleLabel(b);
+
+			// update track book duration label
+			updateTrackDurationLabel(b);
+
+			// show the correct number of tracks, illegal track index or not
+			updateTrackCounterLabel(b);
+		} else if (eventName.equals(Constants.Event.BOOK_TITLE_CHANGED)) {
+			Book b = bs.getSelectedBook();
+			// Bookshelf
+			// update the name of the book
+
+			// Player
+			// update the book title label
+			updateBookTitleLabel(b);
+		} else if (eventName.equals(Constants.Event.BOOK_DURATION_CHANGED)) {
+			Book b = bs.getSelectedBook();
+			// Bookshelf
+
+			// Player
+			// Update book duration label
+			updateBookDurationLabel(b);
+		} else if (eventName.equals(Constants.Event.TAG_ADDED)) {
+			Book b = bs.getSelectedBook();
+			updateTags(b);
+		} else if (eventName.equals(Constants.Event.TAG_REMOVED)) {
+			Book b = bs.getSelectedBook();
+			updateTags(b);
+		} else if (eventName.equals(Constants.Event.BOOKSHELF_UPDATED)) {
+			bookshelfFragment.bookshelfUpdated(bs);
+		}
 	}
 
 	/**
@@ -586,11 +581,13 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 			});
 		}
 	}
-	
+
 	/**
-	 * UI mutator method that updates the book position 
-	 * of the selected book in bookshelf fragment
-	 * @param b The selected book.
+	 * UI mutator method that updates the book position of the selected book in
+	 * bookshelf fragment
+	 * 
+	 * @param b
+	 *            The selected book.
 	 */
 	private void updateSelectedBookElapsedTime(final Book b) {
 		if (bookshelfFragment.getActivity() != null) {

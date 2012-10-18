@@ -94,18 +94,20 @@ public final class Constants {
 	 * 
 	 */
 	public static final class Message {
+		public static final String NOT_AVAILABLE = "N/A";
+		
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
 
-		public static final CharSequence NO_BOOK_TITLE = "N/A";
-		public static final CharSequence NO_TRACK_TITLE = "N/A";
+		public static final CharSequence NO_BOOK_TITLE = NOT_AVAILABLE;
+		public static final CharSequence NO_TRACK_TITLE = NOT_AVAILABLE;
 
-		public static final CharSequence NO_TRACK_ELAPSED_TIME = "N/A";
-		public static final CharSequence NO_BOOK_ELAPSED_TIME = "N/A";
+		public static final CharSequence NO_TRACK_ELAPSED_TIME = NOT_AVAILABLE;
+		public static final CharSequence NO_BOOK_ELAPSED_TIME = NOT_AVAILABLE;
 
-		public static final String NO_TRACK_DURATION = "N/A";
-		public static final String NO_BOOK_DURATION = "N/A";
+		public static final String NO_TRACK_DURATION = NOT_AVAILABLE;
+		public static final String NO_BOOK_DURATION = NOT_AVAILABLE;
 
-		public static final String NO_AUTHOR = "N/A";
+		public static final String NO_AUTHOR = NOT_AVAILABLE;
 
 		public static final String NO_TRACK_SELECTED = "--";
 

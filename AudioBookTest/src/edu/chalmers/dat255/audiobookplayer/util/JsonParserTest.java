@@ -53,6 +53,6 @@ public class JsonParserTest extends AndroidTestCase {
 		assertEquals(bs, newBookshelf);
 
 		// But assert that they are not the same object
-		assertFalse(bs == newBookshelf);
+		assertNotSame(newBookshelf, bs);
 	}
 }
