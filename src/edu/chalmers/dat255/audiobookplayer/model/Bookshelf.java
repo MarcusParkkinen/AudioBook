@@ -108,8 +108,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 
 		if (hasListeners()) {
-			// pcs.firePropertyChange(Constants.Event.BOOK_ADDED, null,
-			pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
+			pcs.firePropertyChange(Constants.Event.BOOK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -142,7 +141,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		if (hasListeners()) {
 			// notify the listeners about this change
 			// fixes remove errors
-			pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
+			pcs.firePropertyChange(Constants.Event.BOOK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -163,7 +162,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		books.add(from, temp);
 
 		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.BOOK_MOVED, null,
+			pcs.firePropertyChange(Constants.Event.BOOK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -186,7 +185,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		updateBookDuration();
 
 		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.TRACK_REMOVED, null,
+			pcs.firePropertyChange(Constants.Event.TRACK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -206,7 +205,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		updateBookDuration();
 
 		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.TRACK_ADDED, null,
+			pcs.firePropertyChange(Constants.Event.TRACK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -219,7 +218,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		this.books.get(selectedBookIndex).swapTracks(firstIndex, secondIndex);
 
 		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
+			pcs.firePropertyChange(Constants.Event.TRACK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -232,7 +231,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		this.books.get(selectedBookIndex).moveTrack(from, to);
 
 		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.TRACK_ORDER_CHANGED, null,
+			pcs.firePropertyChange(Constants.Event.TRACK_LIST_CHANGED, null,
 					new Bookshelf(this));
 		}
 	}
@@ -265,11 +264,6 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 	public void updateBookDuration() {
 		this.books.get(selectedBookIndex).updateBookDuration();
-
-		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.BOOK_DURATION_CHANGED, null,
-					new Bookshelf(this));
-		}
 	}
 
 	/* End IBookUpdates */
@@ -367,7 +361,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public Book getSelectedBook() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getSelectedBook " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " getSelectedBook "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return this.books.get(selectedBookIndex);
@@ -390,7 +385,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public int getSelectedBookDuration() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getSelectedBookDuration " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG
+					+ " getSelectedBookDuration " + NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getDuration();
@@ -401,7 +397,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public int getSelectedTrackIndex() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getSelectedTrackIndex " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " getSelectedTrackIndex "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getSelectedTrackIndex();
@@ -414,7 +411,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public int getBookElapsedTime() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getBookElapsedTime " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " getBookElapsedTime "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getBookElapsedTime();
@@ -427,7 +425,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public int getNumberOfTracks() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getNumberOfTracks " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " getNumberOfTracks "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getNumberOfTracks();
@@ -442,7 +441,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public int getSelectedTrackDuration() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getSelectedTrackDuration " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG
+					+ " getSelectedTrackDuration " + NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getSelectedTrackDuration();
@@ -453,7 +453,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public String getSelectedTrackPath() {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getSelectedTrackPath " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " getSelectedTrackPath "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getSelectedTrackPath();
@@ -465,7 +466,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public int getTrackDurationAt(int track) {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " getTrackDurationAt " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " getTrackDurationAt "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return books.get(selectedBookIndex).getTrackDurationAt(track);
@@ -489,7 +491,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 	public boolean isLegalTrackIndex(int index) {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
-			throw new IndexOutOfBoundsException(TAG + " isLegalTrackIndex " + NO_BOOK_SELECTED);
+			throw new IndexOutOfBoundsException(TAG + " isLegalTrackIndex "
+					+ NO_BOOK_SELECTED);
 		}
 
 		return this.books.get(selectedBookIndex).isLegalTrackIndex(index);
@@ -530,31 +533,32 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode(){
-	    return new HashCodeBuilder()
-	        .append(books)
-	        .append(selectedBookIndex)
-	        .toHashCode();
+	public int hashCode() {
+		return new HashCodeBuilder().append(books).append(selectedBookIndex)
+				.toHashCode();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(final Object obj){
-	    if(obj instanceof Bookshelf){
-	        final Bookshelf other = (Bookshelf) obj;
-	        return new EqualsBuilder()
-	            .append(books, other.books)
-	            .append(selectedBookIndex, other.selectedBookIndex)
-	            .isEquals();
-	    } else{
-	        return false;
-	    }
+	public boolean equals(final Object obj) {
+		if (obj instanceof Bookshelf) {
+			final Bookshelf other = (Bookshelf) obj;
+			return new EqualsBuilder().append(books, other.books)
+					.append(selectedBookIndex, other.selectedBookIndex)
+					.isEquals();
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -663,33 +667,40 @@ public class Bookshelf implements IBookUpdates, Serializable {
 				// if more than 1 track, remove it
 				if (b.getNumberOfTracks() > 1) {
 					b.removeTrack(trackIndex);
-					updateBookDuration(bookIndex);
+					// re-calculate the book duration and fire an event
+					updateBookDurationAt(bookIndex);
+					if (hasListeners()) {
+						pcs.firePropertyChange(
+								Constants.Event.TRACK_LIST_CHANGED, null,
+								new Bookshelf(this));
+					}
+					return;
 				}
-				// otherwise remove the entire book
+				/*
+				 * otherwise remove the entire book (since there was just 1
+				 * track).
+				 */
 				else {
 					removeBookAt(bookIndex);
-				}
-				if (hasListeners()) {
-					pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
-							new Bookshelf(this));
+					if (hasListeners()) {
+						pcs.firePropertyChange(
+								Constants.Event.BOOK_LIST_CHANGED, null,
+								new Bookshelf(this));
+					}
 				}
 			}
 		}
 	}
 
 	/**
-	 * Private method to update the duration of the book at given index
+	 * Private method to update the duration of the book at given index.
+	 * bookIndex shoulve have already been checked to be legal.
 	 * 
 	 * @param bookIndex
 	 *            Index of the book
 	 */
-	private void updateBookDuration(int bookIndex) {
+	private void updateBookDurationAt(int bookIndex) {
 		this.books.get(bookIndex).updateBookDuration();
-		// fire away to listeners
-		if (hasListeners()) {
-			pcs.firePropertyChange(Constants.Event.BOOK_DURATION_CHANGED, null,
-					new Bookshelf(this));
-		}
 	}
 
 	/**
@@ -713,8 +724,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 				b.moveTrack(trackIndex, trackIndex + offset);
 
 				if (hasListeners()) {
-					pcs.firePropertyChange(Constants.Event.BOOKS_CHANGED, null,
-							new Bookshelf(this));
+					pcs.firePropertyChange(Constants.Event.BOOK_LIST_CHANGED,
+							null, new Bookshelf(this));
 				}
 			}
 		}

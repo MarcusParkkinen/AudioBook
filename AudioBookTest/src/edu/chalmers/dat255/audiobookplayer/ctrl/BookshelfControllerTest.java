@@ -124,7 +124,7 @@ public class BookshelfControllerTest extends AndroidTestCase {
 				LEGAL_TRACK_INDEX);
 
 		// ensure that the indices are changed properly
-		assertTrue(indexChanged());
+		assertTrue(indicesAreLegal());
 
 		/*
 		 * ensure that nothing is changed if the indices are out of bounds for
@@ -137,7 +137,8 @@ public class BookshelfControllerTest extends AndroidTestCase {
 					ILLEGAL_TRACK_INDEX);
 			fail(OUT_OF_BOUNDS_FAILURE_MESSAGE);
 		} catch (IllegalArgumentException e) {
-			assertFalse(indexChanged());
+			// ensure that nothing changed.
+			assertTrue(indicesAreLegal());
 		}
 
 		// setting to illegal book index, legal track index
@@ -146,7 +147,8 @@ public class BookshelfControllerTest extends AndroidTestCase {
 					LEGAL_TRACK_INDEX);
 			fail(OUT_OF_BOUNDS_FAILURE_MESSAGE);
 		} catch (IllegalArgumentException e) {
-			assertFalse(indexChanged());
+			// ensure that nothing changed.
+			assertTrue(indicesAreLegal());
 		}
 
 		// setting to legal book index, illegal track index
@@ -155,7 +157,8 @@ public class BookshelfControllerTest extends AndroidTestCase {
 					ILLEGAL_TRACK_INDEX);
 			fail(OUT_OF_BOUNDS_FAILURE_MESSAGE);
 		} catch (IllegalArgumentException e) {
-			assertFalse(indexChanged());
+			// ensure that nothing changed.
+			assertTrue(indicesAreLegal());
 		}
 
 	}
@@ -164,7 +167,7 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	 * @return True if the selected book and selected track indices are the
 	 *         legal ones specified in BookshelfControllerTest (i.e. changed).
 	 */
-	private boolean indexChanged() {
+	private boolean indicesAreLegal() {
 		return bookshelfController.getSelectedBookIndex() == LEGAL_BOOK_INDEX
 				&& bookshelfController.getSelectedTrackIndex() == LEGAL_TRACK_INDEX;
 	}

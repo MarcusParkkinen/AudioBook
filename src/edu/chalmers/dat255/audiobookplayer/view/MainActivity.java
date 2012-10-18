@@ -313,7 +313,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 * Check which event was fired, and do relevant updates in the
 		 * fragments.
 		 */
-		if (eventName.equals(Constants.Event.BOOKS_CHANGED)) {
+		if (eventName.equals(Constants.Event.BOOK_LIST_CHANGED)) {
 			// Bookshelf
 			bookshelfFragment.bookshelfUpdated(bs);
 
@@ -323,6 +323,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			if (bs.getSelectedBookIndex() != -1) {
 				Book b = bs.getSelectedBook();
 				// Bookshelf
+				// TODO(Fredrik): indicate the selected book or remove this
 
 				// Player
 				// reset the player controls to standard values
@@ -365,11 +366,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				updateElapsedTimeLabels(b);
 			}
 
-		} else if (eventName.equals(Constants.Event.TRACK_REMOVED)) {
+		} else if (eventName.equals(Constants.Event.TRACK_LIST_CHANGED)) {
 			Book b = bs.getSelectedBook();
-			// Bookshelf
-			// remove the track from the list (the child on the given index
-			// in the given parent)
 
 			// Player
 			// update book duration label
@@ -377,25 +375,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// show the correct number of tracks
 			updateTrackCounterLabel(b);
-		} else if (eventName.equals(Constants.Event.TRACK_ADDED)) {
-			Book b = bs.getSelectedBook();
-			// Bookshelf
-			// add ... -"-
 
-			// Player
-			// update book duration label
+			// Update book duration label
 			updateBookDurationLabel(b);
-
-			// show the correct number of tracks
-			updateTrackCounterLabel(b);
-		} else if (eventName.equals(Constants.Event.TRACK_ORDER_CHANGED)) {
-			Book b = bs.getSelectedBook();
-			// Bookshelf
-			// redraw list
-
-			// Player
-			// show the correct number of tracks
-			updateTrackCounterLabel(b);
 		} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
 			Book b = bs.getSelectedBook();
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
@@ -428,27 +410,20 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		} else if (eventName.equals(Constants.Event.BOOK_TITLE_CHANGED)) {
 			Book b = bs.getSelectedBook();
 			// Bookshelf
-			// update the name of the book
+			// TODO(Fredrik): update the name of the book
 
 			// Player
 			// update the book title label
 			updateBookTitleLabel(b);
-		} else if (eventName.equals(Constants.Event.BOOK_DURATION_CHANGED)) {
-			Book b = bs.getSelectedBook();
-			// Bookshelf
-
-			// Player
-			// Update book duration label
-			updateBookDurationLabel(b);
-		} else if (eventName.equals(Constants.Event.TAG_ADDED)) {
-			Book b = bs.getSelectedBook();
-			updateTags(b);
-		} else if (eventName.equals(Constants.Event.TAG_REMOVED)) {
-			Book b = bs.getSelectedBook();
-			updateTags(b);
 		} else if (eventName.equals(Constants.Event.BOOKSHELF_UPDATED)) {
 			bookshelfFragment.bookshelfUpdated(bs);
 		}
+		// else if (eventName.equals(Constants.Event.TAG_ADDED) ||
+		// eventName.equals(Constants.Event.TAG_REMOVED)) {
+		// Book b = bs.getSelectedBook();
+		// updateTags(b);
+		// }
+
 	}
 
 	/**
@@ -658,8 +633,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			return;
 		}
 
-		int selectedBookPosition = bookshelfController
-				.getSelectedBookIndex();
+		int selectedBookPosition = bookshelfController.getSelectedBookIndex();
 
 		// if the book is not currently selected, select it
 		if (selectedBookPosition != bookIndex) {

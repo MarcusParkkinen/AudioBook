@@ -24,7 +24,7 @@ package edu.chalmers.dat255.audiobookplayer.constants;
  */
 public final class Constants {
 	/**
-	 * Event values.
+	 * Event names.
 	 * 
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
@@ -35,25 +35,19 @@ public final class Constants {
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
 
 		// Book update events
+		public static final String BOOK_LIST_CHANGED = "!booksChanged";
 		public static final String BOOK_SELECTED = "!bookSelected";
-		public static final String BOOK_ADDED = "!bookAdded";
-		public static final String BOOK_REMOVED = "!bookRemoved";
-		public static final String BOOK_MOVED = "!bookMoved";
 
 		public static final String BOOK_TITLE_CHANGED = "!bookTitleChanged";
-		public static final String BOOK_DURATION_CHANGED = "!bookDurationChanged";
 
-		public static final String TRACK_REMOVED = "!trackRemoved";
-		public static final String TRACK_ADDED = "!trackAdded";
-		public static final String TRACK_ORDER_CHANGED = "!trackOrderChanged";
+		public static final String TRACK_LIST_CHANGED = "!tracksChanged";
+		
 		public static final String ELAPSED_TIME_CHANGED = "!elapsedTimeChanged";
 		public static final String TRACK_INDEX_CHANGED = "!trackIndexChanged";
 
 		public static final String TAG_ADDED = "!tagAdded";
-
 		public static final String TAG_REMOVED = "!tagRemoved";
 
-		public static final String BOOKS_CHANGED = "!booksChanged";
 	}
 
 	/**
