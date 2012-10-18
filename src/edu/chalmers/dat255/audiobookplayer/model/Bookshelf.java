@@ -167,6 +167,37 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	/**
+	 * Sets both the track index and the book index.
+	 * <p>
+	 * Both integers must be valid, and only the track index may be deselected
+	 * (set to "-1").
+	 * 
+	 * @param bookIndex
+	 *            The index of the book to select. Can not be -1.
+	 * @param trackIndex
+	 *            The index of the track to select. Can be -1.
+	 */
+	public void setSelectedTrackIndex(int bookIndex, int trackIndex) {
+		if (!isLegalBookIndex(bookIndex)) {
+			throw new IndexOutOfBoundsException();
+		} else {
+			Log.d("TESTING", "Valid book " + bookIndex);
+			// the book index is valid
+			if (!isLegalTrackIndexAt(bookIndex, trackIndex) && trackIndex != Constants.Value.NO_TRACK_SELECTED) {
+				throw new IndexOutOfBoundsException();
+			} else {
+				// the track is valid
+				Log.d("TESTING", "Valid track " + trackIndex);
+				// the track index is either valid or deselects
+				// we now know that both indices are valid, so make the changes.
+				setSelectedBookIndex(bookIndex);
+				setSelectedTrackIndex(trackIndex);
+			}
+		}
+
+	}
+
 	/* End Bookshelf methods */
 
 	/* IBookUpdates */
@@ -497,6 +528,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 
 		return this.books.get(selectedBookIndex).isLegalTrackIndex(index);
+	}
+
+	private boolean isLegalTrackIndexAt(int bookIndex, int trackIndex) {
+		if (bookIndex == NO_BOOK_SELECTED) {
+			throw new IndexOutOfBoundsException(TAG + " isLegalTrackIndexAt "
+					+ NO_BOOK_SELECTED);
+		}
+
+		return books.get(bookIndex).isLegalTrackIndex(trackIndex);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

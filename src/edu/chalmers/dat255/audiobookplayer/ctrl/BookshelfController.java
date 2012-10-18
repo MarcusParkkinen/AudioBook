@@ -75,8 +75,7 @@ public class BookshelfController implements IBookshelfEvents {
 	 */
 
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
-		bookshelf.setSelectedBookIndex(bookIndex);
-		bookshelf.setSelectedTrackIndex(trackIndex);
+		bookshelf.setSelectedTrackIndex(bookIndex, trackIndex);
 	}
 
 	public void removeBook(int bookIndex) {

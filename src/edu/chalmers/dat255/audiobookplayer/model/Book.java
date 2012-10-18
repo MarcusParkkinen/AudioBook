@@ -150,7 +150,7 @@ public final class Book implements IBookUpdates, Serializable {
 
 			// adjust the duration
 			duration += t.getDuration();
-			
+
 			if (tracks.size() == 1) {
 				selectedTrackIndex = 0;
 			}
