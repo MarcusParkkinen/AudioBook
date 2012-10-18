@@ -326,8 +326,6 @@ IBookshelfEvents, IBookshelfGUIEvents, PropertyChangeListener {
 				if (bs.getSelectedBookIndex() != -1) {
 					Book b = bs.getSelectedBook();
 					// Bookshelf
-					// indicate selected book
-					// bookshelf.selectedBookChanged(b);
 
 					// Player
 					// reset the player controls to standard values

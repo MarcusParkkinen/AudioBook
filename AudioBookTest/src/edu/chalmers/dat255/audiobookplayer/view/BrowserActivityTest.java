@@ -57,14 +57,6 @@ ActivityInstrumentationTestCase2<BrowserActivity> {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.test.ActivityInstrumentationTestCase2#tearDown()
-	 */
-	@SmallTest
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	/**
 	 * Test method for {@link edu.chalmers.dat255.audiobookplayer.view.BrowserActivity#onCreate(android.os.Bundle)}.
 	 */

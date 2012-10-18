@@ -94,8 +94,6 @@ public interface IBookUpdates extends ITrackUpdates {
 	 */
 	String getSelectedBookTitle();
 
-	// void setAuthor(String newAuthor);
-
 	/**
 	 * Returns the author of the selected book.
 	 * 

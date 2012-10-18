@@ -43,10 +43,6 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 		super.setUp();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public void testLoadBookshelf() {
 		// Assert that we always get a bookshelf instance
 		assertTrue(BookshelfHandler.loadBookshelf(this.getContext(), USERNAME) instanceof Bookshelf);

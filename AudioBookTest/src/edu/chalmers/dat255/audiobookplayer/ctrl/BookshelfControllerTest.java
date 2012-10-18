@@ -79,10 +79,6 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		bs.addBook(book3);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public void testSetSelectedBook() {
 		bs.setSelectedBookIndex(2);
 		assertTrue(bs.getSelectedBookIndex() == 2);

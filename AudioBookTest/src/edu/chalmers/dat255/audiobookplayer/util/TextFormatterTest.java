@@ -44,15 +44,6 @@ public class TextFormatterTest extends TestCase {
 	private static final int NO_OF_TRACKS = 25; // "limit"
 	private static final int NO_SELECTION = -1;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
 	/**
 	 * Test method for
 	 * {@link edu.chalmers.dat255.audiobookplayer.util.TextFormatter#formatTimeFromMillis(int)}
