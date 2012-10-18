@@ -352,19 +352,17 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			}
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
+
 			// Bookshelf
-			if (pager.getCurrentItem() == BOOKSHELF) {
-				updateSelectedBookElapsedTime(b);
-			}
+			updateSelectedBookElapsedTime(b);
+
 			// Player
-			else {
-				// recalculate the track seekbar
-				updateTrackSeekbar(b);
-				// recalculate the book seekbar
-				updateBookSeekbar(b);
-				// update time labels
-				updateElapsedTimeLabels(b);
-			}
+			// recalculate the track seekbar
+			updateTrackSeekbar(b);
+			// recalculate the book seekbar
+			updateBookSeekbar(b);
+			// update time labels
+			updateElapsedTimeLabels(b);
 
 		} else if (eventName.equals(Constants.Event.TRACK_LIST_CHANGED)) {
 			Book b = bs.getSelectedBook();
@@ -565,13 +563,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            The selected book.
 	 */
 	private void updateSelectedBookElapsedTime(final Book b) {
-		if (bookshelfFragment.getActivity() != null) {
+		if (b.getSelectedTrackIndex() != -1
+				&& bookshelfFragment.getActivity() != null) {
 			bookshelfFragment.getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					if (b.getSelectedTrackIndex() != -1) {
-						bookshelfFragment.selectedBookElapsedTimeUpdated(b
-								.getBookElapsedTime());
-					}
+					// update
+					bookshelfFragment.selectedBookElapsedTimeUpdated(b
+							.getBookElapsedTime());
 				}
 			});
 		}
@@ -604,7 +602,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateBookSeekbar(Book b) {
-		if (b.getSelectedTrackIndex() != -1) {
+		if (b.getSelectedTrackIndex() != -1) { // TODO(?): unnecessary check?
 			// elapsed time
 			int bookElapsedTime = b.getBookElapsedTime();
 
