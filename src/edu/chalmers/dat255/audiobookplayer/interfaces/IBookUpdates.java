@@ -37,8 +37,6 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * Removes a track from the collection on the specified index.
 	 * 
 	 * @param index
-	 * @throws IndexOutOfBoundsException
-	 *             If no book is selected.
 	 */
 	void removeTrack(int index);
 
@@ -47,11 +45,8 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * 
 	 * @param firstIndex
 	 * @param secondIndex
-	 * @throws IndexOutOfBoundsException
-	 *             If no book is selected.
 	 */
-	void swapTracks(int firstIndex, int secondIndex)
-			throws IndexOutOfBoundsException;
+	void swapTracks(int firstIndex, int secondIndex);
 
 	/**
 	 * Move a track from a given index to a given index. Indices inbetween will
@@ -59,8 +54,6 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * 
 	 * @param from
 	 * @param to
-	 * @throws IndexOutOfBoundsException
-	 *             If no book is selected.
 	 */
 	void moveTrack(int from, int to);
 
@@ -71,19 +64,15 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * Must be set to integers greater than or equal to -1.
 	 * 
 	 * @param index
-	 * @throws IndexOutOfBoundsException
-	 *             If no book is selected.
 	 */
-	void setSelectedTrackIndex(int index) throws IndexOutOfBoundsException;
+	void setSelectedTrackIndex(int index);
 
 	/**
 	 * Sets the title of the book.
 	 * 
 	 * @param newTitle
-	 * @throws IndexOutOfBoundsException
-	 *             If no book is selected.
 	 */
-	void setSelectedBookTitle(String newTitle) throws IndexOutOfBoundsException;
+	void setSelectedBookTitle(String newTitle);
 
 	/**
 	 * Gets the title of the book.

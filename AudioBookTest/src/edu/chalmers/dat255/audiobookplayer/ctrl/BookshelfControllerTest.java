@@ -14,9 +14,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.test.AndroidTestCase;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
@@ -30,66 +27,77 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * 
  */
 public class BookshelfControllerTest extends AndroidTestCase {
-	
-	// Books
-	private Book book0;
-	private Book book1;
-	private Book book2;
-	private Book book3;
-
-	// Tracks
-	private Track track0;
-	private Track track1;
-	private Track track2;
-	private Track track3;
-
 	// Bookshelf
-	private Bookshelf bs;
+	private Bookshelf bookshelf;
+	
+	// Tracks
+	private static final String PATH0 = "path000";
+	private static final String PATH1 = "path111";
+	private static final String PATH2 = "path222";
+	
+	private static final int DURATION0 = 1234;
+	private static final int DURATION1 = 2345;
+	private static final int DURATION2 = 3456;
+	
+	private static final Track TRACK0 = new Track(PATH0, DURATION0);
+	private static final Track TRACK1 = new Track(PATH1, DURATION1);
+	private static final Track TRACK2 = new Track(PATH2, DURATION2);
+
+	// Books
+	private static final String TITLE0 = "title0";
+	private static final String TITLE1 = "title1";
+	private static final String TITLE2 = "title2";
+	private static final String TITLE3 = "title3";
+	private static final String TITLE4 = "title4";
+	
+	private static final String AUTHOR0 = "author0";
+	private static final String AUTHOR1 = "author1";
+	
+	// One modifiable book
+	private Book book0;
+	private static final Book BOOK1 = new Book(TITLE1, AUTHOR1);
+	private static final Book BOOK2 = new Book(TITLE2);
+	private static final Book BOOK3 = new Book(TITLE3);
+	private static final Book BOOK4 = new Book(TITLE4);
+
 	
 	private static final String TEST_STRING = "TEST";
 
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		bs = new Bookshelf();
+		// NOTE: do not change these values; the tests depend on them
 
-		// Create tracks
-		track0 = new Track("path0", 0);
-		track1 = new Track("path1", 1);
-		track2 = new Track("path2", 2);
-		track3 = new Track("path3", 3);
+		// create a new bookshelf
+		bookshelf = new Bookshelf();
+		
+		// create the single modifiable book
+		book0 = new Book(TITLE0, AUTHOR0);
 
-		// Track list
-		List<Track> tracks = new LinkedList<Track>();
-		tracks.add(track0);
-		tracks.add(track1);
-		tracks.add(track2);
-		tracks.add(track3);
+		// Add tracks to one of the books
+		book0.addTrack(TRACK0);
+		book0.addTrack(TRACK1);
+		book0.addTrack(TRACK2);
 
-		// Create books
-		book0 = new Book(tracks, "title0", "author0");
-		book1 = new Book("title1");
-		book2 = new Book("title2");
-		book3 = new Book("title3");
-
-		// Add them with the indices indicated by the variable name
-		bs.addBook(book0);
-		bs.addBook(book1);
-		bs.addBook(book2);
-		bs.addBook(book3);
+		// Add books to the bookshelf (to add to the allowed indices)
+		bookshelf.addBook(book0);
+		bookshelf.addBook(BOOK1);
+		bookshelf.addBook(BOOK2);
+		bookshelf.addBook(BOOK3);
+		bookshelf.addBook(BOOK4);
 	}
 
 	public void testSetSelectedBook() {
-		bs.setSelectedBookIndex(2);
-		assertTrue(bs.getSelectedBookIndex() == 2);
+		bookshelf.setSelectedBookIndex(2);
+		assertTrue(bookshelf.getSelectedBookIndex() == 2);
 
 		// Try to select an index out of bounds
 		try {
-			bs.setSelectedBookIndex(16);
+			bookshelf.setSelectedBookIndex(16);
 			fail("Selected an illegal book index which was not intended.");
 		} catch (IllegalArgumentException e) {
 			// Assert that the index is the same as it was
-			assertTrue(bs.getSelectedBookIndex() == 2);
+			assertTrue(bookshelf.getSelectedBookIndex() == 2);
 		}
 
 		/*
@@ -99,22 +107,22 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		 * class.
 		 */
 		try {
-			bs.setSelectedBookIndex(-1);
+			bookshelf.setSelectedBookIndex(-1);
 			fail("Selected an illegal book index which was not intended.");
 		} catch (IllegalArgumentException e) {
 			// Assert that the index is the same as it was
-			assertTrue(bs.getSelectedBookIndex() == 2);
+			assertTrue(bookshelf.getSelectedBookIndex() == 2);
 		}
 	}
 
 	public void testGetSelectedBookPosition() {
-		bs.setSelectedBookIndex(2);
-		assertTrue(bs.getSelectedBookIndex() == 2);
+		bookshelf.setSelectedBookIndex(2);
+		assertTrue(bookshelf.getSelectedBookIndex() == 2);
 	}
 
 	public void testGetSelectedBook() {
-		bs.setSelectedBookIndex(2);
-		assertTrue(bs.getSelectedBook().equals(book2));
+		bookshelf.setSelectedBookIndex(2);
+		assertTrue(bookshelf.getSelectedBook().equals(BOOK2));
 	}
 
 	public void testSetSelectedTrack() {
@@ -153,44 +161,44 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		 */
 		// negative integer
 		try {
-			bs.removeBookAt(-1);
+			bookshelf.removeBookAt(-1);
 			fail("Removed a book at an illegal track index (negative out of bounds)");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// out-of-bounds positive integer
 		try {
-			bs.removeBookAt(1252125);
+			bookshelf.removeBookAt(1252125);
 			fail("Removed a book at an illegal track index (positive out of bounds)");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// off-by-one positive integer
 		try {
-			bs.removeBookAt(4);
+			bookshelf.removeBookAt(4);
 			fail("Removed a book at an illegal track index (positive out of bounds by one)");
 		} catch (IllegalArgumentException e) {
 		}
 
 		// the number of books should not have changed
-		assertTrue(bs.getNumberOfBooks() == 4);
+		assertTrue(bookshelf.getNumberOfBooks() == 4);
 
-		bs.removeBookAt(0);
+		bookshelf.removeBookAt(0);
 
 		// the number of books should now have decremented
-		assertTrue(bs.getNumberOfBooks() == 3);
+		assertTrue(bookshelf.getNumberOfBooks() == 3);
 
 		/*
 		 * ensure that the book that is currently at index 0 is the one that was
 		 * at index 1 at the beginning (since we removed a book earlier in the
 		 * list)
 		 */
-		assertTrue(bs.getBookAt(0).equals(book1));
+		assertTrue(bookshelf.getBookAt(0).equals(BOOK1));
 	}
 
 	public void testSetBookTitleAt() {
-		bs.setSelectedBookTitle(TEST_STRING);
-		assertTrue(bs.getSelectedBookTitle().equals(TEST_STRING));
+		bookshelf.setSelectedBookTitle(TEST_STRING);
+		assertTrue(bookshelf.getSelectedBookTitle().equals(TEST_STRING));
 	}
 
 	// testRemoveTrack and testSetSelctedTrack implemented in BookTest

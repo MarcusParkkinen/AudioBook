@@ -153,8 +153,7 @@ public final class Book implements IBookUpdates, Serializable {
 		}
 	}
 
-	public void swapTracks(int firstIndex, int secondIndex)
-			throws IndexOutOfBoundsException {
+	public void swapTracks(int firstIndex, int secondIndex) {
 		if (!isLegalTrackIndex(firstIndex) || !isLegalTrackIndex(secondIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " swapTracks"
 					+ TRACK_INDEX_ILLEGAL);
@@ -173,8 +172,7 @@ public final class Book implements IBookUpdates, Serializable {
 		}
 	}
 
-	public void setSelectedTrackIndex(int index)
-			throws IndexOutOfBoundsException {
+	public void setSelectedTrackIndex(int index) {
 		if (index < -1 || index > this.tracks.size() + 1) {
 			throw new IndexOutOfBoundsException(TAG
 					+ " setSelectedTrackIndex with index out of bounds: "
@@ -215,8 +213,7 @@ public final class Book implements IBookUpdates, Serializable {
 
 	/* ITrackUpdates */
 
-	public void setSelectedTrackElapsedTime(int newTime)
-			throws IndexOutOfBoundsException {
+	public void setSelectedTrackElapsedTime(int newTime) {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {
 			throw new IndexOutOfBoundsException(TAG
 					+ " setSelectedTrackElapsedTime" + TRACK_INDEX_ILLEGAL);
@@ -289,9 +286,6 @@ public final class Book implements IBookUpdates, Serializable {
 	 * Gets the track path of the currently selected track.
 	 * 
 	 * @return
-	 * @throws IndexOutOfBoundsException
-	 *             If the track index is illegal (negative or larger than the
-	 *             elements in the track list).
 	 */
 	public String getSelectedTrackPath() {
 		if (!isLegalTrackIndex(selectedTrackIndex)) {

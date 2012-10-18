@@ -76,15 +76,15 @@ public class BookshelfTest extends TestCase {
 
 		// NOTE: do not change these values; the tests depend on them
 
+		// create a new bookshelf
 		bookshelf = new Bookshelf();
-		bookshelf.addPropertyChangeListener(null);
 
 		// Add tracks to one of the books
 		BOOK0.addTrack(TRACK0);
 		BOOK0.addTrack(TRACK1);
 		BOOK0.addTrack(TRACK2);
 
-		// Add elements to the bookshelf (to add to the allowed indices)
+		// Add books to the bookshelf (to add to the allowed indices)
 		bookshelf.addBook(BOOK0);
 		bookshelf.addBook(BOOK1);
 		bookshelf.addBook(BOOK2);

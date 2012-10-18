@@ -38,7 +38,7 @@ public final class FileBrowser {
 	 * which then is (format1|format2|...) followed by one of these formats. $
 	 * Indicates the end of the line.
 	 */
-	private final static Pattern PATTERN = Pattern.compile("(.*\\.)(mp3|wav)$");
+	private static final Pattern PATTERN = Pattern.compile("(.*\\.)(mp3|wav)$");
 
 	/**
 	 * Searches the directory (file) located at path, and its subdirectories

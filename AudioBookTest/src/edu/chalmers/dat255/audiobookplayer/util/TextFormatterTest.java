@@ -33,6 +33,8 @@ public class TextFormatterTest extends TestCase {
 	private static final int ONE_DIGIT = 3;
 	private static final int TWO_DIGITS = 59;
 
+	private static final int LARGE_PRIME_INTEGER = 421;
+
 	// Converting from milliseconds (ms)
 	private static final int SECONDS = MSECS_IN_SECOND;
 	private static final int MINUTES = MSECS_IN_SECOND * SECS_IN_MINUTE;
@@ -103,9 +105,9 @@ public class TextFormatterTest extends TestCase {
 
 		// test hours >= 24
 		dummy = TWO_DIGITS + ":" + TWO_DIGITS + ":" + TWO_DIGITS;
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(523 * DAYS
-				+ TWO_DIGITS * HOURS + TWO_DIGITS * MINUTES + TWO_DIGITS
-				* SECONDS)));
+		assertTrue(dummy.equals(TextFormatter
+				.formatTimeFromMillis(LARGE_PRIME_INTEGER * DAYS + TWO_DIGITS
+						* HOURS + TWO_DIGITS * MINUTES + TWO_DIGITS * SECONDS)));
 
 	}
 
