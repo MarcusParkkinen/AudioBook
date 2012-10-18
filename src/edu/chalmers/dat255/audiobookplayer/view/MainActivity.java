@@ -418,19 +418,19 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		} else if (eventName.equals(Constants.Event.BOOKSHELF_UPDATED)) {
 			bookshelfFragment.bookshelfUpdated(bs);
 		}
-		// else if (eventName.equals(Constants.Event.TAG_ADDED) ||
-		// eventName.equals(Constants.Event.TAG_REMOVED)) {
-		// Book b = bs.getSelectedBook();
-		// updateTags(b);
-		// }
-
+		/*
+		 * Eventually tag updates would have been handled here as well, calling
+		 * the private method updateTags. Tags are, however, not implemented in
+		 * the GUI so they will not be written here, either.
+		 */
 	}
 
 	/**
-	 * Updates the tags in the player UI.
+	 * Updates the tags in the player UI (unimplemented in GUI).
 	 * 
 	 * @param selectedBook
 	 */
+	@SuppressWarnings("unused")
 	private void updateTags(final Book selectedBook) {
 		playerFragment.getActivity().runOnUiThread(new Runnable() {
 			public void run() {

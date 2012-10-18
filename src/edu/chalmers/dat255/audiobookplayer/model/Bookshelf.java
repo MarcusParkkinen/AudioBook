@@ -280,6 +280,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 					+ BOOK_INDEX_ILLEGAL);
 		}
 
+		// TODO(?): Weird method name 'selected'.
 		this.books.get(bookIndex).setSelectedBookTitle(newTitle);
 
 		if (hasListeners()) {

@@ -35,17 +35,45 @@ public final class Constants {
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
 
 		// Book update events
+		/**
+		 * Called when books are removed, added, or moved.
+		 */
 		public static final String BOOK_LIST_CHANGED = "!booksChanged";
-		public static final String BOOK_SELECTED = "!bookSelected";
+		/**
+		 * Called when tracks are removed, added, or moved.
+		 */
+		public static final String TRACK_LIST_CHANGED = "!tracksChanged";
 
+		/**
+		 * Called when a book is selected.
+		 */
+		public static final String BOOK_SELECTED = "!bookSelected";
+		/**
+		 * Called when the title of a book is changed.
+		 */
 		public static final String BOOK_TITLE_CHANGED = "!bookTitleChanged";
 
-		public static final String TRACK_LIST_CHANGED = "!tracksChanged";
-		
+		/**
+		 * Called when the elapsed time of a track (usually, or probably
+		 * exclusively, the currently selected track in the currently selected
+		 * book) has changed.
+		 */
 		public static final String ELAPSED_TIME_CHANGED = "!elapsedTimeChanged";
+		/**
+		 * Called when the track index of a book is changed.
+		 */
 		public static final String TRACK_INDEX_CHANGED = "!trackIndexChanged";
 
+		/*
+		 * Unimplemented properties below.
+		 */
+		/**
+		 * Called when a tag is added to a track.
+		 */
 		public static final String TAG_ADDED = "!tagAdded";
+		/**
+		 * Called when a tag is removed from a track.
+		 */
 		public static final String TAG_REMOVED = "!tagRemoved";
 
 	}
@@ -67,17 +95,34 @@ public final class Constants {
 	 * 
 	 */
 	public static final class Value {
-		// The frequency for GUI updates. Lower value means updates more often.
+		/**
+		 * The frequency for GUI updates. Lower value means updates more often.
+		 */
 		public static final int UPDATE_FREQUENCY = 100; // default 1000
 
-		// Increases the number of visual jumps when the bars are updated.
+		/**
+		 * The number of zones in a seek bar; the possible values its progress
+		 * can take.
+		 * <p>
+		 * A higher value means smaller visual jumps when the bars are updated,
+		 * thus making it smoother.
+		 */
 		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
 
-		// Indices that the system should interpret as "none selected"
+		/**
+		 * The index that the system should interpret as "none selected"
+		 */
 		public static final int NO_BOOK_SELECTED = -1;
+		/**
+		 * The index that the system should interpret as "none selected"
+		 */
 		public static final int NO_TRACK_SELECTED = -1;
 
-		public static final int MAX_TITLE_CHARACTER_LENGTH = 100;
+		/**
+		 * The maximum title length allowed in the GUI before the text is
+		 * truncated (cut off).
+		 */
+		public static final int MAX_TITLE_CHARACTER_LENGTH = 30;
 
 	}
 
@@ -88,8 +133,9 @@ public final class Constants {
 	 * 
 	 */
 	public static final class Message {
+		// fixing the 'magic number' complaints of Sonar.
 		public static final String NOT_AVAILABLE = "N/A";
-		
+
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
 
 		public static final CharSequence NO_BOOK_TITLE = NOT_AVAILABLE;
