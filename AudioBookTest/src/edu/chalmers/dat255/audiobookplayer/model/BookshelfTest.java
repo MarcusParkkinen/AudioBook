@@ -98,7 +98,6 @@ public class BookshelfTest extends TestCase {
 	/**
 	 * Tests the constructor.
 	 */
-	@Test(expected = IndexOutOfBoundsException.class)
 	public void testBookshelf() {
 		assertTrue(bookshelf.getSelectedBookIndex() == -1); // not selected
 		try {
@@ -134,7 +133,6 @@ public class BookshelfTest extends TestCase {
 	/**
 	 * Tests selecting a book.
 	 */
-	@Test(expected = IndexOutOfBoundsException.class)
 	public void testSetSelectedBook() {
 		// Test the accessor
 		bookshelf.setSelectedBookIndex(LEGAL_POSITIVE_INDEX);
@@ -187,7 +185,6 @@ public class BookshelfTest extends TestCase {
 	/**
 	 * Tests removing a book.
 	 */
-	@Test(expected = IndexOutOfBoundsException.class)
 	public void testRemoveBook() {
 		// Try to remove a book from an illegal index
 		bookshelf.removeBookAt(ILLEGAL_NEGATIVE_INDEX);
@@ -215,7 +212,6 @@ public class BookshelfTest extends TestCase {
 	/**
 	 * Tests moving a book.
 	 */
-	@Test(expected = IndexOutOfBoundsException.class)
 	public void testMoveBook() {
 		// Make a copy to compare with
 		Bookshelf copy = new Bookshelf(bookshelf);
