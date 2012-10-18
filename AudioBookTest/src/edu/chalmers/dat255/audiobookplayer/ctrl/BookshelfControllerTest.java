@@ -13,6 +13,9 @@
 
 package edu.chalmers.dat255.audiobookplayer.ctrl;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import android.test.AndroidTestCase;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
@@ -50,11 +53,21 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	private static final String OUT_OF_BOUNDS_FAILURE_MESSAGE = "Index was out of bounds,"
 			+ " but the operation was still completed.";
 
-	// since we are testing with 3 books, 3 is an illegal index (0-2 are legal)
+	// since we will be testing with 3 books, 3 is an illegal index (0-2 are
+	// legal)
 	private static final int ILLEGAL_BOOK_INDEX = 3;
 
-	// since we are testing with 3 tracks, 3 is an illegal index (0-2 are legal)
+	// since we will be testing with 3 tracks, 3 is an illegal index (0-2 are
+	// legal)
 	private static final int ILLEGAL_TRACK_INDEX = 3;
+
+	private static final String PATH0 = "p0";
+	private static final String PATH1 = "p1";
+	private static final String PATH2 = "p2";
+
+	private static final int DURATION0 = 5000;
+	private static final int DURATION1 = 6000;
+	private static final int DURATION2 = 7000;
 
 	/*
 	 * (non-Javadoc)
@@ -65,21 +78,32 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		super.setUp();
 
 		// NOTE: do not change these values; the tests depend on them
-		
+
+		// Create tracks
+		Track t0 = new Track(PATH0, DURATION0);
+		Track t1 = new Track(PATH1, DURATION1);
+		Track t2 = new Track(PATH2, DURATION2);
+
+		// Put them in a list
+		List<Track> tracks = new LinkedList<Track>();
+		tracks.add(t0);
+		tracks.add(t1);
+		tracks.add(t2);
+
 		// Create books
-		Book b0 = new Book(TITLE0);
-		Book b1 = new Book(TITLE1);
-		Book b2 = new Book(TITLE2);
-		
-		// create a new bookshelf to create the controller
+		Book b0 = new Book(tracks, TITLE0);
+		Book b1 = new Book(tracks, TITLE1);
+		Book b2 = new Book(tracks, TITLE2);
+
+		// Create a new bookshelf to create the controller with
 		Bookshelf bookshelf = new Bookshelf();
 
 		// Add books to the bookshelf (to add to the allowed indices)
 		bookshelf.addBook(b0);
 		bookshelf.addBook(b1);
 		bookshelf.addBook(b2);
-		
-		// create a new controller with the bookshelf
+
+		// Create a new controller with the bookshelf
 		bookshelfController = new BookshelfController(bookshelf);
 
 	}
@@ -97,9 +121,9 @@ public class BookshelfControllerTest extends AndroidTestCase {
 
 		// select a book and track at legal indices
 		bookshelfController.setSelectedTrack(LEGAL_BOOK_INDEX,
-				ILLEGAL_TRACK_INDEX);
+				LEGAL_TRACK_INDEX);
 
-		// ensure that the indices changed properly
+		// ensure that the indices are changed properly
 		assertTrue(indexChanged());
 
 		/*
@@ -137,8 +161,8 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	}
 
 	/**
-	 * @return True if the selected book and selected track indices are legal
-	 *         (i.e. changed).
+	 * @return True if the selected book and selected track indices are the
+	 *         legal ones specified in BookshelfControllerTest (i.e. changed).
 	 */
 	private boolean indexChanged() {
 		return bookshelfController.getSelectedBookIndex() == LEGAL_BOOK_INDEX

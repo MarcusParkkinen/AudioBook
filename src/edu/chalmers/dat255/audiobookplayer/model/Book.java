@@ -109,6 +109,10 @@ public final class Book implements IBookUpdates, Serializable {
 		}
 	}
 
+	public Book(Collection<Track> col, String title) {
+		this(col, title, Constants.Message.NO_AUTHOR);
+	}
+
 	/* IBookUpdates */
 	/**
 	 * Remove a track from the book.
