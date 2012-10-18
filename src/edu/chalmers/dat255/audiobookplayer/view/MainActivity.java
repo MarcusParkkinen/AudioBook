@@ -659,7 +659,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		}
 
 		int selectedBookPosition = bookshelfController
-				.getSelectedBookPosition();
+				.getSelectedBookIndex();
 
 		// if the book is not currently selected, select it
 		if (selectedBookPosition != bookIndex) {

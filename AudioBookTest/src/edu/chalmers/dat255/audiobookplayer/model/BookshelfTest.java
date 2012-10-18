@@ -18,7 +18,9 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
- * Test for Bookshelf.
+ * Test for Bookshelf. Tests constructing and copying a bookshelf,
+ * selecting/adding/moving/removing book(s), getting number of books and the
+ * equals method for a bookshelf.
  * 
  * @author Aki Käkelä
  * @version 0.3
@@ -26,17 +28,18 @@ import org.junit.Test;
  */
 public class BookshelfTest extends TestCase {
 
+	// Bookshelf
 	private Bookshelf bookshelf;
-	
+
 	// Tracks
 	private static final String PATH0 = "path000";
 	private static final String PATH1 = "path111";
 	private static final String PATH2 = "path222";
-	
+
 	private static final int DURATION0 = 1234;
 	private static final int DURATION1 = 2345;
 	private static final int DURATION2 = 3456;
-	
+
 	private static final Track TRACK0 = new Track(PATH0, DURATION0);
 	private static final Track TRACK1 = new Track(PATH1, DURATION1);
 	private static final Track TRACK2 = new Track(PATH2, DURATION2);
@@ -47,10 +50,10 @@ public class BookshelfTest extends TestCase {
 	private static final String TITLE2 = "title2";
 	private static final String TITLE3 = "title3";
 	private static final String TITLE4 = "title4";
-	
+
 	private static final String AUTHOR0 = "author0";
 	private static final String AUTHOR1 = "author1";
-	
+
 	private static final Book BOOK0 = new Book(TITLE0, AUTHOR0);
 	private static final Book BOOK1 = new Book(TITLE1, AUTHOR1);
 	private static final Book BOOK2 = new Book(TITLE2);
@@ -128,6 +131,9 @@ public class BookshelfTest extends TestCase {
 		assertEquals(bookshelf, testBookshelf);
 	}
 
+	/**
+	 * Tests selecting a book.
+	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testSetSelectedBook() {
 		// Test the accessor
@@ -158,6 +164,9 @@ public class BookshelfTest extends TestCase {
 		assertTrue(bookshelf.getSelectedBookIndex() == 1);
 	}
 
+	/**
+	 * Tests adding a book.
+	 */
 	public void testAddBook() {
 		// Make a new (empty) bookshelf
 		bookshelf = new Bookshelf();
@@ -175,6 +184,9 @@ public class BookshelfTest extends TestCase {
 		assertTrue(bookshelf.getSelectedBook().equals(BOOK0));
 	}
 
+	/**
+	 * Tests removing a book.
+	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testRemoveBook() {
 		// Try to remove a book from an illegal index
@@ -200,6 +212,9 @@ public class BookshelfTest extends TestCase {
 		assertTrue(testBookshelf.equals(bookshelf));
 	}
 
+	/**
+	 * Tests moving a book.
+	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testMoveBook() {
 		// Make a copy to compare with
@@ -251,6 +266,9 @@ public class BookshelfTest extends TestCase {
 		assertTrue(bookshelf.getBookAt(1).equals(copy.getBookAt(3)));
 	}
 
+	/**
+	 * Tests getting the correct number of books.
+	 */
 	public void testGetNumberOfBooks() {
 		// Assert that the number of books is correct
 		assertTrue(bookshelf.getNumberOfBooks() == STARTING_NUMBER_OF_BOOKS);
@@ -260,6 +278,9 @@ public class BookshelfTest extends TestCase {
 		assertTrue(bookshelf.getNumberOfBooks() == 0);
 	}
 
+	/**
+	 * Tests if the equals method for bookshelves is correct.
+	 */
 	public void testEqualsObject() {
 		// Assert that they are equivalent (reflexive, symmetric and transitive)
 

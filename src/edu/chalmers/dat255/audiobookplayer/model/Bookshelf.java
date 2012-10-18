@@ -191,6 +191,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	// TODO: never called, only uses tests
 	public void addTrack(Track t) {
 		if (!isLegalBookIndex(selectedBookIndex)) {
 			throw new IndexOutOfBoundsException();

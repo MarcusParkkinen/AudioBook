@@ -56,8 +56,16 @@ public class BookshelfController implements IBookshelfEvents {
 	/**
 	 * @return
 	 */
-	public int getSelectedBookPosition() {
+	public int getSelectedBookIndex() {
 		return bookshelf.getSelectedBookIndex();
+	}
+	
+	/**
+	 * (Currently only used for testing.)
+	 * @return
+	 */
+	public int getSelectedTrackIndex() {
+		return bookshelf.getSelectedTrackIndex();
 	}
 
 	// sort, swap, move, edit book

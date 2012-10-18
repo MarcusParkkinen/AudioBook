@@ -16,91 +16,118 @@ package edu.chalmers.dat255.audiobookplayer.model;
 import junit.framework.TestCase;
 
 /**
- * @author Marcus Parkkinen
- * @version 0.1
+ * Tests constructing and copying a track, getting the track path, and getting
+ * and setting the elapsed time of the selected track.
+ * 
+ * @author Marcus Parkkinen, Aki Käkelä
+ * @version 0.2
  */
 
 public class TrackTest extends TestCase {
-	private static final String trackPath = "MyTrack.mp3";
-	private static final int trackLength = 1238921;
-	private static final int elapsedTime = 238238;
+	// The test object.
 	private Track t;
-	
+
+	// Some values for creating tracks.
+	private static final String TRACK_PATH = "MyTrack.mp3";
+	private static final int TRACK_DURATION = 1238921;
+	private static final int ELAPSED_TIME = 238238;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		t = new Track(trackPath, trackLength);
-		t.setSelectedTrackElapsedTime(elapsedTime);
+
+		t = new Track(TRACK_PATH, TRACK_DURATION);
+		t.setSelectedTrackElapsedTime(ELAPSED_TIME);
 	}
-	
+
+	/**
+	 * Tests the constructor.
+	 */
+	public void testConstructor() {
+		// try creating a track with 'null' as path
+		try {
+			t = new Track(null, TRACK_DURATION);
+			fail("Constructor did not throw exception for null path.");
+		} catch (IllegalArgumentException e) {
+
+		}
+
+		// try creating a track with illegal path string
+		try {
+			t = new Track("", TRACK_DURATION);
+			fail("Constructor did not throw exception for empty string as path");
+		} catch (IllegalArgumentException e) {
+
+		}
+
+		// try creating a track with 0 as duration
+		try {
+			t = new Track(TRACK_PATH, 0);
+			fail("Constructor did not throw exception for zero duration.");
+		} catch (IllegalArgumentException e) {
+
+		}
+
+		// try creating a track with -1 as duration
+		try {
+			t = new Track(TRACK_PATH, -1);
+			fail("Constructor did not throw exception for negative duration.");
+		} catch (IllegalArgumentException e) {
+
+		}
+	}
+
+	/**
+	 * Tests the copy constructor.
+	 */
 	public void testCopy() {
-		//create a new copy of the track
+		// create a new copy of the track
 		Track newTrack = new Track(t);
-		
-		//assert that we have two separate objects
+
+		// assert that we have two separate objects
 		assertNotSame(newTrack, t);
-		
-		//but assert that they are equal
+
+		// but assert that they are equal
 		assertTrue(newTrack.equals(t));
 	}
-	
+
+	/**
+	 * Tests getting the track path.
+	 */
 	public void testGetTrackPath() {
-		assertTrue(trackPath.equals(t.getTrackPath()));
+		assertTrue(TRACK_PATH.equals(t.getTrackPath()));
 	}
-	
+
+	/**
+	 * Tests getting the elapsed time.
+	 */
 	public void testGetElapsedTime() {
-		assertEquals(elapsedTime, t.getElapsedTime());
+		assertEquals(ELAPSED_TIME, t.getElapsedTime());
 	}
-	
+
+	/**
+	 * Tests setting the elapsed time of the selected track.
+	 */
 	public void testSetSelectedTrackElapsedTime() {
-		//test legal bound values
-		t.setSelectedTrackElapsedTime(trackLength);
+		// test legal bound values
+		t.setSelectedTrackElapsedTime(TRACK_DURATION);
 		t.setSelectedTrackElapsedTime(0);
-		
-		//try setting a negative value for the track
-		try{
+
+		// try setting a negative value for the track
+		try {
 			t.setSelectedTrackElapsedTime(-1);
 			fail("managed to set time to negative value.");
-		} catch(IllegalArgumentException e) {
-			
+		} catch (IllegalArgumentException e) {
+
 		}
-		
-		//try setting a time > duration
-		t.setSelectedTrackElapsedTime(trackLength+1);
-		assertEquals(trackLength, t.getElapsedTime());
+
+		// try setting a time > duration
+		t.setSelectedTrackElapsedTime(TRACK_DURATION + 1);
+		assertEquals(TRACK_DURATION, t.getElapsedTime());
 	}
-	
-	public void testConstructor() {
-		//try creating a track with 'null' as path
-		try{
-			t = new Track(null, trackLength);
-			fail("Constructor did not throw exception for null path.");
-		} catch(IllegalArgumentException e) {
-			
-		}
-		
-		//try creating a track with illegal path string
-		try{
-			t = new Track("", trackLength);
-			fail("Constructor did not throw exception for empty string as path");
-		} catch(IllegalArgumentException e) {
-			
-		}
-		
-		//try creating a track with 0 as duration
-		try{
-			t = new Track(trackPath, 0);
-			fail("Constructor did not throw exception for zero duration.");
-		} catch(IllegalArgumentException e) {
-			
-		}
-		
-		//try creating a track with -1 as duration
-		try{
-			t = new Track(trackPath, -1);
-			fail("Constructor did not throw exception for negative duration.");
-		} catch(IllegalArgumentException e) {
-			
-		}
-	}
+
 }
