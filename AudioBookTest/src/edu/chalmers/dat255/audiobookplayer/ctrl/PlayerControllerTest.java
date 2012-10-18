@@ -25,7 +25,7 @@ import junit.framework.TestCase;
  * Test case for PlayerController (MediaPlayer wrapper class).
  * 
  * @author Aki Käkelä
- * @version 0.1
+ * @version 0.2
  * 
  */
 public class PlayerControllerTest extends TestCase {
@@ -44,6 +44,9 @@ public class PlayerControllerTest extends TestCase {
 
 	// the 2:nd track counted from zero
 	private static final int TRACK_INDEX = 1;
+
+	// temporary
+	private static final String SEEK_TEST_FAILURES = "Seek tests not yet implemented";
 
 	/**
 	 * @param name
@@ -147,7 +150,7 @@ public class PlayerControllerTest extends TestCase {
 	public final void testStop() {
 		pc.start();
 		pc.stop();
-		
+
 		// it should not be started nor playing
 		assertFalse(pc.isPlaying());
 		assertFalse(pc.isStarted());
@@ -160,7 +163,7 @@ public class PlayerControllerTest extends TestCase {
 	 */
 	public final void testStart() {
 		pc.start();
-		
+
 		// it should not be both started and playing
 		assertTrue(pc.isPlaying());
 		assertTrue(pc.isStarted());
@@ -172,7 +175,7 @@ public class PlayerControllerTest extends TestCase {
 	 * .
 	 */
 	public final void testStartAt() {
-		fail("Not yet implemented - SEEK"); // TODO
+		fail(SEEK_TEST_FAILURES); // TODO
 	}
 
 	/**
@@ -184,10 +187,10 @@ public class PlayerControllerTest extends TestCase {
 		// pause and start
 		pc.start();
 		pc.pause();
-		
+
 		// it SHOULD be started
 		assertTrue(pc.isStarted());
-		
+
 		// it should NOT be playing audio
 		assertFalse(pc.isPlaying());
 	}
@@ -201,7 +204,8 @@ public class PlayerControllerTest extends TestCase {
 		// start pc
 		pc.start();
 
-		// pause it to resume it again.
+		// pause it so that we can resume
+		// pause is tested by another test method
 		pc.pause();
 
 		pc.resume();
@@ -210,7 +214,6 @@ public class PlayerControllerTest extends TestCase {
 		assertTrue(pc.isPlaying());
 
 		assertTrue(pc.isStarted());
-		fail("Not yet implemented"); // TODO
 	}
 
 	/**
@@ -241,7 +244,7 @@ public class PlayerControllerTest extends TestCase {
 	 * .
 	 */
 	public final void testSeekRight() {
-		fail("Not yet implemented - SEEK"); // TODO
+		fail(SEEK_TEST_FAILURES); // TODO
 	}
 
 	/**
@@ -250,7 +253,7 @@ public class PlayerControllerTest extends TestCase {
 	 * .
 	 */
 	public final void testSeekLeft() {
-		fail("Not yet implemented - SEEK"); // TODO
+		fail(SEEK_TEST_FAILURES); // TODO
 	}
 
 	/**
@@ -259,7 +262,7 @@ public class PlayerControllerTest extends TestCase {
 	 * .
 	 */
 	public final void testSeekToPercentageInTrack() {
-		fail("Not yet implemented - SEEK"); // TODO
+		fail(SEEK_TEST_FAILURES); // TODO
 	}
 
 	/**
@@ -268,7 +271,7 @@ public class PlayerControllerTest extends TestCase {
 	 * .
 	 */
 	public final void testSeekToPercentageInBook() {
-		fail("Not yet implemented - SEEK"); // TODO
+		fail(SEEK_TEST_FAILURES); // TODO
 	}
 
 	/**
@@ -278,7 +281,7 @@ public class PlayerControllerTest extends TestCase {
 	 */
 	public final void testSeekTo() {
 		pc.seekTo(TIME);
-		fail("Not yet implemented - SEEK"); // TODO
+		fail(SEEK_TEST_FAILURES); // TODO
 	}
 
 	/**

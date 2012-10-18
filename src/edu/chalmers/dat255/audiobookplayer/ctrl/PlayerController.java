@@ -107,6 +107,9 @@ public class PlayerController implements IPlayerEvents {
 	 * Starts the audio player from the beginning. Starts updating the model.
 	 * <p>
 	 * Can be called in any state (stopped, paused, resumed, uninitialized).
+	 * <p>
+	 * To start from the a given time, see
+	 * {@link PlayerController#startAt(int)}.
 	 * 
 	 * @precondition The Bookshelf must have been initialized and the path at
 	 *               the selected track index can not be null. Otherwise nothing
@@ -123,6 +126,9 @@ public class PlayerController implements IPlayerEvents {
 	 * updating the model.
 	 * <p>
 	 * Can be called in any state (stopped, paused, resumed, uninitialized).
+	 * <p>
+	 * To start from the beginning or resume, see
+	 * {@link PlayerController#start()}.
 	 * 
 	 * @precondition The Bookshelf must have been initialized and the path at
 	 *               the selected track index can not be null. Otherwise nothing
@@ -429,6 +435,14 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	public boolean isStarted() {
+		return isStarted;
+	}
+
+	public boolean isPlaying() {
+		return mp.isPlaying();
+	}
+
 	/* End IPlayerEvents */
 
 	/**
@@ -478,14 +492,6 @@ public class PlayerController implements IPlayerEvents {
 		return bs.getSelectedBookIndex() != Constants.Value.NO_BOOK_SELECTED;
 	}
 
-	public boolean isStarted() {
-		return isStarted;
-	}
-
-	public boolean isPlaying() {
-		return mp.isPlaying();
-	}
-
 	/**
 	 * Thread that updates the elapsed time in a track.
 	 * 
@@ -511,14 +517,32 @@ public class PlayerController implements IPlayerEvents {
 	/*
 	 * *** FOR TESTING PURPOSES ONLY ***
 	 */
+	/**
+	 * *** FOR TESTING PURPOSES ONLY ***
+	 * 
+	 * Returns the media player instance for testing.
+	 * 
+	 */
 	public MediaPlayer getMp() {
 		return mp;
 	}
 
+	/**
+	 * *** FOR TESTING PURPOSES ONLY ***
+	 * 
+	 * Returns the bookshelf for testing.
+	 * 
+	 */
 	public Bookshelf getBs() {
 		return bs;
 	}
 
+	/**
+	 * *** FOR TESTING PURPOSES ONLY ***
+	 * 
+	 * Returns the thread for testing.
+	 * 
+	 */
 	public Thread getTrackTimeUpdateThread() {
 		return trackTimeUpdateThread;
 	}
