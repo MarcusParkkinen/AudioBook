@@ -25,8 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 public final class TextFormatter {
 
 	private TextFormatter() {
-		// to defeat instantiation
-	}
+	} // to defeat instantiation
 
 	private static final int MSECONDS_IN_SECOND = 1000;
 	private static final int SECONDS_IN_MINUTE = 60;

@@ -18,7 +18,7 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
  * 
  * @author Aki Käkelä
  * @version 0.1
- *
+ * 
  */
 public interface IBookshelfGUIEvents extends IBookshelfEvents {
 

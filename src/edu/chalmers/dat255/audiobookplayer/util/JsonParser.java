@@ -23,11 +23,20 @@ import com.google.gson.Gson;
 public final class JsonParser {
 	private JsonParser() {
 	} // to defeat instantiation
-	
+
+	/**
+	 * @param jsonString
+	 * @param type
+	 * @return
+	 */
 	public static <T> T fromJSON(String jsonString, Class<T> type) {
 		return (new Gson()).fromJson(jsonString, type);
 	}
 
+	/**
+	 * @param obj
+	 * @return
+	 */
 	public static String toJSON(Object obj) {
 		return (new Gson()).toJson(obj);
 	}

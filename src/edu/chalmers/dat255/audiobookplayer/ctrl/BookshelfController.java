@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 
 import android.content.Context;
 import android.util.Log;
-
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
@@ -59,9 +58,10 @@ public class BookshelfController implements IBookshelfEvents {
 	public int getSelectedBookIndex() {
 		return bookshelf.getSelectedBookIndex();
 	}
-	
+
 	/**
 	 * (Currently only used for testing.)
+	 * 
 	 * @return
 	 */
 	public int getSelectedTrackIndex() {
@@ -90,7 +90,7 @@ public class BookshelfController implements IBookshelfEvents {
 	public void removeTrack(int trackIndex) {
 		bookshelf.removeTrack(trackIndex);
 	}
-	
+
 	public void removeTrack(int bookIndex, int trackIndex) {
 		bookshelf.removeTrack(bookIndex, trackIndex);
 	}
@@ -128,5 +128,5 @@ public class BookshelfController implements IBookshelfEvents {
 	public boolean saveBookshelf(Context c, String username) {
 		return BookshelfHandler.saveBookshelf(c, username, bookshelf);
 	}
-	
+
 }

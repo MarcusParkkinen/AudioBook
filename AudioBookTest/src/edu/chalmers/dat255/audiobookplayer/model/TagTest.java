@@ -32,7 +32,7 @@ public class TagTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		tag = new Tag(TIME);
 	}
 
@@ -43,15 +43,15 @@ public class TagTest extends TestCase {
 	public void testEqualsObject() {
 		Tag dummy = new Tag(tag.getTime());
 		Tag otherDummy = new Tag(dummy.getTime());
-		
+
 		// reflexive test
 		assertTrue(dummy.equals(dummy));
 		assertTrue(tag.equals(tag));
-		
+
 		// symmetric test
 		assertTrue(tag.equals(dummy));
 		assertTrue(dummy.equals(tag));
-		
+
 		// transitive test
 		assertTrue(tag.equals(otherDummy));
 	}

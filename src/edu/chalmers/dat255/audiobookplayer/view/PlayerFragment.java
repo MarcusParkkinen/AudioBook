@@ -162,8 +162,10 @@ public class PlayerFragment extends Fragment {
 				}
 				// else do nothing since this was done by code
 			}
+
 			public void onStartTrackingTouch(SeekBar seekBar) {
 			}// do nothing
+
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			}// do nothing
 
@@ -183,8 +185,10 @@ public class PlayerFragment extends Fragment {
 				}
 				// else do nothing since this was done by code
 			}
+
 			public void onStartTrackingTouch(SeekBar seekBar) {
 			} // do nothing
+
 			public void onStopTrackingTouch(SeekBar seekBar) {
 			} // do nothing
 

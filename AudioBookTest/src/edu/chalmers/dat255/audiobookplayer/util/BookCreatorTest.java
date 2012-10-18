@@ -16,10 +16,9 @@ package edu.chalmers.dat255.audiobookplayer.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Environment;
-
-import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import junit.framework.TestCase;
+import android.os.Environment;
+import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
  * JUnit test for BookCreator class.
@@ -31,13 +30,16 @@ import junit.framework.TestCase;
 public class BookCreatorTest extends TestCase {
 	// MUST BE SPECIFIED IN ORDER FOR TESTS TO PASS
 	private static final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
-	private static final String VALID_PATH = Environment.getExternalStorageDirectory()
-			.getPath() + FILE_NAME;
+	private static final String VALID_PATH = Environment
+			.getExternalStorageDirectory().getPath() + FILE_NAME;
 	private static final int NUMBER_OF_TRACKS = 125;
 	private BookCreator bc;
 	private Bookshelf bs;
 	private List<String> paths;
 
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -58,11 +60,17 @@ public class BookCreatorTest extends TestCase {
 		}
 	}
 
+	/**
+	 * Tests the singleton getInstance method.
+	 */
 	public void testSingleton() {
 		// We should always get the same instance
 		assertEquals(bc, BookCreator.getInstance());
 	}
 
+	/**
+	 * Tests creating a book.
+	 */
 	public void testCreateBook() {
 		// Try creating a book with a valid path
 		bc.createBook(paths, "Testbook", "Tester");

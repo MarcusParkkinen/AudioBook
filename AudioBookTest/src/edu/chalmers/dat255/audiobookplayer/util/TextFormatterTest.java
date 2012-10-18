@@ -13,8 +13,8 @@
 
 package edu.chalmers.dat255.audiobookplayer.util;
 
-import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import junit.framework.TestCase;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
 /**
  * @author Aki Käkelä

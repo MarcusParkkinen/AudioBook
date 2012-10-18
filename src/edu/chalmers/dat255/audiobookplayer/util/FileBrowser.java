@@ -16,7 +16,8 @@ package edu.chalmers.dat255.audiobookplayer.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class containing static methods to help create a file browser.
@@ -26,10 +27,10 @@ import java.util.regex.*;
  * 
  */
 public final class FileBrowser {
-	
+
 	private FileBrowser() {
 	} // to defeat instantiation
-	
+
 	/*
 	 * Regexp Explanation (.*\\.)(mp3|wav)$ Searchpattern used to identify
 	 * filename extensions, in this case mp3 or wav.

@@ -25,7 +25,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * @version 0.6
  */
 public final class TrackCreator {
-	
+
 	private TrackCreator() {
 	} // to defeat instantiation
 
