@@ -16,6 +16,7 @@ package edu.chalmers.dat255.audiobookplayer.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,12 +75,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 	/* Bookshelf methods */
 	/**
-	 * The book that the player will use (read from) is set here.
+	 * The book that the player will use (read from) is set here. Can be
+	 * deselecting by calling with Constants.Value.NO_BOOK_SELECTED.
 	 * 
 	 * @param index
+	 *            The index to select. -1 <= x <= last list index.
 	 */
 	public void setSelectedBookIndex(int index) {
-		if (!isLegalBookIndex(index)) {
+		if (!isLegalBookIndex(index)
+				&& index != Constants.Value.NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG + " setSelectedBookIndex"
 					+ BOOK_INDEX_ILLEGAL);
 		}
@@ -120,8 +124,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 */
 	public void removeBookAt(int index) {
 		if (!isLegalBookIndex(index)) {
-			throw new IndexOutOfBoundsException(TAG + " removeBook"
-					+ BOOK_INDEX_ILLEGAL);
+			Log.e(TAG, "removeBookAt " + index + " illegal. Size: "
+					+ this.books.size() + ". Skipping operation.");
 		}
 
 		books.remove(index);
@@ -158,8 +162,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 			throw new IndexOutOfBoundsException(TAG + " moveBook"
 					+ BOOK_INDEX_ILLEGAL);
 		}
-		Book temp = books.remove(to);
-		books.add(from, temp);
+		
+		Collections.rotate(books.subList(from, to + 1), -1);
 
 		if (hasListeners()) {
 			pcs.firePropertyChange(Constants.Event.BOOK_LIST_CHANGED, null,
@@ -184,7 +188,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		} else {
 			Log.d("TESTING", "Valid book " + bookIndex);
 			// the book index is valid
-			if (!isLegalTrackIndexAt(bookIndex, trackIndex) && trackIndex != Constants.Value.NO_TRACK_SELECTED) {
+			if (!isLegalTrackIndexAt(bookIndex, trackIndex)
+					&& trackIndex != Constants.Value.NO_TRACK_SELECTED) {
 				throw new IndexOutOfBoundsException();
 			} else {
 				// the track is valid

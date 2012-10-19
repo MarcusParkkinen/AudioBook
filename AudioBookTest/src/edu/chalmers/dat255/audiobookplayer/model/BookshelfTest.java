@@ -17,6 +17,10 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import android.util.Log;
+
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
+
 /**
  * Test for Bookshelf. Tests constructing and copying a bookshelf,
  * selecting/adding/moving/removing book(s), getting number of books and the
@@ -99,10 +103,23 @@ public class BookshelfTest extends TestCase {
 	 * Tests the constructor.
 	 */
 	public void testBookshelf() {
-		assertTrue(bookshelf.getSelectedBookIndex() == -1); // not selected
+		/*
+		 * According to the design, the bookshelf should select only the first
+		 * book added. If it is empty, it will not have a selection. If it has
+		 * more than one book, it will still keep the first added book selected.
+		 */
+		assertTrue(bookshelf.getSelectedBookIndex() == 0); // first one selected
+
+		// now try an empty bookshelf
+		bookshelf = new Bookshelf();
+
+		// none selected:
+		assertTrue(bookshelf.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED);
+
+		// make sure that getting the book causes an exception.
 		try {
 			bookshelf.getSelectedBook();
-			fail("Current book on an empty bookshelf should not exist.");
+			fail("()" + "Current book on an empty bookshelf should not exist.");
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
@@ -139,27 +156,31 @@ public class BookshelfTest extends TestCase {
 		assertTrue(bookshelf.getSelectedBookIndex() == LEGAL_POSITIVE_INDEX);
 
 		// Test a positive integer beyond the allowed indices
-		bookshelf.setSelectedBookIndex(ILLEGAL_POSITIVE_INDEX);
+		try {
+			bookshelf.setSelectedBookIndex(ILLEGAL_POSITIVE_INDEX);
+			fail("()" + OUT_OF_BOUNDS_MESSAGE);
+		} catch (IndexOutOfBoundsException e) {
+		} // expected
+
+		// ensure that nothing changed
 		assertFalse(bookshelf.getSelectedBookIndex() == ILLEGAL_POSITIVE_INDEX);
 
 		// Test a negative integer beyond the allowed indices (-1 is allowed)
-		bookshelf.setSelectedBookIndex(ILLEGAL_NEGATIVE_INDEX);
+		try {
+			bookshelf.setSelectedBookIndex(ILLEGAL_NEGATIVE_INDEX);
+			fail("()" + OUT_OF_BOUNDS_MESSAGE);
+		} catch (IndexOutOfBoundsException e) {
+		} // expected
+
+		// ensure that nothing changed
 		assertFalse(bookshelf.getSelectedBookIndex() == ILLEGAL_NEGATIVE_INDEX);
 
-		// Test -1
-		bookshelf.setSelectedBookIndex(-1);
-		assertTrue(bookshelf.getSelectedBookIndex() == -1);
+		// Test deselecting
+		bookshelf.setSelectedBookIndex(Constants.Value.NO_BOOK_SELECTED);
 
-		// Test index when removing a book
-		bookshelf.setSelectedBookIndex(2);
-		// nothing should happen to selected index since this is the last
-		// element
-		bookshelf.removeBookAt(6);
-		assertTrue(bookshelf.getSelectedBookIndex() == 2);
-		bookshelf.removeBookAt(1);
-		// we removed something earlier in the list, so the index should
-		// decrement
-		assertTrue(bookshelf.getSelectedBookIndex() == 1);
+		// ensure that it changed
+		assertTrue(bookshelf.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED);
+
 	}
 
 	/**
@@ -187,8 +208,17 @@ public class BookshelfTest extends TestCase {
 	 */
 	public void testRemoveBook() {
 		// Try to remove a book from an illegal index
-		bookshelf.removeBookAt(ILLEGAL_NEGATIVE_INDEX);
-		bookshelf.removeBookAt(ILLEGAL_POSITIVE_INDEX);
+		try {
+			bookshelf.removeBookAt(ILLEGAL_NEGATIVE_INDEX);
+			fail("(illegal negative)" + OUT_OF_BOUNDS_MESSAGE);
+		} catch (IndexOutOfBoundsException e) {
+		} // expected
+
+		try {
+			bookshelf.removeBookAt(ILLEGAL_POSITIVE_INDEX);
+			fail("(illegal positive)" + OUT_OF_BOUNDS_MESSAGE);
+		} catch (IndexOutOfBoundsException e) {
+		} // expected
 
 		// Assert that a book is removed and that it is the correct one
 		bookshelf.removeBookAt(2);
@@ -204,8 +234,18 @@ public class BookshelfTest extends TestCase {
 
 		// Assert that removing a book does nothing to an empty bookshelf
 		bookshelf = new Bookshelf();
+
+		// copy to compare with
 		Bookshelf testBookshelf = new Bookshelf(bookshelf);
-		bookshelf.removeBookAt(0);
+
+		// remove from the original
+		try {
+			bookshelf.removeBookAt(0);
+			fail("Removing " + OUT_OF_BOUNDS_MESSAGE);
+		} catch (IndexOutOfBoundsException e) {
+		} // expected
+
+		// make sure they are still equal
 		assertTrue(testBookshelf.equals(bookshelf));
 	}
 
@@ -214,14 +254,14 @@ public class BookshelfTest extends TestCase {
 	 */
 	public void testMoveBook() {
 		// Make a copy to compare with
-		Bookshelf copy = new Bookshelf(bookshelf);
+		Bookshelf orig = new Bookshelf(bookshelf);
 
 		try {
 			// Try to move from an illegal index to an illegal index
 			bookshelf.moveBook(ILLEGAL_POSITIVE_INDEX,
 					OTHER_ILLEGAL_POSITIVE_INDEX);
-			assertTrue(copy.equals(bookshelf));
-			fail(OUT_OF_BOUNDS_MESSAGE);
+			assertTrue(orig.equals(bookshelf));
+			fail("(illegal-illegal)" + OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
@@ -230,8 +270,8 @@ public class BookshelfTest extends TestCase {
 			// Try to move from an illegal index to a legal index
 			bookshelf.moveBook(ILLEGAL_POSITIVE_INDEX,
 					OTHER_LEGAL_POSITIVE_INDEX);
-			assertTrue(copy.equals(bookshelf));
-			fail(OUT_OF_BOUNDS_MESSAGE);
+			assertTrue(orig.equals(bookshelf));
+			fail("(illegal-legal)" + OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
@@ -240,26 +280,42 @@ public class BookshelfTest extends TestCase {
 			// Try to move from a legal index to an illegal index
 			bookshelf.moveBook(LEGAL_POSITIVE_INDEX,
 					OTHER_ILLEGAL_POSITIVE_INDEX);
-			assertTrue(copy.equals(bookshelf));
-			fail(OUT_OF_BOUNDS_MESSAGE);
+			assertTrue(orig.equals(bookshelf));
+			fail("(legal-illegal)" + OUT_OF_BOUNDS_MESSAGE);
 		} catch (IndexOutOfBoundsException e) {
 			// expected
 		}
 
-		try {
-			// Try to move from a legal index to a legal index
-			bookshelf
-					.moveBook(LEGAL_POSITIVE_INDEX, OTHER_LEGAL_POSITIVE_INDEX);
-			assertFalse(copy.equals(bookshelf));
-			fail(OUT_OF_BOUNDS_MESSAGE);
-		} catch (IndexOutOfBoundsException e) {
-			// expected
-		}
+		// Try to move from a legal index to a legal index
+		// in this case, from position 1 to 4
+		bookshelf.moveBook(LEGAL_POSITIVE_INDEX, OTHER_LEGAL_POSITIVE_INDEX);
+		assertFalse(orig.equals(bookshelf));
 
-		// Assert that it was moved correctly
-		assertTrue(bookshelf.getBookAt(3).equals(copy.getBookAt(1)));
-		assertTrue(bookshelf.getBookAt(2).equals(copy.getBookAt(2)));
-		assertTrue(bookshelf.getBookAt(1).equals(copy.getBookAt(3)));
+		// The move also means that the other indices are changed.
+		/*
+		 * Indices before the lowest index remain as they were. Indices between
+		 * will decrement. Indices after will remain as they were.
+		 * 
+		 * In this case we have that the books at indices 0 and 5 will remain.
+		 * book1 will be moved to book4, and books 2-4 will decrement indices.
+		 */
+		for (int i = 0; i < 5; i++) {
+			Log.d("-> Moved copy", bookshelf.getBookAt(i).getSelectedBookTitle());
+			Log.d("-> Original ", orig.getBookAt(i).getSelectedBookTitle());
+		}
+		
+		// 0, 5 are as they were
+		assertTrue(orig.getBookAt(0).equals(bookshelf.getBookAt(0)));
+		assertTrue(orig.getBookAt(5).equals(bookshelf.getBookAt(5)));
+
+		// 1 is moved to index 4
+		assertTrue(orig.getBookAt(1).equals(bookshelf.getBookAt(4)));
+
+		// 2-4 are moved one back since an earlier book was moved ahead
+		assertTrue(orig.getBookAt(2).equals(bookshelf.getBookAt(1)));
+		assertTrue(orig.getBookAt(3).equals(bookshelf.getBookAt(2)));
+		assertTrue(orig.getBookAt(4).equals(bookshelf.getBookAt(3)));
+
 	}
 
 	/**
