@@ -37,6 +37,9 @@ public class TrackCreatorTest extends TestCase {
 		invalidPath = "/invalidPath/myInvalidTrack.mp3";
 	}
 
+	/**
+	 * Tests if creating tracks works as intended.
+	 */
 	public void testCreateTrack() {
 
 		// If trying to create a track with an invalid path, we should

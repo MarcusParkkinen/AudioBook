@@ -24,11 +24,15 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * Test case for JSONParser utility class.
  * 
  * @author Marcus Parkkinen
+ * @version 0.1
  * 
  */
 public class JsonParserTest extends AndroidTestCase {
 	private Bookshelf bs;
 
+	/* (non-Javadoc)
+	 * @see android.test.AndroidTestCase#setUp()
+	 */
 	protected void setUp() throws Exception {
 		// Set up test environment by creating an object tree for testing
 		Track[] tracks = new Track[] { new Track("trackPath", 1) };
@@ -41,6 +45,9 @@ public class JsonParserTest extends AndroidTestCase {
 		super.setUp();
 	}
 
+	/**
+	 * As the name describes.
+	 */
 	public void testToAndFromJSON() {
 		// First convert the object tree to its JSON representation
 		String jsonRepresentation = JsonParser.toJSON(bs);

@@ -24,6 +24,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
  * Test case for loading and saving bookmarks.
  * 
  * @author Aki Käkelä, Marcus Parkkinen
+ * @version 0.1
  * 
  */
 public class BookshelfHandlerTest extends AndroidTestCase {
@@ -43,17 +44,26 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 		super.setUp();
 	}
 
+	/**
+	 * Tests to see if loading bookshelves works as intended.
+	 */
 	public void testLoadBookshelf() {
 		// Assert that we always get a bookshelf instance
 		assertTrue(BookshelfHandler.loadBookshelf(this.getContext(), USERNAME) instanceof Bookshelf);
 	}
 
+	/**
+	 * Tests to see if saving bookshelves works as intended.
+	 */
 	public void testSaveBookshelf() {
 		// Assert that saving the bookshelf is successful
 		assertTrue(BookshelfHandler.saveBookshelf(this.getContext(), USERNAME,
 				bs));
 	}
 
+	/**
+	 * Tests to see if saving and loading bookshelves work as intended.
+	 */
 	public void testSaveAndLoadBookshelf() {
 		// Make some changes to the bookshelf ..
 		bs.addPropertyChangeListener(null);

@@ -21,6 +21,7 @@ import android.test.AndroidTestCase;
  * Test case for FileParser utility class.
  * 
  * @author Marcus Parkkinen
+ * @version 0.1
  * 
  */
 public class FileParserTest extends AndroidTestCase {
@@ -34,6 +35,9 @@ public class FileParserTest extends AndroidTestCase {
 		super.setUp();
 	}
 
+	/**
+	 * As the name describes.
+	 */
 	public void testWriteAndReadFromInternalStorage() {
 		// Just assert that the write operation does not generate an exception
 		try {
