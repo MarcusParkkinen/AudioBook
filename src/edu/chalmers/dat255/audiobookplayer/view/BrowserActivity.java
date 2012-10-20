@@ -407,12 +407,11 @@ public class BrowserActivity extends Activity {
 			boolean checkState = checkedItems.contains(file);
 			cb.setChecked(checkState);
 
-			final CheckBox c = cb;
 			// set the on click listener of the checkbox
 			cb.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// checks all children if a folder, or the file otherwise
-					checkAllChildren(file, c.isChecked());
+					checkAllChildren(file, ((CheckBox)v).isChecked());
 				}
 			});
 
