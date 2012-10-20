@@ -10,7 +10,7 @@
  * 
  *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
  **/
-package edu.chalmers.dat255.audiobookplayer.model;
+package edu.chalmers.dat255.audiobookplayer.util;
 
 /**
  * Contains the possible playback statuses.
@@ -19,7 +19,10 @@ package edu.chalmers.dat255.audiobookplayer.model;
  * @version 0.1
  * 
  */
-public class PlaybackStatus {
+public final class PlaybackStatus {
+	private PlaybackStatus() {
+	} // to defeat instantiation
+	
 	public static final int PLAYING = 0;
 	public static final int PAUSED = 1;
 	public static final int STOPPED = 2;

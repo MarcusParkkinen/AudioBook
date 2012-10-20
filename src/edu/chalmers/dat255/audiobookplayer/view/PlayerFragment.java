@@ -30,7 +30,7 @@ import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
-import edu.chalmers.dat255.audiobookplayer.model.PlaybackStatus;
+import edu.chalmers.dat255.audiobookplayer.util.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
 
 /**

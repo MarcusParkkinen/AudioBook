@@ -37,9 +37,9 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
-import edu.chalmers.dat255.audiobookplayer.model.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
+import edu.chalmers.dat255.audiobookplayer.util.PlaybackStatus;
 
 /**
  * The main activity of the application. TODO: insert license
