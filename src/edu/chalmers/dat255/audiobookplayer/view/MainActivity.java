@@ -37,6 +37,7 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
+import edu.chalmers.dat255.audiobookplayer.model.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 
@@ -439,7 +440,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// update the track counter
 			updateTrackCounterLabel(b);
 			
-			playerFragment.setToPlaying();
+			playerFragment.setPlayPauseStatus(PlaybackStatus.PLAYING);
 		}
 	}
 

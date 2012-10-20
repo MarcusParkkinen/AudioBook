@@ -30,6 +30,7 @@ import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
+import edu.chalmers.dat255.audiobookplayer.model.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
 
 /**
@@ -207,25 +208,21 @@ public class PlayerFragment extends Fragment {
 		});
 
 		trackTitle = (TextView) view.findViewById(R.id.track_title);
-		trackTitle.setText(Constants.Message.NO_TRACK_TITLE);
 
 		bookTitle = (TextView) view.findViewById(R.id.bookTitle);
-		bookTitle.setText(Constants.Message.NO_BOOK_TITLE);
 
 		bookDuration = (TextView) view.findViewById(R.id.book_duration);
-		bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
 
 		trackDuration = (TextView) view.findViewById(R.id.track_duration);
-		trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
 
 		bookElapsedTime = (TextView) view.findViewById(R.id.book_elapsed_time);
-		bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
 
 		trackElapsedTime = (TextView) view
 				.findViewById(R.id.track_elapsed_time);
-		trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
 
 		trackCounter = (TextView) view.findViewById(R.id.track_counter);
+
+		resetComponents();
 
 		return view;
 	}
@@ -388,21 +385,32 @@ public class PlayerFragment extends Fragment {
 		this.trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
 		this.bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
 
-		// reset play/pause button to disabled
-		playPause.setBackgroundResource(0);
-		playPause
-				.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
+		// reset the track counter
+		this.trackCounter.setText(Constants.Message.NO_TRACKS_FOUND);
+
+		// reset play/pause button to stopped
+		setPlayPauseStatus(PlaybackStatus.STOPPED);
 	}
 
 	/**
-	 * Sets the play/pause button to show play.
+	 * Sets the play/pause button status.
 	 * 
-	 * @param enabled
+	 * @param status
 	 */
-	public void setToPlaying() {
-		// indicate that it is playing by showing the pause button
+	public void setPlayPauseStatus(int status) {
 		playPause.setBackgroundResource(0);
-		playPause.setBackgroundResource(R.drawable.pb_pause_default);
+		switch (status) {
+		case PlaybackStatus.PLAYING:
+			playPause.setBackgroundResource(R.drawable.pb_play_default);
+			return;
+		case PlaybackStatus.PAUSED:
+			playPause.setBackgroundResource(R.drawable.pb_pause_default);
+			return;
+		case PlaybackStatus.STOPPED:
+		default:
+			playPause
+					.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
+		}
 	}
 
 	/**
