@@ -146,34 +146,8 @@ public class BrowserActivity extends Activity {
 		// set listener for button "Create Book"
 		Button createBookButton = (Button) findViewById(R.id.createBook);
 		createBookButton.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
-				// check that some items are checked
-				if (!checkedItems.isEmpty()) {
-					// create a list of tracks to add
-					List<String> tracks = new ArrayList<String>();
-					String name = null;
-					for (File f : checkedItems) {
-						// only add tracks, not folders
-						if (f.isFile()) {
-							if (tracks.size() == 0) {
-								// this name is but a backup in the case that
-								// there is no album id3
-								name = f.getParentFile().getName();
-							}
-							tracks.add(f.getAbsolutePath());
-						}
-					}
-					BookCreator.getInstance().createBook(tracks, name, null);
-					// create a toast to notify the user that a book has been
-					// added.
-					Toast.makeText(BrowserActivity.this, "Book added: " + name,
-							Toast.LENGTH_SHORT).show();
-					// empty checkedItems and fill the list with unchecked items
-					checkedItems = new TreeSet<File>();
-					// refill the ListView from currentDirectory
-					fill(currentDirectory);
-				}
+				createBook();
 			}
 		});
 
@@ -189,6 +163,38 @@ public class BrowserActivity extends Activity {
 
 		});
 
+	}
+
+	/**
+	 * Private class used to create a book from the currently selected items.
+	 */
+	private void createBook() {
+		// check that some items are checked
+		if (!checkedItems.isEmpty()) {
+			// create a list of tracks to add
+			List<String> tracks = new ArrayList<String>();
+			String name = null;
+			for (File f : checkedItems) {
+				// only add tracks, not folders
+				if (f.isFile()) {
+					if (tracks.size() == 0) {
+						// this name is but a backup in the case that
+						// there is no album id3
+						name = f.getParentFile().getName();
+					}
+					tracks.add(f.getAbsolutePath());
+				}
+			}
+			BookCreator.getInstance().createBook(tracks, name, null);
+			// create a toast to notify the user that a book has been
+			// added.
+			Toast.makeText(BrowserActivity.this, "Book added: " + name,
+					Toast.LENGTH_SHORT).show();
+			// empty checkedItems and fill the list with unchecked items
+			checkedItems = new TreeSet<File>();
+			// refill the ListView from currentDirectory
+			fill(currentDirectory);
+		}
 	}
 
 	/**
@@ -400,10 +406,11 @@ public class BrowserActivity extends Activity {
 			CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox);
 			boolean checkState = checkedItems.contains(file);
 			cb.setChecked(checkState);
+
+			final CheckBox c = cb;
 			// set the on click listener of the checkbox
 			cb.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					CheckBox c = (CheckBox) v;
 					// checks all children if a folder, or the file otherwise
 					checkAllChildren(file, c.isChecked());
 				}
@@ -428,13 +435,10 @@ public class BrowserActivity extends Activity {
 				checkItem(file, checkState);
 				return;
 			}
-			// if the file is a folder
-			// declare the list outside the if clause to only get file once from
-			// map and to only use one if clause.
-			List<TypedFile> list;
+			// the get returns null if file is not contained within the map
+			List<TypedFile> list = childMap.get(file);
 			// if childMap contains the file, instantiate the list
-			if (childMap.containsKey(file)
-					&& (list = childMap.get(file)) != null) {
+			if (list != null) {
 				for (File f : list) {
 					// check the item
 					checkItem(f, checkState);
