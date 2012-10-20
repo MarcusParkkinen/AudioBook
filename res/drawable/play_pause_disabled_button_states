@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/pb_play_pause_disabled_focused" android:state_pressed="true"/>
+    <item android:drawable="@drawable/pb_play_pause_disabled_pressed" android:state_focused="true"/>
+    <item android:drawable="@drawable/pb_play_pause_disabled_default"/>
+
+</selector>

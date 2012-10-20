@@ -186,14 +186,11 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		if (!isLegalBookIndex(bookIndex)) {
 			throw new IndexOutOfBoundsException();
 		} else {
-			Log.d("TESTING", "Valid book " + bookIndex);
 			// the book index is valid
 			if (!isLegalTrackIndexAt(bookIndex, trackIndex)
 					&& trackIndex != Constants.Value.NO_TRACK_SELECTED) {
 				throw new IndexOutOfBoundsException();
 			} else {
-				// the track is valid
-				Log.d("TESTING", "Valid track " + trackIndex);
 				// the track index is either valid or deselects
 				// we now know that both indices are valid, so make the changes.
 				setSelectedBookIndex(bookIndex);
@@ -545,19 +542,12 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		Log.d(TAG,
-				"addPropertyChangeListener(listener), # of listeners before adding: "
-						+ pcs.getPropertyChangeListeners().length);
-
 		if (listener != null) {
 			pcs.addPropertyChangeListener(listener);
 
-			Log.d(TAG,
-					"addPropertyChangeListener(listener), # of listeners after adding: "
-							+ pcs.getPropertyChangeListeners().length);
-
-			// Synchronize the new listener with the current state of the
-			// bookshelf
+			/* Synchronize the new listener with the current state of the
+			 * bookshelf.
+			 */
 			pcs.firePropertyChange(Constants.Event.BOOKSHELF_UPDATED, null,
 					new Bookshelf(this));
 
@@ -571,9 +561,6 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * Removes all listeners from the pcs member.
 	 */
 	public void removeListeners() {
-		Log.d(TAG,
-				"removeListeners(), # of listeners before remove: "
-						+ pcs.getPropertyChangeListeners().length);
 		for (PropertyChangeListener pcl : pcs.getPropertyChangeListeners()) {
 			pcs.removePropertyChangeListener(pcl);
 		}

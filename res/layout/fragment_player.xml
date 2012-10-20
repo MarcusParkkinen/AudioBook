@@ -18,7 +18,6 @@
             android:layout_height="match_parent"
             android:maxHeight="26dp"
             android:minHeight="26dp"
-            android:progress="100"
             android:progressDrawable="@drawable/book_bar_progress_background"
             android:thumb="@drawable/sb_book_thumb"
             android:thumbOffset="3dp" />
@@ -68,7 +67,8 @@
         android:layout_height="90dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true"
+        android:background="#232323" >
 
         <LinearLayout
             android:id="@+id/play_pause"
@@ -84,6 +84,7 @@
                 android:id="@+id/playPause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/play_pause_disabled_button_states"
                 android:contentDescription="@string/playPause" />
         </LinearLayout>
 
@@ -169,7 +170,8 @@
         android:layout_height="56dp"
         android:layout_above="@+id/track_times_layout"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp" >
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp" >
 
         <!-- book title is displayed -->
 
@@ -278,18 +280,18 @@
     <LinearLayout
         android:id="@+id/track_seek_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="26dp"
         android:layout_above="@+id/player_controls"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp" >
 
         <SeekBar
             android:id="@+id/track_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:maxHeight="20dp"
-            android:minHeight="20dp"
-            android:progress="100"
+            android:maxHeight="22dp"
+            android:minHeight="22dp"
             android:progressDrawable="@drawable/track_bar_progress_background"
             android:thumb="@drawable/sb_track_thumb"
             android:thumbOffset="3dp" />
@@ -304,8 +306,7 @@
         android:layout_above="@+id/playback_details_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/book_times_layout"
-        android:background="#121212" >
+        android:layout_below="@+id/book_times_layout" >
 
         <ImageView
             android:id="@+id/cover_art"

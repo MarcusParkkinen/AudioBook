@@ -69,28 +69,29 @@ public final class TextFormatter {
 	/**
 	 * Formats a given position and limit to a text.
 	 * 
-	 * @param trackNumber
+	 * @param trackIndex
 	 * @param numberOfTracks
 	 * @return Formatted text.
 	 */
-	public static String formatCounter(int trackNumber, int numberOfTracks) {
+	public static String formatCounter(int trackIndex, int numberOfTracks) {
 		// no tracks
 		if (numberOfTracks == 0) {
 			return Constants.Message.NO_TRACKS_FOUND;
 		}
 
 		// illegal track index
-		if (trackNumber != Constants.Value.NO_TRACK_SELECTED
-				&& (trackNumber < 0 || trackNumber > numberOfTracks)) {
+		if (trackIndex != Constants.Value.NO_TRACK_SELECTED
+				&& (trackIndex < 0 || trackIndex > numberOfTracks)) {
 			return Constants.Message.TRACK_INDEX_ERROR;
 		}
 
 		// none selected
-		if (trackNumber == Constants.Value.NO_TRACK_SELECTED) {
+		if (trackIndex == Constants.Value.NO_TRACK_SELECTED) {
 			return numberOfTracks + "";
 		}
 
 		// a valid track is selected
-		return trackNumber + "/" + numberOfTracks;
+		// change the index to a track number (i.e. starts from 1).
+		return (trackIndex + 1) + "/" + numberOfTracks;
 	}
 }

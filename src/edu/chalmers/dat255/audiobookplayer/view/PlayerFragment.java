@@ -115,6 +115,9 @@ public class PlayerFragment extends Fragment {
 
 		// this is a toggle button
 		playPause = (ImageButton) view.findViewById(R.id.playPause);
+		// start as disabled
+		playPause
+				.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				/*
@@ -122,14 +125,23 @@ public class PlayerFragment extends Fragment {
 				 * show the play button (toggle pause/play and the isPlaying
 				 * value).
 				 */
+				// reset
+				playPause.setBackgroundResource(0);
+
 				if (fragmentOwner.isPlaying()) {
+					Log.d(TAG, "Should be playing.");
 					fragmentOwner.pause();
-					playPause.setImageResource(R.drawable.pb_play_default);
+					playPause.setBackgroundResource(R.drawable.pb_play_default);
 				} else if (fragmentOwner.isStarted()) {
+					Log.d(TAG, "Should not be playing but should be started.");
 					fragmentOwner.resume();
-					playPause.setImageResource(R.drawable.pb_pause_default);
+					playPause
+							.setBackgroundResource(R.drawable.pb_pause_default);
 				} else {
-					Log.d(TAG, "else in playPause");
+					Log.d(TAG, "Should not be started nor playing");
+					// set the button to 'disabled'
+					playPause
+							.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
 				}
 			}
 		});
@@ -356,8 +368,8 @@ public class PlayerFragment extends Fragment {
 	}
 
 	/**
-	 * Resets the seek bar progresses, titles, elapsed times and durations
-	 * to display their respective default texts.
+	 * Resets the seek bar progresses, titles, elapsed times and durations to
+	 * display their respective default texts.
 	 */
 	public void resetComponents() {
 		// reset progress of seek bars
@@ -375,16 +387,22 @@ public class PlayerFragment extends Fragment {
 		// reset duration texts
 		this.trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
 		this.bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
+
+		// reset play/pause button to disabled
+		playPause.setBackgroundResource(0);
+		playPause
+				.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
 	}
 
 	/**
-	 * Enables or disables the play/pause button.
+	 * Sets the play/pause button to show play.
+	 * 
+	 * @param enabled
 	 */
-	public void setPlayPauseEnabled(boolean enabled) {
-		playPause.setEnabled(enabled);
-		if (enabled) {
-			playPause.setImageResource(R.drawable.pb_play_default);
-		}
+	public void setToPlaying() {
+		// indicate that it is playing by showing the pause button
+		playPause.setBackgroundResource(0);
+		playPause.setBackgroundResource(R.drawable.pb_pause_default);
 	}
 
 	/**

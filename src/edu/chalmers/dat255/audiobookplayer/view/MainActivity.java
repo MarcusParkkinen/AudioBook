@@ -383,9 +383,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				// Player
 				// restart the player
 				playerController.start();
-
-				// enable play/pause
-				playerFragment.setPlayPauseEnabled(true);
 			}
 
 			// Player
@@ -441,6 +438,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// update the track counter
 			updateTrackCounterLabel(b);
+			
+			playerFragment.setToPlaying();
 		}
 	}
 

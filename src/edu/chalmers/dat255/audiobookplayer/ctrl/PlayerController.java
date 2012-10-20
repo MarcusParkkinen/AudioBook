@@ -108,8 +108,7 @@ public class PlayerController implements IPlayerEvents {
 	 * <p>
 	 * Can be called in any state (stopped, paused, resumed, uninitialized).
 	 * <p>
-	 * To start from the a given time, see
-	 * {@link PlayerController#startAt(int)}.
+	 * To start from the a given time, see {@link PlayerController#startAt(int)}.
 	 * 
 	 * @precondition The Bookshelf must have been initialized and the path at
 	 *               the selected track index can not be null. Otherwise nothing
@@ -368,13 +367,12 @@ public class PlayerController implements IPlayerEvents {
 
 	public void seekToPercentageInTrack(double percentage) {
 		if (!isLegalPercentage(percentage)) {
-			throw new IllegalArgumentException("Attempted to seek "
-					+ "to an illegal state (negative or above 100% seek) "
-					+ "at seekToPercentageInTrack.");
-		}
-		if (isAllowedBookIndex()) {
-			Log.d(TAG, "Track index: " + bs.getSelectedTrackIndex());
-
+			Log.d(TAG,
+					"Seeked to an illegal track state (negative or above 100%). "
+							+ "Skipping track..");
+			// simply play the next track if this happens.
+			nextTrack();
+		} else if (isAllowedBookIndex()) {
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 				// set the selected track index to the last one
 				bs.setSelectedTrackIndex(bs.getNumberOfTracks() - 1);
@@ -395,28 +393,24 @@ public class PlayerController implements IPlayerEvents {
 
 	public void seekToPercentageInBook(double percentage) {
 		if (!isLegalPercentage(percentage)) {
-			throw new IllegalArgumentException("Attempted to seek "
-					+ "to an illegal state (negative or above 100% seek) "
-					+ "at seekToPercentageInBook.");
-		}
-		if (isAllowedBookIndex()) {
+			Log.d(TAG,
+					"Seeked to an illegal book state (negative or above 100%). "
+							+ "Player stopping.");
+			// stop if this happens.
+			stop();
+			// TODO(?): deselect the books in the model.
+		} else if (isAllowedBookIndex()) {
 			// get the duration of the book
 			int bookDuration = bs.getSelectedBookDuration();
 
 			// calculate the seekTime (ms)
 			int seekTime = (int) (bookDuration * percentage);
 
-			Log.d(TAG, "seekTime: " + seekTime + ". Book duration: "
-					+ bookDuration);
-
 			// seek through the tracks
 			int track = 0, trackDuration;
 			while (seekTime > (trackDuration = bs.getTrackDurationAt(track))) {
 				seekTime -= trackDuration;
 				track++;
-				Log.d(TAG, "Skipped track (" + trackDuration
-						+ "ms).\t seekTime: " + seekTime
-						+ "\t at track index: " + track);
 			}
 
 			if (isStarted && bs.getSelectedTrackIndex() == track) {
