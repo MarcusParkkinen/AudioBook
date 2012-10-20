@@ -76,6 +76,12 @@ public class BookshelfTest extends TestCase {
 	private static final String OUT_OF_BOUNDS_MESSAGE = "Index was out of bounds,"
 			+ " but the operation was still completed.";
 
+	private static final int FIRST = 0;
+	private static final int SECOND = 1;
+	private static final int THIRD = 2;
+	private static final int FOURTH = 3;
+	private static final int LAST = 4;
+
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -219,13 +225,13 @@ public class BookshelfTest extends TestCase {
 		} // expected
 
 		// Assert that a book is removed and that it is the correct one
-		bookshelf.removeBookAt(2);
-		assertTrue(bookshelf.getBookAt(0).equals(BOOK0));
-		assertTrue(bookshelf.getBookAt(1).equals(BOOK1));
+		bookshelf.removeBookAt(THIRD);
+		assertTrue(bookshelf.getBookAt(FIRST).equals(BOOK0));
+		assertTrue(bookshelf.getBookAt(SECOND).equals(BOOK1));
 
 		// the other books should now have new indices
-		assertTrue(bookshelf.getBookAt(2).equals(BOOK3));
-		assertTrue(bookshelf.getBookAt(3).equals(BOOK4));
+		assertTrue(bookshelf.getBookAt(THIRD).equals(BOOK3));
+		assertTrue(bookshelf.getBookAt(FOURTH).equals(BOOK4));
 
 		// Assert that the number of books is correct
 		assertTrue(bookshelf.getNumberOfBooks() == STARTING_NUMBER_OF_BOOKS - 1);
@@ -298,21 +304,26 @@ public class BookshelfTest extends TestCase {
 		 * book1 will be moved to book4, and books 2-4 will decrement indices.
 		 */
 		for (int i = 0; i < 5; i++) {
-			Log.d("-> Moved copy", bookshelf.getBookAt(i).getSelectedBookTitle());
+			Log.d("-> Moved copy", bookshelf.getBookAt(i)
+					.getSelectedBookTitle());
 			Log.d("-> Original ", orig.getBookAt(i).getSelectedBookTitle());
 		}
-		
-		// 0, 5 are as they were
-		assertTrue(orig.getBookAt(0).equals(bookshelf.getBookAt(0)));
-		assertTrue(orig.getBookAt(5).equals(bookshelf.getBookAt(5)));
 
-		// 1 is moved to index 4
-		assertTrue(orig.getBookAt(1).equals(bookshelf.getBookAt(4)));
+		// first, last are as they were
+		assertTrue(orig.getBookAt(FIRST).equals(bookshelf.getBookAt(FIRST)));
+		assertTrue(orig.getBookAt(LAST).equals(bookshelf.getBookAt(LAST)));
 
-		// 2-4 are moved one back since an earlier book was moved ahead
-		assertTrue(orig.getBookAt(2).equals(bookshelf.getBookAt(1)));
-		assertTrue(orig.getBookAt(3).equals(bookshelf.getBookAt(2)));
-		assertTrue(orig.getBookAt(4).equals(bookshelf.getBookAt(3)));
+		// second is moved to second last
+		assertTrue(orig.getBookAt(SECOND).equals(bookshelf.getBookAt(LAST - 1)));
+
+		/*
+		 * Those in between are moved one back since an earlier book was moved
+		 * ahead.
+		 */
+		assertTrue(orig.getBookAt(THIRD).equals(bookshelf.getBookAt(THIRD - 1)));
+		assertTrue(orig.getBookAt(FOURTH).equals(
+				bookshelf.getBookAt(FOURTH - 1)));
+		assertTrue(orig.getBookAt(LAST).equals(bookshelf.getBookAt(LAST - 1)));
 
 	}
 
