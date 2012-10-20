@@ -54,7 +54,6 @@ import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
 
 public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	private static final String TAG = "BookshelfFragment.class";
-	private Bookshelf bookshelf;
 	private ExpandableBookshelfAdapter adapter;
 	private IBookshelfGUIEvents fragmentOwner;
 	private ExpandableListView bookshelfList;
@@ -475,8 +474,6 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 				// get duration of book in seconds
 				int bookDuration = bookshelf.getSelectedBookDuration();
-				String bookDur = TextFormatter.formatTimeFromMillis(bookshelf
-						.getSelectedBookDuration());
 				// calculate the progress
 				int calculatedProgress = calculateProgress(newTime,
 						bookDuration);
@@ -610,19 +607,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 
 			cView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					// store the index of the book of the track clicked for
-					// correct redrawal
-					// force the expandable list view to redraw
-					expandableListView.invalidateViews();
-					// inform the bookshelfFragment's listener that a child has
-					// been selected
-					BookshelfFragment.this.childClicked(bookIndex, trackIndex);
-					// store for synchronization
-					selectedBookView = expandableListView.getChildAt(bookIndex);
-					bookElapsedTime = bookshelf.getBookElapsedTime();
-					bookProgress = calculateProgress(bookElapsedTime,
-							bookshelf.getSelectedBookDuration());
+					trackClicked(bookIndex, trackIndex, expandableListView);
 				}
+
 			});
 
 			// set long click to show the child's context menu
@@ -636,6 +623,32 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			});
 
 			return cView;
+		}
+
+		/**
+		 * Private method to be called when a track is clicked
+		 * 
+		 * @param bookIndex
+		 *            The index of the book the track resides within
+		 * @param trackIndex
+		 *            The index of the track
+		 * @param expandableListView
+		 *            The expandable list view
+		 */
+		private void trackClicked(final int bookIndex, final int trackIndex,
+				final ExpandableListView expandableListView) {
+			// store the index of the book of the track clicked for
+			// correct redrawal
+			// force the expandable list view to redraw
+			expandableListView.invalidateViews();
+			// inform the bookshelfFragment's listener that a child has
+			// been selected
+			BookshelfFragment.this.childClicked(bookIndex, trackIndex);
+			// store for synchronization
+			selectedBookView = expandableListView.getChildAt(bookIndex);
+			bookElapsedTime = bookshelf.getBookElapsedTime();
+			bookProgress = calculateProgress(bookElapsedTime,
+					bookshelf.getSelectedBookDuration());
 		}
 
 		/**
@@ -763,24 +776,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			final View finalConvertView = cView;
 			cView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					// expand the selected item
-					if (!isExpanded) {
-						expandableListView.expandGroup(bookIndex);
-					}
-					// scroll to the selected item
-					expandableListView.setSelectionFromTop(bookIndex, 0);
-					// invalidates views to force redraw thus setting the
-					// correct textcolor
-					expandableListView.invalidateViews();
-					// inform the BookshelfFragment that this button has been
-					// pressed.
-					BookshelfFragment.this.groupClicked(bookIndex);
-					// store the view so that text can update
-					selectedBookView = finalConvertView;
-					bookElapsedTime = bookshelf.getBookElapsedTime();
-					bookProgress = calculateProgress(bookElapsedTime,
-							bookshelf.getSelectedBookDuration());
+					bookClicked(bookIndex, isExpanded, expandableListView,
+							finalConvertView);
 				}
+
 			});
 			// set long click to show the group's context menu
 			cView.setOnLongClickListener(new OnLongClickListener() {
@@ -793,6 +792,41 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			});
 
 			return cView;
+		}
+
+		/**
+		 * Private method to be called when a book is clicked.
+		 * 
+		 * @param bookIndex
+		 *            Index of the book clicked
+		 * @param isExpanded
+		 *            Whether or not the book is expanded in the expandable list
+		 *            view
+		 * @param expandableListView
+		 *            The expandable list view
+		 * @param convertView
+		 *            The view to be set as selected
+		 */
+		private void bookClicked(final int bookIndex, final boolean isExpanded,
+				final ExpandableListView expandableListView,
+				final View convertView) {
+			// expand the selected item
+			if (!isExpanded) {
+				expandableListView.expandGroup(bookIndex);
+			}
+			// scroll to the selected item
+			expandableListView.setSelectionFromTop(bookIndex, 0);
+			// invalidates views to force redraw thus setting the
+			// correct textcolor
+			expandableListView.invalidateViews();
+			// inform the BookshelfFragment that this button has been
+			// pressed.
+			BookshelfFragment.this.groupClicked(bookIndex);
+			// store the view so that text can update
+			selectedBookView = convertView;
+			bookElapsedTime = bookshelf.getBookElapsedTime();
+			bookProgress = calculateProgress(bookElapsedTime,
+					bookshelf.getSelectedBookDuration());
 		}
 
 		/**
