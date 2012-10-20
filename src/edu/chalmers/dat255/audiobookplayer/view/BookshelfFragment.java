@@ -8,11 +8,7 @@
  *  Use of this work is permitted only in accordance with license rights granted.
  *  Materials provided "AS IS"; no representations or warranties provided.
  * 
-<<<<<<< HEAD
  *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
-=======
- *  Copyright Â© 2012 Marcus Parkkinen, Aki KÃ¤kelÃ¤, Fredrik Åhs.
->>>>>>> 5127edd60ee8310c0c57691cdc870f7db80b042d
  **/
 
 package edu.chalmers.dat255.audiobookplayer.view;
