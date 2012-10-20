@@ -32,18 +32,18 @@ public class BookTest extends TestCase {
 	private String bookAuthor = "MyTestBookAuthor";
 	private Book b;
 	
-	private final int duration0 = 5;
-	private final int duration1 = 10;
-	private final int duration2 = 15;
-	private final int duration3 = 20;
+	private static final int DURATION0 = 5;
+	private static final int DURATION1 = 10;
+	private static final int DURATION2 = 15;
+	private static final int DURATION3 = 20;
 	
-	private final int totalDuration = duration0+duration1+duration2+duration3;
+	private static final int totalDuration = DURATION0+DURATION1+DURATION2+DURATION3;
 	
 	// Tracks to test the book with
-	private Track t0 = new Track("/thePath/theTrack1.mp3", duration0);
-	private Track t1 = new Track("/thePath/theTrack2.mp3", duration1);
-	private Track t2 = new Track("/thePath/theTrack3.mp3", duration2);
-	private Track t3 = new Track("/thePath/theTrack4.mp3", duration3);
+	private Track t0 = new Track("/thePath/theTrack1.mp3", DURATION0);
+	private Track t1 = new Track("/thePath/theTrack2.mp3", DURATION1);
+	private Track t2 = new Track("/thePath/theTrack3.mp3", DURATION2);
+	private Track t3 = new Track("/thePath/theTrack4.mp3", DURATION3);
 	
 	private Track[] tracks = { t0, t1, t2, t3 };
 
@@ -152,8 +152,6 @@ public class BookTest extends TestCase {
 
 			// assert that the selected track index does not change even
 			// when adding tracks to indices before it
-			Track t = b.getSelectedTrack();
-			Track t2 = tracks[0];
 			assertTrue(b.getSelectedTrack().equals(tracks[0]));
 
 			// assert that the amount of tracks changes accordingly

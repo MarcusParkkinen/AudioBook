@@ -18,7 +18,6 @@ import java.util.List;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
-import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;

@@ -51,6 +51,9 @@ public class PlayerController implements IPlayerEvents {
 	// The frequency of the updates
 	private static final int UPDATE_FREQUENCY = Constants.Value.UPDATE_FREQUENCY;
 
+	private static final double ONE_TENTH = 0.1; // 10%
+	private static final double MAX_SEEK_PERCENTAGE = 1.0; // 100%
+
 	/**
 	 * Creates a PlayerController instance and initializes the Media Player and
 	 * Bookshelf.
@@ -157,7 +160,7 @@ public class PlayerController implements IPlayerEvents {
 	 *            0 <= x <= 100
 	 */
 	private void startAtPercentage(double percentage) {
-		if (percentage >= 0 && percentage <= 100 && setup()) {
+		if (percentage >= 0 && percentage <= MAX_SEEK_PERCENTAGE && setup()) {
 			seekTo((int) (mp.getDuration() * percentage));
 			mp.start();
 		}
@@ -357,8 +360,8 @@ public class PlayerController implements IPlayerEvents {
 		 * stopped/started state to end/start seeking.
 		 */
 		if (isAllowedTrackIndex()) {
-			seekToPercentageInTrack(mp.getCurrentPosition()
-					+ getTrackDuration() / 10);
+			seekTo((int) (ONE_TENTH * getTrackDuration() + mp
+					.getCurrentPosition()));
 		}
 	}
 
@@ -368,8 +371,7 @@ public class PlayerController implements IPlayerEvents {
 		 * stopped/started state to end/start seeking.
 		 */
 		if (isAllowedTrackIndex()) {
-			seekToPercentageInTrack(mp.getCurrentPosition()
-					- getTrackDuration() / 10);
+			seekTo((int) (mp.getCurrentPosition() - ONE_TENTH * getTrackDuration()));
 		}
 	}
 
@@ -388,7 +390,7 @@ public class PlayerController implements IPlayerEvents {
 
 			if (isStarted) {
 				// no need to restart the player
-				mp.seekTo((int) (mp.getDuration() * percentage));
+				seekTo((int) (mp.getDuration() * percentage));
 			} else {
 				/*
 				 * note that startAt() can not be used as MediaPlayer is not
@@ -423,7 +425,7 @@ public class PlayerController implements IPlayerEvents {
 
 			if (isStarted && bs.getSelectedTrackIndex() == track) {
 				// no need to restart the player since it is the same track
-				mp.seekTo(seekTime);
+				seekTo(seekTime);
 			} else {
 				// set the correct track
 				bs.setSelectedTrackIndex(track);
@@ -454,7 +456,7 @@ public class PlayerController implements IPlayerEvents {
 	 * @return True if legal.
 	 */
 	private boolean isLegalPercentage(double percentage) {
-		return percentage >= 0 && percentage <= 100;
+		return percentage >= 0 && percentage <= MAX_SEEK_PERCENTAGE;
 	}
 
 	/**
@@ -464,7 +466,19 @@ public class PlayerController implements IPlayerEvents {
 	 *            ms
 	 */
 	public void seekTo(int time) {
-		mp.seekTo(time);
+		if (time > mp.getDuration() || time < 0) {
+			Log.e(TAG, "Attempted to seek to an invalid position: " + time);
+			if (time > 0) {
+				// just play the next track directly
+				nextTrack();
+			} else {
+				// reset the current track
+				mp.seekTo(0);
+			}
+		} else {
+			// seek to the given, valid time
+			mp.seekTo(time);
+		}
 	}
 
 	/**
