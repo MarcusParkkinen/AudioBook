@@ -22,7 +22,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -44,6 +43,7 @@ import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
+import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
 
 /**
  * Graphical representation of the bookshelf.
@@ -460,24 +460,25 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		 * @return
 		 */
 		public void selectedBookElapsedTimeUpdated(int newTime) {
-			// newTime will be in millis, convert to seconds
-			int newTimeSeconds = newTime / MILLIS_PER_SECOND;
 			// if a second has passed
-			if (newTimeSeconds > bookElapsedTime) {
+			if (newTime / MILLIS_PER_SECOND > bookElapsedTime
+					/ MILLIS_PER_SECOND) {
 				// store this new value
-				bookElapsedTime = newTimeSeconds;
+				bookElapsedTime = newTime;
 				// update the label
 				setTextViewText(
 						selectedBookView,
 						R.id.bookshelfBookPosition,
 						"Position: "
-								+ DateUtils.formatElapsedTime(bookElapsedTime));
+								+ TextFormatter
+										.formatTimeFromMillis(bookElapsedTime));
 
 				// get duration of book in seconds
-				int bookDuration = bookshelf.getSelectedBookDuration()
-						/ MILLIS_PER_SECOND;
+				int bookDuration = bookshelf.getSelectedBookDuration();
+				String bookDur = TextFormatter.formatTimeFromMillis(bookshelf
+						.getSelectedBookDuration());
 				// calculate the progress
-				int calculatedProgress = calculateProgress(newTimeSeconds,
+				int calculatedProgress = calculateProgress(newTime,
 						bookDuration);
 				// if there is no errors and the progress has progressed since
 				// the last saved progress
@@ -602,11 +603,10 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			setTextViewText(cView, R.id.bookshelfTrackTitle,
 					bookshelf.getTrackTitleAt(bookIndex, trackIndex));
 			// get the position of the track from the book
-			int duration = bookshelf.getTrackDurationAt(bookIndex, trackIndex)
-					/ MILLIS_PER_SECOND;
+			int duration = bookshelf.getTrackDurationAt(bookIndex, trackIndex);
 			// convert and set the duration of the track
 			setTextViewText(cView, R.id.bookshelfTrackTime,
-					DateUtils.formatElapsedTime(duration));
+					TextFormatter.formatTimeFromMillis(duration));
 
 			cView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -619,11 +619,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					BookshelfFragment.this.childClicked(bookIndex, trackIndex);
 					// store for synchronization
 					selectedBookView = expandableListView.getChildAt(bookIndex);
-					bookElapsedTime = bookshelf.getBookElapsedTime()
-							/ MILLIS_PER_SECOND;
+					bookElapsedTime = bookshelf.getBookElapsedTime();
 					bookProgress = calculateProgress(bookElapsedTime,
-							bookshelf.getSelectedBookDuration()
-									/ MILLIS_PER_SECOND);
+							bookshelf.getSelectedBookDuration());
 				}
 			});
 
@@ -702,8 +700,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			// set the expandableListView as final to use in listeners
 			final ExpandableListView expandableListView = (ExpandableListView) parent;
 			// get duration from book
-			int duration = bookshelf.getBookDurationAt(bookIndex)
-					/ MILLIS_PER_SECOND;
+			int duration = bookshelf.getBookDurationAt(bookIndex);
 
 			// prevent problems with a duration of 0
 			if (duration == 0) {
@@ -726,19 +723,18 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			else {
 				setTextViewTextColor(cView, R.id.bookshelfBookTitle,
 						Color.WHITE);
-				time = bookshelf.getBookElapsedTimeAt(bookIndex)
-						/ MILLIS_PER_SECOND;
+				time = bookshelf.getBookElapsedTimeAt(bookIndex);
 				progress = calculateProgress(time, duration);
 			}
 			setTextViewText(cView, R.id.bookshelfAuthor,
 					bookshelf.getBookAuthorAt(bookIndex));
 			// format the string of the elapsed time of the book
-			String timeString = time == 0 ? "N/A" : DateUtils
-					.formatElapsedTime(time);
+			String timeString = time == 0 ? "N/A" : TextFormatter
+					.formatTimeFromMillis(time);
 			setTextViewText(cView, R.id.bookshelfBookPosition, "Position: "
 					+ timeString);
 			setTextViewText(cView, R.id.bookshelfBookDuration, "Duration: "
-					+ DateUtils.formatElapsedTime(duration));
+					+ TextFormatter.formatTimeFromMillis(duration));
 
 			// set the progress of the progress bar
 			ProgressBar progressBar = (ProgressBar) cView
@@ -781,11 +777,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 					BookshelfFragment.this.groupClicked(bookIndex);
 					// store the view so that text can update
 					selectedBookView = finalConvertView;
-					bookElapsedTime = bookshelf.getBookElapsedTime()
-							/ MILLIS_PER_SECOND;
+					bookElapsedTime = bookshelf.getBookElapsedTime();
 					bookProgress = calculateProgress(bookElapsedTime,
-							bookshelf.getSelectedBookDuration()
-									/ MILLIS_PER_SECOND);
+							bookshelf.getSelectedBookDuration());
 				}
 			});
 			// set long click to show the group's context menu
