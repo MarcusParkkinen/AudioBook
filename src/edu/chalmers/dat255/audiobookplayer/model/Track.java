@@ -158,7 +158,7 @@ public final class Track implements ITrackUpdates, Serializable {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(final Object obj){
+	public boolean equals(Object obj){
 	    if(obj instanceof Track){
 	        final Track other = (Track) obj;
 	        return new EqualsBuilder()

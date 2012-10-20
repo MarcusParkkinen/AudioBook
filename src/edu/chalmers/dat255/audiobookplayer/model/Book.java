@@ -188,7 +188,7 @@ public final class Book implements IBookUpdates, Serializable {
 
 	public void setSelectedBookTitle(String title) {
 		if (title == null) {
-			throw new IndexOutOfBoundsException(TAG
+			throw new IllegalArgumentException(TAG
 					+ " setBookTitle to null title is illegal");
 		}
 		this.title = title;
@@ -445,12 +445,14 @@ public final class Book implements IBookUpdates, Serializable {
 		return this.tracks.get(selectedTrackIndex).getTagTimes();
 	}
 
-	/*
-	 * TODO(!!): FOR TESTING PURPOSES ONLY! REMOVE
+	/**
+	 * Returns a reference to the currently selected track. NOTE: Only for
+	 * testing purposes.
+	 * 
+	 * @return the currently selected track
 	 */
-	public Object getSelectedTrack() {
-		// TODO Auto-generated method stub
-		return null;
+	public Track getSelectedTrack() {
+		return tracks.get(selectedTrackIndex);
 	}
 
 	/*

@@ -15,8 +15,6 @@ package edu.chalmers.dat255.audiobookplayer.model;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
-
 import android.util.Log;
 
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
