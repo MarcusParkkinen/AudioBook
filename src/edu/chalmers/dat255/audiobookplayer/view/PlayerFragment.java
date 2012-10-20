@@ -87,10 +87,8 @@ public class PlayerFragment extends Fragment {
 					seekLeft(false);
 				} else if (ev == MotionEvent.ACTION_UP) {
 					Log.i(TAG, "Stopped seeking LEFT (ACTION_UP)");
-					seekLeft(false);
 				} else if (ev == MotionEvent.ACTION_CANCEL) {
 					Log.i(TAG, "Cancelled seeking LEFT (ACTION_CANCEL)");
-					seekLeft(false);
 				}
 				return false;
 			}
@@ -105,44 +103,37 @@ public class PlayerFragment extends Fragment {
 					seekRight(true);
 				} else if (ev == MotionEvent.ACTION_UP) {
 					Log.i(TAG, "Stopped seeking RIGHT (ACTION_UP)");
-					seekRight(false);
 				} else if (ev == MotionEvent.ACTION_CANCEL) {
 					Log.i(TAG, "Cancelled seeking RIGHT (ACTION_CANCEL)");
-					seekRight(false);
 				}
 				return false;
 			}
 		});
 
-		// this is a toggle button
 		playPause = (ImageButton) view.findViewById(R.id.playPause);
-		// start as disabled
-		playPause
-				.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
 		playPause.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				/*
-				 * if it is player when the user presses pause, then pause and
-				 * show the play button (toggle pause/play and the isPlaying
-				 * value).
+				 * if audio is playing when the user presses pause, then pause
+				 * and show the play button.
 				 */
-				// reset
-				playPause.setBackgroundResource(0);
 
 				if (fragmentOwner.isPlaying()) {
-					Log.d(TAG, "Should be playing.");
+					// was playing.
+
+					// pause
 					fragmentOwner.pause();
-					playPause.setBackgroundResource(R.drawable.pb_play_default);
+					setPlaybackStatus(PlaybackStatus.PAUSED);
 				} else if (fragmentOwner.isStarted()) {
-					Log.d(TAG, "Should not be playing but should be started.");
+					// was paused.
+
+					// resume
 					fragmentOwner.resume();
-					playPause
-							.setBackgroundResource(R.drawable.pb_pause_default);
+					setPlaybackStatus(PlaybackStatus.PLAYING);
 				} else {
-					Log.d(TAG, "Should not be started nor playing");
-					// set the button to 'disabled'
-					playPause
-							.setBackgroundResource(R.drawable.pb_play_pause_disabled_default);
+					// was stopped.
+					Log.d(TAG, "Stopped status.");
+					setPlaybackStatus(PlaybackStatus.STOPPED);
 				}
 			}
 		});
@@ -369,6 +360,7 @@ public class PlayerFragment extends Fragment {
 	 * display their respective default texts.
 	 */
 	public void resetComponents() {
+		Log.d(TAG, "No track selected -- resetting components.");
 		// reset progress of seek bars
 		this.bookBar.setProgress(0);
 		this.trackBar.setProgress(0);
@@ -389,22 +381,23 @@ public class PlayerFragment extends Fragment {
 		this.trackCounter.setText(Constants.Message.NO_TRACKS_FOUND);
 
 		// reset play/pause button to stopped
-		setPlayPauseStatus(PlaybackStatus.STOPPED);
+		setPlaybackStatus(PlaybackStatus.STOPPED);
 	}
 
 	/**
-	 * Sets the play/pause button status.
+	 * Sets the play/pause status.
 	 * 
 	 * @param status
+	 *            The status to change to.
 	 */
-	public void setPlayPauseStatus(int status) {
+	public void setPlaybackStatus(int status) {
 		playPause.setBackgroundResource(0);
 		switch (status) {
 		case PlaybackStatus.PLAYING:
-			playPause.setBackgroundResource(R.drawable.pb_play_default);
+			playPause.setBackgroundResource(R.drawable.pb_pause_default);
 			return;
 		case PlaybackStatus.PAUSED:
-			playPause.setBackgroundResource(R.drawable.pb_pause_default);
+			playPause.setBackgroundResource(R.drawable.pb_play_default);
 			return;
 		case PlaybackStatus.STOPPED:
 		default:

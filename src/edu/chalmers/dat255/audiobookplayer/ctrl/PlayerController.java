@@ -352,6 +352,10 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekRight(boolean seek) {
+		/*
+		 * Note: in the future, 'seek' would have been used to determine a
+		 * stopped/started state to end/start seeking.
+		 */
 		if (isAllowedTrackIndex()) {
 			seekToPercentageInTrack(mp.getCurrentPosition()
 					+ getTrackDuration() / 10);
@@ -359,6 +363,10 @@ public class PlayerController implements IPlayerEvents {
 	}
 
 	public void seekLeft(boolean seek) {
+		/*
+		 * Note: in the future, 'seek' would have been used to determine a
+		 * stopped/started state to end/start seeking.
+		 */
 		if (isAllowedTrackIndex()) {
 			seekToPercentageInTrack(mp.getCurrentPosition()
 					- getTrackDuration() / 10);

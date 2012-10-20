@@ -57,6 +57,9 @@ public interface IPlayerEvents {
 
 	/**
 	 * Seeks to the left (rewinds).
+	 * <p>
+	 * Note: in the future, 'seek' would have been used to determine a
+	 * stopped/started state to end/start seeking.
 	 * 
 	 * @param seek
 	 *            Starts or keeps seeking if true. Stops if false.
@@ -65,6 +68,9 @@ public interface IPlayerEvents {
 
 	/**
 	 * Seeks to the right (fast-forwards).
+	 * <p>
+	 * Note: in the future, 'seek' would have been used to determine a
+	 * stopped/started state to end/start seeking.
 	 * 
 	 * @param seek
 	 *            Starts or keeps seeking if true. Stops if false.

@@ -331,6 +331,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			if (bs.getSelectedBookIndex() != Constants.Value.NO_BOOK_SELECTED) {
 				// update the player GUI components
 				updatePlayerGUI(bs.getSelectedBook());
+				
+				// make sure the player GUI knows it is playing
+				playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
 
 				/*
 				 * Only swap to the player and start audio if a valid book is
@@ -372,18 +375,27 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
 			Book b = bs.getSelectedBook();
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
+				/*
+				 * Do not play audio.
+				 */
 				// reset the controls to 'stopped'
 				playerFragment.resetComponents();
 
 				// stop the audio player
 				playerController.stop();
 			} else {
+				/*
+				 * Play audio.
+				 */
 				// Bookshelf
 				// move the "selected track" indicator to the new index
 
 				// Player
 				// restart the player
 				playerController.start();
+
+				// set the status
+				playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
 			}
 
 			// Player
@@ -439,8 +451,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// update the track counter
 			updateTrackCounterLabel(b);
-			
-			playerFragment.setPlayPauseStatus(PlaybackStatus.PLAYING);
 		}
 	}
 
