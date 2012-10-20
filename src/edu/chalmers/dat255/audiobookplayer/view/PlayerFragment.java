@@ -29,8 +29,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
+import edu.chalmers.dat255.audiobookplayer.constants.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
-import edu.chalmers.dat255.audiobookplayer.util.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
 
 /**
@@ -117,22 +117,16 @@ public class PlayerFragment extends Fragment {
 				 * if audio is playing when the user presses pause, then pause
 				 * and show the play button.
 				 */
-
 				if (fragmentOwner.isPlaying()) {
-					// was playing.
-
-					// pause
+					// it was playing, so pause
 					fragmentOwner.pause();
 					setPlaybackStatus(PlaybackStatus.PAUSED);
 				} else if (fragmentOwner.isStarted()) {
-					// was paused.
-
-					// resume
+					// was paused, so resume
 					fragmentOwner.resume();
 					setPlaybackStatus(PlaybackStatus.PLAYING);
 				} else {
-					// was stopped.
-					Log.d(TAG, "Stopped status.");
+					// it was stopped, keep it stopped
 					setPlaybackStatus(PlaybackStatus.STOPPED);
 				}
 			}

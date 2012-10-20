@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import edu.chalmers.dat255.audiobookplayer.R;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
+import edu.chalmers.dat255.audiobookplayer.constants.PlaybackStatus;
 import edu.chalmers.dat255.audiobookplayer.ctrl.BookshelfController;
 import edu.chalmers.dat255.audiobookplayer.ctrl.PlayerController;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
@@ -39,7 +40,6 @@ import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
-import edu.chalmers.dat255.audiobookplayer.util.PlaybackStatus;
 
 /**
  * The main activity of the application. TODO: insert license

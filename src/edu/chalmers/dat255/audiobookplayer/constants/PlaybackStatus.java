@@ -10,7 +10,7 @@
  * 
  *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
  **/
-package edu.chalmers.dat255.audiobookplayer.util;
+package edu.chalmers.dat255.audiobookplayer.constants;
 
 /**
  * Contains the possible playback statuses.
@@ -20,6 +20,7 @@ package edu.chalmers.dat255.audiobookplayer.util;
  * 
  */
 public final class PlaybackStatus {
+	
 	private PlaybackStatus() {
 	} // to defeat instantiation
 	

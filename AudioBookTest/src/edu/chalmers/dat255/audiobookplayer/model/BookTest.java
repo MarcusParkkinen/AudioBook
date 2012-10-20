@@ -37,7 +37,7 @@ public class BookTest extends TestCase {
 	private static final int DURATION2 = 15;
 	private static final int DURATION3 = 20;
 	
-	private static final int totalDuration = DURATION0+DURATION1+DURATION2+DURATION3;
+	private static final int TOTAL_DURATION = DURATION0+DURATION1+DURATION2+DURATION3;
 	
 	// Tracks to test the book with
 	private Track t0 = new Track("/thePath/theTrack1.mp3", DURATION0);
@@ -81,7 +81,7 @@ public class BookTest extends TestCase {
 		assertEquals(4, b.getNumberOfTracks());
 
 		// assert that the duration of the book has been calculated correctly
-		assertEquals(totalDuration, b.getDuration());
+		assertEquals(TOTAL_DURATION, b.getDuration());
 	}
 
 	/**
