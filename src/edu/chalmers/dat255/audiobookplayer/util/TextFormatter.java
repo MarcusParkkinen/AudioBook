@@ -49,8 +49,7 @@ public final class TextFormatter {
 		int seconds = (ms / MSECONDS_IN_SECOND) % SECONDS_IN_MINUTE;
 		int minutes = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE))
 				% MINUTES_IN_HOUR;
-		int hours = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR))
-				% HOURS_IN_DAY;
+		int hours = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR));
 
 		/*
 		 * Return the hour text only if it is above 0. Add a zero to the minutes
@@ -59,11 +58,25 @@ public final class TextFormatter {
 		 * it needs one for 2 symbols.
 		 */
 
-		return (hours % HOURS_IN_DAY > 0 ? hours % HOURS_IN_DAY + ":" : "")
-				+ ((minutes <= LARGEST_SINGLE_DIGIT_INTEGER) ? "0" : "")
-				+ minutes + ":"
-				+ ((seconds <= LARGEST_SINGLE_DIGIT_INTEGER) ? "0" : "")
-				+ seconds;
+		int days = hours / HOURS_IN_DAY;
+		String dayStr = days > 0 ? days + ":" : "";
+		int hour = hours % HOURS_IN_DAY;
+		// if not edited, will hide hours
+		String hourStr = "";
+		// always show with 2 digits if days > 0
+		if (days > 0) {
+			hourStr = hour <= LARGEST_SINGLE_DIGIT_INTEGER ? "0" + hour + ":"
+					: hour + ":";
+		}
+		// else if hour > 0 show as x
+		else if (hour > 0) {
+			hourStr = hour + ":";
+		}
+		String minStr = minutes <= LARGEST_SINGLE_DIGIT_INTEGER ? "0" + minutes
+				+ ":" : minutes + ":";
+		String secondStr = seconds <= LARGEST_SINGLE_DIGIT_INTEGER ? "0"
+				+ seconds : "" + seconds;
+		return dayStr + hourStr + minStr + secondStr;
 	}
 
 	/**
