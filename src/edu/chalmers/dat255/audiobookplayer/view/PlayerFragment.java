@@ -356,8 +356,8 @@ public class PlayerFragment extends Fragment {
 	}
 
 	/**
-	 * Resets the seek bars, titles, elapsed times and durations displayed to
-	 * their default text.
+	 * Resets the seek bar progresses, titles, elapsed times and durations
+	 * to display their respective default texts.
 	 */
 	public void resetComponents() {
 		// reset progress of seek bars
@@ -370,9 +370,11 @@ public class PlayerFragment extends Fragment {
 
 		// reset elapsed time texts
 		this.trackElapsedTime.setText(Constants.Message.NO_TRACK_ELAPSED_TIME);
+		this.bookElapsedTime.setText(Constants.Message.NO_BOOK_ELAPSED_TIME);
 
 		// reset duration texts
-
+		this.trackDuration.setText(Constants.Message.NO_TRACK_DURATION);
+		this.bookDuration.setText(Constants.Message.NO_BOOK_DURATION);
 	}
 
 	/**

@@ -89,6 +89,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	}
 
+	/**
+	 * Initializes the ViewPager and its adapter.
+	 */
 	private void initPager() {
 		// create a list of our fragments
 		List<Fragment> fragments = new ArrayList<Fragment>();
@@ -307,6 +310,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            The property name of the fired event.
 	 * @param bs
 	 *            Model copy.
+	 * @precondition The bookshelf instance must not be null.
 	 */
 	private void updateFragments(String eventName, Bookshelf bs) {
 		/*
@@ -320,35 +324,23 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// Player
 			// Do nothing
 		} else if (eventName.equals(Constants.Event.BOOK_SELECTED)) {
-			if (bs.getSelectedBookIndex() != -1) {
-				Book b = bs.getSelectedBook();
-				// Bookshelf
-				// TODO(Fredrik): indicate the selected book or remove this
+			// reset the player controls to standard values
+			playerFragment.resetComponents();
 
-				// Player
-				// reset the player controls to standard values
-				playerFragment.resetComponents();
+			if (bs.getSelectedBookIndex() != Constants.Value.NO_BOOK_SELECTED) {
+				// update the player GUI components
+				updatePlayerGUI(bs.getSelectedBook());
+
+				/*
+				 * Only swap to the player and start audio if a valid book is
+				 * selected.
+				 */
 
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
 
 				// start the player
 				playerController.start();
-
-				// show the title of the book
-				updateBookTitleLabel(b);
-
-				// display its duration
-				updateBookDurationLabel(b);
-
-				// show the title of the track
-				updateTrackTitleLabel(b);
-
-				// and display its duration
-				updateTrackDurationLabel(b);
-
-				// update the track counter
-				updateTrackCounterLabel(b);
 			}
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
@@ -421,6 +413,35 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 * the private method updateTags. Tags are, however, not implemented in
 		 * the GUI so they will not be written here, either.
 		 */
+	}
+
+	/**
+	 * Updates the book title/duration, track title/duration and track counter
+	 * (i.e. no changes to seek bars).
+	 * <p>
+	 * Does nothing if the given book is null.
+	 * 
+	 * @param b
+	 *            Book given with the data to be represented by the Player UI.
+	 */
+	private void updatePlayerGUI(Book b) {
+		Log.d(TAG, "Updating Player GUI");
+		if (b != null) {
+			// show the title of the book
+			updateBookTitleLabel(b);
+
+			// display its duration
+			updateBookDurationLabel(b);
+
+			// show the title of the track
+			updateTrackTitleLabel(b);
+
+			// and display its duration
+			updateTrackDurationLabel(b);
+
+			// update the track counter
+			updateTrackCounterLabel(b);
+		}
 	}
 
 	/**

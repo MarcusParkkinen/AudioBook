@@ -10,19 +10,18 @@
         android:id="@+id/book_seek_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:background="#121212" >
+        android:layout_alignParentTop="true" >
 
         <SeekBar
             android:id="@+id/book_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true"
             android:maxHeight="26dp"
             android:minHeight="26dp"
             android:progress="100"
             android:progressDrawable="@drawable/book_bar_progress_background"
-            android:thumb="@drawable/sb_book_thumb" />
+            android:thumb="@drawable/sb_book_thumb"
+            android:thumbOffset="3dp" />
     </LinearLayout>
 
     <!-- Track times: track elapsed time (current progress) and duration (total running time) are displayed. -->
@@ -292,7 +291,8 @@
             android:minHeight="20dp"
             android:progress="100"
             android:progressDrawable="@drawable/track_bar_progress_background"
-            android:thumb="@drawable/sb_track_thumb" />
+            android:thumb="@drawable/sb_track_thumb"
+            android:thumbOffset="3dp" />
     </LinearLayout>
 
     <!-- Cover Art is displayed. -->
