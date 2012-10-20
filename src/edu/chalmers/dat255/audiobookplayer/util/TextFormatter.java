@@ -60,11 +60,10 @@ public final class TextFormatter {
 		 */
 
 		return (hours % HOURS_IN_DAY > 0 ? hours % HOURS_IN_DAY + ":" : "")
-				+ ((minutes <= LARGEST_SINGLE_DIGIT_INTEGER && hours
-						% HOURS_IN_DAY > 0) ? "0" : "")
+				+ ((minutes <= LARGEST_SINGLE_DIGIT_INTEGER) ? "0" : "")
 				+ minutes
 				+ ":"
-				+ ((seconds <= LARGEST_SINGLE_DIGIT_INTEGER && minutes == 0) ? "0"
+				+ ((seconds <= LARGEST_SINGLE_DIGIT_INTEGER) ? "0"
 						: "") + seconds;
 	}
 
