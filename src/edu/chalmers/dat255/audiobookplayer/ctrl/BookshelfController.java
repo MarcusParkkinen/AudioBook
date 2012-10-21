@@ -74,26 +74,66 @@ public class BookshelfController implements IBookshelfEvents {
 	 * IBookshelfEvents
 	 */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#
+	 * setSelectedTrack(int, int)
+	 */
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
 		bookshelf.setSelectedTrackIndex(bookIndex, trackIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeBook
+	 * (int)
+	 */
 	public void removeBook(int bookIndex) {
 		bookshelf.removeBookAt(bookIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#
+	 * setBookTitleAt(int, java.lang.String)
+	 */
 	public void setBookTitleAt(int bookIndex, String newTitle) {
 		bookshelf.setSelectedBookTitle(newTitle);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeTrack
+	 * (int)
+	 */
 	public void removeTrack(int trackIndex) {
 		bookshelf.removeTrack(trackIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeTrack
+	 * (int, int)
+	 */
 	public void removeTrack(int bookIndex, int trackIndex) {
 		bookshelf.removeTrack(bookIndex, trackIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#moveTrack
+	 * (int, int, int)
+	 */
 	public void moveTrack(int bookIndex, int trackIndex, int offset) {
 		bookshelf.moveTrack(bookIndex, trackIndex, offset);
 	}
@@ -102,6 +142,12 @@ public class BookshelfController implements IBookshelfEvents {
 	 * End IBookshelfEvents
 	 */
 
+	/**
+	 * Adds a listener to the bookshelf (model).
+	 * 
+	 * @param pcl
+	 *            The listener to add.
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener pcl) {
 		Log.d(TAG, "Adding listener to bookshelf.");
 		bookshelf.addPropertyChangeListener(pcl);

@@ -66,6 +66,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	private BookshelfController bookshelfController;
 	private PlayerController playerController;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,6 +117,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		pager.setCurrentItem(BOOKSHELF);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 		Log.d(TAG, "onStop()");
@@ -121,6 +131,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		bookshelfController.removeListeners();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onResume()
+	 */
 	@Override
 	protected void onResume() {
 		Log.d(TAG, "onResume()");
@@ -138,12 +153,22 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 */
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onStart()
+	 */
 	@Override
 	protected void onStart() {
 		Log.d(TAG, "onStart()");
 		super.onStart();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onDestroy()
+	 */
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -158,6 +183,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		save();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
@@ -172,9 +202,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return bookshelfController.saveBookshelf(this, USERNAME);
 	}
 
-	/**
+	/*
 	 * Handle the menu item selection. Every item has a unique id.
-	 * */
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -203,42 +237,104 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * relevant controller methods.
 	 */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#previousTrack
+	 * ()
+	 */
 	public void previousTrack() {
 		playerController.previousTrack();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#resume()
+	 */
 	public void resume() {
 		playerController.resume();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#pause()
+	 */
 	public void pause() {
 		playerController.pause();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#nextTrack()
+	 */
 	public void nextTrack() {
 		playerController.nextTrack();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekLeft
+	 * (boolean)
+	 */
 	public void seekLeft(boolean seek) {
 		playerController.seekLeft(seek);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekRight
+	 * (boolean)
+	 */
 	public void seekRight(boolean seek) {
 		playerController.seekRight(seek);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#
+	 * seekToPercentageInBook(double)
+	 */
 	public void seekToPercentageInBook(double percentage) {
 		playerController.seekToPercentageInBook(percentage);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#
+	 * seekToPercentageInTrack(double)
+	 */
 	public void seekToPercentageInTrack(double percentage) {
 		playerController.seekToPercentageInTrack(percentage);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isPlaying()
+	 */
 	public boolean isPlaying() {
 		return playerController.isPlaying();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isStarted()
+	 */
 	public boolean isStarted() {
 		return playerController.isStarted();
 	}
@@ -251,11 +347,23 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		bookshelfController.setSelectedBook(index);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents#
+	 * bookLongPress(int)
+	 */
 	public void bookLongPress(int index) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents#
+	 * addBookButtonPressed()
+	 */
 	public void addBookButtonPressed() {
 		Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
 		startActivity(intent);
@@ -263,6 +371,11 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 	/* End BookshelfUIListener */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.FragmentActivity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
@@ -276,14 +389,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		// start a new task
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
-	}
-
-	public void bookmarkSet() {
-		Log.d(TAG, "Bookmark set");
-	}
-
-	public void tagSet() {
-		Log.d(TAG, "Tag set");
 	}
 
 	/**
@@ -331,7 +436,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			if (bs.getSelectedBookIndex() != Constants.Value.NO_BOOK_SELECTED) {
 				// update the player GUI components
 				updatePlayerGUI(bs.getSelectedBook());
-				
+
 				// make sure the player GUI knows it is playing
 				playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
 
@@ -657,6 +762,12 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		return ((double) elapsedTime) / duration;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#
+	 * setSelectedTrack(int, int)
+	 */
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
 		if (bookIndex == -1 || trackIndex == -1) {
 			return;
@@ -676,22 +787,56 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		playerController.start();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeBook
+	 * (int)
+	 */
 	public void removeBook(int bookIndex) {
 		bookshelfController.removeBook(bookIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeTrack
+	 * (int, int)
+	 */
 	public void removeTrack(int bookIndex, int trackIndex) {
 		bookshelfController.removeTrack(bookIndex, trackIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#
+	 * setBookTitleAt(int, java.lang.String)
+	 */
 	public void setBookTitleAt(int bookIndex, String newTitle) {
 		bookshelfController.setBookTitleAt(bookIndex, newTitle);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeTrack
+	 * (int)
+	 */
 	public void removeTrack(int trackIndex) {
 		bookshelfController.removeTrack(trackIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#moveTrack
+	 * (int, int, int)
+	 */
 	public void moveTrack(int bookIndex, int trackIndex, int offset) {
 		bookshelfController.moveTrack(bookIndex, trackIndex, offset);
 	}

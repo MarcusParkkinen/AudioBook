@@ -273,6 +273,9 @@ public class PlayerController implements IPlayerEvents {
 
 	/* IPlayerEvents */
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#pause()
+	 */
 	public void pause() {
 		if (isStarted && mp.isPlaying()) {
 			stopTimer();
@@ -280,6 +283,9 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#resume()
+	 */
 	public void resume() {
 		if (isStarted) {
 			startTimer();
@@ -287,6 +293,9 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#previousTrack()
+	 */
 	public void previousTrack() {
 		if (isAllowedBookIndex()) {
 			int trackIndex = bs.getSelectedTrackIndex();
@@ -323,6 +332,9 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#nextTrack()
+	 */
 	public void nextTrack() {
 		if (isAllowedBookIndex()) {
 			int trackIndex = bs.getSelectedTrackIndex();
@@ -354,6 +366,9 @@ public class PlayerController implements IPlayerEvents {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekRight(boolean)
+	 */
 	public void seekRight(boolean seek) {
 		/*
 		 * Note: in the future, 'seek' would have been used to determine a
@@ -365,6 +380,9 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekLeft(boolean)
+	 */
 	public void seekLeft(boolean seek) {
 		/*
 		 * Note: in the future, 'seek' would have been used to determine a
@@ -375,6 +393,9 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekToPercentageInTrack(double)
+	 */
 	public void seekToPercentageInTrack(double percentage) {
 		if (!isLegalPercentage(percentage)) {
 			Log.d(TAG,
@@ -401,6 +422,9 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekToPercentageInBook(double)
+	 */
 	public void seekToPercentageInBook(double percentage) {
 		if (!isLegalPercentage(percentage)) {
 			Log.d(TAG,
@@ -439,10 +463,16 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isStarted()
+	 */
 	public boolean isStarted() {
 		return isStarted;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isPlaying()
+	 */
 	public boolean isPlaying() {
 		return mp.isPlaying();
 	}
@@ -516,6 +546,9 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	private class TrackElapsedTimeUpdater implements Runnable {
 
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
 		public void run() {
 			while (isStarted && mp.isPlaying()) {
 				updateTrackTime();
