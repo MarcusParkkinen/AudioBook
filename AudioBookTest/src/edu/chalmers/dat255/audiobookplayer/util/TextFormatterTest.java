@@ -47,6 +47,8 @@ public class TextFormatterTest extends TestCase {
 			* MINS_IN_HOUR;
 	private static final int DAYS = MSECS_IN_SECOND * SECS_IN_MINUTE
 			* MINS_IN_HOUR * HOURS_IN_DAY;
+	
+	private static final String NOT_EQUAL = "!=";
 
 	/**
 	 * Test method for
@@ -63,38 +65,38 @@ public class TextFormatterTest extends TestCase {
 		// test zero
 		expected = "00:00";
 		result = TextFormatter.formatTimeFromMillis(0);
-		assertTrue("zeroes" + "[" + expected + " != " + result + "]",
+		assertTrue("zeroes" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test single-digit seconds
 		expected = "00:0" + ONE_DIGIT;
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * SECONDS);
-		assertTrue("single-digit seconds" + "[" + expected + " != " + result
+		assertTrue("single-digit seconds" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 		// test double-digit seconds
 		expected = "00:" + TWO_DIGITS;
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * SECONDS);
-		assertTrue("double-digit seconds" + "[" + expected + " != " + result
+		assertTrue("double-digit seconds" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 		// test single-digit minutes
 		expected = "0" + ONE_DIGIT + ":00";
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * MINUTES);
-		assertTrue("single-digit minutes" + "[" + expected + " != " + result
+		assertTrue("single-digit minutes" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 		// test double-digit minutes
 		expected = TWO_DIGITS + ":00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * MINUTES);
-		assertTrue("double-digit minutes" + "[" + expected + " != " + result
+		assertTrue("double-digit minutes" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 		// test single-digit hour
 		expected = ONE_DIGIT + ":00:00";
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * HOURS);
 		assertTrue(
-				"single-digit hour" + "[" + expected + " != " + result + "]",
+				"single-digit hour" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test double-digit hour
@@ -102,21 +104,21 @@ public class TextFormatterTest extends TestCase {
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * HOURS);
 		Log.d(TAG, "expected: " + expected + ", received: " + result);
 		assertTrue(
-				"double-digit hour" + "[" + expected + " != " + result + "]",
+				"double-digit hour" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test single-digit day
 		expected = ONE_DIGIT + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * DAYS);
 		Log.d(TAG, "expected: " + expected + ", received: " + result);
-		assertTrue("single-digit day" + "[" + expected + " != " + result + "]",
+		assertTrue("single-digit day" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test double-digit day
 		expected = TWO_DIGITS + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * DAYS);
 		Log.d(TAG, "expected: " + expected + ", received: " + result);
-		assertTrue("double-digit day" + "[" + expected + " != " + result + "]",
+		assertTrue("double-digit day" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		/*
@@ -128,13 +130,13 @@ public class TextFormatterTest extends TestCase {
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * HOURS
 				+ TWO_DIGITS * SECONDS);
 		assertTrue("2-digit hours and 2-digit seconds" + "[" + expected
-				+ " != " + result + "]", expected.equals(result));
+				+ NOT_EQUAL + result + "]", expected.equals(result));
 
 		// test seconds >= 60
 		expected = TWO_DIGITS + ":00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * SECS_IN_MINUTE
 				* SECONDS);
-		assertTrue("seconds >= 60" + "[" + expected + " != " + result + "]",
+		assertTrue("seconds >= 60" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test minutes >= 60 and < 600 (10 hours)
@@ -142,12 +144,12 @@ public class TextFormatterTest extends TestCase {
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * MINS_IN_HOUR
 				* MINUTES);
 		assertTrue("minutes >= 60 and < 600 (10 hours)" + "[" + expected
-				+ " != " + result + "]", expected.equals(result));
+				+ NOT_EQUAL + result + "]", expected.equals(result));
 
 		// test a large amount of days (NOTE: max 24 days with integers)
 		expected = TWO_DIGITS + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * DAYS);
-		assertTrue("large amount of days" + "[" + expected + " != " + result
+		assertTrue("large amount of days" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 	}
@@ -174,13 +176,13 @@ public class TextFormatterTest extends TestCase {
 		// test 0
 		expected = "1/" + NO_OF_TRACKS;
 		result = TextFormatter.formatCounter(0, NO_OF_TRACKS);
-		assertTrue("zero" + "[" + expected + " != " + result + "]",
+		assertTrue("zero" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test position = limit
 		expected = NO_OF_TRACKS + "/" + NO_OF_TRACKS;
 		result = TextFormatter.formatCounter(NO_OF_TRACKS - 1, NO_OF_TRACKS);
-		assertTrue("position = limit" + "[" + expected + " != " + result + "]",
+		assertTrue("position = limit" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		/*
@@ -191,19 +193,19 @@ public class TextFormatterTest extends TestCase {
 		expected = "" + NO_OF_TRACKS;
 		result = TextFormatter.formatCounter(Constants.Value.NO_TRACK_SELECTED,
 				NO_OF_TRACKS);
-		assertTrue("no selection" + "[" + expected + " != " + result + "]",
+		assertTrue("no selection" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test limit = 0
 		expected = Constants.Message.NO_TRACKS_FOUND;
 		result = TextFormatter.formatCounter(0, 0);
-		assertTrue("limit = 0" + "[" + expected + " != " + result + "]",
+		assertTrue("limit = 0" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 		// test position > limit
 		expected = Constants.Message.TRACK_INDEX_ERROR;
 		result = TextFormatter.formatCounter(NO_OF_TRACKS + 1, NO_OF_TRACKS);
-		assertTrue("position > limit" + "[" + expected + " != " + result + "]",
+		assertTrue("position > limit" + "[" + expected + NOT_EQUAL + result + "]",
 				expected.equals(result));
 
 	}
