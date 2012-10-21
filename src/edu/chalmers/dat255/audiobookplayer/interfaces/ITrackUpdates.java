@@ -13,8 +13,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.interfaces;
 
-import java.security.InvalidParameterException;
-
 /**
  * Used to assert that implementing classes can handle updates on Track
  * instances.
@@ -29,8 +27,6 @@ public interface ITrackUpdates {
 	 * Set the elapsed time of the track to a specified amount.
 	 * 
 	 * @param elapsedTime
-	 * @throws InvalidParameterException
-	 *             If the given time is negative.
 	 */
 	void setSelectedTrackElapsedTime(int elapsedTime);
 
@@ -41,8 +37,6 @@ public interface ITrackUpdates {
 	 * Adds a tag with the given time.
 	 * 
 	 * @param time
-	 * @throws InvalidParameterException
-	 *             If the given time is negative.
 	 */
 	void addTag(int time);
 
@@ -51,8 +45,6 @@ public interface ITrackUpdates {
 	 * empty.
 	 * 
 	 * @param tagIndex
-	 * @throws IndexOutOfBoundsException
-	 *             if the given tag index is out of bounds (illegal).
 	 */
 	void removeTagAt(int tagIndex);
 

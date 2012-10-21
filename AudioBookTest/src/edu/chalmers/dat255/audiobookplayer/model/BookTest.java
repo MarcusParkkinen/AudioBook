@@ -31,20 +31,23 @@ public class BookTest extends TestCase {
 	private String bookName = "MyTestBook";
 	private String bookAuthor = "MyTestBookAuthor";
 	private Book b;
-	
+
 	private static final int DURATION0 = 5;
 	private static final int DURATION1 = 10;
 	private static final int DURATION2 = 15;
 	private static final int DURATION3 = 20;
-	
-	private static final int TOTAL_DURATION = DURATION0+DURATION1+DURATION2+DURATION3;
-	
+
+	private static final int TOTAL_DURATION = DURATION0 + DURATION1 + DURATION2
+			+ DURATION3;
+
 	// Tracks to test the book with
 	private Track t0 = new Track("/thePath/theTrack1.mp3", DURATION0);
 	private Track t1 = new Track("/thePath/theTrack2.mp3", DURATION1);
 	private Track t2 = new Track("/thePath/theTrack3.mp3", DURATION2);
 	private Track t3 = new Track("/thePath/theTrack4.mp3", DURATION3);
-	
+
+	private static final int TOTAL_NUMBER_OF_TRACKS = 4;
+
 	private Track[] tracks = { t0, t1, t2, t3 };
 
 	/*
@@ -71,14 +74,14 @@ public class BookTest extends TestCase {
 
 		// assert that four tracks have been added
 		b = new Book(bList, bookName, bookAuthor);
-		assertEquals(4, b.getNumberOfTracks());
+		assertEquals(TOTAL_NUMBER_OF_TRACKS, b.getNumberOfTracks());
 
 		// add a null track to the list
 		bList.add(null);
 
 		// assert that the null track doesn't get added to the book
 		b = new Book(bList, bookName, bookAuthor);
-		assertEquals(4, b.getNumberOfTracks());
+		assertEquals(TOTAL_NUMBER_OF_TRACKS, b.getNumberOfTracks());
 
 		// assert that the duration of the book has been calculated correctly
 		assertEquals(TOTAL_DURATION, b.getDuration());
@@ -127,7 +130,7 @@ public class BookTest extends TestCase {
 			b.removeTrack(0);
 
 			// assert that the amount of tracks is correct
-			assertEquals(3 - i, b.getNumberOfTracks());
+			assertEquals(TOTAL_NUMBER_OF_TRACKS - i - 1, b.getNumberOfTracks());
 
 			// assert that the duration adjusts accordingly
 			duration -= tracks[i].getDuration();
