@@ -110,7 +110,7 @@ public final class Track implements ITrackUpdates, Serializable {
 	}
 
 	public void setSelectedTrackElapsedTime(int elapsedTime) {
-		if (elapsedTime >= duration) {
+		if (elapsedTime > duration) {
 			Log.e(TAG, "elapsedTime (" + elapsedTime + ") set to duration ("
 					+ duration + ")");
 			this.elapsedTime = duration;

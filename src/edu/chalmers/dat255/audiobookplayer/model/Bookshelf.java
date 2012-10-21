@@ -579,7 +579,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 *            Index to check.
 	 * @return True if within bounds.
 	 */
-	private boolean isLegalBookIndex(int index) {
+	public boolean isLegalBookIndex(int index) {
 		return index >= 0 && index < books.size();
 	}
 

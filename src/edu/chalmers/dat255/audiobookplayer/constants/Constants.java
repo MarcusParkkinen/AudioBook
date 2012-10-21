@@ -96,7 +96,7 @@ public final class Constants {
 		/**
 		 * The frequency for GUI updates. Lower value means updates more often.
 		 */
-		public static final int UPDATE_FREQUENCY = 100; // default 1000
+		public static final int UPDATE_FREQUENCY = 200;
 
 		/**
 		 * The number of zones in a seek bar; the possible values its progress
