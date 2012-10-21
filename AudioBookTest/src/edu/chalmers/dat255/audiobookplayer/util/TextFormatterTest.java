@@ -13,6 +13,7 @@
 
 package edu.chalmers.dat255.audiobookplayer.util;
 
+import android.util.Log;
 import junit.framework.TestCase;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
@@ -22,6 +23,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * 
  */
 public class TextFormatterTest extends TestCase {
+	private static final String TAG = "TextFormatterText";
 
 	// Conversions
 	private static final int MSECS_IN_SECOND = 1000;
@@ -30,12 +32,14 @@ public class TextFormatterTest extends TestCase {
 	private static final int HOURS_IN_DAY = 24;
 
 	// The 'magic numbers'
+	// has to be between 0 and 9
 	private static final int ONE_DIGIT = 3;
-	private static final int TWO_DIGITS = 59;
+	// has to be between 10 and 23 (24 hours = 1 day)
+	private static final int TWO_DIGITS = 23;
 
-	private static final int LARGE_PRIME_INTEGER = 421;
+	private static final int NO_OF_TRACKS = 25; // "limit"
 
-	// Converting from milliseconds (ms)
+	// Converting to milliseconds (ms)
 	private static final int SECONDS = MSECS_IN_SECOND;
 	private static final int MINUTES = MSECS_IN_SECOND * SECS_IN_MINUTE;
 	private static final int HOURS = MSECS_IN_SECOND * SECS_IN_MINUTE
@@ -43,71 +47,107 @@ public class TextFormatterTest extends TestCase {
 	private static final int DAYS = MSECS_IN_SECOND * SECS_IN_MINUTE
 			* MINS_IN_HOUR * HOURS_IN_DAY;
 
-	private static final int NO_OF_TRACKS = 25; // "limit"
-	private static final int NO_SELECTION = -1;
-
 	/**
 	 * Test method for
 	 * {@link edu.chalmers.dat255.audiobookplayer.util.TextFormatter#formatTimeFromMillis(int)}
 	 * .
 	 */
 	public final void testFormatTimeFromMillis() {
-		String dummy;
+		// the expected result
+		String expected;
+
+		// the result
+		String result;
 
 		// test zero
-		dummy = "00:00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(0)));
+		expected = "00:00";
+		result = TextFormatter.formatTimeFromMillis(0);
+		assertTrue("zeroes" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
 		// test single-digit seconds
-		dummy = "00:0" + ONE_DIGIT;
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
-				* SECONDS)));
+		expected = "00:0" + ONE_DIGIT;
+		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * SECONDS);
+		assertTrue("single-digit seconds" + "[" + expected + " != " + result
+				+ "]", expected.equals(result));
 
 		// test double-digit seconds
-		dummy = "00:" + TWO_DIGITS;
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
-				* SECONDS)));
+		expected = "00:" + TWO_DIGITS;
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * SECONDS);
+		assertTrue("double-digit seconds" + "[" + expected + " != " + result
+				+ "]", expected.equals(result));
 
 		// test single-digit minutes
-		dummy = "0" + ONE_DIGIT + ":00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
-				* MINUTES)));
+		expected = "0" + ONE_DIGIT + ":00";
+		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * MINUTES);
+		assertTrue("single-digit minutes" + "[" + expected + " != " + result
+				+ "]", expected.equals(result));
 
 		// test double-digit minutes
-		dummy = TWO_DIGITS + ":00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
-				* MINUTES)));
+		expected = TWO_DIGITS + ":00";
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * MINUTES);
+		assertTrue("double-digit minutes" + "[" + expected + " != " + result
+				+ "]", expected.equals(result));
 
 		// test single-digit hour
-		dummy = ONE_DIGIT + ":00:00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
-				* HOURS)));
+		expected = ONE_DIGIT + ":00:00";
+		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * HOURS);
+		assertTrue(
+				"single-digit hour" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
 		// test double-digit hour
-		dummy = TWO_DIGITS + ":00:00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
-				* HOURS)));
+		expected = TWO_DIGITS + ":00:00";
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * HOURS);
+		Log.d(TAG, "expected: " + expected + ", received: " + result);
+		assertTrue(
+				"double-digit hour" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
-		// test only hours and seconds
-		dummy = TWO_DIGITS + ":00:" + TWO_DIGITS;
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
-				* HOURS + TWO_DIGITS * SECONDS)));
+		// test single-digit day
+		expected = ONE_DIGIT + ":00:00:00";
+		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * DAYS);
+		Log.d(TAG, "expected: " + expected + ", received: " + result);
+		assertTrue("single-digit day" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
+
+		// test double-digit day
+		expected = TWO_DIGITS + ":00:00:00";
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * DAYS);
+		Log.d(TAG, "expected: " + expected + ", received: " + result);
+		assertTrue("double-digit day" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
+
+		/*
+		 * Combinations
+		 */
+
+		// test only 2-digit hours and 2-digit seconds
+		expected = TWO_DIGITS + ":00:" + TWO_DIGITS;
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * HOURS
+				+ TWO_DIGITS * SECONDS);
+		assertTrue("2-digit hours and 2-digit seconds" + "[" + expected
+				+ " != " + result + "]", expected.equals(result));
 
 		// test seconds >= 60
-		dummy = TWO_DIGITS + ":00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(TWO_DIGITS
-				* SECS_IN_MINUTE * SECONDS)));
+		expected = TWO_DIGITS + ":00";
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * SECS_IN_MINUTE
+				* SECONDS);
+		assertTrue("seconds >= 60" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
-		// test minutes >= 60
-		dummy = ONE_DIGIT + ":00:00";
-		assertTrue(dummy.equals(TextFormatter.formatTimeFromMillis(ONE_DIGIT
-				* MINS_IN_HOUR * MINUTES)));
+		// test minutes >= 60 and < 600 (10 hours)
+		expected = ONE_DIGIT + ":00:00";
+		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * MINS_IN_HOUR
+				* MINUTES);
+		assertTrue("minutes >= 60 and < 600 (10 hours)" + "[" + expected
+				+ " != " + result + "]", expected.equals(result));
 
-		// test hours >= 24
-		dummy = TWO_DIGITS + ":" + TWO_DIGITS + ":" + TWO_DIGITS;
-		assertTrue(dummy.equals(TextFormatter
-				.formatTimeFromMillis(LARGE_PRIME_INTEGER * DAYS + TWO_DIGITS
-						* HOURS + TWO_DIGITS * MINUTES + TWO_DIGITS * SECONDS)));
+		// test a large amount of days (NOTE: max 24 days with integers)
+		expected = TWO_DIGITS + ":00:00:00";
+		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * DAYS);
+		assertTrue("large amount of days" + "[" + expected + " != " + result
+				+ "]", expected.equals(result));
 
 	}
 
@@ -117,35 +157,53 @@ public class TextFormatterTest extends TestCase {
 	 * .
 	 */
 	public final void testFormatCounter() {
-		String dummy;
+		// the expected result
+		String expected;
 
-		// The following two tests should work as intended
+		// the result
+		String result;
+
+		/*
+		 * The following two tests should work as intended.
+		 * 
+		 * Note that the formatter's first parameter is an index, and the other
+		 * a number (index + 1).
+		 */
 
 		// test 0
-		dummy = "0/" + NO_OF_TRACKS;
-		assertTrue(dummy.equals(TextFormatter.formatCounter(0, NO_OF_TRACKS)));
+		expected = "1/" + NO_OF_TRACKS;
+		result = TextFormatter.formatCounter(0, NO_OF_TRACKS);
+		assertTrue("zero" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
 		// test position = limit
-		dummy = NO_OF_TRACKS + "/" + NO_OF_TRACKS;
-		assertTrue(dummy.equals(TextFormatter.formatCounter(NO_OF_TRACKS,
-				NO_OF_TRACKS)));
+		expected = NO_OF_TRACKS + "/" + NO_OF_TRACKS;
+		result = TextFormatter.formatCounter(NO_OF_TRACKS - 1, NO_OF_TRACKS);
+		assertTrue("position = limit" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
-		// The following three should return special case messages
+		/*
+		 * The following three should return special case messages.
+		 */
 
 		// test with "-1"; no selection
-		dummy = Constants.Message.NO_TRACK_SELECTED;
-		assertTrue(dummy.equals(TextFormatter.formatCounter(NO_SELECTION,
-				NO_OF_TRACKS)));
+		expected = "" + NO_OF_TRACKS;
+		result = TextFormatter.formatCounter(Constants.Value.NO_TRACK_SELECTED,
+				NO_OF_TRACKS);
+		assertTrue("no selection" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
 		// test limit = 0
-		dummy = Constants.Message.NO_TRACKS_FOUND;
-		assertTrue(dummy.equals(TextFormatter.formatCounter(0, 0)));
+		expected = Constants.Message.NO_TRACKS_FOUND;
+		result = TextFormatter.formatCounter(0, 0);
+		assertTrue("limit = 0" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
 		// test position > limit
-		dummy = Constants.Message.TRACK_INDEX_ERROR;
-		assertTrue(dummy.equals(TextFormatter.formatCounter(NO_OF_TRACKS + 1,
-				NO_OF_TRACKS)));
+		expected = Constants.Message.TRACK_INDEX_ERROR;
+		result = TextFormatter.formatCounter(NO_OF_TRACKS + 1, NO_OF_TRACKS);
+		assertTrue("position > limit" + "[" + expected + " != " + result + "]",
+				expected.equals(result));
 
 	}
-
 }

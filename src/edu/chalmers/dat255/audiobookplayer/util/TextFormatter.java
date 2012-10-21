@@ -19,7 +19,7 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * Utility class that formats given values to specific texts.
  * 
  * @author Aki Käkelä
- * @version 0.2
+ * @version 0.3
  * 
  */
 public final class TextFormatter {
@@ -27,23 +27,38 @@ public final class TextFormatter {
 	private TextFormatter() {
 	} // to defeat instantiation
 
+	// Conversions
 	private static final int MSECONDS_IN_SECOND = 1000;
 	private static final int SECONDS_IN_MINUTE = 60;
 	private static final int MINUTES_IN_HOUR = 60;
 	private static final int HOURS_IN_DAY = 24;
+
+	// Help values for making the code clearer
 	private static final int LARGEST_SINGLE_DIGIT = 9;
 	private static final String SEPARATOR = ":";
 
 	/**
-	 * Formats a given time in milliseconds to a text.
+	 * Formats a given time in milliseconds to a text containing days, hours,
+	 * minutes, and seconds.
 	 * <p>
+	 * Days are only shown if the number of hours exceeds 23.
+	 * <p>
+	 * Hours are only shown if the number of minutes exceeds 59.
+	 * <p>
+	 * Minutes and seconds are always in the MM:SS format.
+	 * <p>
+	 * Possibilities:
+	 * <p>
+	 * <b>MM:SS</b>, <b>H:MM:SS</b>, <b>HH:MM:SS</b>, <b>D:HH:MM:SS</b>,
+	 * <b>DD:HH:MM:SS</b>
 	 * 
-	 * If the number of hours is greater than zero or nine the time will be
-	 * formatted to H:MM:SS or HH:MM:SS, respectively. If it surpasses 23, it
-	 * will start from zero again (modulus 24).
+	 * NOTE: ms is currently kept as int (integer) meaning that the maximum
+	 * number of days (before a roll-over from zero again) is 24.855.. ~= 24
+	 * days.
 	 * 
 	 * @param ms
-	 * @return
+	 *            Amount of milliseconds to format.
+	 * @return Formatted text from given input.
 	 */
 	public static String formatTimeFromMillis(int ms) {
 		// get the seconds, minutes and hours from the given ms
@@ -74,34 +89,69 @@ public final class TextFormatter {
 		 * Add a zero to the minutes counter text if it needs one to make it 2
 		 * integers long. Only add a zero to the seconds counter text if the
 		 * number of minutes is zero and it needs one for 2 symbols.
-		 * 
-		 * Possibilities:
-		 * 
-		 * MM:SS
-		 * 
-		 * H:MM:SS
-		 * 
-		 * HH:MM:SS
-		 * 
-		 * D:HH:MM:SS
-		 * 
-		 * DD:HH:MM:SS
 		 */
 
-		String seconds, minutes, hours, days;
+		String days, hours;
 
-		// show mins / secs with 2 integers
-		seconds = (iSeconds > LARGEST_SINGLE_DIGIT ? "" + iSeconds : "0" + iSeconds);
-		minutes = (iMinutes > LARGEST_SINGLE_DIGIT ? "" + iMinutes : "0" + iMinutes);
+		// If there are days to display, the hour text should always be 2
+		// integers. Otherwise it should be displayed as it is (1-2 integers).
+		if (iDays == 0) {
+			// do not add a separator
+			days = "";
 
-		// if there are days to show, make hours 2 integers long,
-		// otherwise just show hours as they are.
-		hours = (iDays > 0 ? (iHours > LARGEST_SINGLE_DIGIT ? "" + iHours : "0" + iHours) : "" + iHours);
+			if (iHours == 0) {
+				// do not add a separator
+				hours = "";
+			} else {
+				// there are no days to show, so write the hours as they are
+				hours = "" + iHours + SEPARATOR;
+			}
+		} else {
+			// there are days to display
 
-		// always show the days as they are (1, 2, 3... n, digits)
-		days = "" + iDays;
+			/*
+			 * The days will currently be shown as they are (anywhere from 1 to
+			 * any number of integers) if above zero.
+			 * 
+			 * Future versions should probably show this in a different way
+			 * (e.g. "more than x days") but this is not important in a media
+			 * player and will thus be ignored for now.
+			 */
+			days = "" + iDays + SEPARATOR;
 
-		return days  + SEPARATOR + hours + SEPARATOR + minutes + SEPARATOR + seconds;
+			// always write the hours as 2 integers since we have days to
+			// display as well.
+			hours = toTwoIntegers(iHours) + SEPARATOR;
+		}
+
+		// always show minutes and seconds as 2 integers.
+		String minutes = toTwoIntegers(iMinutes) + SEPARATOR;
+		String seconds = toTwoIntegers(iSeconds);
+
+		return days + hours + minutes + seconds;
+	}
+
+	/**
+	 * Helper class. It is expected that the time does not surpass 2 integers
+	 * (i.e. proper modulus conversion is already made).
+	 * 
+	 * @param time
+	 *            Time to format to 2 integers.
+	 * @return Formatted time to 2 integers.
+	 */
+	private static String toTwoIntegers(int time) {
+		String result;
+
+		if (time == 0) {
+			result = "00";
+		} else if (time <= LARGEST_SINGLE_DIGIT) {
+			result = "0" + time;
+		} else {
+			// larger than 1 integer.
+			result = "" + time;
+		}
+
+		return result;
 	}
 
 	/**
