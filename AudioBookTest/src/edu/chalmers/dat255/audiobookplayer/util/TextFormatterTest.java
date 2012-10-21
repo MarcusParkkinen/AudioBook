@@ -35,6 +35,7 @@ public class TextFormatterTest extends TestCase {
 	// has to be between 0 and 9
 	private static final int ONE_DIGIT = 3;
 	// has to be between 10 and 23 (24 hours = 1 day)
+	// values of 25 and up will cause the int to roll over to zero.
 	private static final int TWO_DIGITS = 23;
 
 	private static final int NO_OF_TRACKS = 25; // "limit"
