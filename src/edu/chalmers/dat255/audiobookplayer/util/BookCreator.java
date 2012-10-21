@@ -37,6 +37,9 @@ public final class BookCreator {
 	private BookCreator() {
 	} // To disable outside instantiation
 
+	/**
+	 * @return The instance of this object.
+	 */
 	public static BookCreator getInstance() {
 		if (instance == null) {
 			instance = new BookCreator();

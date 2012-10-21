@@ -162,7 +162,7 @@ public class Bookshelf implements IBookUpdates, Serializable {
 			throw new IndexOutOfBoundsException(TAG + " moveBook"
 					+ BOOK_INDEX_ILLEGAL);
 		}
-		
+
 		Collections.rotate(books.subList(from, to + 1), -1);
 
 		if (hasListeners()) {
@@ -204,6 +204,13 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 	/* IBookUpdates */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#removeTrack
+	 * (int)
+	 */
 	public void removeTrack(int index) {
 		if (!isLegalBookIndex(selectedBookIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -223,7 +230,13 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
-	// TODO: never called, only uses tests
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#addTrack(
+	 * edu.chalmers.dat255.audiobookplayer.model.Track)
+	 */
 	public void addTrack(Track t) {
 		if (!isLegalBookIndex(selectedBookIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -243,6 +256,13 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#swapTracks
+	 * (int, int)
+	 */
 	public void swapTracks(int firstIndex, int secondIndex) {
 		if (!isLegalBookIndex(selectedBookIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -256,6 +276,13 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#moveTrack
+	 * (int, int)
+	 */
 	public void moveTrack(int from, int to) {
 		if (!isLegalBookIndex(selectedBookIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -269,6 +296,12 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
+	 * setSelectedTrackIndex(int)
+	 */
 	public void setSelectedTrackIndex(int index) {
 		if (!isLegalBookIndex(selectedBookIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -283,18 +316,42 @@ public class Bookshelf implements IBookUpdates, Serializable {
 				+ this.books.get(selectedBookIndex).getSelectedTrackIndex());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
+	 * setSelectedBookTitle(java.lang.String)
+	 */
 	public void setSelectedBookTitle(String newTitle) {
 		setBookTitleAt(selectedBookIndex, newTitle);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
+	 * getSelectedBookTitle()
+	 */
 	public String getSelectedBookTitle() {
 		return getBookTitleAt(this.selectedBookIndex);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
+	 * getSelectedBookAuthor()
+	 */
 	public String getSelectedBookAuthor() {
 		return this.books.get(selectedBookIndex).getSelectedBookAuthor();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
+	 * updateBookDuration()
+	 */
 	public void updateBookDuration() {
 		this.books.get(selectedBookIndex).updateBookDuration();
 	}
@@ -322,6 +379,13 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	/**
+	 * Gets the title of a book at a given index.
+	 * 
+	 * @param bookIndex
+	 *            Index to get the book title from.
+	 * @return Book title at a given index.
+	 */
 	public String getBookTitleAt(int bookIndex) {
 		if (bookIndex == NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG + " getBookTitleAt"
@@ -333,6 +397,12 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 	/* ITrackUpdates */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#
+	 * setSelectedTrackElapsedTime(int)
+	 */
 	public void setSelectedTrackElapsedTime(int elapsedTime) {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG
@@ -348,6 +418,12 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#addTag(int)
+	 */
 	public void addTag(int time) {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG + " addTag "
@@ -359,6 +435,13 @@ public class Bookshelf implements IBookUpdates, Serializable {
 				this));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#removeTagAt
+	 * (int)
+	 */
 	public void removeTagAt(int tagIndex) {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG + " removeTagAt "
@@ -519,10 +602,18 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return index >= 0 && index < books.size();
 	}
 
+	/**
+	 * @return True if this object has elements in its property change listener
+	 *         object.
+	 */
 	private boolean hasListeners() {
 		return pcs.getPropertyChangeListeners().length > 0;
 	}
 
+	/**
+	 * @param index
+	 * @return
+	 */
 	public boolean isLegalTrackIndex(int index) {
 		if (selectedBookIndex == NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG + " isLegalTrackIndex "
@@ -532,6 +623,11 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return this.books.get(selectedBookIndex).isLegalTrackIndex(index);
 	}
 
+	/**
+	 * @param bookIndex
+	 * @param trackIndex
+	 * @return
+	 */
 	private boolean isLegalTrackIndexAt(int bookIndex, int trackIndex) {
 		if (bookIndex == NO_BOOK_SELECTED) {
 			throw new IndexOutOfBoundsException(TAG + " isLegalTrackIndexAt "
@@ -541,11 +637,18 @@ public class Bookshelf implements IBookUpdates, Serializable {
 		return books.get(bookIndex).isLegalTrackIndex(trackIndex);
 	}
 
+	/**
+	 * Adds a listener to this object's property change listener object.
+	 * 
+	 * @param listener
+	 *            Listener to add.
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (listener != null) {
 			pcs.addPropertyChangeListener(listener);
 
-			/* Synchronize the new listener with the current state of the
+			/*
+			 * Synchronize the new listener with the current state of the
 			 * bookshelf.
 			 */
 			pcs.firePropertyChange(Constants.Event.BOOKSHELF_UPDATED, null,

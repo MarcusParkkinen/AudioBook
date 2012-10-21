@@ -863,6 +863,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			}
 		}
 
+		/* (non-Javadoc)
+		 * @see android.widget.ExpandableListAdapter#hasStableIds()
+		 */
 		public boolean hasStableIds() {
 			return true;
 		}

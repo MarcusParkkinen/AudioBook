@@ -173,10 +173,16 @@ public final class Track implements ITrackUpdates, Serializable {
 	    }
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#addTag(int)
+	 */
 	public void addTag(int time) {
 		this.tags.add(new Tag(time));
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#removeTagAt(int)
+	 */
 	public void removeTagAt(int tagIndex)  {
 		if (!isLegalTagIndex(tagIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
@@ -200,6 +206,10 @@ public final class Track implements ITrackUpdates, Serializable {
 		return result;
 	}
 
+	/**
+	 * @param tagIndex
+	 * @return
+	 */
 	private boolean isLegalTagIndex(int tagIndex) {
 		return tagIndex >= 0 && tagIndex < tags.size();
 	}
