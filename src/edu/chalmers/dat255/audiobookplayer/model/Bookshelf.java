@@ -175,25 +175,12 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 *            The index of the track to select. Can be -1.
 	 */
 	public void setSelectedTrackIndex(int bookIndex, int trackIndex) {
-		checkBookIndexLegal(bookIndex);
-		if (!isValidTrackIndex(bookIndex, trackIndex)) {
-			/*
-			 * Something went wrong, perhaps trackIndex is invalid, i.e. not in
-			 * the [-1, list.size()-1] range.
-			 */
-			throw new IndexOutOfBoundsException("Invalid track index: "
-					+ trackIndex + ", at book index: " + bookIndex);
-		}
-
 		// make no changes if book index is illegal or track index is invalid
-		Log.d("FAILURE", "bi: " + bookIndex + ", ti: " + trackIndex);
 
 		if (isLegalBookIndex(bookIndex)) {
 			// the book index must be legal
-			Log.d("FAILURE", "bi legal");
 			if (isValidTrackIndex(bookIndex, trackIndex)) {
 				// the track index can be unselected or legal only
-				Log.d("FAILURE", "ti valid");
 
 				// the track index is either valid or deselects
 				// we now know that both indices are valid, so make the changes.
@@ -585,6 +572,46 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	}
 
 	/**
+	 * Checks whether a given index is within the legal bounds of the list of
+	 * books.
+	 * 
+	 * @param index
+	 *            Index to check.
+	 * @return True if within bounds.
+	 */
+	private boolean isLegalBookIndex(int index) {
+		return index >= 0 && index < books.size();
+	}
+
+	/**
+	 * Checks whether a given index is within the valid bounds of the list of
+	 * books. Includes the 'deselected' index.
+	 * 
+	 * @param index
+	 *            Index to check.
+	 * @return True if within bounds.
+	 */
+	private boolean isValidBookIndex(int index) {
+		return isLegalBookIndex(index)
+				|| index == Constants.Value.NO_BOOK_SELECTED;
+	}
+
+	/**
+	 * Checks whether a given index is within the valid bounds of the list of
+	 * tracks. Includes the 'deselected' index.
+	 * 
+	 * @param bookIndex
+	 *            The book at which to check for validity.
+	 * @param trackIndex
+	 *            Index to check.
+	 * @return True if within bounds.
+	 */
+	private boolean isValidTrackIndex(int bookIndex, int trackIndex) {
+		return isLegalTrackIndexAt(bookIndex, trackIndex)
+				|| trackIndex == Constants.Value.NO_TRACK_SELECTED;
+	}
+
+	/**
 	 * @return True if this object has elements in its property change listener
 	 *         object.
 	 */
@@ -706,6 +733,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	}
 
 	/**
+	 * BAD IMPLEMENTATION - CAUSES CRASH.
+	 * 
 	 * Gets the duration of the given book
 	 * 
 	 * @param bookIndex
@@ -713,13 +742,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * @return
 	 */
 	public int getBookDurationAt(int bookIndex) {
-		checkBookIndexLegal(bookIndex);
-
-		// TODO
+		if (isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getDuration();
+		}
 		return 0;
 	}
 
 	/**
+	 * BAD IMPLEMENTATION - CAUSES CRASH.
+	 * 
 	 * Gets the given books elapsed time
 	 * 
 	 * @param bookIndex
@@ -727,13 +758,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * @return The given books elapsed time
 	 */
 	public int getBookElapsedTimeAt(int bookIndex) {
-		checkBookIndexLegal(bookIndex);
-
-		// TODO
+		if (isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getBookElapsedTime();
+		}
 		return 0;
 	}
 
 	/**
+	 * BAD IMPLEMENTATION - CAUSES CRASH.
+	 * 
 	 * Gets the author at given position
 	 * 
 	 * @param bookIndex
@@ -741,13 +774,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * @return The given books author
 	 */
 	public String getBookAuthorAt(int bookIndex) {
-		checkBookIndexLegal(bookIndex);
-
-		// TODO
+		if (isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getSelectedBookAuthor();
+		}
 		return null;
 	}
 
 	/**
+	 * BAD IMPLEMENTATION - CAUSES CRASH.
+	 * 
 	 * Gets duration of a track at given position
 	 * 
 	 * @param bookIndex
@@ -757,10 +792,10 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * @return
 	 */
 	public int getTrackDurationAt(int bookIndex, int trackIndex) {
-		checkBookIndexLegal(bookIndex);
-		checkTrackIndexLegalAt(bookIndex, trackIndex);
-
-		return this.books.get(bookIndex).getTrackDurationAt(trackIndex);
+		if (isLegalBookIndex(bookIndex)) {
+			return getBookAt(bookIndex).getTrackDurationAt(trackIndex);
+		}
+		return 0;
 	}
 
 	/**
@@ -864,46 +899,6 @@ public class Bookshelf implements IBookUpdates, Serializable {
 					"Track or book index not legal (book, track): " + bookIndex
 							+ ", " + trackIndex);
 		}
-	}
-
-	/**
-	 * Checks whether a given index is within the legal bounds of the list of
-	 * books.
-	 * 
-	 * @param index
-	 *            Index to check.
-	 * @return True if within bounds.
-	 */
-	private boolean isLegalBookIndex(int index) {
-		return index >= 0 && index < books.size();
-	}
-
-	/**
-	 * Checks whether a given index is within the valid bounds of the list of
-	 * books. Includes the 'deselected' index.
-	 * 
-	 * @param index
-	 *            Index to check.
-	 * @return True if within bounds.
-	 */
-	private boolean isValidBookIndex(int index) {
-		return isLegalBookIndex(index)
-				|| index == Constants.Value.NO_BOOK_SELECTED;
-	}
-
-	/**
-	 * Checks whether a given index is within the valid bounds of the list of
-	 * tracks. Includes the 'deselected' index.
-	 * 
-	 * @param bookIndex
-	 *            The book at which to check for validity.
-	 * @param trackIndex
-	 *            Index to check.
-	 * @return True if within bounds.
-	 */
-	private boolean isValidTrackIndex(int bookIndex, int trackIndex) {
-		return isLegalTrackIndexAt(bookIndex, trackIndex)
-				|| trackIndex == Constants.Value.NO_TRACK_SELECTED;
 	}
 
 }

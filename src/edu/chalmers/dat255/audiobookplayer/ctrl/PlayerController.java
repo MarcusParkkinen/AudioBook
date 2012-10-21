@@ -15,6 +15,7 @@ package edu.chalmers.dat255.audiobookplayer.ctrl;
 
 import java.io.IOException;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -85,27 +86,6 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 		// start a new timer
 		this.trackTimeUpdateThread = new Thread(new TrackElapsedTimeUpdater());
 		this.trackTimeUpdateThread.start();
-	}
-
-	/**
-	 * Stops the audio player. Stops updating the model.
-	 * <p>
-	 * Call when activities are paused or stopped to free resources.
-	 */
-	public void stop() {
-		if (isStarted) {
-			// revert what setup does.
-			isStarted = false;
-			stopTimer();
-			mp.stop();
-			mp.reset();
-
-			// ensure that nothing went wrong
-			if (isStarted) {
-				throw new IllegalStateException(
-						"Player is still started after stopping.");
-			}
-		}
 	}
 
 	/**
@@ -219,6 +199,9 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 
 			// start listening for when MediaPlayer is prepared
 			mp.setOnPreparedListener(this);
+			
+			// set the stream type before preparing
+			mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
 			// set the data source and start preparing
 			try {
@@ -244,6 +227,34 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 		// path was null, so no setup was done
 		return false;
 
+	}
+	
+
+	/**
+	 * Stops the audio player. Stops updating the model.
+	 * <p>
+	 * Call when activities are paused or stopped to free resources.
+	 */
+	public void stop() {
+		if (isStarted) {
+			tearDown();
+		}
+	}
+	
+	/**
+	 * Reverts what setUp does.
+	 */
+	private void tearDown() {
+		isStarted = false;
+		stopTimer();
+		mp.stop();
+		mp.reset();
+
+		// ensure that nothing went wrong
+		if (isStarted) {
+			throw new IllegalStateException(
+					"Player is still started after stopping.");
+		}
 	}
 
 	/**
