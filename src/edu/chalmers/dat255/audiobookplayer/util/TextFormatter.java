@@ -31,7 +31,8 @@ public final class TextFormatter {
 	private static final int SECONDS_IN_MINUTE = 60;
 	private static final int MINUTES_IN_HOUR = 60;
 	private static final int HOURS_IN_DAY = 24;
-	private static final int LARGEST_SINGLE_DIGIT_INTEGER = 9;
+	private static final int LARGEST_SINGLE_DIGIT = 9;
+	private static final String SEPARATOR = ":";
 
 	/**
 	 * Formats a given time in milliseconds to a text.
@@ -46,37 +47,61 @@ public final class TextFormatter {
 	 */
 	public static String formatTimeFromMillis(int ms) {
 		// get the seconds, minutes and hours from the given ms
-		int seconds = (ms / MSECONDS_IN_SECOND) % SECONDS_IN_MINUTE;
-		int minutes = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE))
+		int iSeconds = (ms / (MSECONDS_IN_SECOND)) % SECONDS_IN_MINUTE;
+		int iMinutes = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE))
 				% MINUTES_IN_HOUR;
-		int hours = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR));
+		int iHours = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR))
+				% HOURS_IN_DAY;
+		int iDays = (ms / (MSECONDS_IN_SECOND * SECONDS_IN_MINUTE
+				* MINUTES_IN_HOUR * HOURS_IN_DAY));
 
 		/*
-		 * Return the hour text only if it is above 0. Add a zero to the minutes
-		 * counter text if it needs one to make it 2 integers long. Only add a
-		 * zero to the seconds counter text if the number of minutes is zero and
-		 * it needs one for 2 symbols.
+		 * Return the days text only if it is above 0.
+		 * 
+		 * Return the hour text only if it is above 0.
+		 * 
+		 * Make the hour text 2 integers long only if the days text is above 0.
+		 * 
+		 * If the days text is beyond 99 (i.e. 3 symbols wide) do something else
+		 * in the future to make sure that the text is not truncated (i.e.
+		 * "2:07:2...") or similar.
+		 * 
+		 * Always make the minutes and seconds 2 integers long.
+		 * 
+		 * If the days text is above 0, make sure that the hours text is 2
+		 * integers long.
+		 * 
+		 * Add a zero to the minutes counter text if it needs one to make it 2
+		 * integers long. Only add a zero to the seconds counter text if the
+		 * number of minutes is zero and it needs one for 2 symbols.
+		 * 
+		 * Possibilities:
+		 * 
+		 * MM:SS
+		 * 
+		 * H:MM:SS
+		 * 
+		 * HH:MM:SS
+		 * 
+		 * D:HH:MM:SS
+		 * 
+		 * DD:HH:MM:SS
 		 */
 
-		int days = hours / HOURS_IN_DAY;
-		String dayStr = days > 0 ? days + ":" : "";
-		int hour = hours % HOURS_IN_DAY;
-		// if not edited, will hide hours
-		String hourStr = "";
-		// always show with 2 digits if days > 0
-		if (days > 0) {
-			hourStr = hour <= LARGEST_SINGLE_DIGIT_INTEGER ? "0" + hour + ":"
-					: hour + ":";
-		}
-		// else if hour > 0 show as x
-		else if (hour > 0) {
-			hourStr = hour + ":";
-		}
-		String minStr = minutes <= LARGEST_SINGLE_DIGIT_INTEGER ? "0" + minutes
-				+ ":" : minutes + ":";
-		String secondStr = seconds <= LARGEST_SINGLE_DIGIT_INTEGER ? "0"
-				+ seconds : "" + seconds;
-		return dayStr + hourStr + minStr + secondStr;
+		String seconds, minutes, hours, days;
+
+		// show mins / secs with 2 integers
+		seconds = (iSeconds > LARGEST_SINGLE_DIGIT ? "" + iSeconds : "0" + iSeconds);
+		minutes = (iMinutes > LARGEST_SINGLE_DIGIT ? "" + iMinutes : "0" + iMinutes);
+
+		// if there are days to show, make hours 2 integers long,
+		// otherwise just show hours as they are.
+		hours = (iDays > 0 ? (iHours > LARGEST_SINGLE_DIGIT ? "" + iHours : "0" + iHours) : "" + iHours);
+
+		// always show the days as they are (1, 2, 3... n, digits)
+		days = "" + iDays;
+
+		return days  + SEPARATOR + hours + SEPARATOR + minutes + SEPARATOR + seconds;
 	}
 
 	/**

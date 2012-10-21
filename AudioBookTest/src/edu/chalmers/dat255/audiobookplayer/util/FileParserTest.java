@@ -28,6 +28,9 @@ public class FileParserTest extends AndroidTestCase {
 	private String textString;
 	private String fileName;
 
+	/* (non-Javadoc)
+	 * @see android.test.AndroidTestCase#setUp()
+	 */
 	protected void setUp() throws Exception {
 		// Initialize strings
 		textString = "Random text for testing";
