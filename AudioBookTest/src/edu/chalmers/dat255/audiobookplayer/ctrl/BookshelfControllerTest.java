@@ -132,6 +132,7 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		 */
 
 		// setting to illegal book index, illegal track index
+		Log.d("FAILURE", "FAILING TEST----");
 		try {
 			bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
 					ILLEGAL_TRACK_INDEX);

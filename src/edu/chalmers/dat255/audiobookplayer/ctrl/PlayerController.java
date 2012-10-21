@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents;
@@ -33,8 +34,9 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * @author Aki Käkelä
  * @version 0.6
  */
-public class PlayerController implements IPlayerEvents {
-	private static final String TAG = "PlayerController.class";
+public class PlayerController implements IPlayerEvents, OnPreparedListener,
+		OnCompletionListener {
+	private static final String TAG = "PlayerController";
 
 	// The audio player
 	private MediaPlayer mp;
@@ -92,7 +94,7 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	public void stop() {
 		if (isStarted) {
-			// revert what setup() and start() do.
+			// revert what setup does.
 			isStarted = false;
 			stopTimer();
 			mp.stop();
@@ -101,7 +103,7 @@ public class PlayerController implements IPlayerEvents {
 			// ensure that nothing went wrong
 			if (isStarted) {
 				throw new IllegalStateException(
-						"Player is started after stopping.");
+						"Player is still started after stopping.");
 			}
 		}
 	}
@@ -118,9 +120,7 @@ public class PlayerController implements IPlayerEvents {
 	 *               is done.
 	 */
 	public void start() {
-		if (setup()) {
-			mp.start();
-		}
+		setup();
 	}
 
 	/**
@@ -142,7 +142,6 @@ public class PlayerController implements IPlayerEvents {
 	public void startAt(int ms) {
 		if (setup()) {
 			seekTo(ms);
-			mp.start();
 		}
 	}
 
@@ -162,28 +161,38 @@ public class PlayerController implements IPlayerEvents {
 	private void startAtPercentage(double percentage) {
 		if (percentage >= 0 && percentage <= MAX_SEEK_PERCENTAGE && setup()) {
 			seekTo((int) (mp.getDuration() * percentage));
-			mp.start();
 		}
+	}
+
+	/**
+	 * Starts the media player and sets 'isStarted' to true.
+	 */
+	private void startMediaPlayer() {
+		// start a new timer
+		startTimer();
+
+		mp.start();
+
+		isStarted = true;
 	}
 
 	/**
 	 * Can only be called if the path is valid.
 	 * 
-	 * @return True if setup was run without problems.
+	 * @return True if setup was run without problems. False if nothing was done
+	 *         (no selected track or path is null).
 	 */
 	private boolean setup() {
 		Log.d(TAG, "PlayerController setting up.");
+
+		// do nothing if no track is selected
 		if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
-			Log.d(TAG, "Index is -1. Should not continue playing. Stopping.");
+			Log.d(TAG, "Stopping since track index is not selected.");
 			stop();
 
 			// no setup was done since no track was selected
 			return false;
 		}
-		/*
-		 * we have started playing a file, so start the thread that updates the
-		 * time on the Track instance
-		 */
 
 		// get the path
 		String path = null;
@@ -195,7 +204,7 @@ public class PlayerController implements IPlayerEvents {
 		if (path != null) {
 			/*
 			 * Now we are ready to set the source and start the audio. The audio
-			 * is not started yet
+			 * is not started yet.
 			 */
 			isStarted = false;
 
@@ -203,13 +212,18 @@ public class PlayerController implements IPlayerEvents {
 			stopTimer();
 
 			/*
-			 * prepare the media player after resetting it and providing a file
-			 * path
+			 * Reset the media player and then prepare it, providing a file
+			 * path.
 			 */
 			mp.reset();
+
+			// start listening for when MediaPlayer is prepared
+			mp.setOnPreparedListener(this);
+
+			// set the data source and start preparing
 			try {
 				mp.setDataSource(path);
-				mp.prepare();
+				mp.prepareAsync();
 			} catch (IllegalArgumentException e) {
 				Log.e(TAG, "Illegal argument");
 			} catch (SecurityException e) {
@@ -219,23 +233,9 @@ public class PlayerController implements IPlayerEvents {
 			} catch (IOException e) {
 				Log.e(TAG, "IO Exception");
 			}
-			/*
-			 * listen to track completion and change to next track if a track is
-			 * completed
-			 */
-			mp.setOnCompletionListener(new OnCompletionListener() {
-				public void onCompletion(MediaPlayer mp) {
-					Log.i(TAG,
-							"onComplete: Track finished. Starting next track.");
-					nextTrack();
-				}
-			});
 
-			// set the status to isStarted
-			isStarted = true;
-
-			// start a new timer
-			startTimer();
+			// listen to track completion
+			mp.setOnCompletionListener(this);
 
 			// mark that the setup went without problems
 			return true;
@@ -273,7 +273,9 @@ public class PlayerController implements IPlayerEvents {
 
 	/* IPlayerEvents */
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#pause()
 	 */
 	public void pause() {
@@ -283,8 +285,11 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#resume()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#resume()
 	 */
 	public void resume() {
 		if (isStarted) {
@@ -293,8 +298,12 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#previousTrack()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#previousTrack
+	 * ()
 	 */
 	public void previousTrack() {
 		if (isAllowedBookIndex()) {
@@ -332,8 +341,11 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#nextTrack()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#nextTrack()
 	 */
 	public void nextTrack() {
 		if (isAllowedBookIndex()) {
@@ -366,8 +378,12 @@ public class PlayerController implements IPlayerEvents {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekRight(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekRight
+	 * (boolean)
 	 */
 	public void seekRight(boolean seek) {
 		/*
@@ -380,8 +396,12 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekLeft(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekLeft
+	 * (boolean)
 	 */
 	public void seekLeft(boolean seek) {
 		/*
@@ -389,12 +409,16 @@ public class PlayerController implements IPlayerEvents {
 		 * stopped/started state to end/start seeking.
 		 */
 		if (isAllowedTrackIndex()) {
-			seekTo((int) (mp.getCurrentPosition() - ONE_TENTH * getTrackDuration()));
+			seekTo((int) (mp.getCurrentPosition() - ONE_TENTH
+					* getTrackDuration()));
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekToPercentageInTrack(double)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#
+	 * seekToPercentageInTrack(double)
 	 */
 	public void seekToPercentageInTrack(double percentage) {
 		if (!isLegalPercentage(percentage)) {
@@ -422,8 +446,11 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#seekToPercentageInBook(double)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#
+	 * seekToPercentageInBook(double)
 	 */
 	public void seekToPercentageInBook(double percentage) {
 		if (!isLegalPercentage(percentage)) {
@@ -463,15 +490,21 @@ public class PlayerController implements IPlayerEvents {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isStarted()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isStarted()
 	 */
 	public boolean isStarted() {
 		return isStarted;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isPlaying()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#isPlaying()
 	 */
 	public boolean isPlaying() {
 		return mp.isPlaying();
@@ -497,7 +530,8 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	public void seekTo(int time) {
 		if (time > mp.getDuration() || time < 0) {
-			Log.e(TAG, "Attempted to seek to an invalid position: " + time);
+			Log.e(TAG, "Attempted to seek to an invalid position: " + time
+					+ ". Fixing by seeking to the end or beginning.");
 			if (time > 0) {
 				// just play the next track directly
 				nextTrack();
@@ -546,7 +580,9 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	private class TrackElapsedTimeUpdater implements Runnable {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run() {
@@ -594,6 +630,29 @@ public class PlayerController implements IPlayerEvents {
 	 */
 	public Thread getTrackTimeUpdateThread() {
 		return trackTimeUpdateThread;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.media.MediaPlayer.OnPreparedListener#onPrepared(android.media
+	 * .MediaPlayer)
+	 */
+	public void onPrepared(MediaPlayer mp) {
+		startMediaPlayer();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.media.MediaPlayer.OnCompletionListener#onCompletion(android.media
+	 * .MediaPlayer)
+	 */
+	public void onCompletion(MediaPlayer mp) {
+		Log.i(TAG, "onComplete: Track finished. Starting next track.");
+		nextTrack();
 	}
 
 	/*
