@@ -14,17 +14,15 @@
 package edu.chalmers.dat255.audiobookplayer.constants;
 
 /**
- * Holds unique property names ensuring that property names match if intended to
- * do so and that property name changing is simple.
- * <p>
- * Also contains hard-coded fields.
+ * Contains hard-coded values.
  * 
- * @author Aki Käkelä, Marcus Parkkinen
- * @version 0.2
+ * @author Aki Käkelä
+ * @version 0.3
  */
 public final class Constants {
 	/**
-	 * Event names.
+	 * Holds unique property names ensuring that property names match if
+	 * intended to do so and that property name changing is simple.
 	 * 
 	 * @author Aki Käkelä, Marcus Parkkinen
 	 * 
@@ -79,9 +77,9 @@ public final class Constants {
 	}
 
 	/**
-	 * Contains String-type references for serialization.
+	 * Contains String-type reference used in serialization.
 	 * 
-	 * @author Aki Käkelä, Marcus Parkkinen
+	 * @author Marcus Parkkinen
 	 * 
 	 */
 	public static final class Reference {
@@ -89,9 +87,9 @@ public final class Constants {
 	}
 
 	/**
-	 * Contains hard-coded values.
+	 * Contains hard-coded integer values.
 	 * 
-	 * @author Aki Käkelä, Marcus Parkkinen
+	 * @author Aki Käkelä
 	 * 
 	 */
 	public static final class Value {
@@ -127,22 +125,24 @@ public final class Constants {
 	}
 
 	/**
-	 * Contains string messages.
+	 * Contains GUI-messages.
 	 * 
-	 * @author Aki Käkelä, Marcus Parkkinen
+	 * @author Aki Käkelä
 	 * 
 	 */
 	public static final class Message {
-		// fixing the 'magic number' complaints of Sonar.
+		/**
+		 * Fixing the 'magic number' complaints in Sonar.
+		 */
 		public static final String NOT_AVAILABLE = "N/A";
 
 		public static final String NO_AUDIO_FILES_FOUND = "No audio files found.";
 
-		public static final CharSequence NO_BOOK_TITLE = NOT_AVAILABLE;
-		public static final CharSequence NO_TRACK_TITLE = NOT_AVAILABLE;
+		public static final String NO_BOOK_TITLE = NOT_AVAILABLE;
+		public static final String NO_TRACK_TITLE = NOT_AVAILABLE;
 
-		public static final CharSequence NO_TRACK_ELAPSED_TIME = NOT_AVAILABLE;
-		public static final CharSequence NO_BOOK_ELAPSED_TIME = NOT_AVAILABLE;
+		public static final String NO_TRACK_ELAPSED_TIME = NOT_AVAILABLE;
+		public static final String NO_BOOK_ELAPSED_TIME = NOT_AVAILABLE;
 
 		public static final String NO_TRACK_DURATION = NOT_AVAILABLE;
 		public static final String NO_BOOK_DURATION = NOT_AVAILABLE;
