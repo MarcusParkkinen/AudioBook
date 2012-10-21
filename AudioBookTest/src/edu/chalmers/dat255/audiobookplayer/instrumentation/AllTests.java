@@ -10,7 +10,9 @@
  * 
  *  Copyright © 2012 Marcus Parkkinen, Aki Käkelä, Fredrik Åhs.
  **/
+
 package edu.chalmers.dat255.audiobookplayer.instrumentation;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import android.test.suitebuilder.TestSuiteBuilder;
@@ -20,8 +22,8 @@ import android.test.suitebuilder.TestSuiteBuilder;
  * 
  */
 public class AllTests extends TestSuite {
-    public static Test suite() {
-        return new TestSuiteBuilder(AllTests.class).includeAllPackagesUnderHere().build();
-    }
+	public static Test suite() {
+		return new TestSuiteBuilder(AllTests.class)
+				.includeAllPackagesUnderHere().build();
+	}
 }
-

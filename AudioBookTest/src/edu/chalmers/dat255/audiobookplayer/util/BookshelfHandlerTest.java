@@ -33,6 +33,9 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 	private Bookshelf bs;
 	private Book newBook;
 
+	/* (non-Javadoc)
+	 * @see android.test.AndroidTestCase#setUp()
+	 */
 	protected void setUp() throws Exception {
 		bs = new Bookshelf();
 

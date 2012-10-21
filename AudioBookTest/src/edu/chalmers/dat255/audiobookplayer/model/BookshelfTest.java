@@ -82,6 +82,9 @@ public class BookshelfTest extends TestCase {
 	private static final int FOURTH = 3;
 	private static final int LAST = 4;
 
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -300,10 +303,11 @@ public class BookshelfTest extends TestCase {
 		 * Indices before the lowest index remain as they were. Indices between
 		 * will decrement. Indices after will remain as they were.
 		 * 
-		 * In this case we have that the books at indices 0 and 5 will remain.
-		 * book1 will be moved to book4, and books 2-4 will decrement indices.
+		 * In this case we have that the first and last books will have the same
+		 * indices as before. book1 will be moved to book4, and books 2-3 will
+		 * decrement indices.
 		 */
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < STARTING_NUMBER_OF_BOOKS; i++) {
 			Log.d("-> Moved copy", bookshelf.getBookAt(i)
 					.getSelectedBookTitle());
 			Log.d("-> Original ", orig.getBookAt(i).getSelectedBookTitle());
