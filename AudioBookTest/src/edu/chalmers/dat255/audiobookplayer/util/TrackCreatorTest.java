@@ -33,7 +33,7 @@ public class TrackCreatorTest extends TestCase {
 	 * MUST BE VALID IN ORDER FOR TESTS TO PASS
 	 * 
 	 */
-	private static final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
+	private static final String FILE_NAME = "/audiobooks/huckleberry finn/huck_finn_chap01-text.mp3";
 	/**
 	 * NOTE:
 	 * 

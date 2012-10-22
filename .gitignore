@@ -13,7 +13,7 @@ bin/
 gen/
 AudioBookTest/bin/
 AudioBookTest/gen/
-
+*Thumbs.db
 # Local configuration file (sdk path, etc)
 local.properties
 

@@ -16,7 +16,7 @@ package edu.chalmers.dat255.audiobookplayer.ctrl;
 import java.beans.PropertyChangeListener;
 
 import android.content.Context;
-import android.util.Log;
+import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
@@ -29,7 +29,6 @@ import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
  * @version 0.7
  */
 public class BookshelfController implements IBookshelfEvents {
-	private static final String TAG = "BookshelfController";
 	private Bookshelf bookshelf;
 
 	/**
@@ -53,22 +52,28 @@ public class BookshelfController implements IBookshelfEvents {
 	}
 
 	/**
+	 * Only for testing purposes.
+	 * 
 	 * @return
 	 */
 	public int getSelectedBookIndex() {
-		return bookshelf.getSelectedBookIndex();
+		if (bookshelf != null) {
+			return bookshelf.getSelectedBookIndex();
+		}
+		return Constants.Value.NO_BOOK_SELECTED;
 	}
 
 	/**
-	 * (Currently only used for testing.)
+	 * Only for testing purposes.
 	 * 
 	 * @return
 	 */
 	public int getSelectedTrackIndex() {
-		return bookshelf.getSelectedTrackIndex();
+		if (bookshelf != null) {
+			return bookshelf.getSelectedTrackIndex();
+		}
+		return Constants.Value.NO_TRACK_SELECTED;
 	}
-
-	// sort, swap, move, edit book
 
 	/*
 	 * IBookshelfEvents
@@ -81,7 +86,12 @@ public class BookshelfController implements IBookshelfEvents {
 	 * setSelectedTrack(int, int)
 	 */
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
-		bookshelf.setSelectedTrackIndex(bookIndex, trackIndex);
+		if (bookshelf != null) {
+			if (bookshelf.getSelectedBookIndex() != bookIndex) {
+				bookshelf.setSelectedBookIndex(bookIndex);
+			}
+			bookshelf.setSelectedTrackIndex(bookIndex, trackIndex);
+		}
 	}
 
 	/*
@@ -92,7 +102,9 @@ public class BookshelfController implements IBookshelfEvents {
 	 * (int)
 	 */
 	public void removeBook(int bookIndex) {
-		bookshelf.removeBookAt(bookIndex);
+		if (bookshelf != null) {
+			bookshelf.removeBookAt(bookIndex);
+		}
 	}
 
 	/*
@@ -102,7 +114,9 @@ public class BookshelfController implements IBookshelfEvents {
 	 * setBookTitleAt(int, java.lang.String)
 	 */
 	public void setBookTitleAt(int bookIndex, String newTitle) {
-		bookshelf.setSelectedBookTitle(newTitle);
+		if (bookshelf != null) {
+			bookshelf.setSelectedBookTitle(newTitle);
+		}
 	}
 
 	/*
@@ -113,7 +127,9 @@ public class BookshelfController implements IBookshelfEvents {
 	 * (int)
 	 */
 	public void removeTrack(int trackIndex) {
-		bookshelf.removeTrack(trackIndex);
+		if (bookshelf != null) {
+			bookshelf.removeTrack(trackIndex);
+		}
 	}
 
 	/*
@@ -124,7 +140,9 @@ public class BookshelfController implements IBookshelfEvents {
 	 * (int, int)
 	 */
 	public void removeTrack(int bookIndex, int trackIndex) {
-		bookshelf.removeTrack(bookIndex, trackIndex);
+		if (bookshelf != null) {
+			bookshelf.removeTrack(bookIndex, trackIndex);
+		}
 	}
 
 	/*
@@ -135,7 +153,9 @@ public class BookshelfController implements IBookshelfEvents {
 	 * (int, int, int)
 	 */
 	public void moveTrack(int bookIndex, int trackIndex, int offset) {
-		bookshelf.moveTrack(bookIndex, trackIndex, offset);
+		if (bookshelf != null) {
+			bookshelf.moveTrack(bookIndex, trackIndex, offset);
+		}
 	}
 
 	/*
@@ -149,16 +169,18 @@ public class BookshelfController implements IBookshelfEvents {
 	 *            The listener to add.
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener pcl) {
-		Log.d(TAG, "Adding listener to bookshelf.");
-		bookshelf.addPropertyChangeListener(pcl);
+		if (bookshelf != null) {
+			bookshelf.addPropertyChangeListener(pcl);
+		}
 	}
 
 	/**
 	 * Removes all listeners from the model.
 	 */
 	public void removeListeners() {
-		Log.d(TAG, "Removing ALL listeners of bookshelf.");
-		bookshelf.removeListeners();
+		if (bookshelf != null) {
+			bookshelf.removeListeners();
+		}
 	}
 
 	/**

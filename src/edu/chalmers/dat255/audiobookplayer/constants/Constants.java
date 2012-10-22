@@ -30,6 +30,10 @@ public final class Constants {
 	public static final class Event {
 
 		// Bookshelf update events
+		/**
+		 * Called when the bookshelf is populated when a new instance of this
+		 * application is run.
+		 */
 		public static final String BOOKSHELF_UPDATED = "!bookshelfUpdated";
 
 		// Book update events
@@ -83,6 +87,10 @@ public final class Constants {
 	 * 
 	 */
 	public static final class Reference {
+		/**
+		 * Called to indicate that a bookshelf is contained within a bundle
+		 * object.
+		 */
 		public static final String BOOKSHELF = "@bookshelf";
 	}
 

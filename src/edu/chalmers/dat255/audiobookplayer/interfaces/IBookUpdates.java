@@ -37,6 +37,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * Removes a track from the collection on the specified index.
 	 * 
 	 * @param index
+	 *            Index of the track to remove.
 	 */
 	void removeTrack(int index);
 
@@ -90,7 +91,7 @@ public interface IBookUpdates extends ITrackUpdates {
 	/**
 	 * Returns the author of the selected book.
 	 * 
-	 * @return
+	 * @return The author of the selected book.
 	 */
 	String getSelectedBookAuthor();
 

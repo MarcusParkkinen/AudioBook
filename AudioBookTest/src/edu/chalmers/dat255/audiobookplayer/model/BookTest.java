@@ -41,10 +41,10 @@ public class BookTest extends TestCase {
 			+ DURATION3;
 
 	// Tracks to test the book with
-	private Track t0 = new Track("/thePath/theTrack1.mp3", DURATION0);
-	private Track t1 = new Track("/thePath/theTrack2.mp3", DURATION1);
-	private Track t2 = new Track("/thePath/theTrack3.mp3", DURATION2);
-	private Track t3 = new Track("/thePath/theTrack4.mp3", DURATION3);
+	private Track t0 = new Track("/audiobooks/huckleberry finn/huck_finn_chap01-text.mp3", DURATION0);
+	private Track t1 = new Track("/audiobooks/huckleberry finn/huck_finn_chap02-text.mp3", DURATION1);
+	private Track t2 = new Track("/audiobooks/huckleberry finn/huck_finn_chap03-text.mp3", DURATION2);
+	private Track t3 = new Track("/audiobooks/huckleberry finn/huck_finn_chap04-text.mp3", DURATION3);
 
 	private static final int TOTAL_NUMBER_OF_TRACKS = 4;
 
