@@ -439,7 +439,6 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 							+ "Player stopping.");
 			// stop if this happens.
 			stop();
-			// TODO(?): deselect the books in the model.
 		} else if (isAllowedBookIndex()) {
 			// get the duration of the book
 			int bookDuration = bs.getSelectedBookDuration();

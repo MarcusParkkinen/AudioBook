@@ -415,7 +415,7 @@ public class PlayerFragment extends Fragment {
 	}
 
 	public void updateTagTimes(int[] tagTimes) {
-		// TODO(?): Tags not implemented in GUI.
+		// Tags not implemented in GUI.
 	}
 
 }

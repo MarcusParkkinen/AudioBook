@@ -128,7 +128,7 @@ public final class Track implements ITrackUpdates, Serializable {
 	 * @return The title of the track (the path without the parent folders).
 	 */
 	public String getTrackTitle() {
-		return this.title; // TODO: just get the track name, not path
+		return this.title;
 	}
 
 	/**

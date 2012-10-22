@@ -42,9 +42,9 @@ import edu.chalmers.dat255.audiobookplayer.util.BookCreator;
 import edu.chalmers.dat255.audiobookplayer.util.BookshelfHandler;
 
 /**
- * The main activity of the application. TODO: insert license
+ * The main activity of the application.
  * 
- * @author Aki K&auml;kel&auml;, Marcus Parkkinen
+ * @author Aki Käkelä, Marcus Parkkinen
  * @version 0.6
  * 
  */
@@ -147,9 +147,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		bookshelfController.addPropertyChangeListener(this);
 
 		/*
-		 * TODO(??): This method is run every time the application is created,
-		 * starts or resumes. The updates should only start when returning from
-		 * a paused or stopped state.
+		 * This method is run every time the application is created, starts or
+		 * resumes. The updates should only start when returning from a paused
+		 * or stopped state.
 		 */
 	}
 
@@ -440,9 +440,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// TODO remove this when bookshelf crashes are resolved
 			playerController.start();
-			
+
 			// start the player at the elapsed time of the track
-//			playerController.startAt(b.getSelectedTrackElapsedTime());
+			// playerController.startAt(b.getSelectedTrackElapsedTime());
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
 
@@ -507,7 +507,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		} else if (eventName.equals(Constants.Event.BOOK_TITLE_CHANGED)) {
 			Book b = bs.getSelectedBook();
 			// Bookshelf
-			// TODO(Fredrik): update the name of the book
 
 			// Player
 			// update the book title label
@@ -730,17 +729,15 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book that specifies the change
 	 */
 	private void updateBookSeekbar(Book b) {
-		if (b.getSelectedTrackIndex() != -1) { // TODO(?): unnecessary check?
-			// elapsed time
-			int bookElapsedTime = b.getBookElapsedTime();
+		// elapsed time
+		int bookElapsedTime = b.getBookElapsedTime();
 
-			// total duration
-			int bookDuration = b.getDuration();
+		// total duration
+		int bookDuration = b.getDuration();
 
-			double progress = getProgress(bookElapsedTime, bookDuration);
+		double progress = getProgress(bookElapsedTime, bookDuration);
 
-			playerFragment.updateBookSeekBar(progress);
-		}
+		playerFragment.updateBookSeekBar(progress);
 	}
 
 	/**
