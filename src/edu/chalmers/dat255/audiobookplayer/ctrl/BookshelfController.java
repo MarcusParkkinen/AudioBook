@@ -16,7 +16,6 @@ package edu.chalmers.dat255.audiobookplayer.ctrl;
 import java.beans.PropertyChangeListener;
 
 import android.content.Context;
-import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
