@@ -55,8 +55,14 @@ public class BookTest extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 
 		bList = new ArrayList<Track>();
 

@@ -49,8 +49,14 @@ public class BrowserActivityTest extends
 	 * @see android.test.ActivityInstrumentationTestCase2#setUp()
 	 */
 	@SmallTest
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		bActivity = getActivity();
 		assertNotNull("BrowserActivity null", bActivity);
 		browserListView = (ListView) bActivity.findViewById(R.id.browserList);

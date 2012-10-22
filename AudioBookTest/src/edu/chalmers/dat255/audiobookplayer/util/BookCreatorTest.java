@@ -37,12 +37,19 @@ public class BookCreatorTest extends TestCase {
 	private Bookshelf bs;
 	private List<String> paths;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		// Instantiate a BookCreator and a bookshelf for testing
 		bc = BookCreator.getInstance();
 		bs = new Bookshelf();

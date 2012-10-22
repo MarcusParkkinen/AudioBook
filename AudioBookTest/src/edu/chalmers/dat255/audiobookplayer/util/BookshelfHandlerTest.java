@@ -33,10 +33,19 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 	private Bookshelf bs;
 	private Book newBook;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.test.AndroidTestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		bs = new Bookshelf();
 
 		// Create a book object for testing
@@ -44,7 +53,6 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 				Arrays.asList(new Track[] { new Track("trackPath", 1) }),
 				"BookTitle", "BookAuthor");
 
-		super.setUp();
 	}
 
 	/**

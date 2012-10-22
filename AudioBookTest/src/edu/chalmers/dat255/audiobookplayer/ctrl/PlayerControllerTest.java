@@ -60,9 +60,14 @@ public class PlayerControllerTest extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		Log.d(TAG, "setUp()");
 
 		// re-create the bookshelf and player for each test
@@ -167,14 +172,14 @@ public class PlayerControllerTest extends TestCase {
 	 */
 	public final void testStart() {
 		Log.d(TAG, "testStart()");
-		
+
 		pc.start();
 
 		// it should be started
 		assertTrue(pc.isStarted());
-		
+
 		// it should be playing
-		
+
 		// wait for the thread to react (MediaPlayer).
 		assertTrue(pc.isPlaying());
 	}
@@ -203,7 +208,7 @@ public class PlayerControllerTest extends TestCase {
 	 */
 	public final void testResume() {
 		Log.d(TAG, "testResume()");
-		
+
 		// start pc
 		pc.start();
 
@@ -214,7 +219,7 @@ public class PlayerControllerTest extends TestCase {
 		pc.resume();
 		// resumed means that pc is both started and playing
 		// (see javadoc for the difference between the two).
-		
+
 		// wait for the thread to react (MediaPlayer).
 		assertTrue(pc.isPlaying());
 
@@ -268,7 +273,7 @@ public class PlayerControllerTest extends TestCase {
 	 */
 	public final void testIsPlaying() {
 		Log.d(TAG, "testIsPlaying()");
-		
+
 		// should not be playing initially
 		assertFalse(pc.isStarted());
 
@@ -278,13 +283,13 @@ public class PlayerControllerTest extends TestCase {
 
 		// pause and check again
 		pc.pause();
-		
+
 		// wait for the thread to react (MediaPlayer).
 		assertFalse(pc.isPlaying());
 
 		// resume and make sure it is now playing
 		pc.resume();
-		
+
 		// wait for the thread to start (MediaPlayer).
 		assertTrue(pc.isPlaying());
 	}

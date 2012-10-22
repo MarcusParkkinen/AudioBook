@@ -82,12 +82,19 @@ public class BookshelfTest extends TestCase {
 	private static final int FOURTH = 3;
 	private static final int LAST = 4;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		// NOTE: do not change these values; the tests depend on them
 
 		// create a new bookshelf
@@ -164,8 +171,9 @@ public class BookshelfTest extends TestCase {
 
 		// Test a positive integer beyond the allowed indices
 		try {
+			int expected = bookshelf.getSelectedBookIndex();
 			bookshelf.setSelectedBookIndex(ILLEGAL_POSITIVE_INDEX);
-			fail("()" + OUT_OF_BOUNDS_MESSAGE);
+			assertEquals(expected, bookshelf.getSelectedBookIndex());
 		} catch (IndexOutOfBoundsException e) {
 		} // expected
 
@@ -174,10 +182,11 @@ public class BookshelfTest extends TestCase {
 
 		// Test a negative integer beyond the allowed indices (-1 is allowed)
 		try {
+			int expected = bookshelf.getSelectedBookIndex();
 			bookshelf.setSelectedBookIndex(ILLEGAL_NEGATIVE_INDEX);
-			fail("()" + OUT_OF_BOUNDS_MESSAGE);
+			assertEquals(expected, bookshelf.getSelectedBookIndex());
 		} catch (IndexOutOfBoundsException e) {
-		} // expected
+		} // expecteds
 
 		// ensure that nothing changed
 		assertFalse(bookshelf.getSelectedBookIndex() == ILLEGAL_NEGATIVE_INDEX);

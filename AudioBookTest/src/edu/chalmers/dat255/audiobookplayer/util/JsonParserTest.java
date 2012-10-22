@@ -30,10 +30,19 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 public class JsonParserTest extends AndroidTestCase {
 	private Bookshelf bs;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.test.AndroidTestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		// Set up test environment by creating an object tree for testing
 		Track[] tracks = new Track[] { new Track("trackPath", 1) };
 		Book b = new Book(Arrays.asList(tracks), "BookTitle", "BookAuthor");
@@ -41,8 +50,6 @@ public class JsonParserTest extends AndroidTestCase {
 		bs = new Bookshelf();
 		bs.addPropertyChangeListener(null);
 		bs.addBook(b);
-
-		super.setUp();
 	}
 
 	/**

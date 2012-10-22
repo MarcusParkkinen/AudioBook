@@ -74,9 +74,14 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	 * 
 	 * @see android.test.AndroidTestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		// NOTE: do not change these values; the tests depend on them
 
 		// Create tracks
@@ -134,9 +139,10 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		// setting to illegal book index, illegal track index
 		Log.d("FAILURE", "FAILING TEST----");
 		try {
+			int expected = bookshelfController.getSelectedBookIndex();
 			bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
 					ILLEGAL_TRACK_INDEX);
-			fail(OUT_OF_BOUNDS_FAILURE_MESSAGE);
+			assertEquals(expected, bookshelfController.getSelectedBookIndex());
 		} catch (IndexOutOfBoundsException e) {
 			// ensure that nothing changed.
 			assertTrue(indicesAreUnchangedLegal());
@@ -144,9 +150,10 @@ public class BookshelfControllerTest extends AndroidTestCase {
 
 		// setting to illegal book index, legal track index
 		try {
+			int expected = bookshelfController.getSelectedBookIndex();
 			bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
 					LEGAL_TRACK_INDEX);
-			fail(OUT_OF_BOUNDS_FAILURE_MESSAGE);
+			assertEquals(expected, bookshelfController.getSelectedBookIndex());
 		} catch (IndexOutOfBoundsException e) {
 			// ensure that nothing changed.
 			assertTrue(indicesAreUnchangedLegal());
@@ -154,9 +161,10 @@ public class BookshelfControllerTest extends AndroidTestCase {
 
 		// setting to legal book index, illegal track index
 		try {
+			int expected = bookshelfController.getSelectedBookIndex();
 			bookshelfController.setSelectedTrack(LEGAL_BOOK_INDEX,
 					ILLEGAL_TRACK_INDEX);
-			fail(OUT_OF_BOUNDS_FAILURE_MESSAGE);
+			assertEquals(expected, bookshelfController.getSelectedBookIndex());
 		} catch (IndexOutOfBoundsException e) {
 			// ensure that nothing changed.
 			assertTrue(indicesAreUnchangedLegal());

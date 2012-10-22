@@ -28,14 +28,22 @@ public class FileParserTest extends AndroidTestCase {
 	private String textString;
 	private String fileName;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.test.AndroidTestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
+	@Override
+	protected void setUp() {
+		try {
+			super.setUp();
+		} catch (Exception e) {
+			// catch exceptions from super.setUp() and fail
+			fail("setUp failed + " + e.getMessage());
+		}
 		// Initialize strings
 		textString = "Random text for testing";
 		fileName = "FileParserTestFile";
-		super.setUp();
 	}
 
 	/**
