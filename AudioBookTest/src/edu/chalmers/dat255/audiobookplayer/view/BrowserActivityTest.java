@@ -133,7 +133,7 @@ public class BrowserActivityTest extends
 			}
 			assertTrue(cb.isChecked());
 		}
-		// TODO(testCreateButton) : BookCreator's Bookshelf is null, bypass this
+		// BookCreator's Bookshelf is null, bypass this
 		// somehow
 		// As bookshelf is null in BookCreator and there seems to be no possible
 		// way to

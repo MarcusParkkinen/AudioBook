@@ -52,7 +52,7 @@ import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
  * @author Perkele
  * 
  */
-public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
+public class BookshelfFragment extends Fragment {
 	private static final String TAG = "BookshelfFragment.class";
 	private ExpandableBookshelfAdapter adapter;
 	private IBookshelfGUIEvents fragmentOwner;
