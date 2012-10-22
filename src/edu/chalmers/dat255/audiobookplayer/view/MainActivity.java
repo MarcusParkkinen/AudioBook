@@ -424,25 +424,26 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// reset the player controls to standard values
 			playerFragment.resetComponents();
 
-			// debug
-			if (bs.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED) {
-				Log.e(TAG, "Selected illegal book index!");
-			}
-
 			// update the player GUI components
-			updatePlayerGUI(bs.getSelectedBook());
+			updatePlayerGUI(b);
 
 			// make sure the player GUI knows it is playing
 			playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
 
 			// show the player UI
 			pager.setCurrentItem(PLAYER);
+			
+			// debug
+			if (bs.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED) {
+				Log.e(TAG, "BOOK_SELECTED " + "Selected illegal book index!");
+			}
 
-			// TODO remove this when bookshelf crashes are resolved
-			playerController.start();
-
-			// start the player at the elapsed time of the track
-			// playerController.startAt(b.getSelectedTrackElapsedTime());
+			// debug
+			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
+				Log.e(TAG, "BOOK_SELECTED " + "Selected illegal track index!");
+			}
+			
+			bookshelfController.setSelectedTrack(bs.getSelectedBookIndex(), bs.getSelectedTrackIndex());
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
 

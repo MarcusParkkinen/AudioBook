@@ -96,6 +96,6 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * Updates the duration of the book to the sum of the duration of its
 	 * tracks.
 	 */
-	void updateBookDuration();
+	void updateSelectedBookDuration();
 
 }

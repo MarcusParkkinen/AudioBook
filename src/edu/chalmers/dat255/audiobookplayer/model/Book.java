@@ -245,7 +245,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
 	 * updateBookDuration()
 	 */
-	public void updateBookDuration() {
+	public void updateSelectedBookDuration() {
 		this.duration = 0;
 		for (Track t : tracks) {
 			this.duration += t.getDuration();
@@ -396,12 +396,15 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @return
 	 */
 	public String getSelectedTrackPath() {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(
-					"getSelectedTrackPath (illegal track index "
-							+ selectedTrackIndex + ")");
-		}
-		return tracks.get(selectedTrackIndex).getTrackPath();
+		// TODO: checkTrackLegal...
+		
+		return getTrackPathAt(selectedTrackIndex);
+	}
+	
+	public String getTrackPathAt(int trackIndex) {
+		// TODO: check legal
+		
+		return tracks.get(trackIndex).getTrackPath();
 	}
 
 	/**

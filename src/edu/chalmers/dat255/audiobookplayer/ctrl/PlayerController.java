@@ -449,8 +449,9 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 			// go through the tracks and calculate the remainder and track index
 			int track = 0;
 			int trackDuration = 0;
-			while (seekRemainder > (trackDuration = bs
-					.getTrackDurationAt(track))) {
+			int selectedBook = bs.getSelectedBookIndex();
+			while (seekRemainder > (trackDuration = bs.getTrackDurationAt(
+					selectedBook, track))) {
 				seekRemainder -= trackDuration;
 				track++;
 			}
