@@ -716,7 +716,11 @@ public class BookshelfFragment extends Fragment {
 			BookshelfFragment.this.childClicked(bookIndex, trackIndex);
 			// store for synchronization
 			selectedBookView = expandableListView.getChildAt(bookIndex);
-			bookElapsedTime = bookshelf.getBookElapsedTime();
+			try {
+				bookElapsedTime = bookshelf.getBookElapsedTime();
+			}  catch(IndexOutOfBoundsException e ) {
+				bookElapsedTime = 0;
+			}
 			bookProgress = calculateProgress(bookElapsedTime,
 					bookshelf.getSelectedBookDuration());
 		}
@@ -787,7 +791,7 @@ public class BookshelfFragment extends Fragment {
 
 			// prevent problems with a duration of 0
 			if (duration == 0) {
-				return null;
+				return cView;
 			}
 			// get the elapsed time of the book
 			int time = 0;
@@ -806,7 +810,11 @@ public class BookshelfFragment extends Fragment {
 			else {
 				setTextViewTextColor(cView, R.id.bookshelfBookTitle,
 						Color.WHITE);
-				time = bookshelf.getBookElapsedTimeAt(bookIndex);
+				try {
+					time = bookshelf.getBookElapsedTime();
+				}  catch(IndexOutOfBoundsException e ) {
+					time = 0;
+				}
 				progress = calculateProgress(time, duration);
 			}
 			setTextViewText(cView, R.id.bookshelfAuthor,
@@ -894,7 +902,11 @@ public class BookshelfFragment extends Fragment {
 			BookshelfFragment.this.groupClicked(bookIndex);
 			// store the view so that text can update
 			selectedBookView = convertView;
-			bookElapsedTime = bookshelf.getBookElapsedTime();
+			try {
+				bookElapsedTime = bookshelf.getBookElapsedTime();
+			}  catch(IndexOutOfBoundsException e ) {
+				bookElapsedTime = 0;
+			}
 			bookProgress = calculateProgress(bookElapsedTime,
 					bookshelf.getSelectedBookDuration());
 		}
