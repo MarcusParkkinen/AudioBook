@@ -109,11 +109,6 @@ public class BrowserActivity extends Activity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
 	public void onBackPressed() {
 		Log.i(TAG, "Back pressed in Browser Activity");
 		finish();
