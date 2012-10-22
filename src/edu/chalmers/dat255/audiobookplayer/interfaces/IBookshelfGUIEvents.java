@@ -23,14 +23,6 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
 public interface IBookshelfGUIEvents extends IBookshelfEvents {
 
 	/**
-	 * Informs the listener that a book has been long pressed.
-	 * 
-	 * @param index
-	 *            The index of the book pressed.
-	 */
-	void bookLongPress(int index);
-
-	/**
 	 * Informs the listener that the add button has been pressed.
 	 */
 	void addBookButtonPressed();

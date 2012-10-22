@@ -351,17 +351,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * (non-Javadoc)
 	 * 
 	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents#
-	 * bookLongPress(int)
-	 */
-	public void bookLongPress(int index) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents#
 	 * addBookButtonPressed()
 	 */
 	public void addBookButtonPressed() {

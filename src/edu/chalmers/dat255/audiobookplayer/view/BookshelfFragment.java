@@ -48,6 +48,10 @@ import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
  * @version 0.6
  */
 
+/**
+ * @author Perkele
+ *
+ */
 public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 	private static final String TAG = "BookshelfFragment.class";
 	private ExpandableBookshelfAdapter adapter;
@@ -108,6 +112,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		};
 	}
 
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onAttach(android.app.Activity)
+	 */
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -242,6 +249,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onContextItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if (getActivity() == null) {
@@ -345,14 +355,24 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#moveTrack(int, int, int)
+	 */
 	public void moveTrack(int bookIndex, int trackIndex, int offset) {
 		fragmentOwner.moveTrack(bookIndex, trackIndex, offset);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeTrack(int, int)
+	 */
 	public void removeTrack(int bookIndex, int trackIndex) {
 		fragmentOwner.removeTrack(bookIndex, trackIndex);
 	}
 
+	/**
+	 * @param bookIndex
+	 * @param trackIndex
+	 */
 	private void childClicked(int bookIndex, int trackIndex) {
 		if (getActivity() != null) {
 			Log.d(TAG, "Child clicked at + [" + bookIndex + ", " + trackIndex
@@ -361,6 +381,9 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		}
 	}
 
+	/**
+	 * @param bookIndex
+	 */
 	private void groupClicked(int bookIndex) {
 		if (getActivity() != null) {
 			setSelectedBook(bookIndex);
@@ -383,34 +406,51 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 		}
 	}
 
+	/**
+	 * @param newTime
+	 */
 	public void selectedBookElapsedTimeUpdated(int newTime) {
 		adapter.selectedBookElapsedTimeUpdated(newTime);
 	}
 
-	public void bookLongPress(int index) {
-		fragmentOwner.bookLongPress(index);
-	}
-
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfGUIEvents#addBookButtonPressed()
+	 */
 	public void addBookButtonPressed() {
 		fragmentOwner.addBookButtonPressed();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#setSelectedBook(int)
+	 */
 	public void setSelectedBook(int bookIndex) {
 		fragmentOwner.setSelectedBook(bookIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#setSelectedTrack(int, int)
+	 */
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
 		fragmentOwner.setSelectedTrack(bookIndex, trackIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeBook(int)
+	 */
 	public void removeBook(int bookIndex) {
 		fragmentOwner.removeBook(bookIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#removeTrack(int)
+	 */
 	public void removeTrack(int trackIndex) {
 		fragmentOwner.removeTrack(trackIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents#setBookTitleAt(int, java.lang.String)
+	 */
 	public void setBookTitleAt(int bookIndex, String newTitle) {
 		fragmentOwner.setBookTitleAt(bookIndex, "NEWNAME");
 	}
