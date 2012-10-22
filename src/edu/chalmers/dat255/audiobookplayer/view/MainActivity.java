@@ -416,34 +416,39 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// update the bookshelf GUI
 			bookshelfFragment.bookshelfUpdated(bs);
 		} else if (eventName.equals(Constants.Event.BOOK_SELECTED)) {
-			Book b = bs.getSelectedBook();
+			if (bs.getSelectedBookIndex() != Constants.Value.NO_BOOK_SELECTED) {
+				Book b = bs.getSelectedBook();
 
-			// reset the player controls to standard values
-			playerFragment.resetComponents();
+				// reset the player controls to standard values
+				playerFragment.resetComponents();
 
-			// update the player GUI components
-			updatePlayerGUI(b);
+				// update the player GUI components
+				updatePlayerGUI(b);
 
-			// make sure the player GUI knows it is playing
-			playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
+				// make sure the player GUI knows it is playing
+				playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
 
-			// show the player UI
-			pager.setCurrentItem(PLAYER);
+				// show the player UI
+				pager.setCurrentItem(PLAYER);
+				if (bs.getSelectedTrackIndex() != Constants.Value.NO_TRACK_SELECTED) {
+					// start at the saved time
+					playerController.setStartPosition(b
+							.getSelectedTrackElapsedTime());
 
-			// debug
-			if (bs.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED) {
-				throw new IndexOutOfBoundsException("Selected illegal book index!");
+					// select the stored track to start playing in
+					bookshelfController.setSelectedTrack(
+							bs.getSelectedBookIndex(),
+							bs.getSelectedTrackIndex());
+				} else {
+					bookshelfController.setSelectedTrack(
+							bs.getSelectedBookIndex(), 0);
+					playerController.setStartPosition(0);
+					
+				}
+				// TODO: the player should only seek to the saved time if a book
+				// was
+				// selected (in the bookshelf UI).
 			}
-			
-			// start at the saved time
-			playerController.setStartPosition(b.getSelectedTrackElapsedTime());
-
-			// select the stored track to start playing in
-			bookshelfController.setSelectedTrack(bs.getSelectedBookIndex(),
-					bs.getSelectedTrackIndex());
-
-			// TODO: the player should only seek to the saved time if a book was
-			// selected (in the bookshelf UI).
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
 
@@ -460,10 +465,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 		} else if (eventName.equals(Constants.Event.TRACK_LIST_CHANGED)) {
 			Book b = bs.getSelectedBook();
-			
+
 			// Update the bookshelf GUI.
 			bookshelfFragment.bookshelfUpdated(bs);
-			
+
 			// Player
 			// update book duration label
 			updateBookDurationLabel(b);
