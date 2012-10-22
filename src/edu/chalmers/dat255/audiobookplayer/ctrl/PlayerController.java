@@ -139,7 +139,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 		try {
 			path = bs.getSelectedTrackPath();
 		} catch (IllegalArgumentException e) {
-			// the track index was '-1', so do nothing
+			// there was no track selected
 		}
 		if (path != null) {
 			/*
@@ -379,15 +379,10 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 */
 	public void seekToPercentageInTrack(double percentage) {
 		if (!isLegalPercentage(percentage)) {
-			Log.d(TAG,
-					"Seeked to an illegal track state (negative or above 100%). "
-							+ "Skipping track..");
 			// simply play the next track if this happens.
 			nextTrack();
 		} else if (isAllowedBookIndex()) {
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
-				Log.d(TAG, "No track selected when seeking with track bar. "
-						+ "Selecting track index 0.");
 				// set the selected track index to the first one
 				bs.setSelectedTrackIndex(0);
 			} else {
