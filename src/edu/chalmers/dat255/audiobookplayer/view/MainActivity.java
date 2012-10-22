@@ -430,6 +430,8 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 				// show the player UI
 				pager.setCurrentItem(PLAYER);
+
+				// if a track is selected, start it
 				if (bs.getSelectedTrackIndex() != Constants.Value.NO_TRACK_SELECTED) {
 					// start at the saved time
 					playerController.setStartPosition(b
@@ -440,14 +442,13 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 							bs.getSelectedBookIndex(),
 							bs.getSelectedTrackIndex());
 				} else {
+					// if there is no track selected, start from the beginning.
+
+					playerController.setStartPosition(0);
 					bookshelfController.setSelectedTrack(
 							bs.getSelectedBookIndex(), 0);
-					playerController.setStartPosition(0);
-					
+
 				}
-				// TODO: the player should only seek to the saved time if a book
-				// was
-				// selected (in the bookshelf UI).
 			}
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
