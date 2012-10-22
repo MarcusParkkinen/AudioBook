@@ -23,7 +23,7 @@ package edu.chalmers.dat255.audiobookplayer.interfaces;
 public interface IBookshelfGUIEvents extends IBookshelfEvents {
 
 	/**
-	 * Informs the listener that the add button has been pressed.
+	 * Called when the add button has been pressed in the bookshelf GUI.
 	 */
 	void addBookButtonPressed();
 }

@@ -756,18 +756,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 * setSelectedTrack(int, int)
 	 */
 	public void setSelectedTrack(int bookIndex, int trackIndex) {
-		if (bookIndex == -1 || trackIndex == -1) {
-			return;
-		}
 
-		int selectedBookPosition = bookshelfController.getSelectedBookIndex();
-
-		// if the book is not currently selected, select it
-		if (selectedBookPosition != bookIndex) {
-			setSelectedBook(bookIndex);
-		}
-
-		// as the book is selected, track can be selected.
 		bookshelfController.setSelectedTrack(bookIndex, trackIndex);
 
 		// restart the player

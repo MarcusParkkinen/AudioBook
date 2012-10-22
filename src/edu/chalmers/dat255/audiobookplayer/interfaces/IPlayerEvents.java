@@ -81,7 +81,7 @@ public interface IPlayerEvents {
 	 * Seeks to the given percentage in a track.
 	 * 
 	 * @param percentage
-	 *            0 <= x <= 1
+	 *            0 <= percentage <= 1
 	 */
 	void seekToPercentageInTrack(double percentage);
 
@@ -89,7 +89,7 @@ public interface IPlayerEvents {
 	 * Seeks to the given percentage in a book.
 	 * 
 	 * @param percentage
-	 *            0 <= x <= 1
+	 *            0 <= percentage <= 1
 	 */
 	void seekToPercentageInBook(double percentage);
 

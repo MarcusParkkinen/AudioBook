@@ -28,7 +28,7 @@ public class TrackTest extends TestCase {
 	private Track t;
 
 	// Some values for creating tracks.
-	private static final String TRACK_PATH = "MyTrack.mp3";
+	private static final String TRACK_PATH = "/audiobooks/huckleberry finn/huck_finn_chap01-text.mp3";
 	private static final int TRACK_DURATION = 1238921;
 	private static final int ELAPSED_TIME = 238238;
 

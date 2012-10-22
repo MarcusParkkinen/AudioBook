@@ -48,6 +48,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * Used when no author is given.
 	 * 
 	 * @param title
+	 *            The title of the book.
 	 */
 	public Book(String title) {
 		this(title, Constants.Message.NO_AUTHOR);
@@ -62,11 +63,17 @@ public final class Book implements IBookUpdates, Serializable {
 
 		// when a book is created, it should be ensured that the author is
 		// appropriate.
-		this.author = author;
+
+		if (author == null || author.isEmpty()) {
+			this.author = Constants.Message.NO_AUTHOR;
+		} else {
+			this.author = author;
+		}
 	}
 
 	/**
-	 * Creates a book from the referenced collection of Tracks.
+	 * Creates a book from the referenced collection of Tracks. This constructor
+	 * assumes that the provided collection holds tracks.
 	 * 
 	 * @param col
 	 *            The collection of tracks.
@@ -93,6 +100,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * Copy constructor.
 	 * 
 	 * @param original
+	 *            The book to copy.
 	 */
 	public Book(Book original) {
 		this(original.getSelectedBookTitle(), original.getSelectedBookAuthor());
@@ -424,7 +432,7 @@ public final class Book implements IBookUpdates, Serializable {
 	/**
 	 * Returns the elapsed time of the current book.
 	 * 
-	 * @return
+	 * @return The elapsed time of the book.
 	 */
 	public int getBookElapsedTime() {
 		int bookElapsedTime = 0;
@@ -536,6 +544,12 @@ public final class Book implements IBookUpdates, Serializable {
 		return null;
 	}
 
+	/**
+	 * Throws an IndexOutOfBoundsException if the given index is not legal.
+	 * 
+	 * @param trackIndex
+	 *            The given index.
+	 */
 	private void checkTrackIndexLegal(int trackIndex) {
 		if (!isLegalTrackIndex(trackIndex)) {
 			throw new IndexOutOfBoundsException("Track index is illegal: "
