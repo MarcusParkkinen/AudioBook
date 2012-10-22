@@ -460,7 +460,10 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 		} else if (eventName.equals(Constants.Event.TRACK_LIST_CHANGED)) {
 			Book b = bs.getSelectedBook();
-
+			
+			// Update the bookshelf GUI.
+			bookshelfFragment.bookshelfUpdated(bs);
+			
 			// Player
 			// update book duration label
 			updateBookDurationLabel(b);

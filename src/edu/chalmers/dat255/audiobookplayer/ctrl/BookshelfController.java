@@ -16,6 +16,7 @@ package edu.chalmers.dat255.audiobookplayer.ctrl;
 import java.beans.PropertyChangeListener;
 
 import android.content.Context;
+import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 import edu.chalmers.dat255.audiobookplayer.interfaces.IBookshelfEvents;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
@@ -103,7 +104,11 @@ public class BookshelfController implements IBookshelfEvents {
 	 */
 	public void removeBook(int bookIndex) {
 		if (bookshelf != null) {
-			bookshelf.removeBookAt(bookIndex);
+			try {
+				bookshelf.removeBookAt(bookIndex);
+			} catch (IndexOutOfBoundsException e) {
+				// Expected when trying to remove last book.
+			}
 		}
 	}
 
@@ -128,7 +133,11 @@ public class BookshelfController implements IBookshelfEvents {
 	 */
 	public void removeTrack(int trackIndex) {
 		if (bookshelf != null) {
-			bookshelf.removeTrack(trackIndex);
+			try {
+				bookshelf.removeTrack(trackIndex);
+			} catch (IndexOutOfBoundsException e) {
+				// Expected when trying to remove last track in last book.
+			}
 		}
 	}
 
@@ -154,7 +163,11 @@ public class BookshelfController implements IBookshelfEvents {
 	 */
 	public void moveTrack(int bookIndex, int trackIndex, int offset) {
 		if (bookshelf != null) {
-			bookshelf.moveTrack(bookIndex, trackIndex, offset);
+			try {
+				bookshelf.moveTrack(bookIndex, trackIndex, offset);
+			} catch (IndexOutOfBoundsException e) {
+				// Expected when trying to move a track to an illegal position.
+			}
 		}
 	}
 

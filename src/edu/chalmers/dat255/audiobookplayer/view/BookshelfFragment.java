@@ -47,11 +47,6 @@ import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
  * @author Marcus Parkkinen, Fredrik Åhs
  * @version 0.6
  */
-
-/**
- * @author Perkele
- * 
- */
 public class BookshelfFragment extends Fragment {
 	private static final String TAG = "BookshelfFragment.class";
 	private ExpandableBookshelfAdapter adapter;
@@ -718,7 +713,7 @@ public class BookshelfFragment extends Fragment {
 			selectedBookView = expandableListView.getChildAt(bookIndex);
 			try {
 				bookElapsedTime = bookshelf.getBookElapsedTime();
-			}  catch(IndexOutOfBoundsException e ) {
+			} catch (IndexOutOfBoundsException e) {
 				bookElapsedTime = 0;
 			}
 			bookProgress = calculateProgress(bookElapsedTime,
@@ -812,7 +807,7 @@ public class BookshelfFragment extends Fragment {
 						Color.WHITE);
 				try {
 					time = bookshelf.getBookElapsedTime();
-				}  catch(IndexOutOfBoundsException e ) {
+				} catch (IndexOutOfBoundsException e) {
 					time = 0;
 				}
 				progress = calculateProgress(time, duration);
@@ -904,7 +899,7 @@ public class BookshelfFragment extends Fragment {
 			selectedBookView = convertView;
 			try {
 				bookElapsedTime = bookshelf.getBookElapsedTime();
-			}  catch(IndexOutOfBoundsException e ) {
+			} catch (IndexOutOfBoundsException e) {
 				bookElapsedTime = 0;
 			}
 			bookProgress = calculateProgress(bookElapsedTime,
