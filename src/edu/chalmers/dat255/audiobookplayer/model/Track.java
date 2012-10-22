@@ -139,51 +139,54 @@ public final class Track implements ITrackUpdates, Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode(){
-	    return new HashCodeBuilder()
-	        .append(duration)
-	        .append(elapsedTime)
-	        .append(path)
-	        .append(tags)
-	        .append(title)
-	        .toHashCode();
+	public int hashCode() {
+		return new HashCodeBuilder().append(duration).append(elapsedTime)
+				.append(path).append(tags).append(title).toHashCode();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj){
-	    if(obj instanceof Track){
-	        final Track other = (Track) obj;
-	        return new EqualsBuilder()
-	            .append(duration, other.duration)
-	            .append(elapsedTime, other.elapsedTime)
-	            .append(tags, other.tags)
-	            .append(title, other.title)
-	            .append(path, other.path)
-	            .isEquals();
-	    } else{
-	        return false;
-	    }
+	public boolean equals(Object obj) {
+		if (obj instanceof Track) {
+			final Track other = (Track) obj;
+			return new EqualsBuilder().append(duration, other.duration)
+					.append(elapsedTime, other.elapsedTime)
+					.append(tags, other.tags).append(title, other.title)
+					.append(path, other.path).isEquals();
+		} else {
+			return false;
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#addTag(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#addTag(int)
 	 */
 	public void addTag(int time) {
 		this.tags.add(new Tag(time));
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#removeTagAt(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#removeTagAt
+	 * (int)
 	 */
-	public void removeTagAt(int tagIndex)  {
+	public void removeTagAt(int tagIndex) {
 		if (!isLegalTagIndex(tagIndex)) {
 			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
 					+ TAG_INDEX_ILLEGAL);

@@ -36,7 +36,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 		this.fragments = fragments;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.support.v4.view.PagerAdapter#getCount()
 	 */
 	@Override
@@ -45,7 +47,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 		return this.fragments.size();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
 	 */
 	@Override

@@ -413,24 +413,16 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 		 * fragments.
 		 */
 		if (eventName.equals(Constants.Event.BOOK_LIST_CHANGED)) {
-			// Bookshelf
+			// update the bookshelf GUI
 			bookshelfFragment.bookshelfUpdated(bs);
-
-			// Player
-			// Do nothing
 		} else if (eventName.equals(Constants.Event.BOOK_SELECTED)) {
 			Book b = bs.getSelectedBook();
 
 			// reset the player controls to standard values
 			playerFragment.resetComponents();
 
-			// debug
-			if (bs.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED) {
-				Log.e(TAG, "Selected illegal book index!");
-			}
-
 			// update the player GUI components
-			updatePlayerGUI(bs.getSelectedBook());
+			updatePlayerGUI(b);
 
 			// make sure the player GUI knows it is playing
 			playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
@@ -438,11 +430,20 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// show the player UI
 			pager.setCurrentItem(PLAYER);
 
-			// TODO remove this when bookshelf crashes are resolved
-			playerController.start();
+			// debug
+			if (bs.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED) {
+				throw new IndexOutOfBoundsException("Selected illegal book index!");
+			}
+			
+			// start at the saved time
+			playerController.setStartPosition(b.getSelectedTrackElapsedTime());
 
-			// start the player at the elapsed time of the track
-			// playerController.startAt(b.getSelectedTrackElapsedTime());
+			// select the stored track to start playing in
+			bookshelfController.setSelectedTrack(bs.getSelectedBookIndex(),
+					bs.getSelectedTrackIndex());
+
+			// TODO: the player should only seek to the saved time if a book was
+			// selected (in the bookshelf UI).
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
 
@@ -470,7 +471,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			// Update book duration label
 			updateBookDurationLabel(b);
 		} else if (eventName.equals(Constants.Event.TRACK_INDEX_CHANGED)) {
-			Book b = bs.getSelectedBook();
+			pager.setCurrentItem(PLAYER);
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 				/*
 				 * Do not play audio.
@@ -484,16 +485,14 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 				/*
 				 * Play audio.
 				 */
-				// Bookshelf
-				// move the "selected track" indicator to the new index
 
-				// Player
 				// restart the player
 				playerController.start();
 
 				// set the status
 				playerFragment.setPlaybackStatus(PlaybackStatus.PLAYING);
 			}
+			Book b = bs.getSelectedBook();
 
 			// Player
 			// update track title label
@@ -531,7 +530,6 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 	 *            Book given with the data to be represented by the Player UI.
 	 */
 	private void updatePlayerGUI(Book b) {
-		Log.d(TAG, "Updating Player GUI");
 		if (b != null) {
 			// show the title of the book
 			updateBookTitleLabel(b);

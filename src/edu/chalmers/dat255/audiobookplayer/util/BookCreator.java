@@ -64,12 +64,38 @@ public final class BookCreator {
 	 * @param author
 	 *            The author of the book.
 	 */
-	public void createBook(List<String> paths, String title, String author) {
+	public boolean createBookToBookshelf(List<String> paths, String title,
+			String author) {
+		Book b = createBook(paths, title, author);
+
+		if (b != null) {
+			bsh.addBook(b);
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Helper class.
+	 * 
+	 * In future versions, this should be used instead of adding directly to the
+	 * bookshelf (see Issue #1 on the issue tracker).
+	 * 
+	 * @param paths
+	 *            A list paths to all the tracks that will be added.
+	 * @param title
+	 *            The title of the book.
+	 * @param author
+	 *            The author of the book.
+	 * @return A book created with given data.
+	 */
+	private Book createBook(List<String> paths, String title, String author) {
 		String tmpTitle = title;
 		String tmpAuthor = author;
 		// if no tracks, do not create book
 		if (paths.size() == 0) {
-			return;
+			return null;
 		}
 		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 		// assumes
@@ -78,7 +104,7 @@ public final class BookCreator {
 
 		} catch (IllegalArgumentException e) {
 			Log.d(TAG, " invalid path to book provided. Skipping operation.");
-			return;
+			return null;
 		}
 
 		// try to retrieve metadata ALBUM which is where the title of the book
@@ -104,7 +130,7 @@ public final class BookCreator {
 				continue;
 			}
 		}
-		bsh.addBook(new Book(trackList, tmpTitle, tmpAuthor));
+		return new Book(trackList, tmpTitle, tmpAuthor);
 	}
 
 }

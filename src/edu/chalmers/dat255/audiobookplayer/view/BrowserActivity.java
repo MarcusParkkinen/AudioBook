@@ -111,7 +111,6 @@ public class BrowserActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.d(TAG, "onDestroy()");
 	}
 
 	@Override
@@ -185,15 +184,19 @@ public class BrowserActivity extends Activity {
 					tracks.add(f.getAbsolutePath());
 				}
 			}
-			BookCreator.getInstance().createBook(tracks, name, null);
-			// create a toast to notify the user that a book has been
-			// added.
-			Toast.makeText(BrowserActivity.this, "Book added: " + name,
-					Toast.LENGTH_SHORT).show();
-			// empty checkedItems and fill the list with unchecked items
-			checkedItems = new TreeSet<File>();
-			// refill the ListView from currentDirectory
-			fill(currentDirectory);
+			// if we manage to create a book (the book is valid) then continue
+			// as normal
+			if (BookCreator.getInstance().createBookToBookshelf(tracks, name,
+					null)) {
+				// create a toast to notify the user that a book has been
+				// added.
+				Toast.makeText(BrowserActivity.this, "Book added: " + name,
+						Toast.LENGTH_SHORT).show();
+				// empty checkedItems and fill the list with unchecked items
+				checkedItems = new TreeSet<File>();
+				// refill the ListView from currentDirectory
+				fill(currentDirectory);
+			}
 		}
 	}
 
@@ -411,7 +414,7 @@ public class BrowserActivity extends Activity {
 			cb.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// checks all children if a folder, or the file otherwise
-					checkAllChildren(file, ((CheckBox)v).isChecked());
+					checkAllChildren(file, ((CheckBox) v).isChecked());
 				}
 			});
 

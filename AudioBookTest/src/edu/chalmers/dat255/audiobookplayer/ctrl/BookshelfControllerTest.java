@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.test.AndroidTestCase;
-import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.model.Book;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 import edu.chalmers.dat255.audiobookplayer.model.Track;
@@ -49,9 +48,6 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	// indices to test selecting.
 	private static final int LEGAL_BOOK_INDEX = 2;
 	private static final int LEGAL_TRACK_INDEX = 2;
-
-	private static final String OUT_OF_BOUNDS_FAILURE_MESSAGE = "Index was out of bounds,"
-			+ " but the operation was still completed.";
 
 	// since we will be testing with 3 books, 3 is an illegal index (0-2 are
 	// legal)
@@ -123,13 +119,12 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		assertTrue(bookshelfController.getSelectedBookIndex() == 0);
 		assertTrue(bookshelfController.getSelectedTrackIndex() == 0);
 
-		Log.d("FAILING TEST", "h");
 		// select a book and track at legal indices
 		bookshelfController.setSelectedTrack(LEGAL_BOOK_INDEX,
 				LEGAL_TRACK_INDEX);
 
 		// ensure that the indices are changed properly
-		assertTrue(indicesAreUnchangedLegal());
+		assertTrue(indicesAreUnchanged());
 
 		/*
 		 * ensure that nothing is changed if the indices are out of bounds for
@@ -137,38 +132,22 @@ public class BookshelfControllerTest extends AndroidTestCase {
 		 */
 
 		// setting to illegal book index, illegal track index
-		Log.d("FAILURE", "FAILING TEST----");
-		try {
-			int expected = bookshelfController.getSelectedBookIndex();
-			bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
-					ILLEGAL_TRACK_INDEX);
-			assertEquals(expected, bookshelfController.getSelectedBookIndex());
-		} catch (IndexOutOfBoundsException e) {
-			// ensure that nothing changed.
-			assertTrue(indicesAreUnchangedLegal());
-		}
+		bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
+				ILLEGAL_TRACK_INDEX);
+		// ensure that nothing changed.
+		assertTrue(indicesAreUnchanged());
 
 		// setting to illegal book index, legal track index
-		try {
-			int expected = bookshelfController.getSelectedBookIndex();
-			bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
-					LEGAL_TRACK_INDEX);
-			assertEquals(expected, bookshelfController.getSelectedBookIndex());
-		} catch (IndexOutOfBoundsException e) {
-			// ensure that nothing changed.
-			assertTrue(indicesAreUnchangedLegal());
-		}
+		bookshelfController.setSelectedTrack(ILLEGAL_BOOK_INDEX,
+				LEGAL_TRACK_INDEX);
+		// ensure that nothing changed.
+		assertTrue(indicesAreUnchanged());
 
 		// setting to legal book index, illegal track index
-		try {
-			int expected = bookshelfController.getSelectedBookIndex();
-			bookshelfController.setSelectedTrack(LEGAL_BOOK_INDEX,
-					ILLEGAL_TRACK_INDEX);
-			assertEquals(expected, bookshelfController.getSelectedBookIndex());
-		} catch (IndexOutOfBoundsException e) {
-			// ensure that nothing changed.
-			assertTrue(indicesAreUnchangedLegal());
-		}
+		bookshelfController.setSelectedTrack(LEGAL_BOOK_INDEX,
+				ILLEGAL_TRACK_INDEX);
+		// ensure that nothing changed.
+		assertTrue(indicesAreUnchanged());
 
 	}
 
@@ -176,7 +155,7 @@ public class BookshelfControllerTest extends AndroidTestCase {
 	 * @return True if the selected book and selected track indices are the
 	 *         legal ones specified in BookshelfControllerTest (i.e. changed).
 	 */
-	private boolean indicesAreUnchangedLegal() {
+	private boolean indicesAreUnchanged() {
 		return bookshelfController.getSelectedBookIndex() == LEGAL_BOOK_INDEX
 				&& bookshelfController.getSelectedTrackIndex() == LEGAL_TRACK_INDEX;
 	}

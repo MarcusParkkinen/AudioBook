@@ -48,7 +48,6 @@ public class JsonParserTest extends AndroidTestCase {
 		Book b = new Book(Arrays.asList(tracks), "BookTitle", "BookAuthor");
 
 		bs = new Bookshelf();
-		bs.addPropertyChangeListener(null);
 		bs.addBook(b);
 	}
 

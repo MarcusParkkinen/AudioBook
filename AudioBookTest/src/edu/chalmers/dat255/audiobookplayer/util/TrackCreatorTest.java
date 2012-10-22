@@ -20,32 +20,30 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * JUnit test for TrackCreator class.
  * 
- * NOTE: in order for the test to pass, a valid path to an audio track on the
- * device must be specified in VALID_PATH.
+ * @author Marcus Parkkinen, Aki Käkelä
+ * 
+ *         NOTE: in order for the test to pass, a valid path to an audio track
+ *         on the device must be specified in VALID_PATH.
  * 
  */
 public class TrackCreatorTest extends TestCase {
-	// MUST BE SPECIFIED IN ORDER FOR TEST TO PASS
+	/**
+	 * NOTE:
+	 * 
+	 * MUST BE VALID IN ORDER FOR TESTS TO PASS
+	 * 
+	 */
 	private static final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
+	/**
+	 * NOTE:
+	 * 
+	 * MUST BE VALID IN ORDER FOR TESTS TO PASS
+	 * 
+	 */
 	private static final String VALID_PATH = Environment
 			.getExternalStorageDirectory().getPath() + FILE_NAME;
-	private String invalidPath;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() {
-		try {
-			super.setUp();
-		} catch (Exception e) {
-			// catch exceptions from super.setUp() and fail
-			fail("setUp failed + " + e.getMessage());
-		}
-		invalidPath = "/invalidPath/myInvalidTrack.mp3";
-	}
+	private static final String INVALID_PATH = "/invalidPath/myInvalidTrack.mp3";
 
 	/**
 	 * Tests if creating tracks works as intended.
@@ -55,14 +53,23 @@ public class TrackCreatorTest extends TestCase {
 		// If trying to create a track with an invalid path, we should
 		// receive an exception
 		try {
-			TrackCreator.createTrack(invalidPath);
+			TrackCreator.createTrack(INVALID_PATH);
 			fail("managed to create a track object with an invalid path");
 		} catch (IllegalArgumentException e) {
 			// everything ok
 		}
 
 		// If we however specify a valid path, track creation should work
-		Track t = TrackCreator.createTrack(VALID_PATH);
-		assertNotNull(t);
+		Track t = null;
+		try {
+			t = TrackCreator.createTrack(VALID_PATH);
+			assertNotNull(t);
+		} catch (IllegalArgumentException e) {
+			/*
+			 * See the class description or FILE_NAME, VALID_PATH. These were
+			 * not set correctly if this exception is thrown.
+			 */
+			assertNull(t);
+		}
 	}
 }

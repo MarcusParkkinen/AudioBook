@@ -34,7 +34,6 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
  */
 public final class Book implements IBookUpdates, Serializable {
 	private static final String TAG = "Book.java";
-	private static final String TRACK_INDEX_ILLEGAL = " Track index is illegal";
 
 	private static final int NO_TRACK_SELECTED = Constants.Value.NO_TRACK_SELECTED;
 	private static final long serialVersionUID = 2;
@@ -130,23 +129,20 @@ public final class Book implements IBookUpdates, Serializable {
 	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#removeTrack
 	 * (int)
 	 */
-	public void removeTrack(int index) {
-		if (!isLegalTrackIndex(index)) {
-			throw new IndexOutOfBoundsException(TAG + " removeTrack"
-					+ TRACK_INDEX_ILLEGAL);
-		}
+	public void removeTrack(int trackIndex) {
+		checkTrackIndexLegal(trackIndex);
 
 		// remove the track and adjust the duration
-		duration -= tracks.remove(index).getDuration();
+		duration -= tracks.remove(trackIndex).getDuration();
 
 		// check whether this was the last track
 		if (tracks.size() == 0) {
 			setSelectedTrackIndex(NO_TRACK_SELECTED);
 		} else {
-			if (index < selectedTrackIndex) {
+			if (trackIndex < selectedTrackIndex) {
 				// adjust the index if we removed one earlier in the list
 				selectedTrackIndex--;
-			} else if (index == selectedTrackIndex) {
+			} else if (trackIndex == selectedTrackIndex) {
 				// if we removed the selected one then mark the first
 				selectedTrackIndex = 0;
 			}
@@ -183,10 +179,9 @@ public final class Book implements IBookUpdates, Serializable {
 	 * (int, int)
 	 */
 	public void swapTracks(int firstIndex, int secondIndex) {
-		if (!isLegalTrackIndex(firstIndex) || !isLegalTrackIndex(secondIndex)) {
-			throw new IndexOutOfBoundsException(TAG + " swapTracks"
-					+ TRACK_INDEX_ILLEGAL);
-		}
+		checkTrackIndexLegal(firstIndex);
+		checkTrackIndexLegal(secondIndex);
+
 		Collections.swap(tracks, firstIndex, secondIndex);
 	}
 
@@ -197,15 +192,12 @@ public final class Book implements IBookUpdates, Serializable {
 	 * edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#moveTrack
 	 * (int, int)
 	 */
-	public void moveTrack(int from, int to) {
-		if (!isLegalTrackIndex(from) || !isLegalTrackIndex(to)) {
-			throw new IndexOutOfBoundsException(TAG + " moveTrack"
-					+ TRACK_INDEX_ILLEGAL);
-		}
-		if (from != to) {
-			Track t = tracks.remove(from);
-			tracks.add(to, t);
-		}
+	public void moveTrack(int fromIndex, int toIndex) {
+		checkTrackIndexLegal(fromIndex);
+		checkTrackIndexLegal(toIndex);
+
+		Track t = tracks.remove(fromIndex);
+		tracks.add(toIndex, t);
 	}
 
 	/*
@@ -245,7 +237,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @see edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates#
 	 * updateBookDuration()
 	 */
-	public void updateBookDuration() {
+	public void updateSelectedBookDuration() {
 		this.duration = 0;
 		for (Track t : tracks) {
 			this.duration += t.getDuration();
@@ -276,7 +268,7 @@ public final class Book implements IBookUpdates, Serializable {
 
 	/**
 	 * @param author
-	 *            The author to set.
+	 *            The author to set to.
 	 */
 	private void setAuthor(String author) {
 		this.author = author;
@@ -291,10 +283,8 @@ public final class Book implements IBookUpdates, Serializable {
 	 * setSelectedTrackElapsedTime(int)
 	 */
 	public void setSelectedTrackElapsedTime(int newTime) {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(TAG
-					+ " setSelectedTrackElapsedTime" + TRACK_INDEX_ILLEGAL);
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
+
 		this.tracks.get(selectedTrackIndex)
 				.setSelectedTrackElapsedTime(newTime);
 	}
@@ -306,10 +296,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * edu.chalmers.dat255.audiobookplayer.interfaces.ITrackUpdates#addTag(int)
 	 */
 	public void addTag(int time) {
-		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(TAG + " addTag"
-					+ TRACK_INDEX_ILLEGAL);
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
 
 		this.tracks.get(selectedTrackIndex).addTag(time);
 	}
@@ -322,10 +309,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * (int)
 	 */
 	public void removeTagAt(int tagIndex) {
-		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(TAG + " removeTagAt"
-					+ TRACK_INDEX_ILLEGAL);
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
 
 		this.tracks.get(selectedTrackIndex).removeTagAt(tagIndex);
 	}
@@ -368,11 +352,8 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @return
 	 */
 	public int getSelectedTrackDuration() {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(
-					"getSelectedTrackDuration (illegal track index "
-							+ selectedTrackIndex + ")");
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
+
 		return tracks.get(selectedTrackIndex).getDuration();
 	}
 
@@ -382,11 +363,8 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @return elapsed time
 	 */
 	public int getSelectedTrackElapsedTime() {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(
-					"getSelectedTrackElapsedTime (illegal track index "
-							+ selectedTrackIndex + ")");
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
+
 		return this.tracks.get(selectedTrackIndex).getElapsedTime();
 	}
 
@@ -396,12 +374,15 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @return
 	 */
 	public String getSelectedTrackPath() {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(
-					"getSelectedTrackPath (illegal track index "
-							+ selectedTrackIndex + ")");
-		}
-		return tracks.get(selectedTrackIndex).getTrackPath();
+		// TODO: checkTrackLegal...
+
+		return getTrackPathAt(selectedTrackIndex);
+	}
+
+	public String getTrackPathAt(int trackIndex) {
+		// TODO: check legal
+
+		return tracks.get(trackIndex).getTrackPath();
 	}
 
 	/**
@@ -462,17 +443,14 @@ public final class Book implements IBookUpdates, Serializable {
 	/**
 	 * Returns the duration (in ms) of the track located at the specified index.
 	 * 
-	 * @param index
+	 * @param trackIndex
 	 *            Index of the track
 	 * @return int duration (ms)
 	 */
-	public int getTrackDurationAt(int index) {
-		if (!isLegalTrackIndex(index)) {
-			throw new IndexOutOfBoundsException(
-					"getTrackDurationAt (illegal track index "
-							+ selectedTrackIndex + ")");
-		}
-		return tracks.get(index).getDuration();
+	public int getTrackDurationAt(int trackIndex) {
+		checkTrackIndexLegal(trackIndex);
+
+		return tracks.get(trackIndex).getDuration();
 	}
 
 	/**
@@ -481,11 +459,8 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @return String title
 	 */
 	public String getTrackTitle() {
-		if (!isLegalTrackIndex(selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(
-					"getTrackTitle (illegal track index " + selectedTrackIndex
-							+ ")");
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
+
 		return this.tracks.get(selectedTrackIndex).getTrackTitle();
 	}
 
@@ -524,10 +499,7 @@ public final class Book implements IBookUpdates, Serializable {
 	 * @return Array of all tag times.
 	 */
 	public int[] getTagTimes() {
-		if (!isLegalTrackIndex(this.selectedTrackIndex)) {
-			throw new IndexOutOfBoundsException(TAG + " getTagTimes"
-					+ TRACK_INDEX_ILLEGAL);
-		}
+		checkTrackIndexLegal(selectedTrackIndex);
 
 		return this.tracks.get(selectedTrackIndex).getTagTimes();
 	}
@@ -562,6 +534,13 @@ public final class Book implements IBookUpdates, Serializable {
 			return tracks.get(trackIndex).getTrackTitle();
 		}
 		return null;
+	}
+
+	private void checkTrackIndexLegal(int trackIndex) {
+		if (!isLegalTrackIndex(trackIndex)) {
+			throw new IndexOutOfBoundsException("Track index is illegal: "
+					+ trackIndex);
+		}
 	}
 
 }

@@ -13,7 +13,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.util;
 
-import android.util.Log;
 import junit.framework.TestCase;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
@@ -23,7 +22,6 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * 
  */
 public class TextFormatterTest extends TestCase {
-	private static final String TAG = "TextFormatterText";
 
 	// Conversions
 	private static final int MSECS_IN_SECOND = 1000;
@@ -101,21 +99,18 @@ public class TextFormatterTest extends TestCase {
 		// test double-digit hour
 		expected = TWO_DIGITS + ":00:00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * HOURS);
-		Log.d(TAG, "expected: " + expected + ", received: " + result);
 		assertTrue("double-digit hour" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 		// test single-digit day
 		expected = ONE_DIGIT + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * DAYS);
-		Log.d(TAG, "expected: " + expected + ", received: " + result);
 		assertTrue("single-digit day" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 
 		// test double-digit day
 		expected = TWO_DIGITS + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * DAYS);
-		Log.d(TAG, "expected: " + expected + ", received: " + result);
 		assertTrue("double-digit day" + "[" + expected + NOT_EQUAL + result
 				+ "]", expected.equals(result));
 

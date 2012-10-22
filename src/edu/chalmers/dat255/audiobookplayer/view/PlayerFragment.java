@@ -41,7 +41,7 @@ import edu.chalmers.dat255.audiobookplayer.util.TextFormatter;
  * 
  */
 public class PlayerFragment extends Fragment {
-	private static final String TAG = "PlayerFragment.class";
+	private static final String TAG = "PlayerFragment";
 	private SeekBar bookBar;
 	private SeekBar trackBar;
 	private TextView bookTitle;
@@ -354,7 +354,6 @@ public class PlayerFragment extends Fragment {
 	 * display their respective default texts.
 	 */
 	public void resetComponents() {
-		Log.d(TAG, "No track selected -- resetting components.");
 		// reset progress of seek bars
 		this.bookBar.setProgress(0);
 		this.trackBar.setProgress(0);

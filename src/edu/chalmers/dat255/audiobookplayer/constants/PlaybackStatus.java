@@ -20,10 +20,10 @@ package edu.chalmers.dat255.audiobookplayer.constants;
  * 
  */
 public final class PlaybackStatus {
-	
+
 	private PlaybackStatus() {
 	} // to defeat instantiation
-	
+
 	public static final int PLAYING = 0;
 	public static final int PAUSED = 1;
 	public static final int STOPPED = 2;

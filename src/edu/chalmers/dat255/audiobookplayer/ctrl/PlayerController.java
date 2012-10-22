@@ -18,7 +18,6 @@ import java.io.IOException;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
@@ -37,7 +36,7 @@ import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
  * @version 0.6
  */
 public class PlayerController implements IPlayerEvents, OnPreparedListener,
-		OnCompletionListener, OnErrorListener {
+		OnCompletionListener {
 	private static final String TAG = "PlayerController";
 
 	/**
@@ -64,7 +63,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 * When audio starts, it will seek to this value. Needed both for safety and
 	 * to prevent errors with MediaPlayer.
 	 */
-	private transient int seekRemainder = 0;
+	private transient int seekPosition = 0;
 
 	private static final int UPDATE_FREQUENCY = Constants.Value.UPDATE_FREQUENCY;
 
@@ -117,39 +116,18 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	}
 
 	/**
-	 * Starts the audio player from the given time in milliseconds. Starts
-	 * updating the model.
-	 * <p>
-	 * Can be called in any state (stopped, paused, resumed, uninitialized).
-	 * <p>
-	 * To start from the beginning or resume, see
-	 * {@link PlayerController#start()}.
-	 * 
-	 * @precondition The Bookshelf must have been initialized and the path at
-	 *               the selected track index can not be null. Otherwise nothing
-	 *               is done.
-	 * 
-	 * @param ms
-	 *            Time in milliseconds to seek to before starting.
-	 */
-	public void startAt(int ms) {
-		seekRemainder = ms;
-		setup();
-	}
-
-	/**
 	 * Can only be called if the path is valid.
 	 * 
 	 * @return True if setup was run without problems. False if nothing was done
 	 *         (no selected track or path is null).
 	 */
 	private boolean setup() {
-		Log.d(TAG, "PlayerController setting up.");
 		isStarted = false;
+		seekPosition = 0;
 
 		// do nothing if no track is selected
 		if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
-			Log.d(TAG, "Stopping since track index is not selected.");
+			Log.i(TAG, "Stopping since track index is not selected.");
 			stop();
 
 			// no setup was done since no track was selected
@@ -176,18 +154,13 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 			 * Reset the media player and then prepare it, providing a file
 			 * path.
 			 */
-			Log.d(TAG, "Resetting mp.---");
 			mp.reset();
-			Log.d(TAG, "---Resetting mp.");
 
 			// start listening for when MediaPlayer is prepared
 			mp.setOnPreparedListener(this);
 
 			// listen to track completion
 			mp.setOnCompletionListener(this);
-
-			// listen to errors
-			mp.setOnErrorListener(this);
 
 			// set the stream type before preparing
 			mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -206,8 +179,9 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 				Log.e(TAG, "IO Exception");
 			}
 
+			isStarted = true;
+
 			// mark that the setup went without problems
-			Log.d(TAG, "setup ok.");
 			return true;
 		}
 
@@ -229,16 +203,13 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 * Reverts what setup does.
 	 */
 	private void tearDown() {
-		Log.d(TAG, "Resetting player values.");
+		seekPosition = 0;
 		isStarted = false;
 		stopTimer();
-		mp.stop();
-		mp.reset();
 
-		// ensure that nothing went wrong
-		if (isStarted) {
-			throw new IllegalStateException(
-					"Player is still started after stopping.");
+		if (isPlaying()) {
+			mp.stop();
+			mp.reset();
 		}
 	}
 
@@ -278,7 +249,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#resume()
 	 */
 	public void resume() {
-		if (isStarted) {
+		if (isStarted && !mp.isPlaying()) {
 			startTimer();
 			mp.start();
 		}
@@ -416,7 +387,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 		} else if (isAllowedBookIndex()) {
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 				Log.d(TAG, "No track selected when seeking with track bar. "
-						+ "Setting the first track as selected.");
+						+ "Selecting track index 0.");
 				// set the selected track index to the first one
 				bs.setSelectedTrackIndex(0);
 			} else {
@@ -444,14 +415,15 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 			int bookDuration = bs.getSelectedBookDuration();
 
 			// calculate the seek time (ms)
-			seekRemainder = (int) (bookDuration * percentage);
+			seekPosition = (int) (bookDuration * percentage);
 
 			// go through the tracks and calculate the remainder and track index
 			int track = 0;
 			int trackDuration = 0;
-			while (seekRemainder > (trackDuration = bs
-					.getTrackDurationAt(track))) {
-				seekRemainder -= trackDuration;
+			int selectedBook = bs.getSelectedBookIndex();
+			while (seekPosition > (trackDuration = bs.getTrackDurationAt(
+					selectedBook, track))) {
+				seekPosition -= trackDuration;
 				track++;
 			}
 
@@ -509,15 +481,11 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 				nextTrack();
 			} else {
 				// reset the current track
-				Log.d(TAG, "seeking --");
 				mp.seekTo(0);
-				Log.d(TAG, "-- seeking");
 			}
 		} else {
 			// seek to the given, valid time
-			Log.d(TAG, "seeking to " + time + " --");
 			mp.seekTo(time);
-			Log.d(TAG, "-- seeking to " + time);
 		}
 	}
 
@@ -586,14 +554,12 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 */
 	public void onPrepared(MediaPlayer mp) {
 		// seek to starting position
-		if (seekRemainder != 0) {
-			seekTo(seekRemainder);
+		if (seekPosition != 0) {
+			seekTo(seekPosition);
 		}
 
 		// start the media player
 		mp.start();
-
-		isStarted = true;
 
 		// start a new timer
 		startTimer();
@@ -609,18 +575,6 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	public void onCompletion(MediaPlayer mp) {
 		Log.i(TAG, "onComplete: Track finished. Starting next track.");
 		nextTrack();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.media.MediaPlayer.OnErrorListener#onError(android.media.MediaPlayer
-	 * , int, int)
-	 */
-	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
-		Log.e(TAG, "Error: " + arg1 + ", " + arg2 + ", at " + arg0.toString());
-		return false;
 	}
 
 	/*
@@ -654,6 +608,19 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 */
 	public Thread getTrackTimeUpdateThread() {
 		return trackTimeUpdateThread;
+	}
+
+	/**
+	 * Set to 0 to always start playing from the beginning.
+	 * 
+	 * Set to other values (0 to the duration of the track) to seek when
+	 * starting.
+	 * 
+	 * @param pos
+	 *            Seek position in milliseconds to start at.
+	 */
+	public void setStartPosition(int pos) {
+		this.seekPosition = pos;
 	}
 
 	/*

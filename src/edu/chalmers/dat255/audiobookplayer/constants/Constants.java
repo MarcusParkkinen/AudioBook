@@ -105,7 +105,7 @@ public final class Constants {
 		 * A higher value means smaller visual jumps when the bars are updated,
 		 * thus making it smoother.
 		 */
-		public static final int NUMBER_OF_SEEK_BAR_ZONES = 500; // default 100
+		public static final int NUMBER_OF_SEEK_BAR_ZONES = 10000; // default 100
 
 		/**
 		 * The index that the system should interpret as "none selected"

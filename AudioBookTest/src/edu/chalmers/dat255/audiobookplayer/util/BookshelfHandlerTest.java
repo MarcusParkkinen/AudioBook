@@ -77,7 +77,6 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 	 */
 	public void testSaveAndLoadBookshelf() {
 		// Make some changes to the bookshelf ..
-		bs.addPropertyChangeListener(null);
 		bs.addBook(newBook);
 
 		// .. before saving it again
