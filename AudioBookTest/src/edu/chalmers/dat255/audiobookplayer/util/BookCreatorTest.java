@@ -18,37 +18,47 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import android.os.Environment;
+import android.util.Log;
 import edu.chalmers.dat255.audiobookplayer.model.Bookshelf;
 
 /**
  * JUnit test for BookCreator class.
  * 
- * NOTE: in order for the test to pass, a valid path to an audio track on the
- * device must be specified in VALID_PATH.
+ * @author Marcus Parkkinen, Aki Käkelä
+ * 
+ *         NOTE: in order for the test to pass, a valid path to an audio track
+ *         on the device must be specified in VALID_PATH.
  * 
  */
 public class BookCreatorTest extends TestCase {
-	// MUST BE SPECIFIED IN ORDER FOR TESTS TO PASS
+	/**
+	 * NOTE:
+	 * 
+	 * MUST BE VALID IN ORDER FOR TESTS TO PASS
+	 * 
+	 */
 	private static final String FILE_NAME = "/Music/01-nocturne-ube.mp3";
+	/**
+	 * NOTE:
+	 * 
+	 * MUST BE VALID IN ORDER FOR TESTS TO PASS
+	 * 
+	 */
 	private static final String VALID_PATH = Environment
 			.getExternalStorageDirectory().getPath() + FILE_NAME;
+
 	private static final int NUMBER_OF_TRACKS = 125;
-	private BookCreator bc;
-	private Bookshelf bs;
+	private final BookCreator bc = BookCreator.getInstance();
+	private final Bookshelf bs = new Bookshelf();
 	private List<String> paths;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		// Instantiate a BookCreator and a bookshelf for testing
-		bc = BookCreator.getInstance();
-		bs = new Bookshelf();
-
-		// We do not wish to update any view components during testing
-		bs.addPropertyChangeListener(null);
 
 		// Set the bookcreator to use the dummy bookshelf
 		bc.setBookshelf(bs);
@@ -72,14 +82,18 @@ public class BookCreatorTest extends TestCase {
 	 * Tests creating a book.
 	 */
 	public void testCreateBook() {
+		Log.d("FAILURE", "##### testCreateBook #####");
 		// Try creating a book with a valid path
-		bc.createBook(paths, "Testbook", "Tester");
+		if (bc.createBookToBookshelf(paths, "Testbook", "Tester")) {
+			// Assert that all tracks that were provided were
+			// added to the book
+			assertEquals(paths.size(), bs.getBookAt(0).getTrackPaths().size());
 
-		// Assert that all tracks that were provided were
-		// added to the book
-		assertEquals(paths.size(), bs.getBookAt(0).getTrackPaths().size());
+			Log.d("FAILURE", "----------");
 
-		// Also assert that the paths are correct
-		assertEquals(paths, bs.getBookAt(0).getTrackPaths());
+			// Also assert that the paths are correct
+			assertEquals(paths, bs.getBookAt(0).getTrackPaths());
+		}
+
 	}
 }

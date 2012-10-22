@@ -670,7 +670,7 @@ public class BookshelfFragment extends Fragment implements IBookshelfGUIEvents {
 			setTextViewText(cView, R.id.bookshelfTrackTitle,
 					bookshelf.getTrackTitleAt(bookIndex, trackIndex));
 			// get the position of the track from the book
-			int duration = bookshelf.getSelectedTrackDurationAt(bookIndex, trackIndex);
+			int duration = bookshelf.getTrackDurationAt(bookIndex, trackIndex);
 			// convert and set the duration of the track
 			setTextViewText(cView, R.id.bookshelfTrackTime,
 					TextFormatter.formatTimeFromMillis(duration));

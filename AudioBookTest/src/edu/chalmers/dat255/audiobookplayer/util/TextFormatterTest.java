@@ -13,7 +13,6 @@
 
 package edu.chalmers.dat255.audiobookplayer.util;
 
-import android.util.Log;
 import junit.framework.TestCase;
 import edu.chalmers.dat255.audiobookplayer.constants.Constants;
 
@@ -23,7 +22,6 @@ import edu.chalmers.dat255.audiobookplayer.constants.Constants;
  * 
  */
 public class TextFormatterTest extends TestCase {
-	private static final String TAG = "TextFormatterText";
 
 	// Conversions
 	private static final int MSECS_IN_SECOND = 1000;
@@ -47,7 +45,7 @@ public class TextFormatterTest extends TestCase {
 			* MINS_IN_HOUR;
 	private static final int DAYS = MSECS_IN_SECOND * SECS_IN_MINUTE
 			* MINS_IN_HOUR * HOURS_IN_DAY;
-	
+
 	private static final String NOT_EQUAL = "!=";
 
 	/**
@@ -95,31 +93,26 @@ public class TextFormatterTest extends TestCase {
 		// test single-digit hour
 		expected = ONE_DIGIT + ":00:00";
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * HOURS);
-		assertTrue(
-				"single-digit hour" + "[" + expected + NOT_EQUAL + result + "]",
-				expected.equals(result));
+		assertTrue("single-digit hour" + "[" + expected + NOT_EQUAL + result
+				+ "]", expected.equals(result));
 
 		// test double-digit hour
 		expected = TWO_DIGITS + ":00:00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * HOURS);
-		Log.d(TAG, "expected: " + expected + ", received: " + result);
-		assertTrue(
-				"double-digit hour" + "[" + expected + NOT_EQUAL + result + "]",
-				expected.equals(result));
+		assertTrue("double-digit hour" + "[" + expected + NOT_EQUAL + result
+				+ "]", expected.equals(result));
 
 		// test single-digit day
 		expected = ONE_DIGIT + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(ONE_DIGIT * DAYS);
-		Log.d(TAG, "expected: " + expected + ", received: " + result);
-		assertTrue("single-digit day" + "[" + expected + NOT_EQUAL + result + "]",
-				expected.equals(result));
+		assertTrue("single-digit day" + "[" + expected + NOT_EQUAL + result
+				+ "]", expected.equals(result));
 
 		// test double-digit day
 		expected = TWO_DIGITS + ":00:00:00";
 		result = TextFormatter.formatTimeFromMillis(TWO_DIGITS * DAYS);
-		Log.d(TAG, "expected: " + expected + ", received: " + result);
-		assertTrue("double-digit day" + "[" + expected + NOT_EQUAL + result + "]",
-				expected.equals(result));
+		assertTrue("double-digit day" + "[" + expected + NOT_EQUAL + result
+				+ "]", expected.equals(result));
 
 		/*
 		 * Combinations
@@ -182,8 +175,8 @@ public class TextFormatterTest extends TestCase {
 		// test position = limit
 		expected = NO_OF_TRACKS + "/" + NO_OF_TRACKS;
 		result = TextFormatter.formatCounter(NO_OF_TRACKS - 1, NO_OF_TRACKS);
-		assertTrue("position = limit" + "[" + expected + NOT_EQUAL + result + "]",
-				expected.equals(result));
+		assertTrue("position = limit" + "[" + expected + NOT_EQUAL + result
+				+ "]", expected.equals(result));
 
 		/*
 		 * The following three should return special case messages.
@@ -205,8 +198,8 @@ public class TextFormatterTest extends TestCase {
 		// test position > limit
 		expected = Constants.Message.TRACK_INDEX_ERROR;
 		result = TextFormatter.formatCounter(NO_OF_TRACKS + 1, NO_OF_TRACKS);
-		assertTrue("position > limit" + "[" + expected + NOT_EQUAL + result + "]",
-				expected.equals(result));
+		assertTrue("position > limit" + "[" + expected + NOT_EQUAL + result
+				+ "]", expected.equals(result));
 
 	}
 }

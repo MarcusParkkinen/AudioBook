@@ -432,7 +432,7 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 
 			// show the player UI
 			pager.setCurrentItem(PLAYER);
-			
+
 			// debug
 			if (bs.getSelectedBookIndex() == Constants.Value.NO_BOOK_SELECTED) {
 				Log.e(TAG, "BOOK_SELECTED " + "Selected illegal book index!");
@@ -442,8 +442,9 @@ public class MainActivity extends FragmentActivity implements IPlayerEvents,
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 				Log.e(TAG, "BOOK_SELECTED " + "Selected illegal track index!");
 			}
-			
-			bookshelfController.setSelectedTrack(bs.getSelectedBookIndex(), bs.getSelectedTrackIndex());
+
+			bookshelfController.setSelectedTrack(bs.getSelectedBookIndex(),
+					bs.getSelectedTrackIndex());
 		} else if (eventName.equals(Constants.Event.ELAPSED_TIME_CHANGED)) {
 			Book b = bs.getSelectedBook();
 

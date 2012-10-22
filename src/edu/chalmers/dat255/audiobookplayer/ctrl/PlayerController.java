@@ -144,12 +144,11 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 *         (no selected track or path is null).
 	 */
 	private boolean setup() {
-		Log.d(TAG, "PlayerController setting up.");
 		isStarted = false;
 
 		// do nothing if no track is selected
 		if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
-			Log.d(TAG, "Stopping since track index is not selected.");
+			Log.i(TAG, "Stopping since track index is not selected.");
 			stop();
 
 			// no setup was done since no track was selected
@@ -176,9 +175,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 			 * Reset the media player and then prepare it, providing a file
 			 * path.
 			 */
-			Log.d(TAG, "Resetting mp.---");
 			mp.reset();
-			Log.d(TAG, "---Resetting mp.");
 
 			// start listening for when MediaPlayer is prepared
 			mp.setOnPreparedListener(this);
@@ -206,6 +203,8 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 				Log.e(TAG, "IO Exception");
 			}
 
+			isStarted = true;
+
 			// mark that the setup went without problems
 			Log.d(TAG, "setup ok.");
 			return true;
@@ -229,16 +228,12 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 * Reverts what setup does.
 	 */
 	private void tearDown() {
-		Log.d(TAG, "Resetting player values.");
 		isStarted = false;
 		stopTimer();
-		mp.stop();
-		mp.reset();
 
-		// ensure that nothing went wrong
-		if (isStarted) {
-			throw new IllegalStateException(
-					"Player is still started after stopping.");
+		if (isPlaying()) {
+			mp.stop();
+			mp.reset();
 		}
 	}
 
@@ -278,7 +273,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 	 * edu.chalmers.dat255.audiobookplayer.interfaces.IPlayerEvents#resume()
 	 */
 	public void resume() {
-		if (isStarted) {
+		if (isStarted && !mp.isPlaying()) {
 			startTimer();
 			mp.start();
 		}
@@ -416,7 +411,7 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 		} else if (isAllowedBookIndex()) {
 			if (bs.getSelectedTrackIndex() == Constants.Value.NO_TRACK_SELECTED) {
 				Log.d(TAG, "No track selected when seeking with track bar. "
-						+ "Setting the first track as selected.");
+						+ "Selecting track index 0.");
 				// set the selected track index to the first one
 				bs.setSelectedTrackIndex(0);
 			} else {
@@ -510,15 +505,11 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 				nextTrack();
 			} else {
 				// reset the current track
-				Log.d(TAG, "seeking --");
 				mp.seekTo(0);
-				Log.d(TAG, "-- seeking");
 			}
 		} else {
 			// seek to the given, valid time
-			Log.d(TAG, "seeking to " + time + " --");
 			mp.seekTo(time);
-			Log.d(TAG, "-- seeking to " + time);
 		}
 	}
 
@@ -593,8 +584,6 @@ public class PlayerController implements IPlayerEvents, OnPreparedListener,
 
 		// start the media player
 		mp.start();
-
-		isStarted = true;
 
 		// start a new timer
 		startTimer();

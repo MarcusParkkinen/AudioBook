@@ -33,7 +33,9 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 	private Bookshelf bs;
 	private Book newBook;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.test.AndroidTestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
@@ -69,7 +71,6 @@ public class BookshelfHandlerTest extends AndroidTestCase {
 	 */
 	public void testSaveAndLoadBookshelf() {
 		// Make some changes to the bookshelf ..
-		bs.addPropertyChangeListener(null);
 		bs.addBook(newBook);
 
 		// .. before saving it again

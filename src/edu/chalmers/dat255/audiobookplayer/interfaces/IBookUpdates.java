@@ -67,14 +67,16 @@ public interface IBookUpdates extends ITrackUpdates {
 	 * <p>
 	 * Must be set to integers greater than or equal to -1.
 	 * 
-	 * @param index Index to select.
+	 * @param index
+	 *            Index to select.
 	 */
 	void setSelectedTrackIndex(int index);
 
 	/**
 	 * Sets the title of the book.
 	 * 
-	 * @param newTitle The new title to set.
+	 * @param newTitle
+	 *            The new title to set.
 	 */
 	void setSelectedBookTitle(String newTitle);
 

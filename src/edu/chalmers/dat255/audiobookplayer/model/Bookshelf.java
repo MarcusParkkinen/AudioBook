@@ -16,7 +16,6 @@ package edu.chalmers.dat255.audiobookplayer.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,10 +35,9 @@ import edu.chalmers.dat255.audiobookplayer.interfaces.IBookUpdates;
  */
 public class Bookshelf implements IBookUpdates, Serializable {
 	private static final String TAG = "Bookshelf";
-	private static final String BOOK_INDEX_ILLEGAL = " Book index is illegal";
 
 	private static final int NO_BOOK_SELECTED = Constants.Value.NO_BOOK_SELECTED;
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1L;
 
 	private List<Book> books;
 	private int selectedBookIndex;
@@ -149,14 +147,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * Move a book from a given index to a given index. Indices inbetween will
 	 * be adjusted.
 	 * 
-	 * @param from
-	 * @param to
+	 * @param fromIndex
+	 * @param toIndex
 	 */
-	public void moveBook(int from, int to) {
-		checkBookIndexLegal(from);
-		checkBookIndexLegal(to);
+	public void moveBook(int fromIndex, int toIndex) {
+		checkBookIndexLegal(fromIndex);
+		checkBookIndexLegal(toIndex);
 
-		Collections.rotate(books.subList(from, to + 1), -1);
+		Book b = books.remove(fromIndex);
+		books.add(toIndex, b);
 
 		if (hasListeners()) {
 			pcs.firePropertyChange(Constants.Event.BOOK_LIST_CHANGED, null,
@@ -760,7 +759,6 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	 * @return Track title of given track
 	 */
 	public String getTrackTitleAt(int bookIndex, int trackIndex) {
-		checkBookIndexLegal(bookIndex);
 		checkTrackIndexLegalAt(bookIndex, trackIndex);
 
 		return this.books.get(bookIndex).getTrackTitleAt(trackIndex);
@@ -871,18 +869,22 @@ public class Bookshelf implements IBookUpdates, Serializable {
 
 	/**
 	 * Convenience method. Checks if the index is valid for a book.
+	 * <p>
+	 * USED FOR DEBUGGING.
 	 * 
 	 * @param index
 	 */
 	private void checkBookIndexLegal(int index) {
 		if (!isLegalBookIndex(index)) {
-			throw new IndexOutOfBoundsException("Book index not legal: "
+			throw new IndexOutOfBoundsException("Book index is illegal: "
 					+ index);
 		}
 	}
 
 	/**
 	 * Convenience method. Checks if the index is valid for a track in a book.
+	 * <p>
+	 * USED FOR DEBUGGING.
 	 * 
 	 * @param bookIndex
 	 *            Book to check in.
@@ -892,8 +894,8 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	private void checkTrackIndexLegalAt(int bookIndex, int trackIndex) {
 		if (!isLegalTrackIndexAt(bookIndex, trackIndex)) {
 			throw new IndexOutOfBoundsException(
-					"Track or book index not legal (book, track): " + bookIndex
-							+ ", " + trackIndex);
+					"Track or book index is illegal (book, track): "
+							+ bookIndex + ", " + trackIndex);
 		}
 	}
 

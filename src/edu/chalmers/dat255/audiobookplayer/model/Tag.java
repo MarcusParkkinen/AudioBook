@@ -49,29 +49,29 @@ public class Tag implements Serializable {
 		return time;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode(){
-	    return new HashCodeBuilder()
-	        .append(time)
-	        .toHashCode();
+	public int hashCode() {
+		return new HashCodeBuilder().append(time).toHashCode();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(final Object obj){
-	    if(obj instanceof Tag){
-	        final Tag other = (Tag) obj;
-	        return new EqualsBuilder()
-	            .append(time, other.time)
-	            .isEquals();
-	    } else{
-	        return false;
-	    }
+	public boolean equals(final Object obj) {
+		if (obj instanceof Tag) {
+			final Tag other = (Tag) obj;
+			return new EqualsBuilder().append(time, other.time).isEquals();
+		} else {
+			return false;
+		}
 	}
 
 }

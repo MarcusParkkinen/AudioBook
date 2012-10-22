@@ -30,7 +30,9 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 public class JsonParserTest extends AndroidTestCase {
 	private Bookshelf bs;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.test.AndroidTestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
@@ -39,7 +41,6 @@ public class JsonParserTest extends AndroidTestCase {
 		Book b = new Book(Arrays.asList(tracks), "BookTitle", "BookAuthor");
 
 		bs = new Bookshelf();
-		bs.addPropertyChangeListener(null);
 		bs.addBook(b);
 
 		super.setUp();
