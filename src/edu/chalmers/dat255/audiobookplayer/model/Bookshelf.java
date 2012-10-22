@@ -177,16 +177,15 @@ public class Bookshelf implements IBookUpdates, Serializable {
 	public void setSelectedTrackIndex(int bookIndex, int trackIndex) {
 		// make no changes if book index is illegal or track index is invalid
 
-		if (isLegalBookIndex(bookIndex)) {
+		if (isLegalBookIndex(bookIndex)
+				&& isValidTrackIndex(bookIndex, trackIndex)) {
 			// the book index must be legal
-			if (isValidTrackIndex(bookIndex, trackIndex)) {
-				// the track index can be unselected or legal only
+			// the track index can be unselected or legal only
 
-				// the track index is either valid or deselects
-				// we now know that both indices are valid, so make the changes.
-				setSelectedBookIndex(bookIndex);
-				setSelectedTrackIndex(trackIndex);
-			}
+			// the track index is either valid or deselects
+			// we now know that both indices are valid, so make the changes.
+			setSelectedBookIndex(bookIndex);
+			setSelectedTrackIndex(trackIndex);
 		}
 
 	}
