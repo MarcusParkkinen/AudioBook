@@ -24,8 +24,25 @@ import edu.chalmers.dat255.audiobookplayer.model.Track;
 /**
  * Test case for PlayerController (MediaPlayer wrapper class).
  * 
+ * NOTE:
+ * 
+ * Waiting for the thread of the test object to react is not implemented
+ * currently, meaning that tests are not complete for the following test
+ * methods:
+ * 
+ * testStart, testResume, testIsPlaying.
+ * 
+ * These test methods rely on MediaPlayer.isPlaying() method.
+ * 
+ * testStartTimer().
+ * 
+ * This test method relies on checking that the thread is alive.
+ * 
+ * These methods are currently not implemented in a way that makes test runs
+ * consistent, and the assertions have therefore been removed.
+ * 
  * @author Aki Käkelä
- * @version 0.2
+ * @version 0.3
  * 
  */
 public class PlayerControllerTest extends TestCase {
@@ -46,6 +63,8 @@ public class PlayerControllerTest extends TestCase {
 	private static final int TRACK_INDEX = 1;
 
 	/**
+	 * Tests the constructor.
+	 * 
 	 * @param name
 	 */
 	public PlayerControllerTest(String name) {
@@ -142,14 +161,8 @@ public class PlayerControllerTest extends TestCase {
 		assertTrue(pc.isStarted());
 
 		// check that we have started the thread (by calling start)
+		// See the note in the class description.
 
-		/*
-		 * Wait for the thread to react (MediaPlayer).
-		 * 
-		 * Should test if the thread is alive, but it is not yet started.
-		 * 
-		 * assertTrue(pc.getTrackTimeUpdateThread().isAlive());
-		 */
 	}
 
 	/**
@@ -176,15 +189,6 @@ public class PlayerControllerTest extends TestCase {
 		// it should be started
 		assertTrue(pc.isStarted());
 
-		// it should be playing
-
-		/*
-		 * Wait for the thread to react (MediaPlayer).
-		 * 
-		 * Should test pc.isPlaying(), but the thread is not yet active.
-		 * 
-		 * assertTrue(pc.isPlaying());
-		 */
 	}
 
 	/**
@@ -223,14 +227,6 @@ public class PlayerControllerTest extends TestCase {
 
 		// it should still be started
 		assertTrue(pc.isStarted());
-
-		/*
-		 * Wait for the thread to react (MediaPlayer).
-		 * 
-		 * Should test pc.isPlaying(), but the thread is not yet active.
-		 * 
-		 * assertTrue(pc.isPlaying());
-		 */
 
 	}
 
@@ -285,14 +281,6 @@ public class PlayerControllerTest extends TestCase {
 
 		// start pc and check again
 		pc.start();
-
-		/*
-		 * Wait for the thread to react (MediaPlayer).
-		 * 
-		 * Should test pc.isPlaying(), but the thread is not yet active.
-		 * 
-		 * assertTrue(pc.isPlaying());
-		 */
 
 	}
 
